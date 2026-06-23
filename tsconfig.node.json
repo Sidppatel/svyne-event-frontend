@@ -10,8 +10,6 @@
     "moduleDetection": "force",
     "noEmit": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noUncheckedSideEffectImports": true
   },
   "include": ["vite.config.ts"]

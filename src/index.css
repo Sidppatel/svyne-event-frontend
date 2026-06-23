@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+:root {
+  --brand-primary: #4f46e5;
+  --brand-secondary: #0ea5e9;
+  --brand-accent: #f59e0b;
+  --brand-font: ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--brand-font);
+  margin: 0;
+}

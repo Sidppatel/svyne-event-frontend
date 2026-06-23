@@ -1,0 +1,32 @@
+import { Routes, Route } from 'react-router-dom';
+import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
+import { NotFoundPage } from '@/shared/components/StatusPages';
+import { DeveloperLayout } from '@/shared/components/layouts/DeveloperLayout';
+import { isDeveloper } from '@/shared/roles';
+import { authRoutes } from '@/app/authRoutes';
+import { DeveloperTenantsPage } from '@/features/developer/pages/DeveloperTenantsPage';
+import { DeveloperTenantMembersPage } from '@/features/developer/pages/DeveloperTenantMembersPage';
+import { DeveloperDashboardPage } from '@/features/developer/pages/DeveloperDashboardPage';
+import { DeveloperLogsPage } from '@/features/developer/pages/DeveloperLogsPage';
+
+export default function DeveloperRoutes() {
+  return (
+    <Routes>
+      {authRoutes()}
+      <Route
+        element={
+          <ProtectedRoute allow={isDeveloper}>
+            <DeveloperLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<DeveloperTenantsPage />} />
+        <Route path="developer" element={<DeveloperTenantsPage />} />
+        <Route path="developer/dashboard" element={<DeveloperDashboardPage />} />
+        <Route path="developer/tenants/:tenantsId" element={<DeveloperTenantMembersPage />} />
+        <Route path="developer/logs" element={<DeveloperLogsPage />} />
+      </Route>
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+}

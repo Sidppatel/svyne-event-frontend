@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "gen:proto": "node -e \"require('fs').mkdirSync('src/shared/proto',{recursive:true})\" && protoc --ts_out src/shared/proto --ts_opt long_type_string,optimize_speed,eslint_disable --proto_path ../svyne-event-backend/protos common.proto auth.proto event.proto tenant.proto catalog.proto booking.proto purchase.proto admin.proto"
+    "gen:proto": "node scripts/gen-proto.mjs"
   },
   "dependencies": {
     "@protobuf-ts/grpcweb-transport": "2.9.4",

@@ -1,0 +1,136 @@
+import { eventClient, tableBookingClient } from '@/shared/apiClient';
+import { callRpc } from '@/shared/session';
+import type { Event, EventStats } from '@/shared/proto/event';
+import type { Table } from '@/shared/proto/booking';
+
+export interface EventDraft {
+  title: string;
+  slug: string;
+  description: string;
+  status: string;
+  category: string;
+  startDate: string;
+  endDate: string;
+  maxCapacity: number;
+  layoutMode: string;
+  venuesId: string;
+  gridRows: number;
+  gridCols: number;
+  imagePath: string;
+}
+
+export async function createEvent(draft: EventDraft): Promise<string> {
+  const response = await callRpc(() =>
+    eventClient.createEvent({
+      title: draft.title,
+      slug: draft.slug,
+      description: draft.description,
+      status: draft.status,
+      category: draft.category,
+      startDate: draft.startDate,
+      endDate: draft.endDate,
+      imagePath: draft.imagePath,
+      isFeatured: false,
+      layoutMode: draft.layoutMode,
+      maxCapacity: draft.maxCapacity,
+      gridRows: draft.gridRows,
+      gridCols: draft.gridCols,
+      venuesId: draft.venuesId,
+      scheduledPublishAt: '0',
+    }),
+  );
+  return response.eventsId;
+}
+
+export async function updateEvent(eventsId: string, draft: EventDraft): Promise<void> {
+  await callRpc(() =>
+    eventClient.updateEvent({
+      eventsId,
+      title: draft.title,
+      description: draft.description,
+      category: draft.category,
+      startDate: draft.startDate,
+      endDate: draft.endDate,
+      imagePath: draft.imagePath,
+      isFeatured: false,
+      maxCapacity: draft.maxCapacity,
+      venuesId: draft.venuesId,
+    }),
+  );
+}
+
+export async function deleteEvent(eventsId: string): Promise<void> {
+  await callRpc(() => eventClient.deleteEvent({ value: eventsId }));
+}
+
+export async function changeEventStatus(eventsId: string, status: string): Promise<void> {
+  await callRpc(() => eventClient.changeEventStatus({ eventsId, status }));
+}
+
+export async function getEvent(eventsId: string): Promise<Event> {
+  return callRpc(() => eventClient.getEvent({ value: eventsId }));
+}
+
+export async function getEventStats(eventsId: string): Promise<EventStats> {
+  return callRpc(() => eventClient.getEventStats({ value: eventsId }));
+}
+
+export interface TicketTypeDraft {
+  eventsId: string;
+  label: string;
+  priceCents: number;
+  platformFeeCents: number;
+  maxQuantity: number;
+  sortOrder: number;
+  description: string;
+}
+
+export async function createTicketType(draft: TicketTypeDraft): Promise<string> {
+  const response = await callRpc(() =>
+    tableBookingClient.createEventTicketType({
+      eventsId: draft.eventsId,
+      label: draft.label,
+      priceCents: draft.priceCents,
+      platformFeeCents: draft.platformFeeCents,
+      maxQuantity: draft.maxQuantity,
+      sortOrder: draft.sortOrder,
+      description: draft.description,
+    }),
+  );
+  return response.value;
+}
+
+export async function listEventTables(eventsId: string): Promise<Table[]> {
+  const response = await callRpc(() => tableBookingClient.listTablesForEvent({ value: eventsId }));
+  return response.tables;
+}
+
+export interface TableDraft {
+  eventsId: string;
+  label: string;
+  capacity: number;
+  shape: string;
+  color: string;
+  priceCents: number;
+  platformFeeCents: number;
+}
+
+export async function createEventTable(draft: TableDraft): Promise<string> {
+  const response = await callRpc(() =>
+    tableBookingClient.createEventTable({
+      eventsId: draft.eventsId,
+      label: draft.label,
+      capacity: draft.capacity,
+      shape: draft.shape,
+      color: draft.color,
+      priceCents: draft.priceCents,
+      platformFeeCents: draft.platformFeeCents,
+      tableTemplatesId: '',
+    }),
+  );
+  return response.value;
+}
+
+export async function deleteEventTable(tablesId: string): Promise<void> {
+  await callRpc(() => tableBookingClient.deleteEventTable({ value: tablesId }));
+}

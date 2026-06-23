@@ -1,0 +1,294 @@
+import { useCallback, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAsync } from '@/shared/hooks/useAsync';
+import {
+  getEvent,
+  getEventStats,
+  changeEventStatus,
+  updateEvent,
+  createTicketType,
+  listEventTables,
+  createEventTable,
+  deleteEventTable,
+} from '@/features/admin/services/eventAdminService';
+import { ImageUpload } from '@/shared/components/ImageUpload';
+import type { Event } from '@/shared/proto/event';
+import {
+  listStaffForEvent,
+  assignStaff,
+  unassignStaff,
+} from '@/features/admin/services/staffAdminService';
+import { rpcErrorMessage } from '@/shared/session';
+import { centsToUSD } from '@/shared/lib/format';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
+export function AdminEventManagePage() {
+  const { eventsId = '' } = useParams();
+  const eventLoader = useCallback(() => getEvent(eventsId), [eventsId]);
+  const statsLoader = useCallback(() => getEventStats(eventsId), [eventsId]);
+  const tablesLoader = useCallback(() => listEventTables(eventsId), [eventsId]);
+  const staffLoader = useCallback(() => listStaffForEvent(eventsId), [eventsId]);
+
+  const event = useAsync(eventLoader);
+  const stats = useAsync(statsLoader);
+  const tables = useAsync(tablesLoader);
+  const staff = useAsync(staffLoader);
+
+  const [ticketLabel, setTicketLabel] = useState('');
+  const [ticketPriceCents, setTicketPriceCents] = useState(0);
+  const [tableLabel, setTableLabel] = useState('');
+  const [tableCapacity, setTableCapacity] = useState(8);
+  const [assignUserId, setAssignUserId] = useState('');
+  const [notice, setNotice] = useState<string | null>(null);
+
+  async function guard(action: () => Promise<void>, reload?: () => void) {
+    setNotice(null);
+    try {
+      await action();
+      reload?.();
+    } catch (caught) {
+      setNotice(rpcErrorMessage(caught));
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {event.loading ? <p className="text-gray-500">Loading…</p> : null}
+      {event.error ? <p className="text-red-600">{event.error}</p> : null}
+      {notice ? <p className="text-sm text-amber-700">{notice}</p> : null}
+
+      {event.data ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>{event.data.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <p className="text-sm text-gray-500">Status: {event.data.status}</p>
+            <div className="flex gap-2">
+              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'published'), event.reload)}>
+                Publish
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'draft'), event.reload)}>
+                Set draft
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {event.data ? <EditSection event={event.data} onSaved={event.reload} /> : null}
+
+      {stats.data ? (
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <Stat label="Purchases" value={stats.data.totalPurchases} />
+          <Stat label="Tickets sold" value={stats.data.ticketsSold} />
+          <Stat label="Checked in" value={stats.data.checkedIn} />
+          <Stat label="Revenue" value={centsToUSD(stats.data.revenueCents)} />
+        </div>
+      ) : null}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Ticket types</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <Label>Label</Label>
+            <Input value={ticketLabel} onChange={(e) => setTicketLabel(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Price (cents)</Label>
+            <Input type="number" value={ticketPriceCents} onChange={(e) => setTicketPriceCents(Number(e.target.value))} />
+          </div>
+          <Button
+            size="sm"
+            onClick={() =>
+              guard(() =>
+                createTicketType({
+                  eventsId,
+                  label: ticketLabel,
+                  priceCents: ticketPriceCents,
+                  platformFeeCents: 0,
+                  maxQuantity: 0,
+                  sortOrder: 0,
+                  description: '',
+                }).then(() => setTicketLabel('')),
+              )
+            }
+          >
+            Add ticket type
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Tables</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <Label>Label</Label>
+              <Input value={tableLabel} onChange={(e) => setTableLabel(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>Capacity</Label>
+              <Input type="number" value={tableCapacity} onChange={(e) => setTableCapacity(Number(e.target.value))} />
+            </div>
+            <Button
+              size="sm"
+              onClick={() =>
+                guard(
+                  () =>
+                    createEventTable({
+                      eventsId,
+                      label: tableLabel,
+                      capacity: tableCapacity,
+                      shape: 'round',
+                      color: '#888888',
+                      priceCents: 0,
+                      platformFeeCents: 0,
+                    }).then(() => setTableLabel('')),
+                  tables.reload,
+                )
+              }
+            >
+              Add table
+            </Button>
+          </div>
+          <div className="space-y-1">
+            {(tables.data ?? []).map((table) => (
+              <div key={table.tablesId} className="flex items-center justify-between border-b py-1 text-sm">
+                <span>
+                  {table.label} · {table.status}
+                </span>
+                <Button size="sm" variant="ghost" onClick={() => guard(() => deleteEventTable(table.tablesId), tables.reload)}>
+                  Remove
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Staff</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <Label>User ID</Label>
+              <Input value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)} />
+            </div>
+            <Button
+              size="sm"
+              onClick={() => guard(() => assignStaff(assignUserId, eventsId).then(() => setAssignUserId('')), staff.reload)}
+            >
+              Assign staff
+            </Button>
+          </div>
+          <div className="space-y-1">
+            {(staff.data ?? []).map((member) => (
+              <div key={member.usersId} className="flex items-center justify-between border-b py-1 text-sm">
+                <span>
+                  {member.firstName} {member.lastName} · {member.email}
+                </span>
+                <Button size="sm" variant="ghost" onClick={() => guard(() => unassignStaff(member.usersId, eventsId), staff.reload)}>
+                  Unassign
+                </Button>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function EditSection({ event, onSaved }: { event: Event; onSaved: () => void }) {
+  const [title, setTitle] = useState(event.title);
+  const [description, setDescription] = useState(event.description);
+  const [category, setCategory] = useState(event.category);
+  const [capacity, setCapacity] = useState(event.maxCapacity);
+  const [imagePath, setImagePath] = useState(event.imagePath);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function save() {
+    setSaving(true);
+    setError(null);
+    try {
+      await updateEvent(event.eventsId, {
+        title,
+        slug: event.slug,
+        description,
+        status: event.status,
+        category,
+        startDate: event.startDate,
+        endDate: event.endDate,
+        maxCapacity: capacity,
+        layoutMode: event.layoutMode,
+        venuesId: event.venuesId,
+        gridRows: 0,
+        gridCols: 0,
+        imagePath,
+      });
+      onSaved();
+    } catch (caught) {
+      setError(rpcErrorMessage(caught));
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Edit details</CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="space-y-1">
+          <Label>Title</Label>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </div>
+        <div className="space-y-1">
+          <Label>Category</Label>
+          <Input value={category} onChange={(e) => setCategory(e.target.value)} />
+        </div>
+        <div className="space-y-1">
+          <Label>Max capacity</Label>
+          <Input type="number" value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} />
+        </div>
+        <div className="space-y-1">
+          <Label>Image</Label>
+          <ImageUpload entityType="event" entityId={event.eventsId} onUploaded={setImagePath} />
+        </div>
+        <div className="space-y-1 md:col-span-2">
+          <Label>Description</Label>
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        </div>
+        {error ? <p className="text-sm text-red-600 md:col-span-2">{error}</p> : null}
+        <div className="md:col-span-2">
+          <Button size="sm" onClick={save} disabled={saving}>
+            {saving ? 'Saving…' : 'Save details'}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number | string }) {
+  return (
+    <Card>
+      <CardContent className="space-y-1">
+        <CardTitle>{value}</CardTitle>
+        <p className="text-sm text-gray-500">{label}</p>
+      </CardContent>
+    </Card>
+  );
+}
