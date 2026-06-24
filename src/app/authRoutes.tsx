@@ -7,11 +7,11 @@ import { SetPasswordPage } from '@/features/auth/pages/SetPasswordPage';
 import { MagicLinkVerifyPage } from '@/features/auth/pages/MagicLinkVerifyPage';
 import { AcceptInvitationPage } from '@/features/auth/pages/AcceptInvitationPage';
 
-export function authRoutes() {
+export function authRoutes(options?: { allowRegister?: boolean }) {
   return (
     <>
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+      {options?.allowRegister ? <Route path="/register" element={<RegisterPage />} /> : null}
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/set-password" element={<SetPasswordPage />} />
       <Route path="/verify" element={<MagicLinkVerifyPage />} />

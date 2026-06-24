@@ -274,9 +274,9 @@ export interface EventStats {
      */
     eventsId: string;
     /**
-     * @generated from protobuf field: int32 total_purchases = 2;
+     * @generated from protobuf field: int32 total_bookings = 2;
      */
-    totalPurchases: number;
+    totalBookings: number;
     /**
      * @generated from protobuf field: int32 tickets_sold = 3;
      */
@@ -1052,7 +1052,7 @@ class EventStats$Type extends MessageType<EventStats> {
     constructor() {
         super("svyne.event.EventStats", [
             { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "total_purchases", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "total_bookings", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "tickets_sold", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "revenue_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
             { no: 5, name: "checked_in", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
@@ -1061,7 +1061,7 @@ class EventStats$Type extends MessageType<EventStats> {
     create(value?: PartialMessage<EventStats>): EventStats {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.eventsId = "";
-        message.totalPurchases = 0;
+        message.totalBookings = 0;
         message.ticketsSold = 0;
         message.revenueCents = "0";
         message.checkedIn = 0;
@@ -1077,8 +1077,8 @@ class EventStats$Type extends MessageType<EventStats> {
                 case /* string events_id */ 1:
                     message.eventsId = reader.string();
                     break;
-                case /* int32 total_purchases */ 2:
-                    message.totalPurchases = reader.int32();
+                case /* int32 total_bookings */ 2:
+                    message.totalBookings = reader.int32();
                     break;
                 case /* int32 tickets_sold */ 3:
                     message.ticketsSold = reader.int32();
@@ -1104,9 +1104,9 @@ class EventStats$Type extends MessageType<EventStats> {
         /* string events_id = 1; */
         if (message.eventsId !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.eventsId);
-        /* int32 total_purchases = 2; */
-        if (message.totalPurchases !== 0)
-            writer.tag(2, WireType.Varint).int32(message.totalPurchases);
+        /* int32 total_bookings = 2; */
+        if (message.totalBookings !== 0)
+            writer.tag(2, WireType.Varint).int32(message.totalBookings);
         /* int32 tickets_sold = 3; */
         if (message.ticketsSold !== 0)
             writer.tag(3, WireType.Varint).int32(message.ticketsSold);

@@ -2,8 +2,8 @@ import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
-  getPurchase,
-  listPurchaseTickets,
+  getBooking,
+  listTickets,
   inviteTicket,
 } from '@/features/public/services/ticketService';
 import { rpcErrorMessage } from '@/shared/session';
@@ -12,11 +12,11 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-export function PurchaseDetailPage() {
-  const { purchasesId = '' } = useParams();
-  const purchaseLoader = useCallback(() => getPurchase(purchasesId), [purchasesId]);
-  const ticketsLoader = useCallback(() => listPurchaseTickets(purchasesId), [purchasesId]);
-  const purchase = useAsync(purchaseLoader);
+export function BookingDetailPage() {
+  const { bookingsId = '' } = useParams();
+  const bookingLoader = useCallback(() => getBooking(bookingsId), [bookingsId]);
+  const ticketsLoader = useCallback(() => listTickets(bookingsId), [bookingsId]);
+  const booking = useAsync(bookingLoader);
   const tickets = useAsync(ticketsLoader);
   const [emails, setEmails] = useState<Record<string, string>>({});
 
@@ -31,17 +31,17 @@ export function PurchaseDetailPage() {
 
   return (
     <div className="space-y-4">
-      {purchase.loading ? <p className="text-gray-500">Loading…</p> : null}
-      {purchase.error ? <p className="text-red-600">{purchase.error}</p> : null}
-      {purchase.data ? (
+      {booking.loading ? <p className="text-gray-500">Loading…</p> : null}
+      {booking.error ? <p className="text-red-600">{booking.error}</p> : null}
+      {booking.data ? (
         <Card>
           <CardHeader>
-            <CardTitle>Purchase #{purchase.data.purchaseNumber}</CardTitle>
+            <CardTitle>Booking #{booking.data.bookingNumber}</CardTitle>
           </CardHeader>
           <CardContent className="text-sm text-gray-600">
-            <p>Status: {purchase.data.status}</p>
-            <p>Total: {centsToUSD(purchase.data.totalCents)}</p>
-            <p>Seats reserved: {purchase.data.seatsReserved}</p>
+            <p>Status: {booking.data.status}</p>
+            <p>Total: {centsToUSD(booking.data.totalCents)}</p>
+            <p>Seats reserved: {booking.data.seatsReserved}</p>
           </CardContent>
         </Card>
       ) : null}
@@ -52,17 +52,17 @@ export function PurchaseDetailPage() {
         </CardHeader>
         <CardContent className="space-y-2">
           {(tickets.data ?? []).map((ticket) => (
-            <div key={ticket.purchaseTicketsId} className="flex flex-wrap items-center gap-2 border-b py-2 text-sm">
+            <div key={ticket.ticketsId} className="flex flex-wrap items-center gap-2 border-b py-2 text-sm">
               <span className="font-medium">{ticket.ticketCode}</span>
               <span className="text-gray-500">seat {ticket.seatNumber}</span>
               <span className="text-gray-400">{ticket.status}</span>
               <Input
                 className="w-48"
                 placeholder="invite email"
-                value={emails[ticket.purchaseTicketsId] ?? ''}
-                onChange={(e) => setEmails((prev) => ({ ...prev, [ticket.purchaseTicketsId]: e.target.value }))}
+                value={emails[ticket.ticketsId] ?? ''}
+                onChange={(e) => setEmails((prev) => ({ ...prev, [ticket.ticketsId]: e.target.value }))}
               />
-              <Button size="sm" variant="outline" onClick={() => invite(ticket.purchaseTicketsId)}>
+              <Button size="sm" variant="outline" onClick={() => invite(ticket.ticketsId)}>
                 Invite
               </Button>
             </div>

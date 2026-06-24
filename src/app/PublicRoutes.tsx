@@ -4,19 +4,21 @@ import { NotFoundPage } from '@/shared/components/StatusPages';
 import { PublicLayout } from '@/shared/components/layouts/PublicLayout';
 import { authRoutes, authenticated } from '@/app/authRoutes';
 import { EventListPage } from '@/features/public/pages/EventListPage';
+import { TenantLandingPage } from '@/features/public/pages/TenantLandingPage';
+import { currentTenantSlug } from '@/shared/subdomain';
 import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
 import { MyBookingsPage } from '@/features/public/pages/MyBookingsPage';
 import { ProfilePage } from '@/features/public/pages/ProfilePage';
-import { PurchaseDetailPage } from '@/features/public/pages/PurchaseDetailPage';
+import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
 import { ClaimTicketPage } from '@/features/public/pages/ClaimTicketPage';
 import { FeedbackPage } from '@/features/public/pages/FeedbackPage';
 
 export default function PublicRoutes() {
   return (
     <Routes>
-      {authRoutes()}
+      {authRoutes({ allowRegister: true })}
       <Route element={<PublicLayout />}>
-        <Route index element={<EventListPage />} />
+        <Route index element={currentTenantSlug() ? <EventListPage /> : <TenantLandingPage />} />
         <Route path="events/:slug" element={<EventDetailPage />} />
         <Route path="claim" element={<ClaimTicketPage />} />
         <Route
@@ -28,10 +30,10 @@ export default function PublicRoutes() {
           }
         />
         <Route
-          path="purchases/:purchasesId"
+          path="bookings/:bookingsId"
           element={
             <ProtectedRoute allow={authenticated}>
-              <PurchaseDetailPage />
+              <BookingDetailPage />
             </ProtectedRoute>
           }
         />

@@ -32,10 +32,10 @@ export function canManageTenantSettings(role: number): boolean {
 
 export function homePathForRole(role: number): string {
   if (isDeveloper(role)) {
-    return '/developer';
+    return '/';
   }
   if (canAccessAdmin(role)) {
-    return '/admin';
+    return '/';
   }
   if (isStaff(role)) {
     return '/staff';

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { scanTicket, getCheckInStats } from '@/features/staff/services/staffService';
 import { rpcErrorMessage } from '@/shared/session';
-import type { ScanResponse, CheckInStats } from '@/shared/proto/purchase';
+import type { ScanResponse, CheckInStats } from '@/shared/proto/bookings';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';

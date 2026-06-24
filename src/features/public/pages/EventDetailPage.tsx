@@ -5,7 +5,7 @@ import {
   getEventBySlug,
   getEventLayout,
   reserveOpenCapacity,
-  purchaseTable,
+  bookingTable,
 } from '@/features/public/services/publicEventService';
 import { rpcErrorMessage } from '@/shared/session';
 import { Button } from '@/shared/ui/button';
@@ -58,11 +58,11 @@ function BookingPanel({ eventsId, layoutMode }: { eventsId: string; layoutMode: 
     setBookingError(null);
     setConfirmation(null);
     try {
-      const purchaseNumber =
+      const bookingNumber =
         isTableLayout && tableId
-          ? await purchaseTable({ eventsId, tablesId: tableId, seats })
+          ? await bookingTable({ eventsId, tablesId: tableId, seats })
           : await reserveOpenCapacity({ eventsId, seats, eventTicketTypesId: '' });
-      setConfirmation(purchaseNumber);
+      setConfirmation(bookingNumber);
     } catch (caught) {
       setBookingError(rpcErrorMessage(caught));
     } finally {
@@ -83,7 +83,7 @@ function BookingPanel({ eventsId, layoutMode }: { eventsId: string; layoutMode: 
                 key={table.tablesId}
                 size="sm"
                 variant={tableId === table.tablesId ? 'default' : 'outline'}
-                disabled={table.status !== 'available' && table.status !== 'open'}
+                disabled={table.status !== 'Available'}
                 onClick={() => setTableId(table.tablesId)}
               >
                 {table.label} · {table.status}

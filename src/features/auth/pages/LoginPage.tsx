@@ -6,11 +6,13 @@ import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { useAuthFlow } from '@/features/auth/hooks/useAuthFlow';
 import { GoogleSignInButton } from '@/features/auth/components/GoogleSignInButton';
+import { resolvePortalContext } from '@/shared/subdomain';
 
 export function LoginPage() {
   const { login, google, loading, error } = useAuthFlow();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const allowRegister = resolvePortalContext().portal === 'public';
 
   return (
     <div className="mx-auto mt-16 max-w-sm">
@@ -28,13 +30,14 @@ export function LoginPage() {
           >
             <div className="space-y-1">
               <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+              <Input id="email" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div className="space-y-1">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -47,7 +50,7 @@ export function LoginPage() {
           </form>
           <GoogleSignInButton onToken={google} />
           <div className="flex justify-between text-sm text-gray-600">
-            <Link to="/register">Create account</Link>
+            {allowRegister ? <Link to="/register">Create account</Link> : <span />}
             <Link to="/forgot-password">Forgot password?</Link>
           </div>
         </CardContent>

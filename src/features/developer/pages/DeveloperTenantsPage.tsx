@@ -73,7 +73,7 @@ export function DeveloperTenantsPage() {
         {(data ?? []).map((tenant) => (
           <Card key={tenant.tenantsId}>
             <CardContent className="flex flex-wrap items-center justify-between gap-2">
-              <Link to={`/developer/tenants/${tenant.tenantsId}`} className="font-medium text-indigo-600">
+              <Link to={`/tenants/${tenant.tenantsId}`} className="font-medium text-indigo-600">
                 {tenant.name} <span className="text-gray-400">/{tenant.slug}</span>
               </Link>
               <div className="flex items-center gap-3">

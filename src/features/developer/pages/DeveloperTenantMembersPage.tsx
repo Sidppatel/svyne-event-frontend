@@ -17,7 +17,7 @@ export function DeveloperTenantMembersPage() {
 
   return (
     <div className="space-y-4">
-      <Link to="/developer" className="text-sm text-indigo-600">
+      <Link to="/" className="text-sm text-indigo-600">
         ← Back to tenants
       </Link>
       <h1 className="text-xl font-semibold">Tenant members</h1>

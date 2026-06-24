@@ -7,9 +7,9 @@ export function DeveloperLayout() {
       <PortalNav
         title="Svyne Developer"
         links={[
-          { to: '/developer', label: 'Tenants' },
-          { to: '/developer/dashboard', label: 'Overview' },
-          { to: '/developer/logs', label: 'System Logs' },
+          { to: '/', label: 'Tenants' },
+          { to: '/dashboard', label: 'Overview' },
+          { to: '/logs', label: 'System Logs' },
         ]}
       />
       <main className="mx-auto max-w-6xl px-6 py-6">

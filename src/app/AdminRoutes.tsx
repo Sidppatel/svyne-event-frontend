@@ -8,7 +8,7 @@ import { AdminDashboardPage } from '@/features/admin/pages/AdminDashboardPage';
 import { AdminEventsPage } from '@/features/admin/pages/AdminEventsPage';
 import { AdminEventWizardPage } from '@/features/admin/pages/AdminEventWizardPage';
 import { AdminEventManagePage } from '@/features/admin/pages/AdminEventManagePage';
-import { AdminPurchasesPage } from '@/features/admin/pages/AdminPurchasesPage';
+import { AdminBookingsPage } from '@/features/admin/pages/AdminBookingsPage';
 import { AdminCatalogPage } from '@/features/admin/pages/AdminCatalogPage';
 import { AdminInvitationsPage } from '@/features/admin/pages/AdminInvitationsPage';
 import { AdminFinancialPage } from '@/features/admin/pages/AdminFinancialPage';
@@ -27,16 +27,15 @@ export default function AdminRoutes() {
         }
       >
         <Route index element={<AdminDashboardPage />} />
-        <Route path="admin" element={<AdminDashboardPage />} />
-        <Route path="admin/events" element={<AdminEventsPage />} />
-        <Route path="admin/events/new" element={<AdminEventWizardPage />} />
-        <Route path="admin/events/:eventsId" element={<AdminEventManagePage />} />
-        <Route path="admin/purchases" element={<AdminPurchasesPage />} />
-        <Route path="admin/catalog" element={<AdminCatalogPage />} />
-        <Route path="admin/invitations" element={<AdminInvitationsPage />} />
-        <Route path="admin/financial" element={<AdminFinancialPage />} />
-        <Route path="admin/feedback" element={<AdminFeedbackPage />} />
-        <Route path="admin/logs" element={<AdminLogsPage />} />
+        <Route path="events" element={<AdminEventsPage />} />
+        <Route path="events/new" element={<AdminEventWizardPage />} />
+        <Route path="events/:eventsId" element={<AdminEventManagePage />} />
+        <Route path="bookings" element={<AdminBookingsPage />} />
+        <Route path="catalog" element={<AdminCatalogPage />} />
+        <Route path="invitations" element={<AdminInvitationsPage />} />
+        <Route path="financial" element={<AdminFinancialPage />} />
+        <Route path="feedback" element={<AdminFeedbackPage />} />
+        <Route path="logs" element={<AdminLogsPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

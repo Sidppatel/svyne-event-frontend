@@ -5,8 +5,6 @@ export interface PortalContext {
   tenantSlug: string;
 }
 
-const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0']);
-
 function readDevOverride(): Portal | null {
   if (typeof window !== 'undefined') {
     const param = new URLSearchParams(window.location.search).get('portal');
@@ -26,29 +24,47 @@ function readDevOverride(): Portal | null {
   return null;
 }
 
+function readDevTenant(): string {
+  if (typeof window !== 'undefined') {
+    const param = new URLSearchParams(window.location.search).get('tenant');
+    if (param) {
+      window.localStorage.setItem('svyne-tenant', param);
+      return param;
+    }
+    const stored = window.localStorage.getItem('svyne-tenant');
+    if (stored) {
+      return stored;
+    }
+  }
+  return import.meta.env.VITE_TENANT_SLUG ?? '';
+}
+
 export function resolvePortalContext(): PortalContext {
   const host = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
   const path = typeof window !== 'undefined' ? window.location.pathname : '/';
   const labels = host.split('.');
   const first = labels[0];
-  const isLocal = LOCAL_HOSTS.has(host) || host.endsWith('.localhost');
+  const hasSubdomain = host.endsWith('.localhost') ? labels.length > 1 : labels.length > 2;
+  const subLabel = hasSubdomain ? first : '';
+
+  if (subLabel === 'admin' || subLabel === 'staff' || subLabel === 'developer') {
+    const portal = subLabel as Portal;
+    return { portal, tenantSlug: portal === 'developer' ? '' : readDevTenant() };
+  }
 
   if (path.startsWith('/staff')) {
-    return { portal: 'staff', tenantSlug: isLocal ? '' : first };
+    return { portal: 'staff', tenantSlug: subLabel || readDevTenant() };
   }
 
-  if (isLocal) {
-    const override = readDevOverride();
-    return { portal: override ?? 'public', tenantSlug: '' };
+  if (subLabel) {
+    return { portal: 'public', tenantSlug: subLabel };
   }
 
-  if (first === 'admin') {
-    return { portal: 'admin', tenantSlug: '' };
+  const override = readDevOverride();
+  if (override && override !== 'public') {
+    return { portal: override, tenantSlug: override === 'developer' ? '' : readDevTenant() };
   }
-  if (first === 'developer') {
-    return { portal: 'developer', tenantSlug: '' };
-  }
-  return { portal: 'public', tenantSlug: first };
+  return { portal: 'public', tenantSlug: '' };
 }
 
 export function currentTenantSlug(): string {

@@ -68,10 +68,10 @@ export function AdminEventManagePage() {
           <CardContent className="space-y-2">
             <p className="text-sm text-gray-500">Status: {event.data.status}</p>
             <div className="flex gap-2">
-              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'published'), event.reload)}>
+              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}>
                 Publish
               </Button>
-              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'draft'), event.reload)}>
+              <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'Draft'), event.reload)}>
                 Set draft
               </Button>
             </div>
@@ -83,7 +83,7 @@ export function AdminEventManagePage() {
 
       {stats.data ? (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat label="Purchases" value={stats.data.totalPurchases} />
+          <Stat label="Bookings" value={stats.data.totalBookings} />
           <Stat label="Tickets sold" value={stats.data.ticketsSold} />
           <Stat label="Checked in" value={stats.data.checkedIn} />
           <Stat label="Revenue" value={centsToUSD(stats.data.revenueCents)} />
@@ -147,7 +147,7 @@ export function AdminEventManagePage() {
                       eventsId,
                       label: tableLabel,
                       capacity: tableCapacity,
-                      shape: 'round',
+                      shape: 'Round',
                       color: '#888888',
                       priceCents: 0,
                       platformFeeCents: 0,

@@ -5,6 +5,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { AuthService } from "./auth";
+import type { SetAvatarRequest } from "./auth";
+import type { UpdateProfileRequest } from "./auth";
 import type { UserProfile } from "./auth";
 import type { Empty } from "./common";
 import type { SetPasswordRequest } from "./auth";
@@ -15,6 +17,7 @@ import type { AckResponse } from "./common";
 import type { LogoutRequest } from "./auth";
 import type { RefreshTokenRequest } from "./auth";
 import type { GoogleSignInRequest } from "./auth";
+import type { SignUpRequest } from "./auth";
 import { stackIntercept } from "@protobuf-ts/runtime-rpc";
 import type { AuthResponse } from "./auth";
 import type { LoginRequest } from "./auth";
@@ -28,6 +31,10 @@ export interface IAuthServiceClient {
      * @generated from protobuf rpc: Login(svyne.auth.LoginRequest) returns (svyne.auth.AuthResponse);
      */
     login(input: LoginRequest, options?: RpcOptions): UnaryCall<LoginRequest, AuthResponse>;
+    /**
+     * @generated from protobuf rpc: SignUp(svyne.auth.SignUpRequest) returns (svyne.auth.AuthResponse);
+     */
+    signUp(input: SignUpRequest, options?: RpcOptions): UnaryCall<SignUpRequest, AuthResponse>;
     /**
      * @generated from protobuf rpc: GoogleSignIn(svyne.auth.GoogleSignInRequest) returns (svyne.auth.AuthResponse);
      */
@@ -60,6 +67,14 @@ export interface IAuthServiceClient {
      * @generated from protobuf rpc: Me(svyne.common.Empty) returns (svyne.auth.UserProfile);
      */
     me(input: Empty, options?: RpcOptions): UnaryCall<Empty, UserProfile>;
+    /**
+     * @generated from protobuf rpc: UpdateProfile(svyne.auth.UpdateProfileRequest) returns (svyne.auth.UserProfile);
+     */
+    updateProfile(input: UpdateProfileRequest, options?: RpcOptions): UnaryCall<UpdateProfileRequest, UserProfile>;
+    /**
+     * @generated from protobuf rpc: SetAvatar(svyne.auth.SetAvatarRequest) returns (svyne.auth.UserProfile);
+     */
+    setAvatar(input: SetAvatarRequest, options?: RpcOptions): UnaryCall<SetAvatarRequest, UserProfile>;
 }
 /**
  * @generated from protobuf service svyne.auth.AuthService
@@ -78,59 +93,80 @@ export class AuthServiceClient implements IAuthServiceClient, ServiceInfo {
         return stackIntercept<LoginRequest, AuthResponse>("unary", this._transport, method, opt, input);
     }
     /**
+     * @generated from protobuf rpc: SignUp(svyne.auth.SignUpRequest) returns (svyne.auth.AuthResponse);
+     */
+    signUp(input: SignUpRequest, options?: RpcOptions): UnaryCall<SignUpRequest, AuthResponse> {
+        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        return stackIntercept<SignUpRequest, AuthResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: GoogleSignIn(svyne.auth.GoogleSignInRequest) returns (svyne.auth.AuthResponse);
      */
     googleSignIn(input: GoogleSignInRequest, options?: RpcOptions): UnaryCall<GoogleSignInRequest, AuthResponse> {
-        const method = this.methods[1], opt = this._transport.mergeOptions(options);
+        const method = this.methods[2], opt = this._transport.mergeOptions(options);
         return stackIntercept<GoogleSignInRequest, AuthResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: RefreshToken(svyne.auth.RefreshTokenRequest) returns (svyne.auth.AuthResponse);
      */
     refreshToken(input: RefreshTokenRequest, options?: RpcOptions): UnaryCall<RefreshTokenRequest, AuthResponse> {
-        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
         return stackIntercept<RefreshTokenRequest, AuthResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: Logout(svyne.auth.LogoutRequest) returns (svyne.common.AckResponse);
      */
     logout(input: LogoutRequest, options?: RpcOptions): UnaryCall<LogoutRequest, AckResponse> {
-        const method = this.methods[3], opt = this._transport.mergeOptions(options);
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
         return stackIntercept<LogoutRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: RequestMagicLink(svyne.auth.MagicLinkRequest) returns (svyne.common.AckResponse);
      */
     requestMagicLink(input: MagicLinkRequest, options?: RpcOptions): UnaryCall<MagicLinkRequest, AckResponse> {
-        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
         return stackIntercept<MagicLinkRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: VerifyMagicLink(svyne.auth.MagicLinkVerifyRequest) returns (svyne.auth.AuthResponse);
      */
     verifyMagicLink(input: MagicLinkVerifyRequest, options?: RpcOptions): UnaryCall<MagicLinkVerifyRequest, AuthResponse> {
-        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
         return stackIntercept<MagicLinkVerifyRequest, AuthResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: RequestPasswordReset(svyne.auth.PasswordResetRequest) returns (svyne.common.AckResponse);
      */
     requestPasswordReset(input: PasswordResetRequest, options?: RpcOptions): UnaryCall<PasswordResetRequest, AckResponse> {
-        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
         return stackIntercept<PasswordResetRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: SetPassword(svyne.auth.SetPasswordRequest) returns (svyne.common.AckResponse);
      */
     setPassword(input: SetPasswordRequest, options?: RpcOptions): UnaryCall<SetPasswordRequest, AckResponse> {
-        const method = this.methods[7], opt = this._transport.mergeOptions(options);
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
         return stackIntercept<SetPasswordRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: Me(svyne.common.Empty) returns (svyne.auth.UserProfile);
      */
     me(input: Empty, options?: RpcOptions): UnaryCall<Empty, UserProfile> {
-        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, UserProfile>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: UpdateProfile(svyne.auth.UpdateProfileRequest) returns (svyne.auth.UserProfile);
+     */
+    updateProfile(input: UpdateProfileRequest, options?: RpcOptions): UnaryCall<UpdateProfileRequest, UserProfile> {
+        const method = this.methods[10], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UpdateProfileRequest, UserProfile>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: SetAvatar(svyne.auth.SetAvatarRequest) returns (svyne.auth.UserProfile);
+     */
+    setAvatar(input: SetAvatarRequest, options?: RpcOptions): UnaryCall<SetAvatarRequest, UserProfile> {
+        const method = this.methods[11], opt = this._transport.mergeOptions(options);
+        return stackIntercept<SetAvatarRequest, UserProfile>("unary", this._transport, method, opt, input);
     }
 }

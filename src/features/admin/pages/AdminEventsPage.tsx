@@ -24,7 +24,7 @@ export function AdminEventsPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Events</h1>
-        <Link to="/admin/events/new">
+        <Link to="/events/new">
           <Button size="sm">New event</Button>
         </Link>
       </div>
@@ -35,16 +35,16 @@ export function AdminEventsPage() {
           <Card key={event.eventsId}>
             <CardContent className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <Link to={`/admin/events/${event.eventsId}`} className="font-medium text-indigo-600">
+                <Link to={`/events/${event.eventsId}`} className="font-medium text-indigo-600">
                   {event.title}
                 </Link>
                 <span className="ml-2 text-sm text-gray-500">{event.status}</span>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'published'))}>
+                <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'Published'))}>
                   Publish
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'cancelled'))}>
+                <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'Cancelled'))}>
                   Cancel
                 </Button>
                 <Button size="sm" variant="destructive" onClick={() => act(() => deleteEvent(event.eventsId))}>

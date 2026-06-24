@@ -4,39 +4,6 @@ import { useAuth } from '@/shared/auth/useAuth';
 import { roleLabel } from '@/shared/roles';
 import { logout } from '@/features/auth/services/authService';
 
-const DEV_PORTALS = ['public', 'admin', 'staff', 'developer'];
-
-function isLocalHost(): boolean {
-  if (typeof window === 'undefined') {
-    return false;
-  }
-  const host = window.location.hostname;
-  return host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost');
-}
-
-function DevPortalSwitcher() {
-  if (!isLocalHost()) {
-    return null;
-  }
-  const current = window.localStorage.getItem('svyne-portal') ?? 'public';
-  return (
-    <select
-      className="h-8 rounded-md border border-gray-300 px-2 text-xs"
-      value={current}
-      onChange={(e) => {
-        window.localStorage.setItem('svyne-portal', e.target.value);
-        window.location.assign('/');
-      }}
-    >
-      {DEV_PORTALS.map((portal) => (
-        <option key={portal} value={portal}>
-          dev: {portal}
-        </option>
-      ))}
-    </select>
-  );
-}
-
 export interface NavLink {
   to: string;
   label: string;
@@ -61,7 +28,6 @@ export function PortalNav({ title, links }: { title: string; links: NavLink[] })
         </nav>
       </div>
       <div className="flex items-center gap-3 text-sm">
-        <DevPortalSwitcher />
         {isAuthenticated ? (
           <>
             <span className="text-gray-500">

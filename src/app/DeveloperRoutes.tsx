@@ -21,10 +21,9 @@ export default function DeveloperRoutes() {
         }
       >
         <Route index element={<DeveloperTenantsPage />} />
-        <Route path="developer" element={<DeveloperTenantsPage />} />
-        <Route path="developer/dashboard" element={<DeveloperDashboardPage />} />
-        <Route path="developer/tenants/:tenantsId" element={<DeveloperTenantMembersPage />} />
-        <Route path="developer/logs" element={<DeveloperLogsPage />} />
+        <Route path="dashboard" element={<DeveloperDashboardPage />} />
+        <Route path="tenants/:tenantsId" element={<DeveloperTenantMembersPage />} />
+        <Route path="logs" element={<DeveloperLogsPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

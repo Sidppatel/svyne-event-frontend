@@ -2,11 +2,32 @@ import { authClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
 import { currentTenantSlug } from '@/shared/subdomain';
 import { useAuthStore } from '@/shared/auth/store';
-import type { AuthResponse } from '@/shared/proto/auth';
+import type { AuthResponse, UserProfile } from '@/shared/proto/auth';
 
 export async function loginWithPassword(email: string, password: string): Promise<AuthResponse> {
   const auth = await callRpc(() =>
     authClient.login({ email, password, tenantSlug: currentTenantSlug() }),
+  );
+  useAuthStore.getState().setSession(auth);
+  return auth;
+}
+
+export interface SignUpInput {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+}
+
+export async function signUp(input: SignUpInput): Promise<AuthResponse> {
+  const auth = await callRpc(() =>
+    authClient.signUp({
+      email: input.email,
+      password: input.password,
+      firstName: input.firstName,
+      lastName: input.lastName,
+      tenantSlug: currentTenantSlug(),
+    }),
   );
   useAuthStore.getState().setSession(auth);
   return auth;
@@ -40,8 +61,29 @@ export async function setPassword(token: string, newPassword: string): Promise<v
   await callRpc(() => authClient.setPassword({ token, newPassword }));
 }
 
-export async function loadProfile(): Promise<void> {
+export async function loadProfile(): Promise<UserProfile> {
   const profile = await callRpc(() => authClient.me({}));
+  useAuthStore.getState().setUser(profile);
+  return profile;
+}
+
+export interface ProfileInput {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  addressLine: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+export async function updateProfile(input: ProfileInput): Promise<void> {
+  const profile = await callRpc(() => authClient.updateProfile(input));
+  useAuthStore.getState().setUser(profile);
+}
+
+export async function setAvatar(imagesId: string): Promise<void> {
+  const profile = await callRpc(() => authClient.setAvatar({ imagesId }));
   useAuthStore.getState().setUser(profile);
 }
 

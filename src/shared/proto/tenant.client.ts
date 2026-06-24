@@ -7,6 +7,8 @@ import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { TenantService } from "./tenant";
 import type { TenantStripeStatus } from "./tenant";
 import type { ListTenantMembersResponse } from "./tenant";
+import type { ListPublicTenantsResponse } from "./tenant";
+import type { Empty } from "./common";
 import type { ListTenantsResponse } from "./tenant";
 import type { PageRequest } from "./common";
 import type { Tenant } from "./tenant";
@@ -42,6 +44,10 @@ export interface ITenantServiceClient {
      * @generated from protobuf rpc: ListTenants(svyne.common.PageRequest) returns (svyne.tenant.ListTenantsResponse);
      */
     listTenants(input: PageRequest, options?: RpcOptions): UnaryCall<PageRequest, ListTenantsResponse>;
+    /**
+     * @generated from protobuf rpc: ListPublicTenants(svyne.common.Empty) returns (svyne.tenant.ListPublicTenantsResponse);
+     */
+    listPublicTenants(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListPublicTenantsResponse>;
     /**
      * @generated from protobuf rpc: ListTenantMembers(svyne.common.UuidValue) returns (svyne.tenant.ListTenantMembersResponse);
      */
@@ -96,17 +102,24 @@ export class TenantServiceClient implements ITenantServiceClient, ServiceInfo {
         return stackIntercept<PageRequest, ListTenantsResponse>("unary", this._transport, method, opt, input);
     }
     /**
+     * @generated from protobuf rpc: ListPublicTenants(svyne.common.Empty) returns (svyne.tenant.ListPublicTenantsResponse);
+     */
+    listPublicTenants(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListPublicTenantsResponse> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, ListPublicTenantsResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: ListTenantMembers(svyne.common.UuidValue) returns (svyne.tenant.ListTenantMembersResponse);
      */
     listTenantMembers(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, ListTenantMembersResponse> {
-        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, ListTenantMembersResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: GetTenantStripeStatus(svyne.common.UuidValue) returns (svyne.tenant.TenantStripeStatus);
      */
     getTenantStripeStatus(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, TenantStripeStatus> {
-        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, TenantStripeStatus>("unary", this._transport, method, opt, input);
     }
 }

@@ -1,18 +1,18 @@
-import { ticketClient, purchaseClient } from '@/shared/apiClient';
+import { ticketClient, bookingClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
-import type { Ticket, Purchase } from '@/shared/proto/purchase';
+import type { Ticket, Booking } from '@/shared/proto/bookings';
 
-export async function getPurchase(purchasesId: string): Promise<Purchase> {
-  return callRpc(() => purchaseClient.getPurchase({ value: purchasesId }));
+export async function getBooking(bookingsId: string): Promise<Booking> {
+  return callRpc(() => bookingClient.getBooking({ value: bookingsId }));
 }
 
-export async function listPurchaseTickets(purchasesId: string): Promise<Ticket[]> {
-  const response = await callRpc(() => ticketClient.listPurchaseTickets({ value: purchasesId }));
+export async function listTickets(bookingsId: string): Promise<Ticket[]> {
+  const response = await callRpc(() => ticketClient.listTickets({ value: bookingsId }));
   return response.tickets;
 }
 
-export async function inviteTicket(purchaseTicketsId: string, email: string): Promise<void> {
-  await callRpc(() => ticketClient.inviteTicket({ purchaseTicketsId, email }));
+export async function inviteTicket(ticketsId: string, email: string): Promise<void> {
+  await callRpc(() => ticketClient.inviteTicket({ ticketsId, email }));
 }
 
 export async function claimTicket(token: string): Promise<void> {

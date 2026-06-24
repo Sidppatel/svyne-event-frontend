@@ -6,16 +6,16 @@ import { canManageTenantSettings } from '@/shared/roles';
 export function AdminLayout() {
   const { role } = useAuth();
   const links = [
-    { to: '/admin', label: 'Dashboard' },
-    { to: '/admin/events', label: 'Events' },
-    { to: '/admin/purchases', label: 'Purchases' },
-    { to: '/admin/catalog', label: 'Catalog' },
-    { to: '/admin/feedback', label: 'Feedback' },
-    { to: '/admin/logs', label: 'Logs' },
+    { to: '/', label: 'Dashboard' },
+    { to: '/events', label: 'Events' },
+    { to: '/bookings', label: 'Bookings' },
+    { to: '/catalog', label: 'Catalog' },
+    { to: '/feedback', label: 'Feedback' },
+    { to: '/logs', label: 'Logs' },
   ];
   if (canManageTenantSettings(role)) {
-    links.push({ to: '/admin/invitations', label: 'Invitations' });
-    links.push({ to: '/admin/financial', label: 'Financial' });
+    links.push({ to: '/invitations', label: 'Invitations' });
+    links.push({ to: '/financial', label: 'Financial' });
   }
 
   return (

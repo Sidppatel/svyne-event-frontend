@@ -69,7 +69,7 @@ Tenant + role + identity come from **JWT claims** (`tenants_id`, `role`, `tenant
 
 ## gRPC service map
 
-`apiClient.ts` exposes one client per backend service: auth, tenant, event, venue/performer/sponsor, tableBooking, purchase/ticket/checkIn, dashboard, financial, staff, invitation, log, feedback, health. Add new RPCs to the `.proto` in the backend repo, then `pnpm gen:proto`.
+`apiClient.ts` exposes one client per backend service: auth, tenant, event, venue/performer/sponsor, tableBooking, booking/ticket/checkIn, dashboard, financial, staff, invitation, log, feedback, health. Add new RPCs to the `.proto` in the backend repo, then `pnpm gen:proto`.
 
 ## Known backend gaps (frontend is wired and waiting)
 

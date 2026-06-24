@@ -7,11 +7,11 @@ export function centsToUSD(value: number | string): string {
 }
 
 export function formatEpoch(value: number | string): string {
-  const ms = typeof value === 'string' ? Number(value) : value;
-  if (!Number.isFinite(ms) || ms === 0) {
+  const seconds = typeof value === 'string' ? Number(value) : value;
+  if (!Number.isFinite(seconds) || seconds === 0) {
     return '—';
   }
-  return new Date(ms).toLocaleString();
+  return new Date(seconds * 1000).toLocaleString();
 }
 
 export function toEpochString(value: string): string {
@@ -19,5 +19,5 @@ export function toEpochString(value: string): string {
     return '0';
   }
   const ms = new Date(value).getTime();
-  return Number.isFinite(ms) ? String(ms) : '0';
+  return Number.isFinite(ms) ? String(Math.floor(ms / 1000)) : '0';
 }

@@ -15,6 +15,48 @@ import type { PartialMessage } from "@protobuf-ts/runtime";
 import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
 /**
+ * @generated from protobuf message svyne.auth.UpdateProfileRequest
+ */
+export interface UpdateProfileRequest {
+    /**
+     * @generated from protobuf field: string first_name = 1;
+     */
+    firstName: string;
+    /**
+     * @generated from protobuf field: string last_name = 2;
+     */
+    lastName: string;
+    /**
+     * @generated from protobuf field: string phone = 3;
+     */
+    phone: string;
+    /**
+     * @generated from protobuf field: string address_line = 4;
+     */
+    addressLine: string;
+    /**
+     * @generated from protobuf field: string city = 5;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string state = 6;
+     */
+    state: string;
+    /**
+     * @generated from protobuf field: string zip = 7;
+     */
+    zip: string;
+}
+/**
+ * @generated from protobuf message svyne.auth.SetAvatarRequest
+ */
+export interface SetAvatarRequest {
+    /**
+     * @generated from protobuf field: string images_id = 1;
+     */
+    imagesId: string;
+}
+/**
  * @generated from protobuf message svyne.auth.LoginRequest
  */
 export interface LoginRequest {
@@ -28,6 +70,31 @@ export interface LoginRequest {
     password: string;
     /**
      * @generated from protobuf field: string tenant_slug = 3;
+     */
+    tenantSlug: string;
+}
+/**
+ * @generated from protobuf message svyne.auth.SignUpRequest
+ */
+export interface SignUpRequest {
+    /**
+     * @generated from protobuf field: string email = 1;
+     */
+    email: string;
+    /**
+     * @generated from protobuf field: string password = 2;
+     */
+    password: string;
+    /**
+     * @generated from protobuf field: string first_name = 3;
+     */
+    firstName: string;
+    /**
+     * @generated from protobuf field: string last_name = 4;
+     */
+    lastName: string;
+    /**
+     * @generated from protobuf field: string tenant_slug = 5;
      */
     tenantSlug: string;
 }
@@ -171,7 +238,169 @@ export interface UserProfile {
      * @generated from protobuf field: string avatar_url = 9;
      */
     avatarUrl: string;
+    /**
+     * @generated from protobuf field: string phone = 10;
+     */
+    phone: string;
+    /**
+     * @generated from protobuf field: string address_line = 11;
+     */
+    addressLine: string;
+    /**
+     * @generated from protobuf field: string city = 12;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string state = 13;
+     */
+    state: string;
+    /**
+     * @generated from protobuf field: string zip = 14;
+     */
+    zip: string;
 }
+// @generated message type with reflection information, may provide speed optimized methods
+class UpdateProfileRequest$Type extends MessageType<UpdateProfileRequest> {
+    constructor() {
+        super("svyne.auth.UpdateProfileRequest", [
+            { no: 1, name: "first_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "last_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "phone", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "address_line", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<UpdateProfileRequest>): UpdateProfileRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.firstName = "";
+        message.lastName = "";
+        message.phone = "";
+        message.addressLine = "";
+        message.city = "";
+        message.state = "";
+        message.zip = "";
+        if (value !== undefined)
+            reflectionMergePartial<UpdateProfileRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpdateProfileRequest): UpdateProfileRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string first_name */ 1:
+                    message.firstName = reader.string();
+                    break;
+                case /* string last_name */ 2:
+                    message.lastName = reader.string();
+                    break;
+                case /* string phone */ 3:
+                    message.phone = reader.string();
+                    break;
+                case /* string address_line */ 4:
+                    message.addressLine = reader.string();
+                    break;
+                case /* string city */ 5:
+                    message.city = reader.string();
+                    break;
+                case /* string state */ 6:
+                    message.state = reader.string();
+                    break;
+                case /* string zip */ 7:
+                    message.zip = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: UpdateProfileRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string first_name = 1; */
+        if (message.firstName !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.firstName);
+        /* string last_name = 2; */
+        if (message.lastName !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.lastName);
+        /* string phone = 3; */
+        if (message.phone !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.phone);
+        /* string address_line = 4; */
+        if (message.addressLine !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.addressLine);
+        /* string city = 5; */
+        if (message.city !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.city);
+        /* string state = 6; */
+        if (message.state !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.state);
+        /* string zip = 7; */
+        if (message.zip !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.zip);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.auth.UpdateProfileRequest
+ */
+export const UpdateProfileRequest = new UpdateProfileRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SetAvatarRequest$Type extends MessageType<SetAvatarRequest> {
+    constructor() {
+        super("svyne.auth.SetAvatarRequest", [
+            { no: 1, name: "images_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<SetAvatarRequest>): SetAvatarRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.imagesId = "";
+        if (value !== undefined)
+            reflectionMergePartial<SetAvatarRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SetAvatarRequest): SetAvatarRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string images_id */ 1:
+                    message.imagesId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SetAvatarRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string images_id = 1; */
+        if (message.imagesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.imagesId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.auth.SetAvatarRequest
+ */
+export const SetAvatarRequest = new SetAvatarRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class LoginRequest$Type extends MessageType<LoginRequest> {
     constructor() {
@@ -235,6 +464,85 @@ class LoginRequest$Type extends MessageType<LoginRequest> {
  * @generated MessageType for protobuf message svyne.auth.LoginRequest
  */
 export const LoginRequest = new LoginRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SignUpRequest$Type extends MessageType<SignUpRequest> {
+    constructor() {
+        super("svyne.auth.SignUpRequest", [
+            { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "password", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "first_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "last_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<SignUpRequest>): SignUpRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.email = "";
+        message.password = "";
+        message.firstName = "";
+        message.lastName = "";
+        message.tenantSlug = "";
+        if (value !== undefined)
+            reflectionMergePartial<SignUpRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: SignUpRequest): SignUpRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string email */ 1:
+                    message.email = reader.string();
+                    break;
+                case /* string password */ 2:
+                    message.password = reader.string();
+                    break;
+                case /* string first_name */ 3:
+                    message.firstName = reader.string();
+                    break;
+                case /* string last_name */ 4:
+                    message.lastName = reader.string();
+                    break;
+                case /* string tenant_slug */ 5:
+                    message.tenantSlug = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: SignUpRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string email = 1; */
+        if (message.email !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.email);
+        /* string password = 2; */
+        if (message.password !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.password);
+        /* string first_name = 3; */
+        if (message.firstName !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.firstName);
+        /* string last_name = 4; */
+        if (message.lastName !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.lastName);
+        /* string tenant_slug = 5; */
+        if (message.tenantSlug !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.tenantSlug);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.auth.SignUpRequest
+ */
+export const SignUpRequest = new SignUpRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class GoogleSignInRequest$Type extends MessageType<GoogleSignInRequest> {
     constructor() {
@@ -678,7 +986,12 @@ class UserProfile$Type extends MessageType<UserProfile> {
             { no: 6, name: "role", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "email_verified", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 9, name: "avatar_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 9, name: "avatar_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "phone", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "address_line", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 12, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 13, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<UserProfile>): UserProfile {
@@ -692,6 +1005,11 @@ class UserProfile$Type extends MessageType<UserProfile> {
         message.tenantSlug = "";
         message.emailVerified = false;
         message.avatarUrl = "";
+        message.phone = "";
+        message.addressLine = "";
+        message.city = "";
+        message.state = "";
+        message.zip = "";
         if (value !== undefined)
             reflectionMergePartial<UserProfile>(this, message, value);
         return message;
@@ -727,6 +1045,21 @@ class UserProfile$Type extends MessageType<UserProfile> {
                     break;
                 case /* string avatar_url */ 9:
                     message.avatarUrl = reader.string();
+                    break;
+                case /* string phone */ 10:
+                    message.phone = reader.string();
+                    break;
+                case /* string address_line */ 11:
+                    message.addressLine = reader.string();
+                    break;
+                case /* string city */ 12:
+                    message.city = reader.string();
+                    break;
+                case /* string state */ 13:
+                    message.state = reader.string();
+                    break;
+                case /* string zip */ 14:
+                    message.zip = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -767,6 +1100,21 @@ class UserProfile$Type extends MessageType<UserProfile> {
         /* string avatar_url = 9; */
         if (message.avatarUrl !== "")
             writer.tag(9, WireType.LengthDelimited).string(message.avatarUrl);
+        /* string phone = 10; */
+        if (message.phone !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.phone);
+        /* string address_line = 11; */
+        if (message.addressLine !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.addressLine);
+        /* string city = 12; */
+        if (message.city !== "")
+            writer.tag(12, WireType.LengthDelimited).string(message.city);
+        /* string state = 13; */
+        if (message.state !== "")
+            writer.tag(13, WireType.LengthDelimited).string(message.state);
+        /* string zip = 14; */
+        if (message.zip !== "")
+            writer.tag(14, WireType.LengthDelimited).string(message.zip);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -782,6 +1130,7 @@ export const UserProfile = new UserProfile$Type();
  */
 export const AuthService = new ServiceType("svyne.auth.AuthService", [
     { name: "Login", options: {}, I: LoginRequest, O: AuthResponse },
+    { name: "SignUp", options: {}, I: SignUpRequest, O: AuthResponse },
     { name: "GoogleSignIn", options: {}, I: GoogleSignInRequest, O: AuthResponse },
     { name: "RefreshToken", options: {}, I: RefreshTokenRequest, O: AuthResponse },
     { name: "Logout", options: {}, I: LogoutRequest, O: AckResponse },
@@ -789,5 +1138,7 @@ export const AuthService = new ServiceType("svyne.auth.AuthService", [
     { name: "VerifyMagicLink", options: {}, I: MagicLinkVerifyRequest, O: AuthResponse },
     { name: "RequestPasswordReset", options: {}, I: PasswordResetRequest, O: AckResponse },
     { name: "SetPassword", options: {}, I: SetPasswordRequest, O: AckResponse },
-    { name: "Me", options: {}, I: Empty, O: UserProfile }
+    { name: "Me", options: {}, I: Empty, O: UserProfile },
+    { name: "UpdateProfile", options: {}, I: UpdateProfileRequest, O: UserProfile },
+    { name: "SetAvatar", options: {}, I: SetAvatarRequest, O: UserProfile }
 ]);

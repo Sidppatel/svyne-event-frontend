@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   loginWithPassword,
   loginWithGoogle,
+  signUp,
+  type SignUpInput,
   requestMagicLink,
   requestPasswordReset,
   setPassword,
@@ -47,6 +49,15 @@ export function useAuthFlow() {
     [run, navigate],
   );
 
+  const register = useCallback(
+    (input: SignUpInput) =>
+      run(async () => {
+        const auth = await signUp(input);
+        navigate(homePathForRole(auth.user?.role ?? 0));
+      }),
+    [run, navigate],
+  );
+
   const magicLink = useCallback(
     (email: string) =>
       run(async () => {
@@ -75,5 +86,5 @@ export function useAuthFlow() {
     [run, navigate],
   );
 
-  return { loading, error, notice, login, google, magicLink, forgotPassword, submitNewPassword };
+  return { loading, error, notice, login, google, register, magicLink, forgotPassword, submitNewPassword };
 }

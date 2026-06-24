@@ -1,12 +1,12 @@
-import { eventClient, purchaseClient, tableBookingClient } from '@/shared/apiClient';
+import { eventClient, bookingClient, tableBookingClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
 import type { Event } from '@/shared/proto/event';
-import type { Purchase } from '@/shared/proto/purchase';
+import type { Booking } from '@/shared/proto/bookings';
 import type { EventLayout } from '@/shared/proto/booking';
 
 export async function listPublicEvents(search: string): Promise<Event[]> {
   const response = await callRpc(() =>
-    eventClient.listEvents({ page: { offset: 0, limit: 50, search }, status: '', category: '' }),
+    eventClient.listEvents({ page: { offset: 0, limit: 50, search }, status: 'Published', category: '' }),
   );
   return response.events;
 }
@@ -15,11 +15,11 @@ export async function getEventBySlug(slug: string): Promise<Event> {
   return callRpc(() => eventClient.getEventBySlug({ slug }));
 }
 
-export async function listMyPurchases(): Promise<Purchase[]> {
+export async function listMyBookings(): Promise<Booking[]> {
   const response = await callRpc(() =>
-    purchaseClient.listPurchases({ page: { offset: 0, limit: 50, search: '' }, eventsId: '', status: '' }),
+    bookingClient.listBookings({ page: { offset: 0, limit: 50, search: '' }, eventsId: '', status: '' }),
   );
-  return response.purchases;
+  return response.bookings;
 }
 
 export interface ReserveSeatsInput {
@@ -30,7 +30,7 @@ export interface ReserveSeatsInput {
 
 export async function reserveOpenCapacity(input: ReserveSeatsInput): Promise<string> {
   const response = await callRpc(() =>
-    purchaseClient.reserveOpenCapacity({
+    bookingClient.reserveOpenCapacity({
       eventsId: input.eventsId,
       seats: input.seats,
       eventTicketTypesId: input.eventTicketTypesId,
@@ -39,22 +39,22 @@ export async function reserveOpenCapacity(input: ReserveSeatsInput): Promise<str
       totalCents: 0,
     }),
   );
-  return response.purchaseNumber;
+  return response.bookingNumber;
 }
 
 export async function getEventLayout(eventsId: string): Promise<EventLayout> {
   return callRpc(() => tableBookingClient.getEventLayout({ value: eventsId }));
 }
 
-export interface TablePurchaseInput {
+export interface TableBookingInput {
   eventsId: string;
   tablesId: string;
   seats: number;
 }
 
-export async function purchaseTable(input: TablePurchaseInput): Promise<string> {
+export async function bookingTable(input: TableBookingInput): Promise<string> {
   const response = await callRpc(() =>
-    purchaseClient.createPurchase({
+    bookingClient.createBooking({
       eventsId: input.eventsId,
       tablesId: input.tablesId,
       seats: input.seats,
@@ -64,5 +64,5 @@ export async function purchaseTable(input: TablePurchaseInput): Promise<string> 
       totalCents: 0,
     }),
   );
-  return response.purchaseNumber;
+  return response.bookingNumber;
 }

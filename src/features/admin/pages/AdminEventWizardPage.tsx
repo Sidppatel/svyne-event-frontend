@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createEvent, type EventDraft } from '@/features/admin/services/eventAdminService';
+import { listVenues } from '@/features/admin/services/catalogService';
+import type { Venue } from '@/shared/proto/catalog';
+import { listEnums, type EnumOption } from '@/shared/enums';
 import { toEpochString } from '@/shared/lib/format';
 import { rpcErrorMessage } from '@/shared/session';
 import { Button } from '@/shared/ui/button';
@@ -11,36 +14,71 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 export function AdminEventWizardPage() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('general');
+  const [categories, setCategories] = useState<EnumOption[]>([]);
+  const [category, setCategory] = useState('');
+  const [layouts, setLayouts] = useState<EnumOption[]>([]);
+  const [layoutMode, setLayoutMode] = useState('');
   const [start, setStart] = useState('');
   const [end, setEnd] = useState('');
   const [capacity, setCapacity] = useState(100);
+  const [venues, setVenues] = useState<Venue[]>([]);
+  const [venuesId, setVenuesId] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    listVenues()
+      .then((loaded) => {
+        setVenues(loaded);
+        if (loaded.length > 0) {
+          setVenuesId(loaded[0].venuesId);
+        }
+      })
+      .catch((caught) => setError(rpcErrorMessage(caught)));
+    listEnums('EventCategory')
+      .then((loaded) => {
+        setCategories(loaded);
+        if (loaded.length > 0) {
+          setCategory(loaded[0].value);
+        }
+      })
+      .catch((caught) => setError(rpcErrorMessage(caught)));
+    listEnums('LayoutMode')
+      .then((loaded) => {
+        setLayouts(loaded);
+        if (loaded.length > 0) {
+          setLayoutMode(loaded[0].value);
+        }
+      })
+      .catch((caught) => setError(rpcErrorMessage(caught)));
+  }, []);
+
   async function submit() {
+    if (!venuesId) {
+      setError('Select a venue first');
+      return;
+    }
     setSubmitting(true);
     setError(null);
     const draft: EventDraft = {
       title,
-      slug,
+      slug: '',
       description,
-      status: 'draft',
+      status: 'Draft',
       category,
       startDate: toEpochString(start),
       endDate: toEpochString(end),
       maxCapacity: capacity,
-      layoutMode: 'open',
-      venuesId: '',
+      layoutMode,
+      venuesId,
       gridRows: 0,
       gridCols: 0,
       imagePath: '',
     };
     try {
       const eventsId = await createEvent(draft);
-      navigate(`/admin/events/${eventsId}`);
+      navigate(`/events/${eventsId}`);
     } catch (caught) {
       setError(rpcErrorMessage(caught));
     } finally {
@@ -55,8 +93,49 @@ export function AdminEventWizardPage() {
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <Field label="Title" value={title} onChange={setTitle} />
-        <Field label="Slug" value={slug} onChange={setSlug} />
-        <Field label="Category" value={category} onChange={setCategory} />
+        <div className="space-y-1">
+          <Label>Category</Label>
+          <select
+            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {categories.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.value}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1">
+          <Label>Layout</Label>
+          <select
+            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            value={layoutMode}
+            onChange={(e) => setLayoutMode(e.target.value)}
+          >
+            {layouts.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.value === 'Grid' ? 'Table based' : option.value === 'Open' ? 'Open seating' : option.value}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="space-y-1">
+          <Label>Venue</Label>
+          <select
+            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            value={venuesId}
+            onChange={(e) => setVenuesId(e.target.value)}
+          >
+            {venues.length === 0 ? <option value="">No venues — create one first</option> : null}
+            {venues.map((venue) => (
+              <option key={venue.venuesId} value={venue.venuesId}>
+                {venue.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="space-y-1">
           <Label>Max capacity</Label>
           <Input type="number" value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} />
