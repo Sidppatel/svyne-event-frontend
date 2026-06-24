@@ -5,6 +5,7 @@ import type {
   CreateTenantResponse,
   TenantMember,
   TenantStripeStatus,
+  TenantStripeProfile,
 } from '@/shared/proto/tenant';
 import type { LogEntry, DeveloperDashboard } from '@/shared/proto/admin';
 
@@ -25,6 +26,56 @@ export async function archiveTenant(tenantsId: string): Promise<void> {
   await callRpc(() => tenantClient.archiveTenant({ value: tenantsId }));
 }
 
+export async function getTenant(tenantsId: string): Promise<Tenant> {
+  return callRpc(() => tenantClient.getTenant({ value: tenantsId }));
+}
+
+export interface UpdateTenantInput {
+  tenantsId: string;
+  name: string;
+  legalName: string;
+  countryCode: string;
+}
+
+export async function updateTenant(input: UpdateTenantInput): Promise<void> {
+  await callRpc(() =>
+    tenantClient.updateTenant({
+      tenantsId: input.tenantsId,
+      name: input.name,
+      legalName: input.legalName,
+      countryCode: input.countryCode,
+    }),
+  );
+}
+
+export async function getTenantStripeProfile(tenantsId: string): Promise<TenantStripeProfile> {
+  return callRpc(() => tenantClient.getTenantStripeProfile({ value: tenantsId }));
+}
+
+export interface StripeProfileInput {
+  tenantsId: string;
+  businessType: string;
+  businessName: string;
+  businessUrl: string;
+  productDescription: string;
+  mcc: string;
+  supportEmail: string;
+}
+
+export async function updateTenantStripeProfile(input: StripeProfileInput): Promise<void> {
+  await callRpc(() =>
+    tenantClient.updateTenantStripeProfile({
+      tenantsId: input.tenantsId,
+      businessType: input.businessType,
+      businessName: input.businessName,
+      businessUrl: input.businessUrl,
+      productDescription: input.productDescription,
+      mcc: input.mcc,
+      supportEmail: input.supportEmail,
+    }),
+  );
+}
+
 export async function listTenants(): Promise<Tenant[]> {
   const response = await callRpc(() => tenantClient.listTenants({ offset: 0, limit: 100, search: '' }));
   return response.tenants;
@@ -36,6 +87,13 @@ export interface NewTenantInput {
   adminEmail: string;
   adminFirstName: string;
   adminLastName: string;
+  legalName?: string;
+  countryCode?: string;
+  businessType?: string;
+  businessUrl?: string;
+  productDescription?: string;
+  mcc?: string;
+  supportEmail?: string;
 }
 
 export async function createTenant(input: NewTenantInput): Promise<CreateTenantResponse> {
@@ -46,8 +104,13 @@ export async function createTenant(input: NewTenantInput): Promise<CreateTenantR
       adminEmail: input.adminEmail,
       adminFirstName: input.adminFirstName,
       adminLastName: input.adminLastName,
-      legalName: input.name,
-      countryCode: 'US',
+      legalName: input.legalName || input.name,
+      countryCode: input.countryCode || 'US',
+      businessType: input.businessType ?? '',
+      businessUrl: input.businessUrl ?? '',
+      productDescription: input.productDescription ?? '',
+      mcc: input.mcc ?? '',
+      supportEmail: input.supportEmail ?? '',
     }),
   );
 }

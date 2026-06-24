@@ -18,6 +18,72 @@ import { reflectionMergePartial } from "@protobuf-ts/runtime";
 import { MessageType } from "@protobuf-ts/runtime";
 import { PageMeta } from "./common";
 /**
+ * @generated from protobuf message svyne.tenant.TenantStripeProfile
+ */
+export interface TenantStripeProfile {
+    /**
+     * @generated from protobuf field: bool has_account = 1;
+     */
+    hasAccount: boolean;
+    /**
+     * @generated from protobuf field: string business_type = 2;
+     */
+    businessType: string;
+    /**
+     * @generated from protobuf field: string business_name = 3;
+     */
+    businessName: string;
+    /**
+     * @generated from protobuf field: string business_url = 4;
+     */
+    businessUrl: string;
+    /**
+     * @generated from protobuf field: string product_description = 5;
+     */
+    productDescription: string;
+    /**
+     * @generated from protobuf field: string mcc = 6;
+     */
+    mcc: string;
+    /**
+     * @generated from protobuf field: string support_email = 7;
+     */
+    supportEmail: string;
+}
+/**
+ * @generated from protobuf message svyne.tenant.UpdateTenantStripeProfileRequest
+ */
+export interface UpdateTenantStripeProfileRequest {
+    /**
+     * @generated from protobuf field: string tenants_id = 1;
+     */
+    tenantsId: string;
+    /**
+     * @generated from protobuf field: string business_type = 2;
+     */
+    businessType: string;
+    /**
+     * @generated from protobuf field: string business_name = 3;
+     */
+    businessName: string;
+    /**
+     * @generated from protobuf field: string business_url = 4;
+     */
+    businessUrl: string;
+    /**
+     * @generated from protobuf field: string product_description = 5;
+     */
+    productDescription: string;
+    /**
+     * @generated from protobuf field: string mcc = 6;
+     */
+    mcc: string;
+    /**
+     * @generated from protobuf field: string support_email = 7;
+     */
+    supportEmail: string;
+}
+/**
  * @generated from protobuf message svyne.tenant.Tenant
  */
 export interface Tenant {
@@ -90,6 +156,29 @@ export interface CreateTenantRequest {
      * @generated from protobuf field: string country_code = 7;
      */
     countryCode: string;
+    /**
+     * Stripe Connect onboarding prefill (all optional). Used to pre-create the
+     * connected account so the Express onboarding form is pre-filled.
+     *
+     * @generated from protobuf field: string business_type = 8;
+     */
+    businessType: string; // "individual" | "company"
+    /**
+     * @generated from protobuf field: string business_url = 9;
+     */
+    businessUrl: string;
+    /**
+     * @generated from protobuf field: string product_description = 10;
+     */
+    productDescription: string;
+    /**
+     * @generated from protobuf field: string mcc = 11;
+     */
+    mcc: string; // 4-digit Stripe merchant category code
+    /**
+     * @generated from protobuf field: string support_email = 12;
+     */
+    supportEmail: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.CreateTenantResponse
@@ -220,6 +309,196 @@ export interface TenantStripeStatus {
     detailsSubmitted: boolean;
 }
 // @generated message type with reflection information, may provide speed optimized methods
+class TenantStripeProfile$Type extends MessageType<TenantStripeProfile> {
+    constructor() {
+        super("svyne.tenant.TenantStripeProfile", [
+            { no: 1, name: "has_account", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 2, name: "business_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "business_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "business_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "product_description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "mcc", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "support_email", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<TenantStripeProfile>): TenantStripeProfile {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.hasAccount = false;
+        message.businessType = "";
+        message.businessName = "";
+        message.businessUrl = "";
+        message.productDescription = "";
+        message.mcc = "";
+        message.supportEmail = "";
+        if (value !== undefined)
+            reflectionMergePartial<TenantStripeProfile>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TenantStripeProfile): TenantStripeProfile {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* bool has_account */ 1:
+                    message.hasAccount = reader.bool();
+                    break;
+                case /* string business_type */ 2:
+                    message.businessType = reader.string();
+                    break;
+                case /* string business_name */ 3:
+                    message.businessName = reader.string();
+                    break;
+                case /* string business_url */ 4:
+                    message.businessUrl = reader.string();
+                    break;
+                case /* string product_description */ 5:
+                    message.productDescription = reader.string();
+                    break;
+                case /* string mcc */ 6:
+                    message.mcc = reader.string();
+                    break;
+                case /* string support_email */ 7:
+                    message.supportEmail = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TenantStripeProfile, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* bool has_account = 1; */
+        if (message.hasAccount !== false)
+            writer.tag(1, WireType.Varint).bool(message.hasAccount);
+        /* string business_type = 2; */
+        if (message.businessType !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.businessType);
+        /* string business_name = 3; */
+        if (message.businessName !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.businessName);
+        /* string business_url = 4; */
+        if (message.businessUrl !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.businessUrl);
+        /* string product_description = 5; */
+        if (message.productDescription !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.productDescription);
+        /* string mcc = 6; */
+        if (message.mcc !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.mcc);
+        /* string support_email = 7; */
+        if (message.supportEmail !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.supportEmail);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.tenant.TenantStripeProfile
+ */
+export const TenantStripeProfile = new TenantStripeProfile$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class UpdateTenantStripeProfileRequest$Type extends MessageType<UpdateTenantStripeProfileRequest> {
+    constructor() {
+        super("svyne.tenant.UpdateTenantStripeProfileRequest", [
+            { no: 1, name: "tenants_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "business_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "business_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "business_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "product_description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "mcc", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "support_email", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<UpdateTenantStripeProfileRequest>): UpdateTenantStripeProfileRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.tenantsId = "";
+        message.businessType = "";
+        message.businessName = "";
+        message.businessUrl = "";
+        message.productDescription = "";
+        message.mcc = "";
+        message.supportEmail = "";
+        if (value !== undefined)
+            reflectionMergePartial<UpdateTenantStripeProfileRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpdateTenantStripeProfileRequest): UpdateTenantStripeProfileRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string tenants_id */ 1:
+                    message.tenantsId = reader.string();
+                    break;
+                case /* string business_type */ 2:
+                    message.businessType = reader.string();
+                    break;
+                case /* string business_name */ 3:
+                    message.businessName = reader.string();
+                    break;
+                case /* string business_url */ 4:
+                    message.businessUrl = reader.string();
+                    break;
+                case /* string product_description */ 5:
+                    message.productDescription = reader.string();
+                    break;
+                case /* string mcc */ 6:
+                    message.mcc = reader.string();
+                    break;
+                case /* string support_email */ 7:
+                    message.supportEmail = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: UpdateTenantStripeProfileRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string tenants_id = 1; */
+        if (message.tenantsId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.tenantsId);
+        /* string business_type = 2; */
+        if (message.businessType !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.businessType);
+        /* string business_name = 3; */
+        if (message.businessName !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.businessName);
+        /* string business_url = 4; */
+        if (message.businessUrl !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.businessUrl);
+        /* string product_description = 5; */
+        if (message.productDescription !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.productDescription);
+        /* string mcc = 6; */
+        if (message.mcc !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.mcc);
+        /* string support_email = 7; */
+        if (message.supportEmail !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.supportEmail);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.tenant.UpdateTenantStripeProfileRequest
+ */
+export const UpdateTenantStripeProfileRequest = new UpdateTenantStripeProfileRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Tenant$Type extends MessageType<Tenant> {
     constructor() {
         super("svyne.tenant.Tenant", [
@@ -340,7 +619,12 @@ class CreateTenantRequest$Type extends MessageType<CreateTenantRequest> {
             { no: 4, name: "admin_first_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "admin_last_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "legal_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 7, name: "country_code", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 7, name: "country_code", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "business_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "business_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "product_description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "mcc", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 12, name: "support_email", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<CreateTenantRequest>): CreateTenantRequest {
@@ -352,6 +636,11 @@ class CreateTenantRequest$Type extends MessageType<CreateTenantRequest> {
         message.adminLastName = "";
         message.legalName = "";
         message.countryCode = "";
+        message.businessType = "";
+        message.businessUrl = "";
+        message.productDescription = "";
+        message.mcc = "";
+        message.supportEmail = "";
         if (value !== undefined)
             reflectionMergePartial<CreateTenantRequest>(this, message, value);
         return message;
@@ -381,6 +670,21 @@ class CreateTenantRequest$Type extends MessageType<CreateTenantRequest> {
                     break;
                 case /* string country_code */ 7:
                     message.countryCode = reader.string();
+                    break;
+                case /* string business_type */ 8:
+                    message.businessType = reader.string();
+                    break;
+                case /* string business_url */ 9:
+                    message.businessUrl = reader.string();
+                    break;
+                case /* string product_description */ 10:
+                    message.productDescription = reader.string();
+                    break;
+                case /* string mcc */ 11:
+                    message.mcc = reader.string();
+                    break;
+                case /* string support_email */ 12:
+                    message.supportEmail = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -415,6 +719,21 @@ class CreateTenantRequest$Type extends MessageType<CreateTenantRequest> {
         /* string country_code = 7; */
         if (message.countryCode !== "")
             writer.tag(7, WireType.LengthDelimited).string(message.countryCode);
+        /* string business_type = 8; */
+        if (message.businessType !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.businessType);
+        /* string business_url = 9; */
+        if (message.businessUrl !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.businessUrl);
+        /* string product_description = 10; */
+        if (message.productDescription !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.productDescription);
+        /* string mcc = 11; */
+        if (message.mcc !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.mcc);
+        /* string support_email = 12; */
+        if (message.supportEmail !== "")
+            writer.tag(12, WireType.LengthDelimited).string(message.supportEmail);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -923,5 +1242,7 @@ export const TenantService = new ServiceType("svyne.tenant.TenantService", [
     { name: "ListTenants", options: {}, I: PageRequest, O: ListTenantsResponse },
     { name: "ListPublicTenants", options: {}, I: Empty, O: ListPublicTenantsResponse },
     { name: "ListTenantMembers", options: {}, I: UuidValue, O: ListTenantMembersResponse },
-    { name: "GetTenantStripeStatus", options: {}, I: UuidValue, O: TenantStripeStatus }
+    { name: "GetTenantStripeStatus", options: {}, I: UuidValue, O: TenantStripeStatus },
+    { name: "GetTenantStripeProfile", options: {}, I: UuidValue, O: TenantStripeProfile },
+    { name: "UpdateTenantStripeProfile", options: {}, I: UpdateTenantStripeProfileRequest, O: AckResponse }
 ]);

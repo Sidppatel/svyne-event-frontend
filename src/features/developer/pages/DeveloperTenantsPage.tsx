@@ -8,7 +8,20 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-const EMPTY_FORM = { slug: '', name: '', adminEmail: '', adminFirstName: '', adminLastName: '' };
+const EMPTY_FORM = {
+  slug: '',
+  name: '',
+  adminEmail: '',
+  adminFirstName: '',
+  adminLastName: '',
+  legalName: '',
+  countryCode: 'US',
+  businessType: 'individual',
+  businessUrl: '',
+  productDescription: '',
+  mcc: '',
+  supportEmail: '',
+};
 
 export function DeveloperTenantsPage() {
   const loader = useCallback(() => listTenants(), []);
@@ -58,6 +71,44 @@ export function DeveloperTenantsPage() {
               />
             </div>
           ))}
+          <div className="md:col-span-2 mt-2 border-t pt-3">
+            <p className="text-sm font-medium text-gray-700">Stripe onboarding prefill (optional)</p>
+            <p className="text-xs text-gray-500">Pre-fills the seller's Stripe Express onboarding form.</p>
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="businessType">Business type</Label>
+            <select
+              id="businessType"
+              className="h-9 w-full rounded-md border border-gray-300 px-2 text-sm"
+              value={form.businessType}
+              onChange={(e) => setForm((prev) => ({ ...prev, businessType: e.target.value }))}
+            >
+              <option value="individual">Individual / sole proprietorship</option>
+              <option value="company">Company</option>
+            </select>
+          </div>
+
+          {(
+            [
+              ['countryCode', 'Country code (e.g. US)'],
+              ['legalName', 'Legal / business name'],
+              ['businessUrl', 'Business website URL'],
+              ['mcc', 'Industry MCC (4-digit code)'],
+              ['supportEmail', 'Support email'],
+              ['productDescription', 'Product description'],
+            ] as const
+          ).map(([key, label]) => (
+            <div key={key} className="space-y-1">
+              <Label htmlFor={key}>{label}</Label>
+              <Input
+                id={key}
+                value={form[key]}
+                onChange={(e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))}
+              />
+            </div>
+          ))}
+
           {formError ? <p className="text-sm text-red-600 md:col-span-2">{formError}</p> : null}
           <div className="md:col-span-2">
             <Button onClick={submit} disabled={submitting}>

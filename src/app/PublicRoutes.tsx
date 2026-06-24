@@ -10,6 +10,7 @@ import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
 import { MyBookingsPage } from '@/features/public/pages/MyBookingsPage';
 import { ProfilePage } from '@/features/public/pages/ProfilePage';
 import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
+import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
 import { ClaimTicketPage } from '@/features/public/pages/ClaimTicketPage';
 import { FeedbackPage } from '@/features/public/pages/FeedbackPage';
 
@@ -34,6 +35,14 @@ export default function PublicRoutes() {
           element={
             <ProtectedRoute allow={authenticated}>
               <BookingDetailPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="checkout/:bookingsId"
+          element={
+            <ProtectedRoute allow={authenticated}>
+              <CheckoutPage />
             </ProtectedRoute>
           }
         />

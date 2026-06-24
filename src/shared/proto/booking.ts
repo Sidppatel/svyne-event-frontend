@@ -50,6 +50,14 @@ export interface Table {
      * @generated from protobuf field: string status = 8;
      */
     status: string;
+    /**
+     * @generated from protobuf field: int32 price_cents = 9;
+     */
+    priceCents: number;
+    /**
+     * @generated from protobuf field: int32 platform_fee_cents = 10;
+     */
+    platformFeeCents: number;
 }
 /**
  * @generated from protobuf message svyne.booking.EventLayout
@@ -196,7 +204,9 @@ class Table$Type extends MessageType<Table> {
             { no: 5, name: "grid_col", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 8, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 8, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 10, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<Table>): Table {
@@ -209,6 +219,8 @@ class Table$Type extends MessageType<Table> {
         message.rowSpan = 0;
         message.colSpan = 0;
         message.status = "";
+        message.priceCents = 0;
+        message.platformFeeCents = 0;
         if (value !== undefined)
             reflectionMergePartial<Table>(this, message, value);
         return message;
@@ -241,6 +253,12 @@ class Table$Type extends MessageType<Table> {
                     break;
                 case /* string status */ 8:
                     message.status = reader.string();
+                    break;
+                case /* int32 price_cents */ 9:
+                    message.priceCents = reader.int32();
+                    break;
+                case /* int32 platform_fee_cents */ 10:
+                    message.platformFeeCents = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -278,6 +296,12 @@ class Table$Type extends MessageType<Table> {
         /* string status = 8; */
         if (message.status !== "")
             writer.tag(8, WireType.LengthDelimited).string(message.status);
+        /* int32 price_cents = 9; */
+        if (message.priceCents !== 0)
+            writer.tag(9, WireType.Varint).int32(message.priceCents);
+        /* int32 platform_fee_cents = 10; */
+        if (message.platformFeeCents !== 0)
+            writer.tag(10, WireType.Varint).int32(message.platformFeeCents);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

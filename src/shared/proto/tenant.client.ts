@@ -5,6 +5,8 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { TenantService } from "./tenant";
+import type { UpdateTenantStripeProfileRequest } from "./tenant";
+import type { TenantStripeProfile } from "./tenant";
 import type { TenantStripeStatus } from "./tenant";
 import type { ListTenantMembersResponse } from "./tenant";
 import type { ListPublicTenantsResponse } from "./tenant";
@@ -56,6 +58,14 @@ export interface ITenantServiceClient {
      * @generated from protobuf rpc: GetTenantStripeStatus(svyne.common.UuidValue) returns (svyne.tenant.TenantStripeStatus);
      */
     getTenantStripeStatus(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, TenantStripeStatus>;
+    /**
+     * @generated from protobuf rpc: GetTenantStripeProfile(svyne.common.UuidValue) returns (svyne.tenant.TenantStripeProfile);
+     */
+    getTenantStripeProfile(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, TenantStripeProfile>;
+    /**
+     * @generated from protobuf rpc: UpdateTenantStripeProfile(svyne.tenant.UpdateTenantStripeProfileRequest) returns (svyne.common.AckResponse);
+     */
+    updateTenantStripeProfile(input: UpdateTenantStripeProfileRequest, options?: RpcOptions): UnaryCall<UpdateTenantStripeProfileRequest, AckResponse>;
 }
 /**
  * @generated from protobuf service svyne.tenant.TenantService
@@ -121,5 +131,19 @@ export class TenantServiceClient implements ITenantServiceClient, ServiceInfo {
     getTenantStripeStatus(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, TenantStripeStatus> {
         const method = this.methods[7], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, TenantStripeStatus>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetTenantStripeProfile(svyne.common.UuidValue) returns (svyne.tenant.TenantStripeProfile);
+     */
+    getTenantStripeProfile(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, TenantStripeProfile> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UuidValue, TenantStripeProfile>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: UpdateTenantStripeProfile(svyne.tenant.UpdateTenantStripeProfileRequest) returns (svyne.common.AckResponse);
+     */
+    updateTenantStripeProfile(input: UpdateTenantStripeProfileRequest, options?: RpcOptions): UnaryCall<UpdateTenantStripeProfileRequest, AckResponse> {
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UpdateTenantStripeProfileRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
 }

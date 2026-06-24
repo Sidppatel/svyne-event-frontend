@@ -2,3 +2,5 @@ verifyDepsBeforeRun: false
 strictDepBuilds: false
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
+allowBuilds:
+  '@tailwindcss/oxide': set this to true or false
