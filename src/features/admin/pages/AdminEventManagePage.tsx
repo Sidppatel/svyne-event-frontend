@@ -7,10 +7,12 @@ import {
   changeEventStatus,
   updateEvent,
   createTicketType,
+  listTicketTypes,
   listEventTables,
   createEventTable,
   deleteEventTable,
 } from '@/features/admin/services/eventAdminService';
+import { listFeeFormulas, previewFee } from '@/features/developer/services/developerFeeService';
 import { ImageUpload } from '@/shared/components/ImageUpload';
 import type { Event } from '@/shared/proto/event';
 import {
@@ -20,6 +22,7 @@ import {
 } from '@/features/admin/services/staffAdminService';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD } from '@/shared/lib/format';
+import { addCents } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -30,17 +33,27 @@ export function AdminEventManagePage() {
   const eventLoader = useCallback(() => getEvent(eventsId), [eventsId]);
   const statsLoader = useCallback(() => getEventStats(eventsId), [eventsId]);
   const tablesLoader = useCallback(() => listEventTables(eventsId), [eventsId]);
+  const ticketTypesLoader = useCallback(() => listTicketTypes(eventsId), [eventsId]);
   const staffLoader = useCallback(() => listStaffForEvent(eventsId), [eventsId]);
+  const formulasLoader = useCallback(() => listFeeFormulas(), []);
 
   const event = useAsync(eventLoader);
   const stats = useAsync(statsLoader);
   const tables = useAsync(tablesLoader);
+  const ticketTypes = useAsync(ticketTypesLoader);
   const staff = useAsync(staffLoader);
+  const formulas = useAsync(formulasLoader);
+
+  const formulaList = formulas.data ?? [];
+  const formulaById = new Map(formulaList.map((f) => [f.feeFormulasId, f]));
 
   const [ticketLabel, setTicketLabel] = useState('');
   const [ticketPriceCents, setTicketPriceCents] = useState(0);
+  const [ticketFormulaId, setTicketFormulaId] = useState('');
   const [tableLabel, setTableLabel] = useState('');
   const [tableCapacity, setTableCapacity] = useState(8);
+  const [tablePriceCents, setTablePriceCents] = useState(0);
+  const [tableFormulaId, setTableFormulaId] = useState('');
   const [assignUserId, setAssignUserId] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -94,33 +107,69 @@ export function AdminEventManagePage() {
         <CardHeader>
           <CardTitle>Ticket types</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap items-end gap-3">
-          <div className="space-y-1">
-            <Label>Label</Label>
-            <Input value={ticketLabel} onChange={(e) => setTicketLabel(e.target.value)} />
+        <CardContent className="space-y-3">
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="space-y-1">
+              <Label>Label</Label>
+              <Input value={ticketLabel} onChange={(e) => setTicketLabel(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>Price (cents)</Label>
+              <Input type="number" value={ticketPriceCents} onChange={(e) => setTicketPriceCents(Number(e.target.value))} />
+            </div>
+            <div className="space-y-1">
+              <Label>Service fee</Label>
+              <select
+                className="h-9 rounded-md border border-gray-300 px-2 text-sm"
+                value={ticketFormulaId}
+                onChange={(e) => setTicketFormulaId(e.target.value)}
+              >
+                <option value="">— none —</option>
+                {formulaList.map((f) => (
+                  <option key={f.feeFormulasId} value={f.feeFormulasId}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {/* Fee is developer-controlled; tenant only sees the resolved amount. */}
+            <p className="text-sm text-gray-600">
+              Fee {centsToUSD(previewFee(ticketPriceCents, formulaById.get(ticketFormulaId)))} · Buyer pays{' '}
+              {centsToUSD(addCents(ticketPriceCents, previewFee(ticketPriceCents, formulaById.get(ticketFormulaId))))}
+            </p>
+            <Button
+              size="sm"
+              onClick={() =>
+                guard(() =>
+                  createTicketType({
+                    eventsId,
+                    label: ticketLabel,
+                    priceCents: ticketPriceCents,
+                    feeFormulasId: ticketFormulaId,
+                    maxQuantity: 0,
+                    sortOrder: 0,
+                    description: '',
+                  }).then(() => {
+                    setTicketLabel('');
+                    ticketTypes.reload();
+                  }),
+                )
+              }
+            >
+              Add ticket type
+            </Button>
           </div>
+
           <div className="space-y-1">
-            <Label>Price (cents)</Label>
-            <Input type="number" value={ticketPriceCents} onChange={(e) => setTicketPriceCents(Number(e.target.value))} />
+            {(ticketTypes.data ?? []).map((tt) => (
+              <div key={tt.eventTicketTypesId} className="flex items-center justify-between border-b py-1 text-sm">
+                <span>{tt.label}</span>
+                <span className="text-gray-600">
+                  {centsToUSD(tt.priceCents)} + fee {centsToUSD(tt.platformFeeCents)} = {centsToUSD(addCents(tt.priceCents, tt.platformFeeCents))}
+                </span>
+              </div>
+            ))}
           </div>
-          <Button
-            size="sm"
-            onClick={() =>
-              guard(() =>
-                createTicketType({
-                  eventsId,
-                  label: ticketLabel,
-                  priceCents: ticketPriceCents,
-                  platformFeeCents: 0,
-                  maxQuantity: 0,
-                  sortOrder: 0,
-                  description: '',
-                }).then(() => setTicketLabel('')),
-              )
-            }
-          >
-            Add ticket type
-          </Button>
         </CardContent>
       </Card>
 
@@ -138,6 +187,29 @@ export function AdminEventManagePage() {
               <Label>Capacity</Label>
               <Input type="number" value={tableCapacity} onChange={(e) => setTableCapacity(Number(e.target.value))} />
             </div>
+            <div className="space-y-1">
+              <Label>Price (cents)</Label>
+              <Input type="number" value={tablePriceCents} onChange={(e) => setTablePriceCents(Number(e.target.value))} />
+            </div>
+            <div className="space-y-1">
+              <Label>Service fee</Label>
+              <select
+                className="h-9 rounded-md border border-gray-300 px-2 text-sm"
+                value={tableFormulaId}
+                onChange={(e) => setTableFormulaId(e.target.value)}
+              >
+                <option value="">— none —</option>
+                {formulaList.map((f) => (
+                  <option key={f.feeFormulasId} value={f.feeFormulasId}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="text-sm text-gray-600">
+              Fee {centsToUSD(previewFee(tablePriceCents, formulaById.get(tableFormulaId)))} · Buyer pays{' '}
+              {centsToUSD(addCents(tablePriceCents, previewFee(tablePriceCents, formulaById.get(tableFormulaId))))}
+            </p>
             <Button
               size="sm"
               onClick={() =>
@@ -149,8 +221,8 @@ export function AdminEventManagePage() {
                       capacity: tableCapacity,
                       shape: 'Round',
                       color: '#888888',
-                      priceCents: 0,
-                      platformFeeCents: 0,
+                      priceCents: tablePriceCents,
+                      feeFormulasId: tableFormulaId,
                     }).then(() => setTableLabel('')),
                   tables.reload,
                 )

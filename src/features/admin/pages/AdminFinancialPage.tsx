@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   getStripeStatus,
   startStripeOnboarding,
@@ -21,6 +22,8 @@ export function AdminFinancialPage() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [error, setError] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const stripeReturn = searchParams.get('stripe');
 
   async function guard(action: () => Promise<void>) {
     setError(null);
@@ -30,6 +33,28 @@ export function AdminFinancialPage() {
       setError(rpcErrorMessage(caught));
     }
   }
+
+  // Stripe Connect onboarding redirects back here with ?stripe=return|refresh.
+  // Auto-load the latest account status so the admin sees the result immediately.
+  useEffect(() => {
+    if (!stripeReturn || !tenantsId) {
+      return;
+    }
+    
+    const fetchStatus = async () => {
+      try {
+        setStripe(await getStripeStatus(tenantsId));
+      } catch (caught) {
+        setError(rpcErrorMessage(caught));
+      }
+    };
+    
+    fetchStatus();
+    
+    searchParams.delete('stripe');
+    setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stripeReturn, tenantsId]);
 
   return (
     <div className="space-y-4">

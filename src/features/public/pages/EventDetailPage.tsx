@@ -10,12 +10,13 @@ import {
 import type { EventTicketType } from '@/shared/proto/bookings';
 import type { Table } from '@/shared/proto/booking';
 import { rpcErrorMessage } from '@/shared/session';
+import { centsToUSD } from '@/shared/lib/format';
+import { addCents, multiplySeats } from '@/shared/lib/math';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-const money = (cents: number) => `$${(cents / 100).toFixed(2)}`;
 
 export function EventDetailPage() {
   const { slug = '' } = useParams();
@@ -89,9 +90,9 @@ function OpenCapacityPanel({ eventsId, busy, error, onReserve }: PanelProps) {
     () => ticketTypes?.find((t) => t.eventTicketTypesId === selectedId),
     [ticketTypes, selectedId],
   );
-  const subtotal = (selected?.priceCents ?? 0) * seats;
-  const fee = (selected?.platformFeeCents ?? 0) * seats;
-  const total = subtotal + fee;
+  const subtotal = multiplySeats(selected?.priceCents ?? 0, seats);
+  const fee = multiplySeats(selected?.platformFeeCents ?? 0, seats);
+  const total = addCents(subtotal, fee);
 
   return (
     <Card>
@@ -118,7 +119,12 @@ function OpenCapacityPanel({ eventsId, busy, error, onReserve }: PanelProps) {
                 <span className="font-medium">{tt.label}</span>
                 {tt.description ? <span className="block text-xs text-gray-500">{tt.description}</span> : null}
               </span>
-              <span className="font-medium">{money(tt.priceCents + tt.platformFeeCents)}</span>
+              <span className="text-right">
+                <span className="block font-medium">{centsToUSD(tt.priceCents)}</span>
+                {tt.platformFeeCents > 0 ? (
+                  <span className="block text-xs text-gray-500">+ {centsToUSD(tt.platformFeeCents)} service fee</span>
+                ) : null}
+              </span>
             </button>
           ))}
         </div>
@@ -135,7 +141,13 @@ function OpenCapacityPanel({ eventsId, busy, error, onReserve }: PanelProps) {
           />
         </div>
 
-        {selected ? <p className="text-sm text-gray-700">Total: {money(total)}</p> : null}
+        {selected ? (
+          <div className="space-y-0.5 text-sm text-gray-700">
+            <div className="flex justify-between"><span>Ticket price</span><span>{centsToUSD(subtotal)}</span></div>
+            <div className="flex justify-between"><span>Service fee</span><span>{centsToUSD(fee)}</span></div>
+            <div className="flex justify-between font-medium"><span>Total</span><span>{centsToUSD(total)}</span></div>
+          </div>
+        ) : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         <Button
@@ -171,7 +183,7 @@ function TablePanel({ eventsId, busy, error, onReserve }: PanelProps) {
   );
   const subtotal = selected?.priceCents ?? 0;
   const fee = selected?.platformFeeCents ?? 0;
-  const total = subtotal + fee;
+  const total = addCents(subtotal, fee);
 
   return (
     <Card>
@@ -188,7 +200,8 @@ function TablePanel({ eventsId, busy, error, onReserve }: PanelProps) {
               disabled={table.status !== 'Available'}
               onClick={() => setTableId(table.tablesId)}
             >
-              {table.label} · {money(table.priceCents + table.platformFeeCents)}
+              {table.label} · {centsToUSD(table.priceCents)}
+              {table.platformFeeCents > 0 ? ` + ${centsToUSD(table.platformFeeCents)} fee` : ''}
             </Button>
           ))}
           {loading ? <p className="text-sm text-gray-500">Loading tables…</p> : null}
@@ -197,7 +210,13 @@ function TablePanel({ eventsId, busy, error, onReserve }: PanelProps) {
           ) : null}
         </div>
 
-        {selected ? <p className="text-sm text-gray-700">Total: {money(total)}</p> : null}
+        {selected ? (
+          <div className="space-y-0.5 text-sm text-gray-700">
+            <div className="flex justify-between"><span>Table price</span><span>{centsToUSD(subtotal)}</span></div>
+            <div className="flex justify-between"><span>Service fee</span><span>{centsToUSD(fee)}</span></div>
+            <div className="flex justify-between font-medium"><span>Total</span><span>{centsToUSD(total)}</span></div>
+          </div>
+        ) : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         <Button

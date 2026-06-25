@@ -1,23 +1,50 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/shared/auth/store';
 
-function Shell({ title, message }: { title: string; message: string }) {
+function Shell({
+  title,
+  message,
+  children,
+}: {
+  title: string;
+  message: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div className="mx-auto mt-24 max-w-md text-center">
       <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
       <p className="mt-2 text-gray-600">{message}</p>
-      <Link to="/" className="mt-4 inline-block text-indigo-600">
-        Go home
-      </Link>
+      <div className="mt-4 flex justify-center gap-4">
+        <Link to="/" className="text-indigo-600">
+          Go home
+        </Link>
+        {children}
+      </div>
     </div>
   );
 }
 
 export function NotAuthorizedPage() {
+  const navigate = useNavigate();
+  const clear = useAuthStore((state) => state.clear);
+
+  // The signed-in account's role can't access this portal (e.g. an admin
+  // landing on the developer portal). Offer a clean way to sign in as a
+  // different user instead of dead-ending here.
+  function switchAccount() {
+    clear();
+    navigate('/login', { replace: true });
+  }
+
   return (
     <Shell
       title="Not authorized"
       message="Your account does not have access to this area, or it belongs to a different tenant."
-    />
+    >
+      <button type="button" onClick={switchAccount} className="text-indigo-600">
+        Sign in as a different user
+      </button>
+    </Shell>
   );
 }
 

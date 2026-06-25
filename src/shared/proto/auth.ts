@@ -72,6 +72,13 @@ export interface LoginRequest {
      * @generated from protobuf field: string tenant_slug = 3;
      */
     tenantSlug: string;
+    /**
+     * Portal the login originates from: "public" | "admin" | "staff" | "developer".
+     * Login is rejected if the account's role is not allowed in that portal.
+     *
+     * @generated from protobuf field: string portal = 4;
+     */
+    portal: string;
 }
 /**
  * @generated from protobuf message svyne.auth.SignUpRequest
@@ -110,6 +117,12 @@ export interface GoogleSignInRequest {
      * @generated from protobuf field: string tenant_slug = 2;
      */
     tenantSlug: string;
+    /**
+     * See LoginRequest.portal.
+     *
+     * @generated from protobuf field: string portal = 3;
+     */
+    portal: string;
 }
 /**
  * @generated from protobuf message svyne.auth.RefreshTokenRequest
@@ -163,6 +176,13 @@ export interface PasswordResetRequest {
      * @generated from protobuf field: string tenant_slug = 2;
      */
     tenantSlug: string;
+    /**
+     * Origin of the portal the request came from (e.g. http://admin.localhost:5173).
+     * The reset link is built on this host so it returns to the same portal.
+     *
+     * @generated from protobuf field: string origin = 3;
+     */
+    origin: string;
 }
 /**
  * @generated from protobuf message svyne.auth.SetPasswordRequest
@@ -407,7 +427,8 @@ class LoginRequest$Type extends MessageType<LoginRequest> {
         super("svyne.auth.LoginRequest", [
             { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "password", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 3, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "portal", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<LoginRequest>): LoginRequest {
@@ -415,6 +436,7 @@ class LoginRequest$Type extends MessageType<LoginRequest> {
         message.email = "";
         message.password = "";
         message.tenantSlug = "";
+        message.portal = "";
         if (value !== undefined)
             reflectionMergePartial<LoginRequest>(this, message, value);
         return message;
@@ -432,6 +454,9 @@ class LoginRequest$Type extends MessageType<LoginRequest> {
                     break;
                 case /* string tenant_slug */ 3:
                     message.tenantSlug = reader.string();
+                    break;
+                case /* string portal */ 4:
+                    message.portal = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -454,6 +479,9 @@ class LoginRequest$Type extends MessageType<LoginRequest> {
         /* string tenant_slug = 3; */
         if (message.tenantSlug !== "")
             writer.tag(3, WireType.LengthDelimited).string(message.tenantSlug);
+        /* string portal = 4; */
+        if (message.portal !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.portal);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -548,13 +576,15 @@ class GoogleSignInRequest$Type extends MessageType<GoogleSignInRequest> {
     constructor() {
         super("svyne.auth.GoogleSignInRequest", [
             { no: 1, name: "google_token", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "portal", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<GoogleSignInRequest>): GoogleSignInRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.googleToken = "";
         message.tenantSlug = "";
+        message.portal = "";
         if (value !== undefined)
             reflectionMergePartial<GoogleSignInRequest>(this, message, value);
         return message;
@@ -569,6 +599,9 @@ class GoogleSignInRequest$Type extends MessageType<GoogleSignInRequest> {
                     break;
                 case /* string tenant_slug */ 2:
                     message.tenantSlug = reader.string();
+                    break;
+                case /* string portal */ 3:
+                    message.portal = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -588,6 +621,9 @@ class GoogleSignInRequest$Type extends MessageType<GoogleSignInRequest> {
         /* string tenant_slug = 2; */
         if (message.tenantSlug !== "")
             writer.tag(2, WireType.LengthDelimited).string(message.tenantSlug);
+        /* string portal = 3; */
+        if (message.portal !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.portal);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -799,13 +835,15 @@ class PasswordResetRequest$Type extends MessageType<PasswordResetRequest> {
     constructor() {
         super("svyne.auth.PasswordResetRequest", [
             { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "tenant_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "origin", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<PasswordResetRequest>): PasswordResetRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.email = "";
         message.tenantSlug = "";
+        message.origin = "";
         if (value !== undefined)
             reflectionMergePartial<PasswordResetRequest>(this, message, value);
         return message;
@@ -820,6 +858,9 @@ class PasswordResetRequest$Type extends MessageType<PasswordResetRequest> {
                     break;
                 case /* string tenant_slug */ 2:
                     message.tenantSlug = reader.string();
+                    break;
+                case /* string origin */ 3:
+                    message.origin = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -839,6 +880,9 @@ class PasswordResetRequest$Type extends MessageType<PasswordResetRequest> {
         /* string tenant_slug = 2; */
         if (message.tenantSlug !== "")
             writer.tag(2, WireType.LengthDelimited).string(message.tenantSlug);
+        /* string origin = 3; */
+        if (message.origin !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.origin);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

@@ -58,6 +58,10 @@ export interface Table {
      * @generated from protobuf field: int32 platform_fee_cents = 10;
      */
     platformFeeCents: number;
+    /**
+     * @generated from protobuf field: string fee_formulas_id = 11;
+     */
+    feeFormulasId: string;
 }
 /**
  * @generated from protobuf message svyne.booking.EventLayout
@@ -152,9 +156,9 @@ export interface CreateEventTableRequest {
      */
     priceCents: number;
     /**
-     * @generated from protobuf field: int32 platform_fee_cents = 7;
+     * @generated from protobuf field: string fee_formulas_id = 7;
      */
-    platformFeeCents: number;
+    feeFormulasId: string;
     /**
      * @generated from protobuf field: string table_templates_id = 8;
      */
@@ -177,9 +181,9 @@ export interface CreateEventTicketTypeRequest {
      */
     priceCents: number;
     /**
-     * @generated from protobuf field: int32 platform_fee_cents = 4;
+     * @generated from protobuf field: string fee_formulas_id = 4;
      */
-    platformFeeCents: number;
+    feeFormulasId: string;
     /**
      * @generated from protobuf field: int32 max_quantity = 5;
      */
@@ -206,7 +210,8 @@ class Table$Type extends MessageType<Table> {
             { no: 7, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 8, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 9, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 10, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 10, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 11, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Table>): Table {
@@ -221,6 +226,7 @@ class Table$Type extends MessageType<Table> {
         message.status = "";
         message.priceCents = 0;
         message.platformFeeCents = 0;
+        message.feeFormulasId = "";
         if (value !== undefined)
             reflectionMergePartial<Table>(this, message, value);
         return message;
@@ -259,6 +265,9 @@ class Table$Type extends MessageType<Table> {
                     break;
                 case /* int32 platform_fee_cents */ 10:
                     message.platformFeeCents = reader.int32();
+                    break;
+                case /* string fee_formulas_id */ 11:
+                    message.feeFormulasId = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -302,6 +311,9 @@ class Table$Type extends MessageType<Table> {
         /* int32 platform_fee_cents = 10; */
         if (message.platformFeeCents !== 0)
             writer.tag(10, WireType.Varint).int32(message.platformFeeCents);
+        /* string fee_formulas_id = 11; */
+        if (message.feeFormulasId !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.feeFormulasId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -566,7 +578,7 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
             { no: 4, name: "shape", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 7, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 7, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "table_templates_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
@@ -578,7 +590,7 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
         message.shape = "";
         message.color = "";
         message.priceCents = 0;
-        message.platformFeeCents = 0;
+        message.feeFormulasId = "";
         message.tableTemplatesId = "";
         if (value !== undefined)
             reflectionMergePartial<CreateEventTableRequest>(this, message, value);
@@ -607,8 +619,8 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
                 case /* int32 price_cents */ 6:
                     message.priceCents = reader.int32();
                     break;
-                case /* int32 platform_fee_cents */ 7:
-                    message.platformFeeCents = reader.int32();
+                case /* string fee_formulas_id */ 7:
+                    message.feeFormulasId = reader.string();
                     break;
                 case /* string table_templates_id */ 8:
                     message.tableTemplatesId = reader.string();
@@ -643,9 +655,9 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
         /* int32 price_cents = 6; */
         if (message.priceCents !== 0)
             writer.tag(6, WireType.Varint).int32(message.priceCents);
-        /* int32 platform_fee_cents = 7; */
-        if (message.platformFeeCents !== 0)
-            writer.tag(7, WireType.Varint).int32(message.platformFeeCents);
+        /* string fee_formulas_id = 7; */
+        if (message.feeFormulasId !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.feeFormulasId);
         /* string table_templates_id = 8; */
         if (message.tableTemplatesId !== "")
             writer.tag(8, WireType.LengthDelimited).string(message.tableTemplatesId);
@@ -666,7 +678,7 @@ class CreateEventTicketTypeRequest$Type extends MessageType<CreateEventTicketTyp
             { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "label", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 4, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "max_quantity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "sort_order", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
@@ -677,7 +689,7 @@ class CreateEventTicketTypeRequest$Type extends MessageType<CreateEventTicketTyp
         message.eventsId = "";
         message.label = "";
         message.priceCents = 0;
-        message.platformFeeCents = 0;
+        message.feeFormulasId = "";
         message.maxQuantity = 0;
         message.sortOrder = 0;
         message.description = "";
@@ -699,8 +711,8 @@ class CreateEventTicketTypeRequest$Type extends MessageType<CreateEventTicketTyp
                 case /* int32 price_cents */ 3:
                     message.priceCents = reader.int32();
                     break;
-                case /* int32 platform_fee_cents */ 4:
-                    message.platformFeeCents = reader.int32();
+                case /* string fee_formulas_id */ 4:
+                    message.feeFormulasId = reader.string();
                     break;
                 case /* int32 max_quantity */ 5:
                     message.maxQuantity = reader.int32();
@@ -732,9 +744,9 @@ class CreateEventTicketTypeRequest$Type extends MessageType<CreateEventTicketTyp
         /* int32 price_cents = 3; */
         if (message.priceCents !== 0)
             writer.tag(3, WireType.Varint).int32(message.priceCents);
-        /* int32 platform_fee_cents = 4; */
-        if (message.platformFeeCents !== 0)
-            writer.tag(4, WireType.Varint).int32(message.platformFeeCents);
+        /* string fee_formulas_id = 4; */
+        if (message.feeFormulasId !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.feeFormulasId);
         /* int32 max_quantity = 5; */
         if (message.maxQuantity !== 0)
             writer.tag(5, WireType.Varint).int32(message.maxQuantity);

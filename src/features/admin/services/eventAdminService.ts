@@ -1,7 +1,8 @@
-import { eventClient, tableBookingClient } from '@/shared/apiClient';
+import { eventClient, tableBookingClient, bookingClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
 import type { Event, EventStats } from '@/shared/proto/event';
 import type { Table } from '@/shared/proto/booking';
+import type { EventTicketType } from '@/shared/proto/bookings';
 
 export interface EventDraft {
   title: string;
@@ -79,7 +80,7 @@ export interface TicketTypeDraft {
   eventsId: string;
   label: string;
   priceCents: number;
-  platformFeeCents: number;
+  feeFormulasId: string;
   maxQuantity: number;
   sortOrder: number;
   description: string;
@@ -91,13 +92,18 @@ export async function createTicketType(draft: TicketTypeDraft): Promise<string> 
       eventsId: draft.eventsId,
       label: draft.label,
       priceCents: draft.priceCents,
-      platformFeeCents: draft.platformFeeCents,
+      feeFormulasId: draft.feeFormulasId,
       maxQuantity: draft.maxQuantity,
       sortOrder: draft.sortOrder,
       description: draft.description,
     }),
   );
   return response.value;
+}
+
+export async function listTicketTypes(eventsId: string): Promise<EventTicketType[]> {
+  const response = await callRpc(() => bookingClient.listEventTicketTypes({ value: eventsId }));
+  return response.ticketTypes;
 }
 
 export async function listEventTables(eventsId: string): Promise<Table[]> {
@@ -112,7 +118,7 @@ export interface TableDraft {
   shape: string;
   color: string;
   priceCents: number;
-  platformFeeCents: number;
+  feeFormulasId: string;
 }
 
 export async function createEventTable(draft: TableDraft): Promise<string> {
@@ -124,7 +130,7 @@ export async function createEventTable(draft: TableDraft): Promise<string> {
       shape: draft.shape,
       color: draft.color,
       priceCents: draft.priceCents,
-      platformFeeCents: draft.platformFeeCents,
+      feeFormulasId: draft.feeFormulasId,
       tableTemplatesId: '',
     }),
   );

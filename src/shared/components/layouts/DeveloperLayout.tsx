@@ -9,6 +9,7 @@ export function DeveloperLayout() {
         links={[
           { to: '/', label: 'Tenants' },
           { to: '/dashboard', label: 'Overview' },
+          { to: '/fees', label: 'Fees' },
           { to: '/logs', label: 'System Logs' },
         ]}
       />

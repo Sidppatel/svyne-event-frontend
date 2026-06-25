@@ -1,12 +1,17 @@
 import { authClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
-import { currentTenantSlug } from '@/shared/subdomain';
+import { currentTenantSlug, resolvePortalContext } from '@/shared/subdomain';
 import { useAuthStore } from '@/shared/auth/store';
 import type { AuthResponse, UserProfile } from '@/shared/proto/auth';
 
 export async function loginWithPassword(email: string, password: string): Promise<AuthResponse> {
   const auth = await callRpc(() =>
-    authClient.login({ email, password, tenantSlug: currentTenantSlug() }),
+    authClient.login({
+      email,
+      password,
+      tenantSlug: currentTenantSlug(),
+      portal: resolvePortalContext().portal,
+    }),
   );
   useAuthStore.getState().setSession(auth);
   return auth;
@@ -35,7 +40,11 @@ export async function signUp(input: SignUpInput): Promise<AuthResponse> {
 
 export async function loginWithGoogle(googleToken: string): Promise<AuthResponse> {
   const auth = await callRpc(() =>
-    authClient.googleSignIn({ googleToken, tenantSlug: currentTenantSlug() }),
+    authClient.googleSignIn({
+      googleToken,
+      tenantSlug: currentTenantSlug(),
+      portal: resolvePortalContext().portal,
+    }),
   );
   useAuthStore.getState().setSession(auth);
   return auth;
@@ -53,7 +62,11 @@ export async function verifyMagicLink(token: string): Promise<AuthResponse> {
 
 export async function requestPasswordReset(email: string): Promise<void> {
   await callRpc(() =>
-    authClient.requestPasswordReset({ email, tenantSlug: currentTenantSlug() }),
+    authClient.requestPasswordReset({
+      email,
+      tenantSlug: currentTenantSlug(),
+      origin: typeof window !== 'undefined' ? window.location.origin : '',
+    }),
   );
 }
 

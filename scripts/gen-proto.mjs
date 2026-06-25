@@ -22,6 +22,7 @@ const protoFiles = [
   'bookings.proto',
   'admin.proto',
   'enums.proto',
+  'fees.proto',
 ];
 
 mkdirSync(outDir, { recursive: true });
