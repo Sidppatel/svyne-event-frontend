@@ -301,27 +301,19 @@ function TableSection({
   const [pending, setPending] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
-  const grid = useMemo(() => {
-    let rows = layout?.gridRows ?? 0;
-    let cols = layout?.gridCols ?? 0;
+  // Pixel canvas extent = furthest item edge + padding.
+  const canvas = useMemo(() => {
+    let w = 0;
+    let h = 0;
     for (const t of layout?.tables ?? []) {
-      rows = Math.max(rows, t.gridRow + (t.rowSpan || 1));
-      cols = Math.max(cols, t.gridCol + (t.colSpan || 1));
+      w = Math.max(w, t.posX + (t.width || 80));
+      h = Math.max(h, t.posY + (t.height || 80));
     }
     for (const o of layout?.objects ?? []) {
-      rows = Math.max(rows, o.gridRow + 1);
-      cols = Math.max(cols, o.gridCol + 1);
+      w = Math.max(w, o.posX + (o.width || 80));
+      h = Math.max(h, o.posY + (o.height || 80));
     }
-    return { rows, cols };
-  }, [layout]);
-
-  const covered = useMemo(() => {
-    const s = new Set<string>();
-    for (const t of layout?.tables ?? [])
-      for (let r = t.gridRow; r < t.gridRow + (t.rowSpan || 1); r += 1)
-        for (let c = t.gridCol; c < t.gridCol + (t.colSpan || 1); c += 1) s.add(`${r}:${c}`);
-    for (const o of layout?.objects ?? []) s.add(`${o.gridRow}:${o.gridCol}`);
-    return s;
+    return { w: w + 24, h: h + 24 };
   }, [layout]);
 
   function capacityOf(table: Table): number {
@@ -367,33 +359,15 @@ function TableSection({
         ) : null}
         {err ? <p className="text-sm text-red-600">{err}</p> : null}
 
-        {layout && grid.rows > 0 && grid.cols > 0 ? (
-          <div className="overflow-auto">
-            <div
-              className="grid gap-1"
-              style={{
-                gridTemplateColumns: `repeat(${grid.cols}, 2.5rem)`,
-                gridTemplateRows: `repeat(${grid.rows}, 2.5rem)`,
-              }}
-            >
-              {Array.from({ length: grid.rows }).flatMap((_, r) =>
-                Array.from({ length: grid.cols })
-                  .map((__, c) => ({ r, c }))
-                  .filter(({ r, c }) => !covered.has(`${r}:${c}`))
-                  .map(({ r, c }) => (
-                    <div
-                      key={`e${r}:${c}`}
-                      style={{ gridRow: `${r + 1}`, gridColumn: `${c + 1}` }}
-                      className="h-full w-full rounded border border-gray-200 bg-gray-50"
-                    />
-                  )),
-              )}
+        {layout && (layout.tables.length > 0 || layout.objects.length > 0) ? (
+          <div className="overflow-auto rounded-md border bg-gray-100">
+            <div className="relative" style={{ width: canvas.w, height: canvas.h }}>
               {layout.objects.map((o) => (
                 <div
                   key={o.layoutObjectsId}
                   title={o.objectType}
-                  style={{ gridRow: `${o.gridRow + 1}`, gridColumn: `${o.gridCol + 1}` }}
-                  className="flex h-full w-full items-center justify-center rounded border border-emerald-700 bg-emerald-600 text-xs text-white"
+                  style={{ position: 'absolute', left: o.posX, top: o.posY, width: o.width || 80, height: o.height || 80 }}
+                  className="flex items-center justify-center rounded border border-emerald-700 bg-emerald-600 text-xs text-white"
                 >
                   {OBJECT_GLYPH[o.objectType] ?? o.objectType[0]}
                 </div>
@@ -412,11 +386,14 @@ function TableSection({
                     title={`${table.label} · ${table.status} · seats ${capacityOf(table)}`}
                     onClick={() => toggleTable(table)}
                     style={{
-                      gridRow: `${table.gridRow + 1} / span ${table.rowSpan || 1}`,
-                      gridColumn: `${table.gridCol + 1} / span ${table.colSpan || 1}`,
+                      position: 'absolute',
+                      left: table.posX,
+                      top: table.posY,
+                      width: table.width || 80,
+                      height: table.height || 80,
                       backgroundColor: available ? fill : '#9ca3af',
                     }}
-                    className={`flex h-full w-full items-center justify-center border text-[10px] font-medium text-white ${shapeRadius(shape)} ${
+                    className={`flex items-center justify-center border text-[10px] font-medium text-white ${shapeRadius(shape)} ${
                       available ? 'cursor-pointer hover:opacity-90' : 'cursor-not-allowed opacity-60'
                     } ${sel ? 'ring-2 ring-black ring-offset-1' : 'border-black/10'}`}
                   >
@@ -425,7 +402,7 @@ function TableSection({
                 );
               })}
             </div>
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 px-2 pb-2 text-xs text-gray-500">
               Tap an available table to add it (books the whole table at its capacity). Tap again to remove.
               Grey = booked/held. Green = entrance/exit/stage.
             </p>

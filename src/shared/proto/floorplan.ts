@@ -54,14 +54,6 @@ export interface FloorPlanTemplate {
      */
     name: string;
     /**
-     * @generated from protobuf field: int32 grid_rows = 3;
-     */
-    gridRows: number;
-    /**
-     * @generated from protobuf field: int32 grid_cols = 4;
-     */
-    gridCols: number;
-    /**
      * @generated from protobuf field: int32 table_count = 5;
      */
     tableCount: number;
@@ -199,8 +191,6 @@ class FloorPlanTemplate$Type extends MessageType<FloorPlanTemplate> {
         super("svyne.floorplan.FloorPlanTemplate", [
             { no: 1, name: "floor_plan_templates_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "grid_rows", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 4, name: "grid_cols", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "table_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "object_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
@@ -210,8 +200,6 @@ class FloorPlanTemplate$Type extends MessageType<FloorPlanTemplate> {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.floorPlanTemplatesId = "";
         message.name = "";
-        message.gridRows = 0;
-        message.gridCols = 0;
         message.tableCount = 0;
         message.objectCount = 0;
         message.isActive = false;
@@ -229,12 +217,6 @@ class FloorPlanTemplate$Type extends MessageType<FloorPlanTemplate> {
                     break;
                 case /* string name */ 2:
                     message.name = reader.string();
-                    break;
-                case /* int32 grid_rows */ 3:
-                    message.gridRows = reader.int32();
-                    break;
-                case /* int32 grid_cols */ 4:
-                    message.gridCols = reader.int32();
                     break;
                 case /* int32 table_count */ 5:
                     message.tableCount = reader.int32();
@@ -263,12 +245,6 @@ class FloorPlanTemplate$Type extends MessageType<FloorPlanTemplate> {
         /* string name = 2; */
         if (message.name !== "")
             writer.tag(2, WireType.LengthDelimited).string(message.name);
-        /* int32 grid_rows = 3; */
-        if (message.gridRows !== 0)
-            writer.tag(3, WireType.Varint).int32(message.gridRows);
-        /* int32 grid_cols = 4; */
-        if (message.gridCols !== 0)
-            writer.tag(4, WireType.Varint).int32(message.gridCols);
         /* int32 table_count = 5; */
         if (message.tableCount !== 0)
             writer.tag(5, WireType.Varint).int32(message.tableCount);

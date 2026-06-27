@@ -28,8 +28,8 @@ export function TableTemplatesManager() {
   const [capacity, setCapacity] = useState(8);
   const [shape, setShape] = useState('Round');
   const [priceCents, setPriceCents] = useState(0);
-  const [rowSpan, setRowSpan] = useState(1);
-  const [colSpan, setColSpan] = useState(1);
+  const [width, setWidth] = useState(80);
+  const [height, setHeight] = useState(80);
 
   async function guard(action: () => Promise<void>) {
     setNotice(null);
@@ -76,12 +76,12 @@ export function TableTemplatesManager() {
             <Input className="w-28" type="number" value={priceCents} onChange={(e) => setPriceCents(Number(e.target.value))} />
           </div>
           <div className="space-y-1">
-            <Label>Row span</Label>
-            <Input className="w-20" type="number" min={1} value={rowSpan} onChange={(e) => setRowSpan(Number(e.target.value))} />
+            <Label>Width (px)</Label>
+            <Input className="w-20" type="number" min={20} value={width} onChange={(e) => setWidth(Number(e.target.value))} />
           </div>
           <div className="space-y-1">
-            <Label>Col span</Label>
-            <Input className="w-20" type="number" min={1} value={colSpan} onChange={(e) => setColSpan(Number(e.target.value))} />
+            <Label>Height (px)</Label>
+            <Input className="w-20" type="number" min={20} value={height} onChange={(e) => setHeight(Number(e.target.value))} />
           </div>
           <Button
             size="sm"
@@ -93,14 +93,14 @@ export function TableTemplatesManager() {
                   defaultShape: shape,
                   defaultColor: '',
                   defaultPriceCents: priceCents,
-                  defaultRowSpan: Math.max(1, rowSpan),
-                  defaultColSpan: Math.max(1, colSpan),
+                  defaultWidth: Math.max(20, width),
+                  defaultHeight: Math.max(20, height),
                 }).then(() => {
                   setName('');
                   setCapacity(8);
                   setPriceCents(0);
-                  setRowSpan(1);
-                  setColSpan(1);
+                  setWidth(80);
+                  setHeight(80);
                   templates.reload();
                 }),
               )
@@ -116,7 +116,7 @@ export function TableTemplatesManager() {
               <span>
                 <span className="font-medium">{template.name}</span>{' '}
                 <span className="text-gray-500">
-                  · {template.defaultShape} · cap {template.defaultCapacity} · {template.defaultRowSpan}×{template.defaultColSpan} · {centsToUSD(template.defaultPriceCents)}
+                  · {template.defaultShape} · cap {template.defaultCapacity} · {template.defaultWidth}×{template.defaultHeight}px · {centsToUSD(template.defaultPriceCents)}
                 </span>
               </span>
               <Button

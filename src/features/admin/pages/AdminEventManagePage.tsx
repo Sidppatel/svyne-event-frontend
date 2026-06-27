@@ -59,8 +59,8 @@ export function AdminEventManagePage() {
   const [tablePriceCents, setTablePriceCents] = useState(0);
   const [tableIsAllInclusive, setTableIsAllInclusive] = useState(true);
   const [tablePerAttendeeCents, setTablePerAttendeeCents] = useState(0);
-  const [tableRowSpan, setTableRowSpan] = useState(1);
-  const [tableColSpan, setTableColSpan] = useState(1);
+  const [tableWidth, setTableWidth] = useState(80);
+  const [tableHeight, setTableHeight] = useState(80);
 
   function selectTemplate(id: string) {
     setTableTemplateId(id);
@@ -69,12 +69,16 @@ export function AdminEventManagePage() {
       setTableLabel(tpl.name);
       setTableCapacity(tpl.defaultCapacity);
       setTablePriceCents(tpl.defaultPriceCents);
-      setTableRowSpan(tpl.defaultRowSpan || 1);
-      setTableColSpan(tpl.defaultColSpan || 1);
+      setTableWidth(tpl.defaultWidth || 80);
+      setTableHeight(tpl.defaultHeight || 80);
     }
   }
   const [assignUserId, setAssignUserId] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
+  // Bumped when a table type is added so the floor-plan palette reloads.
+  const [floorKey, setFloorKey] = useState(0);
+  // Bumped when table types change so the Pricing panel reloads (each type owns a price).
+  const [pricingKey, setPricingKey] = useState(0);
 
   async function guard(action: () => Promise<void>, reload?: () => void) {
     setNotice(null);
@@ -113,8 +117,10 @@ export function AdminEventManagePage() {
 
       {event.data ? <EditSection event={event.data} onSaved={event.reload} /> : null}
 
-      <PricingManager eventsId={eventsId} />
-      {event.data && event.data.eventType !== 'Open' ? <FloorPlanPanel eventsId={eventsId} /> : null}
+      <PricingManager key={pricingKey} eventsId={eventsId} />
+      {event.data && event.data.eventType !== 'Open' ? (
+        <FloorPlanPanel key={floorKey} eventsId={eventsId} onTypesChanged={() => setPricingKey((k) => k + 1)} />
+      ) : null}
 
       {stats.data ? (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
@@ -214,12 +220,12 @@ export function AdminEventManagePage() {
               <Input type="number" value={tablePriceCents} onChange={(e) => setTablePriceCents(Number(e.target.value))} />
             </div>
             <div className="space-y-1">
-              <Label>Row span</Label>
-              <Input className="w-20" type="number" min={1} value={tableRowSpan} onChange={(e) => setTableRowSpan(Number(e.target.value))} />
+              <Label>Width (px)</Label>
+              <Input className="w-20" type="number" min={20} value={tableWidth} onChange={(e) => setTableWidth(Number(e.target.value))} />
             </div>
             <div className="space-y-1">
-              <Label>Col span</Label>
-              <Input className="w-20" type="number" min={1} value={tableColSpan} onChange={(e) => setTableColSpan(Number(e.target.value))} />
+              <Label>Height (px)</Label>
+              <Input className="w-20" type="number" min={20} value={tableHeight} onChange={(e) => setTableHeight(Number(e.target.value))} />
             </div>
             <label className="flex items-center gap-2 self-center text-sm">
               <input
@@ -249,18 +255,21 @@ export function AdminEventManagePage() {
                       eventsId,
                       label: tableLabel,
                       capacity: tableCapacity,
-                      shape: 'Round',
+                      // Empty = inherit the catalog template's default shape.
+                      shape: '',
                       color: '#888888',
                       priceCents: tablePriceCents,
                       feeFormulasId: '',
                       isAllInclusive: tableIsAllInclusive,
                       perAttendeeCents: tablePerAttendeeCents,
                       tableTemplatesId: tableTemplateId,
-                      rowSpan: tableRowSpan,
-                      colSpan: tableColSpan,
+                      width: tableWidth,
+                      height: tableHeight,
                     }).then(() => {
                       setTableTemplateId('');
                       setTableLabel('');
+                      setFloorKey((k) => k + 1);
+                      setPricingKey((k) => k + 1);
                     }),
                   tables.reload,
                 )
@@ -358,8 +367,6 @@ function EditSection({ event, onSaved }: { event: Event; onSaved: () => void }) 
         layoutMode: eventType === 'Open' ? 'Open' : 'Grid',
         eventType,
         venuesId: event.venuesId,
-        gridRows: 0,
-        gridCols: 0,
         imagePath,
       });
       onSaved();

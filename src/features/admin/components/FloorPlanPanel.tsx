@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
  * Floor-plan tools: a visual grid builder (place tables + Entry/Exit/Stage
  * objects) and reusable whole-floor-plan templates.
  */
-export function FloorPlanPanel({ eventsId }: { eventsId: string }) {
+export function FloorPlanPanel({ eventsId, onTypesChanged }: { eventsId: string; onTypesChanged?: () => void }) {
   const templatesLoader = useCallback(() => listFloorPlanTemplates(), []);
   const templates = useAsync(templatesLoader);
   const [notice, setNotice] = useState<string | null>(null);
@@ -42,7 +42,7 @@ export function FloorPlanPanel({ eventsId }: { eventsId: string }) {
       <CardContent className="space-y-5">
         {notice ? <p className="text-sm text-amber-700">{notice}</p> : null}
 
-        <FloorPlanBuilder key={builderKey} eventsId={eventsId} />
+        <FloorPlanBuilder key={builderKey} eventsId={eventsId} onTypesChanged={onTypesChanged} />
 
         <section className="space-y-2 border-t pt-4">
           <p className="text-sm font-medium text-gray-600">Reusable templates</p>
@@ -69,7 +69,7 @@ export function FloorPlanPanel({ eventsId }: { eventsId: string }) {
             {(templates.data ?? []).map((t) => (
               <div key={t.floorPlanTemplatesId} className="flex items-center justify-between border-b py-1 text-sm">
                 <span>
-                  {t.name} · {t.gridRows}×{t.gridCols} · {t.tableCount} tables · {t.objectCount} objects
+                  {t.name} · {t.tableCount} tables · {t.objectCount} objects
                 </span>
                 <span className="flex gap-2">
                   <Button
@@ -77,7 +77,10 @@ export function FloorPlanPanel({ eventsId }: { eventsId: string }) {
                     variant="outline"
                     onClick={() =>
                       guard(() =>
-                        applyTemplate(t.floorPlanTemplatesId, eventsId).then(() => setBuilderKey((k) => k + 1)),
+                        applyTemplate(t.floorPlanTemplatesId, eventsId).then(() => {
+                          setBuilderKey((k) => k + 1);
+                          onTypesChanged?.();
+                        }),
                       )
                     }
                   >

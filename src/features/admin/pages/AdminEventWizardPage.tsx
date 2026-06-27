@@ -74,8 +74,6 @@ export function AdminEventWizardPage() {
       layoutMode: eventType === 'Open' ? 'Open' : 'Grid',
       eventType,
       venuesId,
-      gridRows: 0,
-      gridCols: 0,
       imagePath: '',
     };
     try {

@@ -7,16 +7,17 @@ export async function getEventLayout(eventsId: string): Promise<EventLayout> {
 }
 
 // Serializes tables/objects back into the PascalCase JSON shape consumed by
-// sp_save_event_layout, preserving existing tables when only objects change.
+// sp_save_event_layout (pixel coords), preserving existing tables when only
+// objects change.
 function tableJson(t: Table) {
   return {
     Id: t.tablesId,
     EventTableId: t.eventTablesId,
     Label: t.label,
-    GridRow: t.gridRow,
-    GridCol: t.gridCol,
-    RowSpan: t.rowSpan || 1,
-    ColSpan: t.colSpan || 1,
+    PosX: t.posX,
+    PosY: t.posY,
+    Width: t.width || 80,
+    Height: t.height || 80,
     IsActive: true,
     SortOrder: 0,
     ShapeOverride: t.shapeOverride || '',
@@ -30,10 +31,10 @@ function objectJson(o: LayoutObject) {
     Id: o.layoutObjectsId,
     ObjectType: o.objectType,
     Label: o.label || '',
-    GridRow: o.gridRow,
-    GridCol: o.gridCol,
-    RowSpan: o.rowSpan || 1,
-    ColSpan: o.colSpan || 1,
+    PosX: o.posX,
+    PosY: o.posY,
+    Width: o.width || 80,
+    Height: o.height || 80,
     Color: o.color || '',
     SortOrder: o.sortOrder || 0,
   };
@@ -41,8 +42,6 @@ function objectJson(o: LayoutObject) {
 
 export async function saveEventLayout(
   eventsId: string,
-  gridRows: number,
-  gridCols: number,
   tables: Table[],
   objects: LayoutObject[],
   lockedIds: string[] = [],
@@ -50,8 +49,6 @@ export async function saveEventLayout(
   await callRpc(() =>
     tableBookingClient.saveEventLayout({
       eventsId,
-      gridRows,
-      gridCols,
       tablesJson: JSON.stringify(tables.map(tableJson)),
       lockedIds,
       objectsJson: JSON.stringify(objects.map(objectJson)),

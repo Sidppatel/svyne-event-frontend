@@ -164,14 +164,6 @@ export interface CreateEventRequest {
      */
     maxCapacity: number;
     /**
-     * @generated from protobuf field: int32 grid_rows = 12;
-     */
-    gridRows: number;
-    /**
-     * @generated from protobuf field: int32 grid_cols = 13;
-     */
-    gridCols: number;
-    /**
      * @generated from protobuf field: string venues_id = 14;
      */
     venuesId: string;
@@ -619,8 +611,6 @@ class CreateEventRequest$Type extends MessageType<CreateEventRequest> {
             { no: 9, name: "is_featured", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 10, name: "layout_mode", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 11, name: "max_capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 12, name: "grid_rows", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 13, name: "grid_cols", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 14, name: "venues_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 15, name: "scheduled_publish_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
             { no: 16, name: "event_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
@@ -639,8 +629,6 @@ class CreateEventRequest$Type extends MessageType<CreateEventRequest> {
         message.isFeatured = false;
         message.layoutMode = "";
         message.maxCapacity = 0;
-        message.gridRows = 0;
-        message.gridCols = 0;
         message.venuesId = "";
         message.scheduledPublishAt = "0";
         message.eventType = "";
@@ -685,12 +673,6 @@ class CreateEventRequest$Type extends MessageType<CreateEventRequest> {
                     break;
                 case /* int32 max_capacity */ 11:
                     message.maxCapacity = reader.int32();
-                    break;
-                case /* int32 grid_rows */ 12:
-                    message.gridRows = reader.int32();
-                    break;
-                case /* int32 grid_cols */ 13:
-                    message.gridCols = reader.int32();
                     break;
                 case /* string venues_id */ 14:
                     message.venuesId = reader.string();
@@ -746,12 +728,6 @@ class CreateEventRequest$Type extends MessageType<CreateEventRequest> {
         /* int32 max_capacity = 11; */
         if (message.maxCapacity !== 0)
             writer.tag(11, WireType.Varint).int32(message.maxCapacity);
-        /* int32 grid_rows = 12; */
-        if (message.gridRows !== 0)
-            writer.tag(12, WireType.Varint).int32(message.gridRows);
-        /* int32 grid_cols = 13; */
-        if (message.gridCols !== 0)
-            writer.tag(13, WireType.Varint).int32(message.gridCols);
         /* string venues_id = 14; */
         if (message.venuesId !== "")
             writer.tag(14, WireType.LengthDelimited).string(message.venuesId);

@@ -1,98 +1,107 @@
-import { useCallback, useMemo, useState } from 'react';
-import type { DragEvent } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import type { PointerEvent as ReactPointerEvent } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { getEventLayout, saveEventLayout } from '@/features/admin/services/layoutService';
-import { listEventTableTypes } from '@/features/admin/services/eventAdminService';
+import { listEventTableTypes, deleteEventTable } from '@/features/admin/services/eventAdminService';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD } from '@/shared/lib/format';
 import type { Table, LayoutObject } from '@/shared/proto/booking';
 import type { EventTableType } from '@/shared/proto/booking';
 import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
 
 type PlacedTable = {
   tablesId: string;
   eventTablesId: string;
   label: string;
-  gridRow: number;
-  gridCol: number;
-  rowSpan: number;
-  colSpan: number;
+  posX: number;
+  posY: number;
+  width: number;
+  height: number;
   shapeOverride: string;
   colorOverride: string;
 };
 type PlacedObject = {
   layoutObjectsId: string;
   objectType: string;
-  gridRow: number;
-  gridCol: number;
+  posX: number;
+  posY: number;
+  width: number;
+  height: number;
 };
-type Tool =
-  | { kind: 'table'; typeId: string; label: string }
-  | { kind: 'object'; objectType: string }
-  | { kind: 'erase' }
-  | null;
 
 const OBJECT_TYPES = ['Entry', 'Exit', 'Stage'];
 const OBJECT_GLYPH: Record<string, string> = { Entry: '→', Exit: '←', Stage: '▭' };
-const SHAPES = ['Round', 'Rectangle', 'Square', 'Cocktail'];
-const CELL = 2.5; // rem
+const CANVAS_W = 1000;
+const CANVAS_H = 640;
+const SNAP = 5;
+const MIN_SIZE = 24;
+const DEFAULT_SIZE = 80;
+
+const snap = (n: number) => Math.round(n / SNAP) * SNAP;
+const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 
 function shapeClass(shape: string): string {
   switch (shape) {
     case 'Round':
+    case 'Cocktail':
       return 'rounded-full';
     case 'Square':
       return 'rounded-none';
-    case 'Cocktail':
-      return 'rounded-full';
     default:
       return 'rounded-md'; // Rectangle
   }
 }
 
+// A live pointer-drag (move or resize) on a placed item.
+type Drag = {
+  kind: 'table' | 'object';
+  mode: 'move' | 'resize';
+  idx: number;
+  startX: number;
+  startY: number;
+  origX: number;
+  origY: number;
+  origW: number;
+  origH: number;
+  moved: boolean;
+};
+
 /**
- * Visual grid floor-plan builder. Rows × cols define the grid. Pick a palette
- * table type (placed with the chosen row/col span, shape and color) or an
- * Entry/Exit/Stage object, then click a cell to place. Multi-cell tables reserve
- * their whole footprint — overlaps and out-of-bounds placements are rejected.
- * All edits are local until "Save layout" persists via sp_save_event_layout.
+ * Free pixel-canvas floor-plan builder. Drag a palette table type or an
+ * Entry/Exit/Stage object onto the canvas; drag placed items to move and the
+ * corner handle to resize. Positions/sizes are absolute pixels (numeric(10,2));
+ * overlaps are allowed. All edits are local until "Save layout" persists via
+ * sp_save_event_layout.
  */
-export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
+export function FloorPlanBuilder({ eventsId, onTypesChanged }: { eventsId: string; onTypesChanged?: () => void }) {
   const layoutLoader = useCallback(() => getEventLayout(eventsId), [eventsId]);
   const layout = useAsync(layoutLoader);
   const typesLoader = useCallback(() => listEventTableTypes(eventsId), [eventsId]);
   const types = useAsync(typesLoader);
 
-  const [rows, setRows] = useState(0);
-  const [cols, setCols] = useState(0);
   const [tables, setTables] = useState<PlacedTable[]>([]);
   const [objects, setObjects] = useState<PlacedObject[]>([]);
-  const [tool, setTool] = useState<Tool>(null);
+  // Selected placed item ("t<idx>" / "o<idx>") shows a delete button.
+  const [selected, setSelected] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Placement overrides applied to the next table dropped on the grid. The grid
-  // footprint (row/col span) comes from the table type itself, not set here.
-  const [shape, setShape] = useState('');
-  const [color, setColor] = useState('');
+  const canvasRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<Drag | null>(null);
 
   const [prevLayoutData, setPrevLayoutData] = useState<unknown>(null);
   if (layout.data && layout.data !== prevLayoutData) {
     setPrevLayoutData(layout.data);
-    setRows(layout.data.gridRows || 6);
-    setCols(layout.data.gridCols || 6);
     setTables(
       layout.data.tables.map((t: Table) => ({
         tablesId: t.tablesId,
         eventTablesId: t.eventTablesId,
         label: t.label,
-        gridRow: t.gridRow,
-        gridCol: t.gridCol,
-        rowSpan: t.rowSpan || 1,
-        colSpan: t.colSpan || 1,
+        posX: t.posX,
+        posY: t.posY,
+        width: t.width || DEFAULT_SIZE,
+        height: t.height || DEFAULT_SIZE,
         shapeOverride: t.shapeOverride || '',
         colorOverride: t.colorOverride || '',
       })),
@@ -101,8 +110,10 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
       layout.data.objects.map((o: LayoutObject) => ({
         layoutObjectsId: o.layoutObjectsId,
         objectType: o.objectType,
-        gridRow: o.gridRow,
-        gridCol: o.gridCol,
+        posX: o.posX,
+        posY: o.posY,
+        width: o.width || DEFAULT_SIZE,
+        height: o.height || DEFAULT_SIZE,
       })),
     );
     setDirty(false);
@@ -115,17 +126,6 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
     return m;
   }, [typeList]);
 
-  // Map every covered cell -> owner key, accounting for table footprints.
-  const covered = useMemo(() => {
-    const m = new Map<string, string>();
-    tables.forEach((t, i) => {
-      for (let r = t.gridRow; r < t.gridRow + t.rowSpan; r += 1)
-        for (let c = t.gridCol; c < t.gridCol + t.colSpan; c += 1) m.set(`${r}:${c}`, `t${i}`);
-    });
-    objects.forEach((o, i) => m.set(`${o.gridRow}:${o.gridCol}`, `o${i}`));
-    return m;
-  }, [tables, objects]);
-
   function nextTableLabel() {
     let n = tables.length + 1;
     const used = new Set(tables.map((t) => t.label));
@@ -133,125 +133,182 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
     return `T${n}`;
   }
 
-  // ignoreOwner = the covered-map owner key to skip (used when moving an item so
-  // it doesn't collide with its own current footprint).
-  function footprintFree(r: number, c: number, rs: number, cs: number, ignoreOwner?: string): boolean {
-    if (r < 0 || c < 0 || r + rs > rows || c + cs > cols) return false;
-    for (let rr = r; rr < r + rs; rr += 1)
-      for (let cc = c; cc < c + cs; cc += 1) {
-        const owner = covered.get(`${rr}:${cc}`);
-        if (owner && owner !== ignoreOwner) return false;
-      }
-    return true;
+  // Pointer position relative to the canvas origin.
+  function canvasPoint(clientX: number, clientY: number) {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (!rect) return { x: 0, y: 0 };
+    return { x: clientX - rect.left, y: clientY - rect.top };
   }
 
-  // Drag payloads: a new palette item, or a move of an existing placed item.
-  type DragPayload =
-    | { drag: 'new-table'; typeId: string }
-    | { drag: 'new-object'; objectType: string }
-    | { drag: 'move-table'; idx: number }
-    | { drag: 'move-object'; idx: number };
+  // True if the rect would overlap any table other than ignoreIdx (AABB).
+  function tableOverlap(x: number, y: number, w: number, h: number, ignoreIdx: number): boolean {
+    return tables.some(
+      (t, i) =>
+        i !== ignoreIdx &&
+        x < t.posX + t.width && x + w > t.posX &&
+        y < t.posY + t.height && y + h > t.posY,
+    );
+  }
 
-  function onDrop(r: number, c: number, e: DragEvent) {
+  function placeTable(typeId: string, cx: number, cy: number) {
+    const t = typeById.get(typeId);
+    const w = Math.max(MIN_SIZE, t?.defaultWidth || DEFAULT_SIZE);
+    const h = Math.max(MIN_SIZE, t?.defaultHeight || DEFAULT_SIZE);
+    const px = clamp(snap(cx - w / 2), 0, CANVAS_W - w);
+    const py = clamp(snap(cy - h / 2), 0, CANVAS_H - h);
+    if (tableOverlap(px, py, w, h, -1)) {
+      setNotice("No room here — tables can't overlap");
+      return;
+    }
+    setTables((prev) => [
+      ...prev,
+      {
+        tablesId: '', eventTablesId: typeId, label: nextTableLabel(),
+        posX: px, posY: py, width: w, height: h, shapeOverride: '', colorOverride: '',
+      },
+    ]);
+    setDirty(true);
+  }
+
+  function placeObject(objectType: string, cx: number, cy: number) {
+    setObjects((prev) => [
+      ...prev,
+      {
+        layoutObjectsId: '', objectType,
+        posX: clamp(snap(cx - DEFAULT_SIZE / 2), 0, CANVAS_W - DEFAULT_SIZE),
+        posY: clamp(snap(cy - DEFAULT_SIZE / 2), 0, CANVAS_H - DEFAULT_SIZE),
+        width: DEFAULT_SIZE, height: DEFAULT_SIZE,
+      },
+    ]);
+    setDirty(true);
+  }
+
+  // --- Palette drag-and-drop onto the canvas ---
+  function onCanvasDrop(e: React.DragEvent) {
     e.preventDefault();
     setNotice(null);
-    let payload: DragPayload;
+    let payload: { drag: string; typeId?: string; objectType?: string };
     try {
       payload = JSON.parse(e.dataTransfer.getData('application/json'));
     } catch {
       return;
     }
-    if (payload.drag === 'new-table') {
-      const placeType = typeById.get(payload.typeId);
-      const rs = Math.max(1, placeType?.rowSpan || 1);
-      const cs = Math.max(1, placeType?.colSpan || 1);
-      if (!footprintFree(r, c, rs, cs)) {
-        setNotice('No room here — overlaps or off-grid');
-        return;
-      }
-      setTables((prev) => [
-        ...prev,
-        {
-          tablesId: '', eventTablesId: payload.typeId, label: nextTableLabel(),
-          gridRow: r, gridCol: c, rowSpan: rs, colSpan: cs, shapeOverride: shape, colorOverride: color,
-        },
-      ]);
-      setDirty(true);
-    } else if (payload.drag === 'new-object') {
-      if (covered.has(`${r}:${c}`)) { setNotice('Cell occupied'); return; }
-      setObjects((prev) => [...prev, { layoutObjectsId: '', objectType: payload.objectType, gridRow: r, gridCol: c }]);
-      setDirty(true);
-    } else if (payload.drag === 'move-table') {
-      const t = tables[payload.idx];
-      if (!t) return;
-      if (!footprintFree(r, c, t.rowSpan, t.colSpan, `t${payload.idx}`)) {
-        setNotice('No room here — overlaps or off-grid');
-        return;
-      }
-      setTables((prev) => prev.map((x, i) => (i === payload.idx ? { ...x, gridRow: r, gridCol: c } : x)));
-      setDirty(true);
-    } else if (payload.drag === 'move-object') {
-      if (covered.has(`${r}:${c}`)) { setNotice('Cell occupied'); return; }
-      setObjects((prev) => prev.map((x, i) => (i === payload.idx ? { ...x, gridRow: r, gridCol: c } : x)));
-      setDirty(true);
-    }
+    const { x, y } = canvasPoint(e.clientX, e.clientY);
+    if (payload.drag === 'new-table' && payload.typeId) placeTable(payload.typeId, x, y);
+    else if (payload.drag === 'new-object' && payload.objectType) placeObject(payload.objectType, x, y);
   }
 
-  function startDrag(e: DragEvent, payload: DragPayload) {
+  function startPaletteDrag(e: React.DragEvent, payload: object) {
     e.dataTransfer.setData('application/json', JSON.stringify(payload));
-    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.effectAllowed = 'copy';
   }
 
-  function clickCell(r: number, c: number) {
-    setNotice(null);
-    const owner = covered.get(`${r}:${c}`);
+  // --- Move / resize of placed items via pointer capture ---
+  function onItemPointerDown(
+    e: ReactPointerEvent,
+    kind: 'table' | 'object',
+    mode: 'move' | 'resize',
+    idx: number,
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+    const item = kind === 'table' ? tables[idx] : objects[idx];
+    if (!item) return;
+    (e.target as Element).setPointerCapture(e.pointerId);
+    dragRef.current = {
+      kind, mode, idx,
+      startX: e.clientX, startY: e.clientY,
+      origX: item.posX, origY: item.posY, origW: item.width, origH: item.height,
+      moved: false,
+    };
+  }
 
-    if (tool?.kind === 'erase' || owner) {
-      if (owner?.startsWith('t')) {
-        const idx = Number(owner.slice(1));
-        setTables((prev) => prev.filter((_, i) => i !== idx));
-        setDirty(true);
-      } else if (owner?.startsWith('o')) {
-        const idx = Number(owner.slice(1));
-        setObjects((prev) => prev.filter((_, i) => i !== idx));
-        setDirty(true);
+  function onItemPointerMove(e: ReactPointerEvent) {
+    const d = dragRef.current;
+    if (!d) return;
+    const dx = e.clientX - d.startX;
+    const dy = e.clientY - d.startY;
+    if (Math.abs(dx) > 2 || Math.abs(dy) > 2) d.moved = true;
+
+    if (d.kind === 'table') {
+      const base = tables[d.idx];
+      if (!base) return;
+      let nx = base.posX, ny = base.posY, nw = base.width, nh = base.height;
+      if (d.mode === 'move') {
+        nx = clamp(snap(d.origX + dx), 0, CANVAS_W - base.width);
+        ny = clamp(snap(d.origY + dy), 0, CANVAS_H - base.height);
+      } else {
+        nw = clamp(snap(d.origW + dx), MIN_SIZE, CANVAS_W - base.posX);
+        nh = clamp(snap(d.origH + dy), MIN_SIZE, CANVAS_H - base.posY);
       }
-      return;
-    }
-    if (!tool) {
-      setNotice('Pick a palette item first');
-      return;
-    }
-    if (tool.kind === 'table') {
-      const placeType = typeById.get(tool.typeId);
-      const rs = Math.max(1, placeType?.rowSpan || 1);
-      const cs = Math.max(1, placeType?.colSpan || 1);
-      if (!footprintFree(r, c, rs, cs)) {
-        setNotice('No room here — overlaps another table/object or goes off-grid');
+      // Reject the step that would overlap another table; item stays put.
+      if (tableOverlap(nx, ny, nw, nh, d.idx)) {
+        setNotice("Tables can't overlap");
         return;
       }
-      setTables((prev) => [
-        ...prev,
-        {
-          tablesId: '',
-          eventTablesId: tool.typeId,
-          label: nextTableLabel(),
-          gridRow: r,
-          gridCol: c,
-          rowSpan: rs,
-          colSpan: cs,
-          shapeOverride: shape,
-          colorOverride: color,
-        },
-      ]);
+      setTables((prev) => prev.map((x, i) => (i === d.idx ? { ...x, posX: nx, posY: ny, width: nw, height: nh } : x)));
       setDirty(true);
-    } else if (tool.kind === 'object') {
-      if (covered.has(`${r}:${c}`)) {
-        setNotice('Cell occupied');
-        return;
-      }
-      setObjects((prev) => [...prev, { layoutObjectsId: '', objectType: tool.objectType, gridRow: r, gridCol: c }]);
-      setDirty(true);
+      return;
+    }
+
+    setObjects((prev) =>
+      prev.map((x, i) => {
+        if (i !== d.idx) return x;
+        if (d.mode === 'move') {
+          return {
+            ...x,
+            posX: clamp(snap(d.origX + dx), 0, CANVAS_W - x.width),
+            posY: clamp(snap(d.origY + dy), 0, CANVAS_H - x.height),
+          };
+        }
+        return {
+          ...x,
+          width: clamp(snap(d.origW + dx), MIN_SIZE, CANVAS_W - x.posX),
+          height: clamp(snap(d.origH + dy), MIN_SIZE, CANVAS_H - x.posY),
+        };
+      }),
+    );
+    setDirty(true);
+  }
+
+  function onItemPointerUp(e: ReactPointerEvent, kind: 'table' | 'object', idx: number) {
+    const d = dragRef.current;
+    dragRef.current = null;
+    if (!d) return;
+    // A click without movement selects the item (toggles its delete button).
+    if (!d.moved) {
+      const key = `${kind === 'table' ? 't' : 'o'}${idx}`;
+      setSelected((cur) => (cur === key ? null : key));
+    }
+    void e;
+  }
+
+  function deleteTable(idx: number) {
+    setTables((prev) => prev.filter((_, i) => i !== idx));
+    setSelected(null);
+    setDirty(true);
+  }
+
+  function deleteObject(idx: number) {
+    setObjects((prev) => prev.filter((_, i) => i !== idx));
+    setSelected(null);
+    setDirty(true);
+  }
+
+  // Delete a table TYPE: removes the type and every placed table of it (server
+  // cascades via sp_delete_event_table), then reloads palette + layout.
+  async function deleteType(typeId: string, label: string) {
+    if (!window.confirm(`Delete table type "${label}" and all its placed tables?`)) return;
+    setNotice(null);
+    try {
+      await deleteEventTable(typeId);
+      setTables((prev) => prev.filter((t) => t.eventTablesId !== typeId));
+      setSelected(null);
+      types.reload();
+      layout.reload();
+      onTypesChanged?.(); // refresh the Pricing panel (the linked price is gone too)
+    } catch (caught) {
+      setNotice(rpcErrorMessage(caught));
     }
   }
 
@@ -261,18 +318,16 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
     try {
       await saveEventLayout(
         eventsId,
-        rows,
-        cols,
         tables.map(
           (t) =>
             ({
               tablesId: t.tablesId,
               eventTablesId: t.eventTablesId,
               label: t.label,
-              gridRow: t.gridRow,
-              gridCol: t.gridCol,
-              rowSpan: t.rowSpan,
-              colSpan: t.colSpan,
+              posX: t.posX,
+              posY: t.posY,
+              width: t.width,
+              height: t.height,
               shapeOverride: t.shapeOverride,
               colorOverride: t.colorOverride,
               capacityOverride: 0,
@@ -284,10 +339,10 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
               layoutObjectsId: o.layoutObjectsId,
               objectType: o.objectType,
               label: '',
-              gridRow: o.gridRow,
-              gridCol: o.gridCol,
-              rowSpan: 1,
-              colSpan: 1,
+              posX: o.posX,
+              posY: o.posY,
+              width: o.width,
+              height: o.height,
               color: '',
               sortOrder: 0,
             }) as LayoutObject,
@@ -303,129 +358,133 @@ export function FloorPlanBuilder({ eventsId }: { eventsId: string }) {
     }
   }
 
-  const isSelected = (t: Tool) =>
-    !!tool && !!t && tool.kind === t.kind &&
-    (t.kind !== 'table' || (tool.kind === 'table' && tool.typeId === t.typeId)) &&
-    (t.kind !== 'object' || (tool.kind === 'object' && tool.objectType === t.objectType));
-
-  // Empty (uncovered, in-bounds) cells for the click targets.
-  const emptyCells: Array<{ r: number; c: number }> = [];
-  for (let r = 0; r < rows; r += 1)
-    for (let c = 0; c < cols; c += 1) if (!covered.has(`${r}:${c}`)) emptyCells.push({ r, c });
-
   return (
     <div className="space-y-3">
       {notice ? <p className="text-sm text-amber-700">{notice}</p> : null}
 
       <div className="flex flex-wrap items-end gap-3">
-        <div className="space-y-1">
-          <Label>Rows</Label>
-          <Input className="w-20" type="number" min={1} value={rows}
-            onChange={(e) => { setRows(Math.max(1, Number(e.target.value))); setDirty(true); }} />
-        </div>
-        <div className="space-y-1">
-          <Label>Cols</Label>
-          <Input className="w-20" type="number" min={1} value={cols}
-            onChange={(e) => { setCols(Math.max(1, Number(e.target.value))); setDirty(true); }} />
-        </div>
         <Button size="sm" onClick={save} disabled={saving || !dirty}>
           {saving ? 'Saving…' : dirty ? 'Save layout' : 'Saved'}
         </Button>
       </div>
 
-      {/* Placement overrides for the next table (footprint comes from the type) */}
-      <div className="flex flex-wrap items-end gap-3 rounded-md border bg-gray-50 p-2">
-        <div className="space-y-1">
-          <Label>Shape</Label>
-          <select className="h-9 rounded-md border border-gray-300 px-2 text-sm"
-            value={shape} onChange={(e) => setShape(e.target.value)}>
-            <option value="">Inherit type</option>
-            {SHAPES.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </div>
-        <div className="space-y-1">
-          <Label>Color</Label>
-          <div className="flex items-center gap-1">
-            <input type="color" className="h-9 w-10 rounded border border-gray-300"
-              value={color || '#4f46e5'} onChange={(e) => setColor(e.target.value)} />
-            {color ? (
-              <Button size="sm" variant="ghost" onClick={() => setColor('')}>inherit</Button>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
       {/* Palette */}
       <div className="flex flex-wrap gap-2">
         {typeList.map((t: EventTableType) => (
-          <Button key={t.eventTablesId} size="sm" draggable
-            onDragStart={(e) => startDrag(e, { drag: 'new-table', typeId: t.eventTablesId })}
-            variant={isSelected({ kind: 'table', typeId: t.eventTablesId, label: t.label }) ? 'default' : 'outline'}
-            onClick={() => setTool({ kind: 'table', typeId: t.eventTablesId, label: t.label })}>
-            {t.label} · {t.rowSpan}×{t.colSpan} · {centsToUSD(t.priceCents)}
-          </Button>
+          <span key={t.eventTablesId}
+            className="inline-flex items-center overflow-hidden rounded-md border border-gray-300">
+            <button type="button" draggable
+              onDragStart={(e) => startPaletteDrag(e, { drag: 'new-table', typeId: t.eventTablesId })}
+              className="cursor-grab px-2 py-1 text-sm hover:bg-gray-100">
+              {t.label} · {t.defaultWidth}×{t.defaultHeight}px · {centsToUSD(t.priceCents)}
+            </button>
+            <button type="button" title="Delete table type and all its placed tables"
+              onClick={() => deleteType(t.eventTablesId, t.label)}
+              className="border-l border-gray-300 px-2 py-1 text-sm text-red-600 hover:bg-red-50">
+              ×
+            </button>
+          </span>
         ))}
         {typeList.length === 0 ? <p className="text-sm text-gray-500">Add table types above to place them.</p> : null}
         {OBJECT_TYPES.map((o) => (
           <Button key={o} size="sm" draggable
-            onDragStart={(e) => startDrag(e, { drag: 'new-object', objectType: o })}
-            variant={isSelected({ kind: 'object', objectType: o }) ? 'default' : 'outline'}
-            onClick={() => setTool({ kind: 'object', objectType: o })}>
+            onDragStart={(e) => startPaletteDrag(e, { drag: 'new-object', objectType: o })}
+            variant="outline">
             {OBJECT_GLYPH[o]} {o}
           </Button>
         ))}
-        <Button size="sm" variant={tool?.kind === 'erase' ? 'destructive' : 'outline'} onClick={() => setTool({ kind: 'erase' })}>
-          Erase
-        </Button>
       </div>
 
-      {/* Grid */}
-      <div className="overflow-auto">
-        <div className="grid gap-1"
+      {/* Canvas */}
+      <div className="overflow-auto rounded-md border bg-gray-100">
+        <div
+          ref={canvasRef}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={onCanvasDrop}
+          className="relative"
           style={{
-            gridTemplateColumns: `repeat(${Math.max(cols, 1)}, ${CELL}rem)`,
-            gridTemplateRows: `repeat(${Math.max(rows, 1)}, ${CELL}rem)`,
-          }}>
-          {emptyCells.map(({ r, c }) => (
-            <button key={`e${r}:${c}`} type="button" title={`${r},${c}`} onClick={() => clickCell(r, c)}
-              onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(r, c, e)}
-              style={{ gridRow: `${r + 1}`, gridColumn: `${c + 1}` }}
-              className="h-full w-full rounded border border-gray-200 bg-gray-50 hover:bg-gray-200" />
-          ))}
+            width: CANVAS_W,
+            height: CANVAS_H,
+            backgroundImage:
+              'radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px)',
+            backgroundSize: `${SNAP * 4}px ${SNAP * 4}px`,
+          }}
+        >
           {tables.map((t, i) => {
             const type = typeById.get(t.eventTablesId);
             const fill = t.colorOverride || type?.color || '#4f46e5';
             const sh = t.shapeOverride || type?.shape || 'Rectangle';
             return (
-              <button key={`t${i}`} type="button" title={`${t.label} · ${sh} (drag to move, click to remove)`}
-                draggable onDragStart={(e) => startDrag(e, { drag: 'move-table', idx: i })}
-                onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(t.gridRow, t.gridCol, e)}
-                onClick={() => clickCell(t.gridRow, t.gridCol)}
+              <div
+                key={`t${i}`}
+                onPointerDown={(e) => onItemPointerDown(e, 'table', 'move', i)}
+                onPointerMove={onItemPointerMove}
+                onPointerUp={(e) => onItemPointerUp(e, 'table', i)}
+                title={`${t.label} · ${sh} (drag to move, corner to resize, click to select)`}
                 style={{
-                  gridRow: `${t.gridRow + 1} / span ${t.rowSpan}`,
-                  gridColumn: `${t.gridCol + 1} / span ${t.colSpan}`,
-                  backgroundColor: fill,
+                  position: 'absolute', left: t.posX, top: t.posY, width: t.width, height: t.height,
+                  backgroundColor: fill, touchAction: 'none',
                 }}
-                className={`flex h-full w-full cursor-move items-center justify-center border border-black/10 text-xs font-medium text-white ${shapeClass(sh)}`}>
+                className={`flex cursor-move select-none items-center justify-center border text-xs font-medium text-white ${shapeClass(sh)} ${
+                  selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'
+                }`}
+              >
                 {t.label}
-              </button>
+                {selected === `t${i}` ? (
+                  <button type="button" title="Delete table"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={() => deleteTable(i)}
+                    className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full border border-white bg-red-600 text-[11px] leading-none text-white shadow">
+                    ×
+                  </button>
+                ) : null}
+                <span
+                  onPointerDown={(e) => onItemPointerDown(e, 'table', 'resize', i)}
+                  onPointerMove={onItemPointerMove}
+                  onPointerUp={(e) => onItemPointerUp(e, 'table', i)}
+                  className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize rounded-sm border border-white bg-black/40"
+                />
+              </div>
             );
           })}
           {objects.map((o, i) => (
-            <button key={`o${i}`} type="button" title={`${o.objectType} (drag to move, click to remove)`}
-              draggable onDragStart={(e) => startDrag(e, { drag: 'move-object', idx: i })}
-              onDragOver={(e) => e.preventDefault()} onDrop={(e) => onDrop(o.gridRow, o.gridCol, e)}
-              onClick={() => clickCell(o.gridRow, o.gridCol)}
-              style={{ gridRow: `${o.gridRow + 1}`, gridColumn: `${o.gridCol + 1}` }}
-              className="flex h-full w-full cursor-move items-center justify-center rounded border border-emerald-700 bg-emerald-600 text-xs text-white">
-              {OBJECT_GLYPH[o.objectType] ?? o.objectType[0]}
-            </button>
+            <div
+              key={`o${i}`}
+              onPointerDown={(e) => onItemPointerDown(e, 'object', 'move', i)}
+              onPointerMove={onItemPointerMove}
+              onPointerUp={(e) => onItemPointerUp(e, 'object', i)}
+              title={`${o.objectType} (drag to move, corner to resize, click to select)`}
+              style={{
+                position: 'absolute', left: o.posX, top: o.posY, width: o.width, height: o.height,
+                touchAction: 'none',
+              }}
+              className={`flex cursor-move select-none items-center justify-center rounded bg-emerald-600 text-xs text-white ${
+                selected === `o${i}` ? 'border-2 border-black ring-2 ring-black' : 'border border-emerald-700'
+              }`}
+            >
+              {OBJECT_GLYPH[o.objectType] ?? o.objectType[0]} {o.objectType}
+              {selected === `o${i}` ? (
+                <button type="button" title="Delete object"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onClick={() => deleteObject(i)}
+                  className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full border border-white bg-red-600 text-[11px] leading-none text-white shadow">
+                  ×
+                </button>
+              ) : null}
+              <span
+                onPointerDown={(e) => onItemPointerDown(e, 'object', 'resize', i)}
+                onPointerMove={onItemPointerMove}
+                onPointerUp={(e) => onItemPointerUp(e, 'object', i)}
+                className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize rounded-sm border border-white bg-black/40"
+              />
+            </div>
           ))}
         </div>
       </div>
       <p className="text-xs text-gray-500">
-        Pick a table type (with span/shape/color) or an object, then click a cell. Multi-cell tables reserve their
-        whole footprint — overlaps are blocked. Click a placed item to remove.{dirty ? ' · Unsaved changes' : ''}
+        Drag a table type or object from the palette onto the canvas. Drag placed items to move, drag the
+        corner handle to resize. Tables can't overlap each other. Click an item to select it, then use × to
+        delete. Delete a palette table type (×) to remove it and all its placed tables.{dirty ? ' · Unsaved changes' : ''}
       </p>
     </div>
   );

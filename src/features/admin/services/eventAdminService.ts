@@ -16,8 +16,6 @@ export interface EventDraft {
   layoutMode: string;
   eventType: string;
   venuesId: string;
-  gridRows: number;
-  gridCols: number;
   imagePath: string;
 }
 
@@ -36,8 +34,6 @@ export async function createEvent(draft: EventDraft): Promise<string> {
       layoutMode: draft.layoutMode,
       eventType: draft.eventType,
       maxCapacity: draft.maxCapacity,
-      gridRows: draft.gridRows,
-      gridCols: draft.gridCols,
       venuesId: draft.venuesId,
       scheduledPublishAt: '0',
     }),
@@ -127,9 +123,9 @@ export interface TableDraft {
   isAllInclusive?: boolean;
   perAttendeeCents?: number;
   tableTemplatesId?: string;
-  // Grid footprint override; 0 = inherit catalog template default.
-  rowSpan?: number;
-  colSpan?: number;
+  // Pixel footprint override; 0 = inherit catalog template default.
+  width?: number;
+  height?: number;
 }
 
 export async function createEventTable(draft: TableDraft): Promise<string> {
@@ -145,8 +141,8 @@ export async function createEventTable(draft: TableDraft): Promise<string> {
       tableTemplatesId: draft.tableTemplatesId ?? '',
       isAllInclusive: draft.isAllInclusive ?? true,
       perAttendeeCents: draft.perAttendeeCents ?? 0,
-      rowSpan: draft.rowSpan ?? 0,
-      colSpan: draft.colSpan ?? 0,
+      width: draft.width ?? 0,
+      height: draft.height ?? 0,
     }),
   );
   return response.value;

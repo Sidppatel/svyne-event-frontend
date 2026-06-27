@@ -8,8 +8,8 @@ export interface TableTemplateInput {
   defaultShape: string;
   defaultColor: string;
   defaultPriceCents: number;
-  defaultRowSpan: number;
-  defaultColSpan: number;
+  defaultWidth: number;
+  defaultHeight: number;
 }
 
 export interface TableTemplatePriceRuleInput {

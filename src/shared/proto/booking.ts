@@ -32,21 +32,21 @@ export interface Table {
      */
     label: string;
     /**
-     * @generated from protobuf field: int32 grid_row = 4;
+     * @generated from protobuf field: double pos_x = 4;
      */
-    gridRow: number;
+    posX: number;
     /**
-     * @generated from protobuf field: int32 grid_col = 5;
+     * @generated from protobuf field: double pos_y = 5;
      */
-    gridCol: number;
+    posY: number;
     /**
-     * @generated from protobuf field: int32 row_span = 6;
+     * @generated from protobuf field: double width = 6;
      */
-    rowSpan: number;
+    width: number;
     /**
-     * @generated from protobuf field: int32 col_span = 7;
+     * @generated from protobuf field: double height = 7;
      */
-    colSpan: number;
+    height: number;
     /**
      * @generated from protobuf field: string status = 8;
      */
@@ -85,7 +85,7 @@ export interface Table {
     pricesId: string;
 }
 /**
- * A non-table object placed on the floor-plan grid (Entry/Exit/Stage).
+ * A non-table object placed on the floor-plan canvas (Entry/Exit/Stage).
  *
  * @generated from protobuf message svyne.booking.LayoutObject
  */
@@ -103,21 +103,21 @@ export interface LayoutObject {
      */
     label: string;
     /**
-     * @generated from protobuf field: int32 grid_row = 4;
+     * @generated from protobuf field: double pos_x = 4;
      */
-    gridRow: number;
+    posX: number;
     /**
-     * @generated from protobuf field: int32 grid_col = 5;
+     * @generated from protobuf field: double pos_y = 5;
      */
-    gridCol: number;
+    posY: number;
     /**
-     * @generated from protobuf field: int32 row_span = 6;
+     * @generated from protobuf field: double width = 6;
      */
-    rowSpan: number;
+    width: number;
     /**
-     * @generated from protobuf field: int32 col_span = 7;
+     * @generated from protobuf field: double height = 7;
      */
-    colSpan: number;
+    height: number;
     /**
      * @generated from protobuf field: string color = 8;
      */
@@ -136,14 +136,6 @@ export interface EventLayout {
      */
     eventsId: string;
     /**
-     * @generated from protobuf field: int32 grid_rows = 2;
-     */
-    gridRows: number;
-    /**
-     * @generated from protobuf field: int32 grid_cols = 3;
-     */
-    gridCols: number;
-    /**
      * @generated from protobuf field: repeated svyne.booking.Table tables = 4;
      */
     tables: Table[];
@@ -160,14 +152,6 @@ export interface SaveEventLayoutRequest {
      * @generated from protobuf field: string events_id = 1;
      */
     eventsId: string;
-    /**
-     * @generated from protobuf field: int32 grid_rows = 2;
-     */
-    gridRows: number;
-    /**
-     * @generated from protobuf field: int32 grid_cols = 3;
-     */
-    gridCols: number;
     /**
      * @generated from protobuf field: string tables_json = 4;
      */
@@ -236,15 +220,15 @@ export interface EventTableType {
      */
     pricesId: string;
     /**
-     * Grid footprint used when placing this type on the floor plan.
+     * Default pixel footprint used when placing this type on the floor plan.
      *
-     * @generated from protobuf field: int32 row_span = 8;
+     * @generated from protobuf field: double default_width = 8;
      */
-    rowSpan: number;
+    defaultWidth: number;
     /**
-     * @generated from protobuf field: int32 col_span = 9;
+     * @generated from protobuf field: double default_height = 9;
      */
-    colSpan: number;
+    defaultHeight: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListEventTableTypesResponse
@@ -304,15 +288,15 @@ export interface CreateEventTableRequest {
      */
     perAttendeeCents: number;
     /**
-     * Grid footprint override (0 = inherit the catalog template default).
+     * Pixel footprint override (0 = inherit the catalog template default).
      *
-     * @generated from protobuf field: int32 row_span = 11;
+     * @generated from protobuf field: double width = 11;
      */
-    rowSpan: number;
+    width: number;
     /**
-     * @generated from protobuf field: int32 col_span = 12;
+     * @generated from protobuf field: double height = 12;
      */
-    colSpan: number;
+    height: number;
 }
 /**
  * @generated from protobuf message svyne.booking.CreateEventTicketTypeRequest
@@ -482,13 +466,13 @@ export interface TableTemplate {
      */
     isActive: boolean;
     /**
-     * @generated from protobuf field: int32 default_row_span = 8;
+     * @generated from protobuf field: double default_width = 8;
      */
-    defaultRowSpan: number;
+    defaultWidth: number;
     /**
-     * @generated from protobuf field: int32 default_col_span = 9;
+     * @generated from protobuf field: double default_height = 9;
      */
-    defaultColSpan: number;
+    defaultHeight: number;
 }
 /**
  * @generated from protobuf message svyne.booking.CreateTableTemplateRequest
@@ -515,13 +499,13 @@ export interface CreateTableTemplateRequest {
      */
     defaultPriceCents: number;
     /**
-     * @generated from protobuf field: int32 default_row_span = 6;
+     * @generated from protobuf field: double default_width = 6;
      */
-    defaultRowSpan: number;
+    defaultWidth: number;
     /**
-     * @generated from protobuf field: int32 default_col_span = 7;
+     * @generated from protobuf field: double default_height = 7;
      */
-    defaultColSpan: number;
+    defaultHeight: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListTableTemplatesResponse
@@ -539,10 +523,10 @@ class Table$Type extends MessageType<Table> {
             { no: 1, name: "tables_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "event_tables_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "label", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "grid_row", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "grid_col", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 6, name: "row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 7, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "pos_x", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 5, name: "pos_y", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 8, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 9, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
@@ -558,10 +542,10 @@ class Table$Type extends MessageType<Table> {
         message.tablesId = "";
         message.eventTablesId = "";
         message.label = "";
-        message.gridRow = 0;
-        message.gridCol = 0;
-        message.rowSpan = 0;
-        message.colSpan = 0;
+        message.posX = 0;
+        message.posY = 0;
+        message.width = 0;
+        message.height = 0;
         message.status = "";
         message.priceCents = 0;
         message.platformFeeCents = 0;
@@ -588,17 +572,17 @@ class Table$Type extends MessageType<Table> {
                 case /* string label */ 3:
                     message.label = reader.string();
                     break;
-                case /* int32 grid_row */ 4:
-                    message.gridRow = reader.int32();
+                case /* double pos_x */ 4:
+                    message.posX = reader.double();
                     break;
-                case /* int32 grid_col */ 5:
-                    message.gridCol = reader.int32();
+                case /* double pos_y */ 5:
+                    message.posY = reader.double();
                     break;
-                case /* int32 row_span */ 6:
-                    message.rowSpan = reader.int32();
+                case /* double width */ 6:
+                    message.width = reader.double();
                     break;
-                case /* int32 col_span */ 7:
-                    message.colSpan = reader.int32();
+                case /* double height */ 7:
+                    message.height = reader.double();
                     break;
                 case /* string status */ 8:
                     message.status = reader.string();
@@ -645,18 +629,18 @@ class Table$Type extends MessageType<Table> {
         /* string label = 3; */
         if (message.label !== "")
             writer.tag(3, WireType.LengthDelimited).string(message.label);
-        /* int32 grid_row = 4; */
-        if (message.gridRow !== 0)
-            writer.tag(4, WireType.Varint).int32(message.gridRow);
-        /* int32 grid_col = 5; */
-        if (message.gridCol !== 0)
-            writer.tag(5, WireType.Varint).int32(message.gridCol);
-        /* int32 row_span = 6; */
-        if (message.rowSpan !== 0)
-            writer.tag(6, WireType.Varint).int32(message.rowSpan);
-        /* int32 col_span = 7; */
-        if (message.colSpan !== 0)
-            writer.tag(7, WireType.Varint).int32(message.colSpan);
+        /* double pos_x = 4; */
+        if (message.posX !== 0)
+            writer.tag(4, WireType.Bit64).double(message.posX);
+        /* double pos_y = 5; */
+        if (message.posY !== 0)
+            writer.tag(5, WireType.Bit64).double(message.posY);
+        /* double width = 6; */
+        if (message.width !== 0)
+            writer.tag(6, WireType.Bit64).double(message.width);
+        /* double height = 7; */
+        if (message.height !== 0)
+            writer.tag(7, WireType.Bit64).double(message.height);
         /* string status = 8; */
         if (message.status !== "")
             writer.tag(8, WireType.LengthDelimited).string(message.status);
@@ -698,10 +682,10 @@ class LayoutObject$Type extends MessageType<LayoutObject> {
             { no: 1, name: "layout_objects_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "object_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "label", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "grid_row", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "grid_col", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 6, name: "row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 7, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "pos_x", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 5, name: "pos_y", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
             { no: 8, name: "color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 9, name: "sort_order", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
@@ -711,10 +695,10 @@ class LayoutObject$Type extends MessageType<LayoutObject> {
         message.layoutObjectsId = "";
         message.objectType = "";
         message.label = "";
-        message.gridRow = 0;
-        message.gridCol = 0;
-        message.rowSpan = 0;
-        message.colSpan = 0;
+        message.posX = 0;
+        message.posY = 0;
+        message.width = 0;
+        message.height = 0;
         message.color = "";
         message.sortOrder = 0;
         if (value !== undefined)
@@ -735,17 +719,17 @@ class LayoutObject$Type extends MessageType<LayoutObject> {
                 case /* string label */ 3:
                     message.label = reader.string();
                     break;
-                case /* int32 grid_row */ 4:
-                    message.gridRow = reader.int32();
+                case /* double pos_x */ 4:
+                    message.posX = reader.double();
                     break;
-                case /* int32 grid_col */ 5:
-                    message.gridCol = reader.int32();
+                case /* double pos_y */ 5:
+                    message.posY = reader.double();
                     break;
-                case /* int32 row_span */ 6:
-                    message.rowSpan = reader.int32();
+                case /* double width */ 6:
+                    message.width = reader.double();
                     break;
-                case /* int32 col_span */ 7:
-                    message.colSpan = reader.int32();
+                case /* double height */ 7:
+                    message.height = reader.double();
                     break;
                 case /* string color */ 8:
                     message.color = reader.string();
@@ -774,18 +758,18 @@ class LayoutObject$Type extends MessageType<LayoutObject> {
         /* string label = 3; */
         if (message.label !== "")
             writer.tag(3, WireType.LengthDelimited).string(message.label);
-        /* int32 grid_row = 4; */
-        if (message.gridRow !== 0)
-            writer.tag(4, WireType.Varint).int32(message.gridRow);
-        /* int32 grid_col = 5; */
-        if (message.gridCol !== 0)
-            writer.tag(5, WireType.Varint).int32(message.gridCol);
-        /* int32 row_span = 6; */
-        if (message.rowSpan !== 0)
-            writer.tag(6, WireType.Varint).int32(message.rowSpan);
-        /* int32 col_span = 7; */
-        if (message.colSpan !== 0)
-            writer.tag(7, WireType.Varint).int32(message.colSpan);
+        /* double pos_x = 4; */
+        if (message.posX !== 0)
+            writer.tag(4, WireType.Bit64).double(message.posX);
+        /* double pos_y = 5; */
+        if (message.posY !== 0)
+            writer.tag(5, WireType.Bit64).double(message.posY);
+        /* double width = 6; */
+        if (message.width !== 0)
+            writer.tag(6, WireType.Bit64).double(message.width);
+        /* double height = 7; */
+        if (message.height !== 0)
+            writer.tag(7, WireType.Bit64).double(message.height);
         /* string color = 8; */
         if (message.color !== "")
             writer.tag(8, WireType.LengthDelimited).string(message.color);
@@ -807,8 +791,6 @@ class EventLayout$Type extends MessageType<EventLayout> {
     constructor() {
         super("svyne.booking.EventLayout", [
             { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "grid_rows", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 3, name: "grid_cols", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "tables", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => Table },
             { no: 5, name: "objects", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => LayoutObject }
         ]);
@@ -816,8 +798,6 @@ class EventLayout$Type extends MessageType<EventLayout> {
     create(value?: PartialMessage<EventLayout>): EventLayout {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.eventsId = "";
-        message.gridRows = 0;
-        message.gridCols = 0;
         message.tables = [];
         message.objects = [];
         if (value !== undefined)
@@ -831,12 +811,6 @@ class EventLayout$Type extends MessageType<EventLayout> {
             switch (fieldNo) {
                 case /* string events_id */ 1:
                     message.eventsId = reader.string();
-                    break;
-                case /* int32 grid_rows */ 2:
-                    message.gridRows = reader.int32();
-                    break;
-                case /* int32 grid_cols */ 3:
-                    message.gridCols = reader.int32();
                     break;
                 case /* repeated svyne.booking.Table tables */ 4:
                     message.tables.push(Table.internalBinaryRead(reader, reader.uint32(), options));
@@ -859,12 +833,6 @@ class EventLayout$Type extends MessageType<EventLayout> {
         /* string events_id = 1; */
         if (message.eventsId !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.eventsId);
-        /* int32 grid_rows = 2; */
-        if (message.gridRows !== 0)
-            writer.tag(2, WireType.Varint).int32(message.gridRows);
-        /* int32 grid_cols = 3; */
-        if (message.gridCols !== 0)
-            writer.tag(3, WireType.Varint).int32(message.gridCols);
         /* repeated svyne.booking.Table tables = 4; */
         for (let i = 0; i < message.tables.length; i++)
             Table.internalBinaryWrite(message.tables[i], writer.tag(4, WireType.LengthDelimited).fork(), options).join();
@@ -886,8 +854,6 @@ class SaveEventLayoutRequest$Type extends MessageType<SaveEventLayoutRequest> {
     constructor() {
         super("svyne.booking.SaveEventLayoutRequest", [
             { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "grid_rows", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 3, name: "grid_cols", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "tables_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "locked_ids", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "objects_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
@@ -896,8 +862,6 @@ class SaveEventLayoutRequest$Type extends MessageType<SaveEventLayoutRequest> {
     create(value?: PartialMessage<SaveEventLayoutRequest>): SaveEventLayoutRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.eventsId = "";
-        message.gridRows = 0;
-        message.gridCols = 0;
         message.tablesJson = "";
         message.lockedIds = [];
         message.objectsJson = "";
@@ -912,12 +876,6 @@ class SaveEventLayoutRequest$Type extends MessageType<SaveEventLayoutRequest> {
             switch (fieldNo) {
                 case /* string events_id */ 1:
                     message.eventsId = reader.string();
-                    break;
-                case /* int32 grid_rows */ 2:
-                    message.gridRows = reader.int32();
-                    break;
-                case /* int32 grid_cols */ 3:
-                    message.gridCols = reader.int32();
                     break;
                 case /* string tables_json */ 4:
                     message.tablesJson = reader.string();
@@ -943,12 +901,6 @@ class SaveEventLayoutRequest$Type extends MessageType<SaveEventLayoutRequest> {
         /* string events_id = 1; */
         if (message.eventsId !== "")
             writer.tag(1, WireType.LengthDelimited).string(message.eventsId);
-        /* int32 grid_rows = 2; */
-        if (message.gridRows !== 0)
-            writer.tag(2, WireType.Varint).int32(message.gridRows);
-        /* int32 grid_cols = 3; */
-        if (message.gridCols !== 0)
-            writer.tag(3, WireType.Varint).int32(message.gridCols);
         /* string tables_json = 4; */
         if (message.tablesJson !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.tablesJson);
@@ -1073,8 +1025,8 @@ class EventTableType$Type extends MessageType<EventTableType> {
             { no: 5, name: "color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "prices_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 8, name: "row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 9, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 8, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<EventTableType>): EventTableType {
@@ -1086,8 +1038,8 @@ class EventTableType$Type extends MessageType<EventTableType> {
         message.color = "";
         message.priceCents = 0;
         message.pricesId = "";
-        message.rowSpan = 0;
-        message.colSpan = 0;
+        message.defaultWidth = 0;
+        message.defaultHeight = 0;
         if (value !== undefined)
             reflectionMergePartial<EventTableType>(this, message, value);
         return message;
@@ -1118,11 +1070,11 @@ class EventTableType$Type extends MessageType<EventTableType> {
                 case /* string prices_id */ 7:
                     message.pricesId = reader.string();
                     break;
-                case /* int32 row_span */ 8:
-                    message.rowSpan = reader.int32();
+                case /* double default_width */ 8:
+                    message.defaultWidth = reader.double();
                     break;
-                case /* int32 col_span */ 9:
-                    message.colSpan = reader.int32();
+                case /* double default_height */ 9:
+                    message.defaultHeight = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1157,12 +1109,12 @@ class EventTableType$Type extends MessageType<EventTableType> {
         /* string prices_id = 7; */
         if (message.pricesId !== "")
             writer.tag(7, WireType.LengthDelimited).string(message.pricesId);
-        /* int32 row_span = 8; */
-        if (message.rowSpan !== 0)
-            writer.tag(8, WireType.Varint).int32(message.rowSpan);
-        /* int32 col_span = 9; */
-        if (message.colSpan !== 0)
-            writer.tag(9, WireType.Varint).int32(message.colSpan);
+        /* double default_width = 8; */
+        if (message.defaultWidth !== 0)
+            writer.tag(8, WireType.Bit64).double(message.defaultWidth);
+        /* double default_height = 9; */
+        if (message.defaultHeight !== 0)
+            writer.tag(9, WireType.Bit64).double(message.defaultHeight);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1234,8 +1186,8 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
             { no: 8, name: "table_templates_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 9, name: "is_all_inclusive", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 10, name: "per_attendee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 11, name: "row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 12, name: "col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 11, name: "width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 12, name: "height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<CreateEventTableRequest>): CreateEventTableRequest {
@@ -1250,8 +1202,8 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
         message.tableTemplatesId = "";
         message.isAllInclusive = false;
         message.perAttendeeCents = 0;
-        message.rowSpan = 0;
-        message.colSpan = 0;
+        message.width = 0;
+        message.height = 0;
         if (value !== undefined)
             reflectionMergePartial<CreateEventTableRequest>(this, message, value);
         return message;
@@ -1291,11 +1243,11 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
                 case /* int32 per_attendee_cents */ 10:
                     message.perAttendeeCents = reader.int32();
                     break;
-                case /* int32 row_span */ 11:
-                    message.rowSpan = reader.int32();
+                case /* double width */ 11:
+                    message.width = reader.double();
                     break;
-                case /* int32 col_span */ 12:
-                    message.colSpan = reader.int32();
+                case /* double height */ 12:
+                    message.height = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1339,12 +1291,12 @@ class CreateEventTableRequest$Type extends MessageType<CreateEventTableRequest> 
         /* int32 per_attendee_cents = 10; */
         if (message.perAttendeeCents !== 0)
             writer.tag(10, WireType.Varint).int32(message.perAttendeeCents);
-        /* int32 row_span = 11; */
-        if (message.rowSpan !== 0)
-            writer.tag(11, WireType.Varint).int32(message.rowSpan);
-        /* int32 col_span = 12; */
-        if (message.colSpan !== 0)
-            writer.tag(12, WireType.Varint).int32(message.colSpan);
+        /* double width = 11; */
+        if (message.width !== 0)
+            writer.tag(11, WireType.Bit64).double(message.width);
+        /* double height = 12; */
+        if (message.height !== 0)
+            writer.tag(12, WireType.Bit64).double(message.height);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1746,8 +1698,8 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
             { no: 5, name: "default_color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "default_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 8, name: "default_row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 9, name: "default_col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 8, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<TableTemplate>): TableTemplate {
@@ -1759,8 +1711,8 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
         message.defaultColor = "";
         message.defaultPriceCents = 0;
         message.isActive = false;
-        message.defaultRowSpan = 0;
-        message.defaultColSpan = 0;
+        message.defaultWidth = 0;
+        message.defaultHeight = 0;
         if (value !== undefined)
             reflectionMergePartial<TableTemplate>(this, message, value);
         return message;
@@ -1791,11 +1743,11 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
                 case /* bool is_active */ 7:
                     message.isActive = reader.bool();
                     break;
-                case /* int32 default_row_span */ 8:
-                    message.defaultRowSpan = reader.int32();
+                case /* double default_width */ 8:
+                    message.defaultWidth = reader.double();
                     break;
-                case /* int32 default_col_span */ 9:
-                    message.defaultColSpan = reader.int32();
+                case /* double default_height */ 9:
+                    message.defaultHeight = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1830,12 +1782,12 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
         /* bool is_active = 7; */
         if (message.isActive !== false)
             writer.tag(7, WireType.Varint).bool(message.isActive);
-        /* int32 default_row_span = 8; */
-        if (message.defaultRowSpan !== 0)
-            writer.tag(8, WireType.Varint).int32(message.defaultRowSpan);
-        /* int32 default_col_span = 9; */
-        if (message.defaultColSpan !== 0)
-            writer.tag(9, WireType.Varint).int32(message.defaultColSpan);
+        /* double default_width = 8; */
+        if (message.defaultWidth !== 0)
+            writer.tag(8, WireType.Bit64).double(message.defaultWidth);
+        /* double default_height = 9; */
+        if (message.defaultHeight !== 0)
+            writer.tag(9, WireType.Bit64).double(message.defaultHeight);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1855,8 +1807,8 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
             { no: 3, name: "default_shape", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "default_color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "default_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 6, name: "default_row_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 7, name: "default_col_span", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 6, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<CreateTableTemplateRequest>): CreateTableTemplateRequest {
@@ -1866,8 +1818,8 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
         message.defaultShape = "";
         message.defaultColor = "";
         message.defaultPriceCents = 0;
-        message.defaultRowSpan = 0;
-        message.defaultColSpan = 0;
+        message.defaultWidth = 0;
+        message.defaultHeight = 0;
         if (value !== undefined)
             reflectionMergePartial<CreateTableTemplateRequest>(this, message, value);
         return message;
@@ -1892,11 +1844,11 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
                 case /* int32 default_price_cents */ 5:
                     message.defaultPriceCents = reader.int32();
                     break;
-                case /* int32 default_row_span */ 6:
-                    message.defaultRowSpan = reader.int32();
+                case /* double default_width */ 6:
+                    message.defaultWidth = reader.double();
                     break;
-                case /* int32 default_col_span */ 7:
-                    message.defaultColSpan = reader.int32();
+                case /* double default_height */ 7:
+                    message.defaultHeight = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1925,12 +1877,12 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
         /* int32 default_price_cents = 5; */
         if (message.defaultPriceCents !== 0)
             writer.tag(5, WireType.Varint).int32(message.defaultPriceCents);
-        /* int32 default_row_span = 6; */
-        if (message.defaultRowSpan !== 0)
-            writer.tag(6, WireType.Varint).int32(message.defaultRowSpan);
-        /* int32 default_col_span = 7; */
-        if (message.defaultColSpan !== 0)
-            writer.tag(7, WireType.Varint).int32(message.defaultColSpan);
+        /* double default_width = 6; */
+        if (message.defaultWidth !== 0)
+            writer.tag(6, WireType.Bit64).double(message.defaultWidth);
+        /* double default_height = 7; */
+        if (message.defaultHeight !== 0)
+            writer.tag(7, WireType.Bit64).double(message.defaultHeight);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
