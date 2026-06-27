@@ -10,6 +10,7 @@ import type { ListTableTemplatesResponse } from "./booking";
 import type { Empty } from "./common";
 import type { ListTableTemplatePriceRulesResponse } from "./booking";
 import type { CreateTableTemplatePriceRuleRequest } from "./booking";
+import type { UpdateEventTicketTypeRequest } from "./booking";
 import type { CreateEventTicketTypeRequest } from "./booking";
 import type { CreateEventTableRequest } from "./booking";
 import type { ListEventTableTypesResponse } from "./booking";
@@ -62,6 +63,10 @@ export interface ITableBookingServiceClient {
      * @generated from protobuf rpc: CreateEventTicketType(svyne.booking.CreateEventTicketTypeRequest) returns (svyne.common.UuidValue);
      */
     createEventTicketType(input: CreateEventTicketTypeRequest, options?: RpcOptions): UnaryCall<CreateEventTicketTypeRequest, UuidValue>;
+    /**
+     * @generated from protobuf rpc: UpdateEventTicketType(svyne.booking.UpdateEventTicketTypeRequest) returns (svyne.common.AckResponse);
+     */
+    updateEventTicketType(input: UpdateEventTicketTypeRequest, options?: RpcOptions): UnaryCall<UpdateEventTicketTypeRequest, AckResponse>;
     /**
      * @generated from protobuf rpc: DeleteEventTicketType(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
@@ -170,10 +175,17 @@ export class TableBookingServiceClient implements ITableBookingServiceClient, Se
         return stackIntercept<CreateEventTicketTypeRequest, UuidValue>("unary", this._transport, method, opt, input);
     }
     /**
+     * @generated from protobuf rpc: UpdateEventTicketType(svyne.booking.UpdateEventTicketTypeRequest) returns (svyne.common.AckResponse);
+     */
+    updateEventTicketType(input: UpdateEventTicketTypeRequest, options?: RpcOptions): UnaryCall<UpdateEventTicketTypeRequest, AckResponse> {
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UpdateEventTicketTypeRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: DeleteEventTicketType(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
     deleteEventTicketType(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        const method = this.methods[10], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
@@ -184,21 +196,21 @@ export class TableBookingServiceClient implements ITableBookingServiceClient, Se
      * @generated from protobuf rpc: CreateTableTemplatePriceRule(svyne.booking.CreateTableTemplatePriceRuleRequest) returns (svyne.common.UuidValue);
      */
     createTableTemplatePriceRule(input: CreateTableTemplatePriceRuleRequest, options?: RpcOptions): UnaryCall<CreateTableTemplatePriceRuleRequest, UuidValue> {
-        const method = this.methods[10], opt = this._transport.mergeOptions(options);
+        const method = this.methods[11], opt = this._transport.mergeOptions(options);
         return stackIntercept<CreateTableTemplatePriceRuleRequest, UuidValue>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ListTableTemplatePriceRules(svyne.common.UuidValue) returns (svyne.booking.ListTableTemplatePriceRulesResponse);
      */
     listTableTemplatePriceRules(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, ListTableTemplatePriceRulesResponse> {
-        const method = this.methods[11], opt = this._transport.mergeOptions(options);
+        const method = this.methods[12], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, ListTableTemplatePriceRulesResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: DeleteTableTemplatePriceRule(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
     deleteTableTemplatePriceRule(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[12], opt = this._transport.mergeOptions(options);
+        const method = this.methods[13], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
@@ -207,21 +219,21 @@ export class TableBookingServiceClient implements ITableBookingServiceClient, Se
      * @generated from protobuf rpc: ListTableTemplates(svyne.common.Empty) returns (svyne.booking.ListTableTemplatesResponse);
      */
     listTableTemplates(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListTableTemplatesResponse> {
-        const method = this.methods[13], opt = this._transport.mergeOptions(options);
+        const method = this.methods[14], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, ListTableTemplatesResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: CreateTableTemplate(svyne.booking.CreateTableTemplateRequest) returns (svyne.common.UuidValue);
      */
     createTableTemplate(input: CreateTableTemplateRequest, options?: RpcOptions): UnaryCall<CreateTableTemplateRequest, UuidValue> {
-        const method = this.methods[14], opt = this._transport.mergeOptions(options);
+        const method = this.methods[15], opt = this._transport.mergeOptions(options);
         return stackIntercept<CreateTableTemplateRequest, UuidValue>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: DeleteTableTemplate(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
     deleteTableTemplate(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[15], opt = this._transport.mergeOptions(options);
+        const method = this.methods[16], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
 }

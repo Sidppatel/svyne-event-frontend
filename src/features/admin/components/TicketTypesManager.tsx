@@ -4,7 +4,7 @@ import {
   createTicketType,
   listTicketTypes,
   deleteTicketType,
-  replaceTicketType,
+  updateTicketType,
 } from '@/features/admin/services/eventAdminService';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
@@ -151,7 +151,7 @@ function TicketTypeRow({
           disabled={!label.trim()}
           onClick={() =>
             guard(() =>
-              replaceTicketType(tt.eventTicketTypesId, {
+              updateTicketType(tt.eventTicketTypesId, {
                 eventsId,
                 label: label.trim(),
                 priceCents: usdToCents(priceUsd),
