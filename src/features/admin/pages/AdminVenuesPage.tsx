@@ -12,13 +12,41 @@ import {
 } from '@/features/admin/services/catalogService';
 import { rpcErrorMessage } from '@/shared/session';
 import { uploadImage, imageUrl } from '@/shared/upload';
-import { AddressAutocomplete } from '@/shared/components/AddressAutocomplete';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { Select } from '@/shared/ui/select';
 import { Switch } from '@/shared/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import {
+  US_STATES,
+  isValidEmail,
+  isValidState,
+  isValidUsPhone,
+  toPhoneE164,
+  formatUsPhone,
+} from '@/shared/lib/validation';
 import type { Venue } from '@/shared/proto/catalog';
+
+function venueError(draft: VenueDraft): string | null {
+  if (!draft.name.trim()) {
+    return 'Name is required';
+  }
+  if (draft.email && !isValidEmail(draft.email)) {
+    return 'Enter a valid email address';
+  }
+  if (draft.phone && !isValidUsPhone(draft.phone)) {
+    return 'Enter a valid US phone (+1 and 10 digits)';
+  }
+  if (draft.state && !isValidState(draft.state)) {
+    return 'Select a valid US state';
+  }
+  return null;
+}
+
+function normalizeVenue(draft: VenueDraft): VenueDraft {
+  return { ...draft, phone: draft.phone ? toPhoneE164(draft.phone) : '' };
+}
 
 
 function emptyDraft(): VenueDraft {
@@ -51,6 +79,10 @@ function toDraft(venue: Venue): VenueDraft {
   };
 }
 
+function withDisplayPhone(draft: VenueDraft): VenueDraft {
+  return { ...draft, phone: formatUsPhone(draft.phone) };
+}
+
 export function AdminVenuesPage() {
   const loader = useCallback(() => listVenues(), []);
   const { data, loading, error, reload } = useAsync(loader);
@@ -58,9 +90,14 @@ export function AdminVenuesPage() {
   const [notice, setNotice] = useState<string | null>(null);
 
   async function add() {
+    const err = venueError(draft);
+    if (err) {
+      setNotice(err);
+      return;
+    }
     setNotice(null);
     try {
-      await createVenue(draft);
+      await createVenue(normalizeVenue(draft));
       setDraft(emptyDraft());
       reload();
     } catch (caught) {
@@ -104,12 +141,8 @@ function VenueFields({ draft, onChange }: { draft: VenueDraft; onChange: (d: Ven
   return (
     <div className="grid gap-3 md:grid-cols-2">
       <div className="space-y-1 md:col-span-2">
-        <Label>Line 1 (type to search)</Label>
-        <AddressAutocomplete
-          value={draft.line1}
-          onChange={(line1) => onChange({ ...draft, line1 })}
-          onSelect={(a) => onChange({ ...draft, line1: a.line1, city: a.city, state: a.state, zip: a.zip })}
-        />
+        <Label>Line 1</Label>
+        <Input value={draft.line1} onChange={(e) => onChange({ ...draft, line1: e.target.value })} />
       </div>
       <div className="space-y-1">
         <Label>Line 2</Label>
@@ -122,7 +155,14 @@ function VenueFields({ draft, onChange }: { draft: VenueDraft; onChange: (d: Ven
       <div className="flex gap-3">
         <div className="space-y-1">
           <Label>State</Label>
-          <Input className="w-20" maxLength={2} value={draft.state} onChange={(e) => onChange({ ...draft, state: e.target.value.toUpperCase() })} />
+          <Select className="w-40" value={draft.state} onChange={(e) => onChange({ ...draft, state: e.target.value })}>
+            <option value="">—</option>
+            {US_STATES.map((s) => (
+              <option key={s.code} value={s.code}>
+                {s.code} — {s.name}
+              </option>
+            ))}
+          </Select>
         </div>
         <div className="space-y-1">
           <Label>Zip</Label>
@@ -131,12 +171,20 @@ function VenueFields({ draft, onChange }: { draft: VenueDraft; onChange: (d: Ven
       </div>
 
       <div className="space-y-1">
-        <Label>Phone</Label>
-        <Input value={draft.phone} onChange={(e) => onChange({ ...draft, phone: e.target.value })} />
+        <Label>Phone (US)</Label>
+        <Input
+          placeholder="+1 (555) 123-4567"
+          value={draft.phone}
+          onChange={(e) => onChange({ ...draft, phone: formatUsPhone(e.target.value) })}
+        />
       </div>
       <div className="space-y-1">
         <Label>Email</Label>
-        <Input value={draft.email} onChange={(e) => onChange({ ...draft, email: e.target.value })} />
+        <Input
+          type="email"
+          value={draft.email}
+          onChange={(e) => onChange({ ...draft, email: e.target.value })}
+        />
       </div>
       <div className="space-y-1 md:col-span-2">
         <Label>Website</Label>
@@ -148,13 +196,18 @@ function VenueFields({ draft, onChange }: { draft: VenueDraft; onChange: (d: Ven
 
 function VenueRow({ venue, onChanged }: { venue: Venue; onChanged: () => void }) {
   const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState<VenueDraft>(toDraft(venue));
+  const [draft, setDraft] = useState<VenueDraft>(withDisplayPhone(toDraft(venue)));
   const [notice, setNotice] = useState<string | null>(null);
 
   async function persist(isActive: boolean) {
+    const err = venueError(draft);
+    if (err) {
+      setNotice(err);
+      return;
+    }
     setNotice(null);
     try {
-      await updateVenue(venue.venuesId, draft, isActive);
+      await updateVenue(venue.venuesId, normalizeVenue(draft), isActive);
       setEditing(false);
       onChanged();
     } catch (caught) {

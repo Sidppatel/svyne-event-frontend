@@ -156,3 +156,13 @@ export async function updateSponsor(sponsorsId: string, draft: NamedDraft): Prom
 export async function deleteSponsor(sponsorsId: string): Promise<void> {
   await callRpc(() => sponsorClient.deleteSponsor({ value: sponsorsId }));
 }
+
+export async function setEventPerformers(eventsId: string, performerIds: string[]): Promise<void> {
+  const linksJson = JSON.stringify(performerIds.map((performerId, sortOrder) => ({ performerId, sortOrder })));
+  await callRpc(() => performerClient.setEventPerformers({ eventsId, linksJson }));
+}
+
+export async function setEventSponsors(eventsId: string, sponsorIds: string[]): Promise<void> {
+  const linksJson = JSON.stringify(sponsorIds.map((sponsorId, sortOrder) => ({ sponsorId, sortOrder })));
+  await callRpc(() => sponsorClient.setEventSponsors({ eventsId, linksJson }));
+}

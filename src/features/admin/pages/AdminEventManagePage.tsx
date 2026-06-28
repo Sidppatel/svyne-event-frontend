@@ -13,7 +13,8 @@ import {
   listTicketTypes,
 } from '@/features/admin/services/eventAdminService';
 import { listTableTemplates } from '@/features/admin/services/tableTemplateService';
-import { getVenue } from '@/features/admin/services/catalogService';
+import { getVenue, listVenues } from '@/features/admin/services/catalogService';
+import { EventCatalogLinks } from '@/features/admin/components/EventCatalogLinks';
 import { getEventLayout } from '@/features/admin/services/layoutService';
 import { tzForState, epochToZonedInput, zonedInputToEpoch, zoneAbbrev } from '@/shared/lib/timezone';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
@@ -30,7 +31,7 @@ import {
   unassignStaff,
 } from '@/features/admin/services/staffAdminService';
 import { rpcErrorMessage } from '@/shared/session';
-import { centsToUSD } from '@/shared/lib/format';
+import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -174,8 +175,8 @@ export function AdminEventManagePage() {
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   disabled={!canPublish}
                   title={canPublish ? "Publish this event" : "Cannot publish until you add at least one ticket type or place a table on the floor plan"}
                   onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
@@ -202,6 +203,15 @@ export function AdminEventManagePage() {
 
       {event.data ? <EditSection event={event.data} timeZone={timeZone} onSaved={event.reload} /> : null}
 
+      {event.data ? (
+        <EventCatalogLinks
+          eventsId={eventsId}
+          performersJson={event.data.performersJson}
+          sponsorsJson={event.data.sponsorsJson}
+          onChanged={event.reload}
+        />
+      ) : null}
+
       <EventMediaManager eventsId={eventsId} />
 
       {event.data ? (
@@ -224,131 +234,133 @@ export function AdminEventManagePage() {
       ) : null}
 
       {event.data && event.data.eventType !== 'Open' ? (
-      <Card>
-        <SectionHeader icon={LayoutGrid} title="Tables" />
-        <CardContent className="space-y-3">
-          {/* Admin reuses a catalog table type and overrides values; cannot create new types. */}
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="space-y-1">
-              <Label>Table type (catalog)</Label>
-              <Select
-                className="w-48"
-                value={tableTemplateId}
-                onChange={(e) => selectTemplate(e.target.value)}
-              >
-                <option value="">— select —</option>
-                {templateList.map((t) => (
-                  <option key={t.tableTemplatesId} value={t.tableTemplatesId}>
-                    {t.name}
-                  </option>
-                ))}
-              </Select>
-            </div>
-            <div className="space-y-1">
-              <Label>Table type name</Label>
-              <Input className="w-32" value={tableLabel} disabled readOnly />
-            </div>
-            <div className="space-y-1">
-              <Label>Color</Label>
-              <span
-                className="flex h-9 w-14 items-center justify-center rounded-md border border-input"
-                title="Inherited from the catalog table type"
-              >
-                <span className="size-5 rounded-sm" style={{ backgroundColor: tableColor || 'transparent' }} />
-              </span>
-            </div>
-            <div className="space-y-1">
-              <Label>Capacity</Label>
-              <Input
-                type="number"
-                disabled={!tableTemplateId}
-                value={tableCapacity}
-                onChange={(e) => setTableCapacity(Number(e.target.value))}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label>Price (cents)</Label>
-              <Input
-                type="number"
-                disabled={!tableTemplateId}
-                value={tablePriceCents}
-                onChange={(e) => setTablePriceCents(Number(e.target.value))}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label>Width (px)</Label>
-              <Input className="w-20" type="number" value={tableWidth} disabled readOnly />
-            </div>
-            <div className="space-y-1">
-              <Label>Height (px)</Label>
-              <Input className="w-20" type="number" value={tableHeight} disabled readOnly />
-            </div>
-            <label className="flex items-center gap-2 self-center text-sm">
-              <input type="checkbox" checked={tableIsAllInclusive} disabled readOnly />
-              All-inclusive (flat table price)
-            </label>
-            <Button
-              size="sm"
-              disabled={!tableTemplateId}
-              onClick={() =>
-                guard(
-                  () =>
-                    createEventTable({
-                      eventsId,
-                      label: tableLabel,
-                      capacity: tableCapacity,
-                      // Empty = inherit the catalog template's default shape.
-                      shape: '',
-                      color: tableColor,
-                      priceCents: tablePriceCents,
-                      feeFormulasId: '',
-                      isAllInclusive: tableIsAllInclusive,
-                      perAttendeeCents: tablePerAttendeeCents,
-                      tableTemplatesId: tableTemplateId,
-                      width: tableWidth,
-                      height: tableHeight,
-                    }).then(() => {
-                      setTableTemplateId('');
-                      setTableLabel('');
-                      setTableColor('');
-                      setFloorKey((k) => k + 1);
-                      setPricingKey((k) => k + 1);
-                    }),
-                  tableTypes.reload,
-                )
-              }
-            >
-              Add table
-            </Button>
-          </div>
-          <div className="space-y-1">
-            {typeList.map((type) => (
-              <div key={type.eventTablesId} className="flex items-center justify-between border-b py-1 text-sm">
-                <span className="flex items-center gap-2">
-                  <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
-                  {type.label} · {centsToUSD(type.priceCents)}
-                </span>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() =>
-                    guard(
-                      () =>
-                        deleteEventTable(type.eventTablesId).then(() => {
-                          setFloorKey((k) => k + 1);
-                          setPricingKey((k) => k + 1);
-                        }),
-                      tableTypes.reload,
-                    )
-                  }
+        <Card>
+          <SectionHeader icon={LayoutGrid} title="Tables" />
+          <CardContent className="space-y-3">
+            {/* Admin reuses a catalog table type and overrides values; cannot create new types. */}
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="space-y-1">
+                <Label>Table Type</Label>
+                <Select
+                  className="w-48"
+                  value={tableTemplateId}
+                  onChange={(e) => selectTemplate(e.target.value)}
                 >
-                  Remove
-                </Button>
+                  <option value="">— select —</option>
+                  {templateList.map((t) => (
+                    <option key={t.tableTemplatesId} value={t.tableTemplatesId}>
+                      {t.name}
+                    </option>
+                  ))}
+                </Select>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <div className="space-y-1">
+                <Label>Table Type Name</Label>
+                <Input className="w-32" value={tableLabel} disabled readOnly />
+              </div>
+              <div className="space-y-1">
+                <Label>Color</Label>
+                <span
+                  className="flex h-9 w-14 items-center justify-center rounded-md border border-input"
+                  title="Inherited from the catalog table type"
+                >
+                  <span className="size-5 rounded-sm" style={{ backgroundColor: tableColor || 'transparent' }} />
+                </span>
+              </div>
+              <div className="space-y-1">
+                <Label>Capacity</Label>
+                <Input
+                  type="number"
+                  disabled={!tableTemplateId}
+                  value={tableCapacity}
+                  onChange={(e) => setTableCapacity(Number(e.target.value))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Price (USD)</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  disabled={!tableTemplateId}
+                  value={centsToUsdInput(tablePriceCents)}
+                  onChange={(e) => setTablePriceCents(usdToCents(e.target.value))}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Width (px)</Label>
+                <Input className="w-20" type="number" value={tableWidth} disabled readOnly />
+              </div>
+              <div className="space-y-1">
+                <Label>Height (px)</Label>
+                <Input className="w-20" type="number" value={tableHeight} disabled readOnly />
+              </div>
+              <label className="flex items-center gap-2 self-center text-sm">
+                <input type="checkbox" checked={tableIsAllInclusive} disabled readOnly />
+                All-inclusive (flat table price)
+              </label>
+              <Button
+                size="sm"
+                disabled={!tableTemplateId}
+                onClick={() =>
+                  guard(
+                    () =>
+                      createEventTable({
+                        eventsId,
+                        label: tableLabel,
+                        capacity: tableCapacity,
+                        // Empty = inherit the catalog template's default shape.
+                        shape: '',
+                        color: tableColor,
+                        priceCents: tablePriceCents,
+                        feeFormulasId: '',
+                        isAllInclusive: tableIsAllInclusive,
+                        perAttendeeCents: tablePerAttendeeCents,
+                        tableTemplatesId: tableTemplateId,
+                        width: tableWidth,
+                        height: tableHeight,
+                      }).then(() => {
+                        setTableTemplateId('');
+                        setTableLabel('');
+                        setTableColor('');
+                        setFloorKey((k) => k + 1);
+                        setPricingKey((k) => k + 1);
+                      }),
+                    tableTypes.reload,
+                  )
+                }
+              >
+                Add table
+              </Button>
+            </div>
+            <div className="space-y-1">
+              {typeList.map((type) => (
+                <div key={type.eventTablesId} className="flex items-center justify-between border-b py-1 text-sm">
+                  <span className="flex items-center gap-2">
+                    <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
+                    {type.label} · {centsToUSD(type.priceCents)}
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() =>
+                      guard(
+                        () =>
+                          deleteEventTable(type.eventTablesId).then(() => {
+                            setFloorKey((k) => k + 1);
+                            setPricingKey((k) => k + 1);
+                          }),
+                        tableTypes.reload,
+                      )
+                    }
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       ) : null}
 
       {event.data && event.data.eventType !== 'Open' ? (
@@ -405,10 +417,13 @@ function EditSection({
   timeZone: string;
   onSaved: () => void;
 }) {
+  const venuesLoader = useCallback(() => listVenues(), []);
+  const venues = useAsync(venuesLoader);
   const [title, setTitle] = useState(event.title);
   const [description, setDescription] = useState(event.description);
   const [category, setCategory] = useState(event.category);
   const [eventType, setEventType] = useState(event.eventType || 'Open');
+  const [venuesId, setVenuesId] = useState(event.venuesId);
   const [feesIncluded, setFeesIncluded] = useState(event.feesIncluded);
   const [start, setStart] = useState(epochToZonedInput(event.startDate, timeZone));
   const [end, setEnd] = useState(epochToZonedInput(event.endDate, timeZone));
@@ -440,7 +455,7 @@ function EditSection({
         // Open has no floor plan; Table/Both need the grid layout.
         layoutMode: eventType === 'Open' ? 'Open' : 'Grid',
         eventType,
-        venuesId: event.venuesId,
+        venuesId,
         imagePath: event.imagePath,
       });
       onSaved();
@@ -473,6 +488,19 @@ function EditSection({
             <option value="Open">Open seating (ticket tiers)</option>
             <option value="Table">Table based (floor plan)</option>
             <option value="Both">Both (tiers + tables)</option>
+          </Select>
+        </div>
+        <div className="space-y-1">
+          <Label>Venue</Label>
+          <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)}>
+            <option value="">— select venue —</option>
+            {(venues.data ?? [])
+              .filter((v) => v.isActive || v.venuesId === venuesId)
+              .map((v) => (
+                <option key={v.venuesId} value={v.venuesId}>
+                  {v.name}
+                </option>
+              ))}
           </Select>
         </div>
         <div className="space-y-1">
