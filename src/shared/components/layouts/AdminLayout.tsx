@@ -12,7 +12,10 @@ export function AdminLayout() {
     { to: '/', label: 'Dashboard' },
     { to: '/events', label: 'Events' },
     { to: '/bookings', label: 'Bookings' },
-    { to: '/catalog', label: 'Catalog' },
+    { to: '/table-types', label: 'Table Types' },
+    { to: '/venues', label: 'Venues' },
+    { to: '/performers', label: 'Performers' },
+    { to: '/sponsors', label: 'Sponsors' },
     { to: '/feedback', label: 'Feedback' },
     { to: '/logs', label: 'Logs' },
   ];

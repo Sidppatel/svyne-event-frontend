@@ -10,6 +10,19 @@ export interface TableTemplateInput {
   defaultPriceCents: number;
   defaultWidth: number;
   defaultHeight: number;
+  defaultIsAllInclusive: boolean;
+}
+
+export interface TableTemplateEdit {
+  tableTemplatesId: string;
+  defaultCapacity: number;
+  defaultShape: string;
+  defaultColor: string;
+  defaultPriceCents: number;
+  defaultWidth: number;
+  defaultHeight: number;
+  defaultIsAllInclusive: boolean;
+  isActive: boolean;
 }
 
 export interface TableTemplatePriceRuleInput {
@@ -32,6 +45,10 @@ export async function listTableTemplates(): Promise<TableTemplate[]> {
 export async function createTableTemplate(input: TableTemplateInput): Promise<string> {
   const res = await callRpc(() => tableBookingClient.createTableTemplate(input));
   return res.value;
+}
+
+export async function updateTableTemplate(input: TableTemplateEdit): Promise<void> {
+  await callRpc(() => tableBookingClient.updateTableTemplate(input));
 }
 
 export async function deleteTableTemplate(tableTemplatesId: string): Promise<void> {

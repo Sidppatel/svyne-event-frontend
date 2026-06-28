@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { NotFoundPage } from '@/shared/components/StatusPages';
 import { AdminLayout } from '@/shared/components/layouts/AdminLayout';
@@ -9,7 +9,10 @@ import { AdminEventsPage } from '@/features/admin/pages/AdminEventsPage';
 import { AdminEventWizardPage } from '@/features/admin/pages/AdminEventWizardPage';
 import { AdminEventManagePage } from '@/features/admin/pages/AdminEventManagePage';
 import { AdminBookingsPage } from '@/features/admin/pages/AdminBookingsPage';
-import { AdminCatalogPage } from '@/features/admin/pages/AdminCatalogPage';
+import { AdminTableTypesPage } from '@/features/admin/pages/AdminTableTypesPage';
+import { AdminVenuesPage } from '@/features/admin/pages/AdminVenuesPage';
+import { AdminPerformersPage } from '@/features/admin/pages/AdminPerformersPage';
+import { AdminSponsorsPage } from '@/features/admin/pages/AdminSponsorsPage';
 import { AdminInvitationsPage } from '@/features/admin/pages/AdminInvitationsPage';
 import { AdminFinancialPage } from '@/features/admin/pages/AdminFinancialPage';
 import { AdminFeedbackPage } from '@/features/admin/pages/AdminFeedbackPage';
@@ -31,7 +34,11 @@ export default function AdminRoutes() {
         <Route path="events/new" element={<AdminEventWizardPage />} />
         <Route path="events/:eventsId" element={<AdminEventManagePage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
-        <Route path="catalog" element={<AdminCatalogPage />} />
+        <Route path="catalog" element={<Navigate to="/venues" replace />} />
+        <Route path="table-types" element={<AdminTableTypesPage />} />
+        <Route path="venues" element={<AdminVenuesPage />} />
+        <Route path="performers" element={<AdminPerformersPage />} />
+        <Route path="sponsors" element={<AdminSponsorsPage />} />
         <Route path="invitations" element={<AdminInvitationsPage />} />
         <Route path="financial" element={<AdminFinancialPage />} />
         <Route path="feedback" element={<AdminFeedbackPage />} />

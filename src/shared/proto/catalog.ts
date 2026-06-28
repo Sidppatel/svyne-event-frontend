@@ -56,6 +56,22 @@ export interface Venue {
      * @generated from protobuf field: string state = 9;
      */
     state: string;
+    /**
+     * @generated from protobuf field: string line1 = 10;
+     */
+    line1: string;
+    /**
+     * @generated from protobuf field: string line2 = 11;
+     */
+    line2: string;
+    /**
+     * @generated from protobuf field: string city = 12;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string zip = 13;
+     */
+    zip: string;
 }
 /**
  * @generated from protobuf message svyne.catalog.CreateVenueRequest
@@ -134,6 +150,30 @@ export interface UpdateVenueRequest {
      * @generated from protobuf field: string website = 6;
      */
     website: string;
+    /**
+     * @generated from protobuf field: string line1 = 7;
+     */
+    line1: string;
+    /**
+     * @generated from protobuf field: string line2 = 8;
+     */
+    line2: string;
+    /**
+     * @generated from protobuf field: string city = 9;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string state = 10;
+     */
+    state: string;
+    /**
+     * @generated from protobuf field: string zip = 11;
+     */
+    zip: string;
+    /**
+     * @generated from protobuf field: bool is_active = 14;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.ListVenuesResponse
@@ -147,6 +187,75 @@ export interface ListVenuesResponse {
      * @generated from protobuf field: svyne.common.PageMeta meta = 2;
      */
     meta?: PageMeta;
+}
+/**
+ * @generated from protobuf message svyne.catalog.VenueImage
+ */
+export interface VenueImage {
+    /**
+     * @generated from protobuf field: string images_id = 1;
+     */
+    imagesId: string;
+    /**
+     * @generated from protobuf field: string storage_key = 2;
+     */
+    storageKey: string;
+    /**
+     * @generated from protobuf field: bool is_primary = 3;
+     */
+    isPrimary: boolean;
+    /**
+     * @generated from protobuf field: int32 sort_order = 4;
+     */
+    sortOrder: number;
+}
+/**
+ * @generated from protobuf message svyne.catalog.ListVenueImagesResponse
+ */
+export interface ListVenueImagesResponse {
+    /**
+     * @generated from protobuf field: repeated svyne.catalog.VenueImage images = 1;
+     */
+    images: VenueImage[];
+}
+/**
+ * @generated from protobuf message svyne.catalog.AddVenueImageRequest
+ */
+export interface AddVenueImageRequest {
+    /**
+     * @generated from protobuf field: string venues_id = 1;
+     */
+    venuesId: string;
+    /**
+     * @generated from protobuf field: string images_id = 2;
+     */
+    imagesId: string;
+}
+/**
+ * @generated from protobuf message svyne.catalog.RemoveVenueImageRequest
+ */
+export interface RemoveVenueImageRequest {
+    /**
+     * @generated from protobuf field: string venues_id = 1;
+     */
+    venuesId: string;
+    /**
+     * @generated from protobuf field: string images_id = 2;
+     */
+    imagesId: string;
+}
+/**
+ * @generated from protobuf message svyne.catalog.ReorderVenueImagesRequest
+ */
+export interface ReorderVenueImagesRequest {
+    /**
+     * @generated from protobuf field: string venues_id = 1;
+     */
+    venuesId: string;
+    /**
+     * @generated from protobuf field: repeated string images_id = 2;
+     */
+    imagesId: string[];
 }
 /**
  * @generated from protobuf message svyne.catalog.Performer
@@ -172,6 +281,10 @@ export interface Performer {
      * @generated from protobuf field: string meta_json = 5;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 6;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.CreatePerformerRequest
@@ -193,6 +306,10 @@ export interface CreatePerformerRequest {
      * @generated from protobuf field: string meta_json = 4;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 5;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.UpdatePerformerRequest
@@ -214,6 +331,10 @@ export interface UpdatePerformerRequest {
      * @generated from protobuf field: string meta_json = 4;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 5;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.ListPerformersResponse
@@ -252,6 +373,10 @@ export interface Sponsor {
      * @generated from protobuf field: string meta_json = 5;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 6;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.CreateSponsorRequest
@@ -273,6 +398,10 @@ export interface CreateSponsorRequest {
      * @generated from protobuf field: string meta_json = 4;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 5;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.UpdateSponsorRequest
@@ -294,6 +423,10 @@ export interface UpdateSponsorRequest {
      * @generated from protobuf field: string meta_json = 4;
      */
     metaJson: string;
+    /**
+     * @generated from protobuf field: bool is_active = 5;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.catalog.ListSponsorsResponse
@@ -333,7 +466,11 @@ class Venue$Type extends MessageType<Venue> {
             { no: 6, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 7, name: "website", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 9, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 9, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "line1", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "line2", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 12, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 13, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Venue>): Venue {
@@ -347,6 +484,10 @@ class Venue$Type extends MessageType<Venue> {
         message.website = "";
         message.isActive = false;
         message.state = "";
+        message.line1 = "";
+        message.line2 = "";
+        message.city = "";
+        message.zip = "";
         if (value !== undefined)
             reflectionMergePartial<Venue>(this, message, value);
         return message;
@@ -382,6 +523,18 @@ class Venue$Type extends MessageType<Venue> {
                     break;
                 case /* string state */ 9:
                     message.state = reader.string();
+                    break;
+                case /* string line1 */ 10:
+                    message.line1 = reader.string();
+                    break;
+                case /* string line2 */ 11:
+                    message.line2 = reader.string();
+                    break;
+                case /* string city */ 12:
+                    message.city = reader.string();
+                    break;
+                case /* string zip */ 13:
+                    message.zip = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -422,6 +575,18 @@ class Venue$Type extends MessageType<Venue> {
         /* string state = 9; */
         if (message.state !== "")
             writer.tag(9, WireType.LengthDelimited).string(message.state);
+        /* string line1 = 10; */
+        if (message.line1 !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.line1);
+        /* string line2 = 11; */
+        if (message.line2 !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.line2);
+        /* string city = 12; */
+        if (message.city !== "")
+            writer.tag(12, WireType.LengthDelimited).string(message.city);
+        /* string zip = 13; */
+        if (message.zip !== "")
+            writer.tag(13, WireType.LengthDelimited).string(message.zip);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -568,7 +733,13 @@ class UpdateVenueRequest$Type extends MessageType<UpdateVenueRequest> {
             { no: 3, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "phone", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 6, name: "website", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 6, name: "website", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "line1", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "line2", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<UpdateVenueRequest>): UpdateVenueRequest {
@@ -579,6 +750,12 @@ class UpdateVenueRequest$Type extends MessageType<UpdateVenueRequest> {
         message.phone = "";
         message.email = "";
         message.website = "";
+        message.line1 = "";
+        message.line2 = "";
+        message.city = "";
+        message.state = "";
+        message.zip = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<UpdateVenueRequest>(this, message, value);
         return message;
@@ -605,6 +782,24 @@ class UpdateVenueRequest$Type extends MessageType<UpdateVenueRequest> {
                     break;
                 case /* string website */ 6:
                     message.website = reader.string();
+                    break;
+                case /* string line1 */ 7:
+                    message.line1 = reader.string();
+                    break;
+                case /* string line2 */ 8:
+                    message.line2 = reader.string();
+                    break;
+                case /* string city */ 9:
+                    message.city = reader.string();
+                    break;
+                case /* string state */ 10:
+                    message.state = reader.string();
+                    break;
+                case /* string zip */ 11:
+                    message.zip = reader.string();
+                    break;
+                case /* bool is_active */ 14:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -636,6 +831,24 @@ class UpdateVenueRequest$Type extends MessageType<UpdateVenueRequest> {
         /* string website = 6; */
         if (message.website !== "")
             writer.tag(6, WireType.LengthDelimited).string(message.website);
+        /* string line1 = 7; */
+        if (message.line1 !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.line1);
+        /* string line2 = 8; */
+        if (message.line2 !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.line2);
+        /* string city = 9; */
+        if (message.city !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.city);
+        /* string state = 10; */
+        if (message.state !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.state);
+        /* string zip = 11; */
+        if (message.zip !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.zip);
+        /* bool is_active = 14; */
+        if (message.isActive !== false)
+            writer.tag(14, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -701,6 +914,289 @@ class ListVenuesResponse$Type extends MessageType<ListVenuesResponse> {
  */
 export const ListVenuesResponse = new ListVenuesResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class VenueImage$Type extends MessageType<VenueImage> {
+    constructor() {
+        super("svyne.catalog.VenueImage", [
+            { no: 1, name: "images_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "storage_key", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "is_primary", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 4, name: "sort_order", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<VenueImage>): VenueImage {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.imagesId = "";
+        message.storageKey = "";
+        message.isPrimary = false;
+        message.sortOrder = 0;
+        if (value !== undefined)
+            reflectionMergePartial<VenueImage>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VenueImage): VenueImage {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string images_id */ 1:
+                    message.imagesId = reader.string();
+                    break;
+                case /* string storage_key */ 2:
+                    message.storageKey = reader.string();
+                    break;
+                case /* bool is_primary */ 3:
+                    message.isPrimary = reader.bool();
+                    break;
+                case /* int32 sort_order */ 4:
+                    message.sortOrder = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: VenueImage, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string images_id = 1; */
+        if (message.imagesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.imagesId);
+        /* string storage_key = 2; */
+        if (message.storageKey !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.storageKey);
+        /* bool is_primary = 3; */
+        if (message.isPrimary !== false)
+            writer.tag(3, WireType.Varint).bool(message.isPrimary);
+        /* int32 sort_order = 4; */
+        if (message.sortOrder !== 0)
+            writer.tag(4, WireType.Varint).int32(message.sortOrder);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.catalog.VenueImage
+ */
+export const VenueImage = new VenueImage$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ListVenueImagesResponse$Type extends MessageType<ListVenueImagesResponse> {
+    constructor() {
+        super("svyne.catalog.ListVenueImagesResponse", [
+            { no: 1, name: "images", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => VenueImage }
+        ]);
+    }
+    create(value?: PartialMessage<ListVenueImagesResponse>): ListVenueImagesResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.images = [];
+        if (value !== undefined)
+            reflectionMergePartial<ListVenueImagesResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ListVenueImagesResponse): ListVenueImagesResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.catalog.VenueImage images */ 1:
+                    message.images.push(VenueImage.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ListVenueImagesResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.catalog.VenueImage images = 1; */
+        for (let i = 0; i < message.images.length; i++)
+            VenueImage.internalBinaryWrite(message.images[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.catalog.ListVenueImagesResponse
+ */
+export const ListVenueImagesResponse = new ListVenueImagesResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AddVenueImageRequest$Type extends MessageType<AddVenueImageRequest> {
+    constructor() {
+        super("svyne.catalog.AddVenueImageRequest", [
+            { no: 1, name: "venues_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "images_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AddVenueImageRequest>): AddVenueImageRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.venuesId = "";
+        message.imagesId = "";
+        if (value !== undefined)
+            reflectionMergePartial<AddVenueImageRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AddVenueImageRequest): AddVenueImageRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string venues_id */ 1:
+                    message.venuesId = reader.string();
+                    break;
+                case /* string images_id */ 2:
+                    message.imagesId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AddVenueImageRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string venues_id = 1; */
+        if (message.venuesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.venuesId);
+        /* string images_id = 2; */
+        if (message.imagesId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.imagesId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.catalog.AddVenueImageRequest
+ */
+export const AddVenueImageRequest = new AddVenueImageRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class RemoveVenueImageRequest$Type extends MessageType<RemoveVenueImageRequest> {
+    constructor() {
+        super("svyne.catalog.RemoveVenueImageRequest", [
+            { no: 1, name: "venues_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "images_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<RemoveVenueImageRequest>): RemoveVenueImageRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.venuesId = "";
+        message.imagesId = "";
+        if (value !== undefined)
+            reflectionMergePartial<RemoveVenueImageRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: RemoveVenueImageRequest): RemoveVenueImageRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string venues_id */ 1:
+                    message.venuesId = reader.string();
+                    break;
+                case /* string images_id */ 2:
+                    message.imagesId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: RemoveVenueImageRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string venues_id = 1; */
+        if (message.venuesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.venuesId);
+        /* string images_id = 2; */
+        if (message.imagesId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.imagesId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.catalog.RemoveVenueImageRequest
+ */
+export const RemoveVenueImageRequest = new RemoveVenueImageRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ReorderVenueImagesRequest$Type extends MessageType<ReorderVenueImagesRequest> {
+    constructor() {
+        super("svyne.catalog.ReorderVenueImagesRequest", [
+            { no: 1, name: "venues_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "images_id", kind: "scalar", repeat: 2 /*RepeatType.UNPACKED*/, T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ReorderVenueImagesRequest>): ReorderVenueImagesRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.venuesId = "";
+        message.imagesId = [];
+        if (value !== undefined)
+            reflectionMergePartial<ReorderVenueImagesRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ReorderVenueImagesRequest): ReorderVenueImagesRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string venues_id */ 1:
+                    message.venuesId = reader.string();
+                    break;
+                case /* repeated string images_id */ 2:
+                    message.imagesId.push(reader.string());
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ReorderVenueImagesRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string venues_id = 1; */
+        if (message.venuesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.venuesId);
+        /* repeated string images_id = 2; */
+        for (let i = 0; i < message.imagesId.length; i++)
+            writer.tag(2, WireType.LengthDelimited).string(message.imagesId[i]);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.catalog.ReorderVenueImagesRequest
+ */
+export const ReorderVenueImagesRequest = new ReorderVenueImagesRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Performer$Type extends MessageType<Performer> {
     constructor() {
         super("svyne.catalog.Performer", [
@@ -708,7 +1204,8 @@ class Performer$Type extends MessageType<Performer> {
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "primary_image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 5, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 5, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<Performer>): Performer {
@@ -718,6 +1215,7 @@ class Performer$Type extends MessageType<Performer> {
         message.slug = "";
         message.primaryImagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<Performer>(this, message, value);
         return message;
@@ -741,6 +1239,9 @@ class Performer$Type extends MessageType<Performer> {
                     break;
                 case /* string meta_json */ 5:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 6:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -769,6 +1270,9 @@ class Performer$Type extends MessageType<Performer> {
         /* string meta_json = 5; */
         if (message.metaJson !== "")
             writer.tag(5, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 6; */
+        if (message.isActive !== false)
+            writer.tag(6, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -786,7 +1290,8 @@ class CreatePerformerRequest$Type extends MessageType<CreatePerformerRequest> {
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<CreatePerformerRequest>): CreatePerformerRequest {
@@ -795,6 +1300,7 @@ class CreatePerformerRequest$Type extends MessageType<CreatePerformerRequest> {
         message.slug = "";
         message.imagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<CreatePerformerRequest>(this, message, value);
         return message;
@@ -815,6 +1321,9 @@ class CreatePerformerRequest$Type extends MessageType<CreatePerformerRequest> {
                     break;
                 case /* string meta_json */ 4:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 5:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -840,6 +1349,9 @@ class CreatePerformerRequest$Type extends MessageType<CreatePerformerRequest> {
         /* string meta_json = 4; */
         if (message.metaJson !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 5; */
+        if (message.isActive !== false)
+            writer.tag(5, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -857,7 +1369,8 @@ class UpdatePerformerRequest$Type extends MessageType<UpdatePerformerRequest> {
             { no: 1, name: "performers_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<UpdatePerformerRequest>): UpdatePerformerRequest {
@@ -866,6 +1379,7 @@ class UpdatePerformerRequest$Type extends MessageType<UpdatePerformerRequest> {
         message.name = "";
         message.imagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<UpdatePerformerRequest>(this, message, value);
         return message;
@@ -886,6 +1400,9 @@ class UpdatePerformerRequest$Type extends MessageType<UpdatePerformerRequest> {
                     break;
                 case /* string meta_json */ 4:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 5:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -911,6 +1428,9 @@ class UpdatePerformerRequest$Type extends MessageType<UpdatePerformerRequest> {
         /* string meta_json = 4; */
         if (message.metaJson !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 5; */
+        if (message.isActive !== false)
+            writer.tag(5, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -983,7 +1503,8 @@ class Sponsor$Type extends MessageType<Sponsor> {
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "primary_image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 5, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 5, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<Sponsor>): Sponsor {
@@ -993,6 +1514,7 @@ class Sponsor$Type extends MessageType<Sponsor> {
         message.slug = "";
         message.primaryImagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<Sponsor>(this, message, value);
         return message;
@@ -1016,6 +1538,9 @@ class Sponsor$Type extends MessageType<Sponsor> {
                     break;
                 case /* string meta_json */ 5:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 6:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1044,6 +1569,9 @@ class Sponsor$Type extends MessageType<Sponsor> {
         /* string meta_json = 5; */
         if (message.metaJson !== "")
             writer.tag(5, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 6; */
+        if (message.isActive !== false)
+            writer.tag(6, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1061,7 +1589,8 @@ class CreateSponsorRequest$Type extends MessageType<CreateSponsorRequest> {
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<CreateSponsorRequest>): CreateSponsorRequest {
@@ -1070,6 +1599,7 @@ class CreateSponsorRequest$Type extends MessageType<CreateSponsorRequest> {
         message.slug = "";
         message.imagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<CreateSponsorRequest>(this, message, value);
         return message;
@@ -1090,6 +1620,9 @@ class CreateSponsorRequest$Type extends MessageType<CreateSponsorRequest> {
                     break;
                 case /* string meta_json */ 4:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 5:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1115,6 +1648,9 @@ class CreateSponsorRequest$Type extends MessageType<CreateSponsorRequest> {
         /* string meta_json = 4; */
         if (message.metaJson !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 5; */
+        if (message.isActive !== false)
+            writer.tag(5, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1132,7 +1668,8 @@ class UpdateSponsorRequest$Type extends MessageType<UpdateSponsorRequest> {
             { no: 1, name: "sponsors_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "image_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "meta_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<UpdateSponsorRequest>): UpdateSponsorRequest {
@@ -1141,6 +1678,7 @@ class UpdateSponsorRequest$Type extends MessageType<UpdateSponsorRequest> {
         message.name = "";
         message.imagePath = "";
         message.metaJson = "";
+        message.isActive = false;
         if (value !== undefined)
             reflectionMergePartial<UpdateSponsorRequest>(this, message, value);
         return message;
@@ -1161,6 +1699,9 @@ class UpdateSponsorRequest$Type extends MessageType<UpdateSponsorRequest> {
                     break;
                 case /* string meta_json */ 4:
                     message.metaJson = reader.string();
+                    break;
+                case /* bool is_active */ 5:
+                    message.isActive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1186,6 +1727,9 @@ class UpdateSponsorRequest$Type extends MessageType<UpdateSponsorRequest> {
         /* string meta_json = 4; */
         if (message.metaJson !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.metaJson);
+        /* bool is_active = 5; */
+        if (message.isActive !== false)
+            writer.tag(5, WireType.Varint).bool(message.isActive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1312,7 +1856,12 @@ export const VenueService = new ServiceType("svyne.catalog.VenueService", [
     { name: "CreateVenue", options: {}, I: CreateVenueRequest, O: UuidValue },
     { name: "UpdateVenue", options: {}, I: UpdateVenueRequest, O: AckResponse },
     { name: "GetVenue", options: {}, I: UuidValue, O: Venue },
-    { name: "ListVenues", options: {}, I: PageRequest, O: ListVenuesResponse }
+    { name: "ListVenues", options: {}, I: PageRequest, O: ListVenuesResponse },
+    { name: "ListVenueImages", options: {}, I: UuidValue, O: ListVenueImagesResponse },
+    { name: "AddVenueImage", options: {}, I: AddVenueImageRequest, O: VenueImage },
+    { name: "RemoveVenueImage", options: {}, I: RemoveVenueImageRequest, O: AckResponse },
+    { name: "SetPrimaryVenueImage", options: {}, I: RemoveVenueImageRequest, O: AckResponse },
+    { name: "ReorderVenueImages", options: {}, I: ReorderVenueImagesRequest, O: AckResponse }
 ]);
 /**
  * @generated ServiceType for protobuf service svyne.catalog.PerformerService

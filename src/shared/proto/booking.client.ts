@@ -5,6 +5,7 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { TableBookingService } from "./booking";
+import type { UpdateTableTemplateRequest } from "./booking";
 import type { CreateTableTemplateRequest } from "./booking";
 import type { ListTableTemplatesResponse } from "./booking";
 import type { Empty } from "./common";
@@ -97,6 +98,10 @@ export interface ITableBookingServiceClient {
      * @generated from protobuf rpc: CreateTableTemplate(svyne.booking.CreateTableTemplateRequest) returns (svyne.common.UuidValue);
      */
     createTableTemplate(input: CreateTableTemplateRequest, options?: RpcOptions): UnaryCall<CreateTableTemplateRequest, UuidValue>;
+    /**
+     * @generated from protobuf rpc: UpdateTableTemplate(svyne.booking.UpdateTableTemplateRequest) returns (svyne.common.AckResponse);
+     */
+    updateTableTemplate(input: UpdateTableTemplateRequest, options?: RpcOptions): UnaryCall<UpdateTableTemplateRequest, AckResponse>;
     /**
      * @generated from protobuf rpc: DeleteTableTemplate(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
@@ -230,10 +235,17 @@ export class TableBookingServiceClient implements ITableBookingServiceClient, Se
         return stackIntercept<CreateTableTemplateRequest, UuidValue>("unary", this._transport, method, opt, input);
     }
     /**
+     * @generated from protobuf rpc: UpdateTableTemplate(svyne.booking.UpdateTableTemplateRequest) returns (svyne.common.AckResponse);
+     */
+    updateTableTemplate(input: UpdateTableTemplateRequest, options?: RpcOptions): UnaryCall<UpdateTableTemplateRequest, AckResponse> {
+        const method = this.methods[16], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UpdateTableTemplateRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: DeleteTableTemplate(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
     deleteTableTemplate(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[16], opt = this._transport.mergeOptions(options);
+        const method = this.methods[17], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
 }

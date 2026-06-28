@@ -14,6 +14,11 @@ import type { CreatePerformerRequest } from "./catalog";
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { VenueService } from "./catalog";
+import type { ReorderVenueImagesRequest } from "./catalog";
+import type { RemoveVenueImageRequest } from "./catalog";
+import type { VenueImage } from "./catalog";
+import type { AddVenueImageRequest } from "./catalog";
+import type { ListVenueImagesResponse } from "./catalog";
 import type { ListVenuesResponse } from "./catalog";
 import type { PageRequest } from "./common";
 import type { Venue } from "./catalog";
@@ -44,6 +49,26 @@ export interface IVenueServiceClient {
      * @generated from protobuf rpc: ListVenues(svyne.common.PageRequest) returns (svyne.catalog.ListVenuesResponse);
      */
     listVenues(input: PageRequest, options?: RpcOptions): UnaryCall<PageRequest, ListVenuesResponse>;
+    /**
+     * @generated from protobuf rpc: ListVenueImages(svyne.common.UuidValue) returns (svyne.catalog.ListVenueImagesResponse);
+     */
+    listVenueImages(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, ListVenueImagesResponse>;
+    /**
+     * @generated from protobuf rpc: AddVenueImage(svyne.catalog.AddVenueImageRequest) returns (svyne.catalog.VenueImage);
+     */
+    addVenueImage(input: AddVenueImageRequest, options?: RpcOptions): UnaryCall<AddVenueImageRequest, VenueImage>;
+    /**
+     * @generated from protobuf rpc: RemoveVenueImage(svyne.catalog.RemoveVenueImageRequest) returns (svyne.common.AckResponse);
+     */
+    removeVenueImage(input: RemoveVenueImageRequest, options?: RpcOptions): UnaryCall<RemoveVenueImageRequest, AckResponse>;
+    /**
+     * @generated from protobuf rpc: SetPrimaryVenueImage(svyne.catalog.RemoveVenueImageRequest) returns (svyne.common.AckResponse);
+     */
+    setPrimaryVenueImage(input: RemoveVenueImageRequest, options?: RpcOptions): UnaryCall<RemoveVenueImageRequest, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ReorderVenueImages(svyne.catalog.ReorderVenueImagesRequest) returns (svyne.common.AckResponse);
+     */
+    reorderVenueImages(input: ReorderVenueImagesRequest, options?: RpcOptions): UnaryCall<ReorderVenueImagesRequest, AckResponse>;
 }
 /**
  * @generated from protobuf service svyne.catalog.VenueService
@@ -81,6 +106,41 @@ export class VenueServiceClient implements IVenueServiceClient, ServiceInfo {
     listVenues(input: PageRequest, options?: RpcOptions): UnaryCall<PageRequest, ListVenuesResponse> {
         const method = this.methods[3], opt = this._transport.mergeOptions(options);
         return stackIntercept<PageRequest, ListVenuesResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListVenueImages(svyne.common.UuidValue) returns (svyne.catalog.ListVenueImagesResponse);
+     */
+    listVenueImages(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, ListVenueImagesResponse> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UuidValue, ListVenueImagesResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: AddVenueImage(svyne.catalog.AddVenueImageRequest) returns (svyne.catalog.VenueImage);
+     */
+    addVenueImage(input: AddVenueImageRequest, options?: RpcOptions): UnaryCall<AddVenueImageRequest, VenueImage> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<AddVenueImageRequest, VenueImage>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: RemoveVenueImage(svyne.catalog.RemoveVenueImageRequest) returns (svyne.common.AckResponse);
+     */
+    removeVenueImage(input: RemoveVenueImageRequest, options?: RpcOptions): UnaryCall<RemoveVenueImageRequest, AckResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<RemoveVenueImageRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: SetPrimaryVenueImage(svyne.catalog.RemoveVenueImageRequest) returns (svyne.common.AckResponse);
+     */
+    setPrimaryVenueImage(input: RemoveVenueImageRequest, options?: RpcOptions): UnaryCall<RemoveVenueImageRequest, AckResponse> {
+        const method = this.methods[7], opt = this._transport.mergeOptions(options);
+        return stackIntercept<RemoveVenueImageRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ReorderVenueImages(svyne.catalog.ReorderVenueImagesRequest) returns (svyne.common.AckResponse);
+     */
+    reorderVenueImages(input: ReorderVenueImagesRequest, options?: RpcOptions): UnaryCall<ReorderVenueImagesRequest, AckResponse> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ReorderVenueImagesRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
 }
 /**

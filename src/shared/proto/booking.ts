@@ -518,6 +518,13 @@ export interface TableTemplate {
      * @generated from protobuf field: double default_height = 9;
      */
     defaultHeight: number;
+    /**
+     * When true the price covers everyone at the table; when false it is the
+     * per-attendee price. Snapshotted onto event prices at table-create time.
+     *
+     * @generated from protobuf field: bool default_is_all_inclusive = 10;
+     */
+    defaultIsAllInclusive: boolean;
 }
 /**
  * @generated from protobuf message svyne.booking.CreateTableTemplateRequest
@@ -551,6 +558,54 @@ export interface CreateTableTemplateRequest {
      * @generated from protobuf field: double default_height = 7;
      */
     defaultHeight: number;
+    /**
+     * @generated from protobuf field: bool default_is_all_inclusive = 8;
+     */
+    defaultIsAllInclusive: boolean;
+}
+/**
+ * Edit a catalog table type. Name is intentionally absent: it is locked after
+ * creation. is_active drives the enable/disable toggle.
+ *
+ * @generated from protobuf message svyne.booking.UpdateTableTemplateRequest
+ */
+export interface UpdateTableTemplateRequest {
+    /**
+     * @generated from protobuf field: string table_templates_id = 1;
+     */
+    tableTemplatesId: string;
+    /**
+     * @generated from protobuf field: int32 default_capacity = 2;
+     */
+    defaultCapacity: number;
+    /**
+     * @generated from protobuf field: string default_shape = 3;
+     */
+    defaultShape: string;
+    /**
+     * @generated from protobuf field: string default_color = 4;
+     */
+    defaultColor: string;
+    /**
+     * @generated from protobuf field: int32 default_price_cents = 5;
+     */
+    defaultPriceCents: number;
+    /**
+     * @generated from protobuf field: double default_width = 6;
+     */
+    defaultWidth: number;
+    /**
+     * @generated from protobuf field: double default_height = 7;
+     */
+    defaultHeight: number;
+    /**
+     * @generated from protobuf field: bool default_is_all_inclusive = 8;
+     */
+    defaultIsAllInclusive: boolean;
+    /**
+     * @generated from protobuf field: bool is_active = 9;
+     */
+    isActive: boolean;
 }
 /**
  * @generated from protobuf message svyne.booking.ListTableTemplatesResponse
@@ -1863,7 +1918,8 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
             { no: 6, name: "default_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 8, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
-            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
+            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "default_is_all_inclusive", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<TableTemplate>): TableTemplate {
@@ -1877,6 +1933,7 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
         message.isActive = false;
         message.defaultWidth = 0;
         message.defaultHeight = 0;
+        message.defaultIsAllInclusive = false;
         if (value !== undefined)
             reflectionMergePartial<TableTemplate>(this, message, value);
         return message;
@@ -1912,6 +1969,9 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
                     break;
                 case /* double default_height */ 9:
                     message.defaultHeight = reader.double();
+                    break;
+                case /* bool default_is_all_inclusive */ 10:
+                    message.defaultIsAllInclusive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1952,6 +2012,9 @@ class TableTemplate$Type extends MessageType<TableTemplate> {
         /* double default_height = 9; */
         if (message.defaultHeight !== 0)
             writer.tag(9, WireType.Bit64).double(message.defaultHeight);
+        /* bool default_is_all_inclusive = 10; */
+        if (message.defaultIsAllInclusive !== false)
+            writer.tag(10, WireType.Varint).bool(message.defaultIsAllInclusive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1972,7 +2035,8 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
             { no: 4, name: "default_color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "default_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
-            { no: 7, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
+            { no: 7, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "default_is_all_inclusive", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
     }
     create(value?: PartialMessage<CreateTableTemplateRequest>): CreateTableTemplateRequest {
@@ -1984,6 +2048,7 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
         message.defaultPriceCents = 0;
         message.defaultWidth = 0;
         message.defaultHeight = 0;
+        message.defaultIsAllInclusive = false;
         if (value !== undefined)
             reflectionMergePartial<CreateTableTemplateRequest>(this, message, value);
         return message;
@@ -2013,6 +2078,9 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
                     break;
                 case /* double default_height */ 7:
                     message.defaultHeight = reader.double();
+                    break;
+                case /* bool default_is_all_inclusive */ 8:
+                    message.defaultIsAllInclusive = reader.bool();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -2047,6 +2115,9 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
         /* double default_height = 7; */
         if (message.defaultHeight !== 0)
             writer.tag(7, WireType.Bit64).double(message.defaultHeight);
+        /* bool default_is_all_inclusive = 8; */
+        if (message.defaultIsAllInclusive !== false)
+            writer.tag(8, WireType.Varint).bool(message.defaultIsAllInclusive);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -2057,6 +2128,117 @@ class CreateTableTemplateRequest$Type extends MessageType<CreateTableTemplateReq
  * @generated MessageType for protobuf message svyne.booking.CreateTableTemplateRequest
  */
 export const CreateTableTemplateRequest = new CreateTableTemplateRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class UpdateTableTemplateRequest$Type extends MessageType<UpdateTableTemplateRequest> {
+    constructor() {
+        super("svyne.booking.UpdateTableTemplateRequest", [
+            { no: 1, name: "table_templates_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "default_capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "default_shape", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "default_color", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "default_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "default_is_all_inclusive", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 9, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+        ]);
+    }
+    create(value?: PartialMessage<UpdateTableTemplateRequest>): UpdateTableTemplateRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.tableTemplatesId = "";
+        message.defaultCapacity = 0;
+        message.defaultShape = "";
+        message.defaultColor = "";
+        message.defaultPriceCents = 0;
+        message.defaultWidth = 0;
+        message.defaultHeight = 0;
+        message.defaultIsAllInclusive = false;
+        message.isActive = false;
+        if (value !== undefined)
+            reflectionMergePartial<UpdateTableTemplateRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: UpdateTableTemplateRequest): UpdateTableTemplateRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string table_templates_id */ 1:
+                    message.tableTemplatesId = reader.string();
+                    break;
+                case /* int32 default_capacity */ 2:
+                    message.defaultCapacity = reader.int32();
+                    break;
+                case /* string default_shape */ 3:
+                    message.defaultShape = reader.string();
+                    break;
+                case /* string default_color */ 4:
+                    message.defaultColor = reader.string();
+                    break;
+                case /* int32 default_price_cents */ 5:
+                    message.defaultPriceCents = reader.int32();
+                    break;
+                case /* double default_width */ 6:
+                    message.defaultWidth = reader.double();
+                    break;
+                case /* double default_height */ 7:
+                    message.defaultHeight = reader.double();
+                    break;
+                case /* bool default_is_all_inclusive */ 8:
+                    message.defaultIsAllInclusive = reader.bool();
+                    break;
+                case /* bool is_active */ 9:
+                    message.isActive = reader.bool();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: UpdateTableTemplateRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string table_templates_id = 1; */
+        if (message.tableTemplatesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.tableTemplatesId);
+        /* int32 default_capacity = 2; */
+        if (message.defaultCapacity !== 0)
+            writer.tag(2, WireType.Varint).int32(message.defaultCapacity);
+        /* string default_shape = 3; */
+        if (message.defaultShape !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.defaultShape);
+        /* string default_color = 4; */
+        if (message.defaultColor !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.defaultColor);
+        /* int32 default_price_cents = 5; */
+        if (message.defaultPriceCents !== 0)
+            writer.tag(5, WireType.Varint).int32(message.defaultPriceCents);
+        /* double default_width = 6; */
+        if (message.defaultWidth !== 0)
+            writer.tag(6, WireType.Bit64).double(message.defaultWidth);
+        /* double default_height = 7; */
+        if (message.defaultHeight !== 0)
+            writer.tag(7, WireType.Bit64).double(message.defaultHeight);
+        /* bool default_is_all_inclusive = 8; */
+        if (message.defaultIsAllInclusive !== false)
+            writer.tag(8, WireType.Varint).bool(message.defaultIsAllInclusive);
+        /* bool is_active = 9; */
+        if (message.isActive !== false)
+            writer.tag(9, WireType.Varint).bool(message.isActive);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.booking.UpdateTableTemplateRequest
+ */
+export const UpdateTableTemplateRequest = new UpdateTableTemplateRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class ListTableTemplatesResponse$Type extends MessageType<ListTableTemplatesResponse> {
     constructor() {
@@ -2124,5 +2306,6 @@ export const TableBookingService = new ServiceType("svyne.booking.TableBookingSe
     { name: "DeleteTableTemplatePriceRule", options: {}, I: UuidValue, O: AckResponse },
     { name: "ListTableTemplates", options: {}, I: Empty, O: ListTableTemplatesResponse },
     { name: "CreateTableTemplate", options: {}, I: CreateTableTemplateRequest, O: UuidValue },
+    { name: "UpdateTableTemplate", options: {}, I: UpdateTableTemplateRequest, O: AckResponse },
     { name: "DeleteTableTemplate", options: {}, I: UuidValue, O: AckResponse }
 ]);

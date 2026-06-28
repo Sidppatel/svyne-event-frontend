@@ -87,7 +87,7 @@ export function AdminEventManagePage() {
   const statsLoader = useCallback(() => getEventStats(eventsId), [eventsId]);
   const tableTypesLoader = useCallback(() => listEventTableTypes(eventsId), [eventsId]);
   const staffLoader = useCallback(() => listStaffForEvent(eventsId), [eventsId]);
-  const templatesLoader = useCallback(() => listTableTemplates(), []);
+  const templatesLoader = useCallback(() => listTableTemplates().then((items) => items.filter((t) => t.isActive)), []);
   const ticketTypesLoader = useCallback(() => listTicketTypes(eventsId), [eventsId]);
   const layoutLoader = useCallback(() => getEventLayout(eventsId), [eventsId]);
 
