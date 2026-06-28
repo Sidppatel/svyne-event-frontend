@@ -73,7 +73,15 @@ type Drag = {
  * overlaps are allowed. All edits are local until "Save layout" persists via
  * sp_save_event_layout.
  */
-export function FloorPlanBuilder({ eventsId, onTypesChanged }: { eventsId: string; onTypesChanged?: () => void }) {
+export function FloorPlanBuilder({
+  eventsId,
+  onTypesChanged,
+  onLayoutSaved,
+}: {
+  eventsId: string;
+  onTypesChanged?: () => void;
+  onLayoutSaved?: () => void;
+}) {
   const layoutLoader = useCallback(() => getEventLayout(eventsId), [eventsId]);
   const layout = useAsync(layoutLoader);
   const typesLoader = useCallback(() => listEventTableTypes(eventsId), [eventsId]);
@@ -307,6 +315,7 @@ export function FloorPlanBuilder({ eventsId, onTypesChanged }: { eventsId: strin
       types.reload();
       layout.reload();
       onTypesChanged?.(); // refresh the Pricing panel (the linked price is gone too)
+      onLayoutSaved?.();
     } catch (caught) {
       setNotice(rpcErrorMessage(caught));
     }
@@ -351,6 +360,7 @@ export function FloorPlanBuilder({ eventsId, onTypesChanged }: { eventsId: strin
       setDirty(false);
       setNotice('Layout saved');
       layout.reload();
+      onLayoutSaved?.();
     } catch (caught) {
       setNotice(rpcErrorMessage(caught));
     } finally {

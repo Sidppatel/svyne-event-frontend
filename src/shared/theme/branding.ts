@@ -7,11 +7,11 @@ export interface TenantBranding {
 }
 
 export const DEFAULT_BRANDING: TenantBranding = {
-  primaryColor: '#6f8f99',
-  secondaryColor: '#deeae8',
-  accentColor: '#d99a6c',
+  primaryColor: '#000000', // Expo: black is the only brand voltage
+  secondaryColor: '#f0f0f3', // surface-strong
+  accentColor: '#ab6400', // warning/amber accent
   logoUrl: null,
-  fontFamily: "'Inter', ui-sans-serif, system-ui, sans-serif",
+  fontFamily: "'Inter', -apple-system, system-ui, sans-serif",
 };
 
 export function applyBranding(branding: TenantBranding): void {

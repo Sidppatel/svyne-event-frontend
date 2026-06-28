@@ -27,6 +27,7 @@ export function TableTemplatesManager() {
   const [name, setName] = useState('');
   const [capacity, setCapacity] = useState(8);
   const [shape, setShape] = useState('Round');
+  const [color, setColor] = useState('#4f46e5');
   const [priceCents, setPriceCents] = useState(0);
   const [width, setWidth] = useState(80);
   const [height, setHeight] = useState(80);
@@ -72,6 +73,15 @@ export function TableTemplatesManager() {
             </select>
           </div>
           <div className="space-y-1">
+            <Label>Default color</Label>
+            <Input
+              type="color"
+              className="h-9 w-14 p-1"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
+          </div>
+          <div className="space-y-1">
             <Label>Base price (cents)</Label>
             <Input className="w-28" type="number" value={priceCents} onChange={(e) => setPriceCents(Number(e.target.value))} />
           </div>
@@ -91,13 +101,14 @@ export function TableTemplatesManager() {
                   name,
                   defaultCapacity: capacity,
                   defaultShape: shape,
-                  defaultColor: '',
+                  defaultColor: color,
                   defaultPriceCents: priceCents,
                   defaultWidth: Math.max(20, width),
                   defaultHeight: Math.max(20, height),
                 }).then(() => {
                   setName('');
                   setCapacity(8);
+                  setColor('#4f46e5');
                   setPriceCents(0);
                   setWidth(80);
                   setHeight(80);
@@ -113,7 +124,8 @@ export function TableTemplatesManager() {
         <div className="space-y-1">
           {(templates.data ?? []).map((template) => (
             <div key={template.tableTemplatesId} className="flex items-center justify-between border-b py-1 text-sm">
-              <span>
+              <span className="flex items-center gap-2">
+                <span className="inline-block size-3 rounded-sm border border-input" style={{ backgroundColor: template.defaultColor }} />
                 <span className="font-medium">{template.name}</span>{' '}
                 <span className="text-muted-foreground">
                   · {template.defaultShape} · cap {template.defaultCapacity} · {template.defaultWidth}×{template.defaultHeight}px · {centsToUSD(template.defaultPriceCents)}

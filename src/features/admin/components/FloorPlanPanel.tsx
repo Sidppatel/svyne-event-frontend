@@ -17,7 +17,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
  * Floor-plan tools: a visual grid builder (place tables + Entry/Exit/Stage
  * objects) and reusable whole-floor-plan templates.
  */
-export function FloorPlanPanel({ eventsId, onTypesChanged }: { eventsId: string; onTypesChanged?: () => void }) {
+export function FloorPlanPanel({
+  eventsId,
+  onTypesChanged,
+  onLayoutSaved,
+}: {
+  eventsId: string;
+  onTypesChanged?: () => void;
+  onLayoutSaved?: () => void;
+}) {
   const templatesLoader = useCallback(() => listFloorPlanTemplates(), []);
   const templates = useAsync(templatesLoader);
   const [notice, setNotice] = useState<string | null>(null);
@@ -42,7 +50,7 @@ export function FloorPlanPanel({ eventsId, onTypesChanged }: { eventsId: string;
       <CardContent className="space-y-5">
         {notice ? <p className="text-sm text-amber-foreground">{notice}</p> : null}
 
-        <FloorPlanBuilder key={builderKey} eventsId={eventsId} onTypesChanged={onTypesChanged} />
+        <FloorPlanBuilder key={builderKey} eventsId={eventsId} onTypesChanged={onTypesChanged} onLayoutSaved={onLayoutSaved} />
 
         <section className="space-y-2 border-t pt-4">
           <p className="text-sm font-medium text-muted-foreground">Reusable templates</p>

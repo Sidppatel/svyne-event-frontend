@@ -6,7 +6,7 @@ import {
   getEventStats,
   changeEventStatus,
   updateEvent,
-  listEventTables,
+  listEventTableTypes,
   createEventTable,
   deleteEventTable,
   setEventFeesIncluded,
@@ -81,7 +81,7 @@ export function AdminEventManagePage() {
   const { eventsId = '' } = useParams();
   const eventLoader = useCallback(() => getEvent(eventsId), [eventsId]);
   const statsLoader = useCallback(() => getEventStats(eventsId), [eventsId]);
-  const tablesLoader = useCallback(() => listEventTables(eventsId), [eventsId]);
+  const tableTypesLoader = useCallback(() => listEventTableTypes(eventsId), [eventsId]);
   const staffLoader = useCallback(() => listStaffForEvent(eventsId), [eventsId]);
   const templatesLoader = useCallback(() => listTableTemplates(), []);
 
@@ -94,17 +94,23 @@ export function AdminEventManagePage() {
   const venue = useAsync(venueLoader);
   const timeZone = tzForState(venue.data?.state);
   const stats = useAsync(statsLoader);
-  const tables = useAsync(tablesLoader);
+  const tableTypes = useAsync(tableTypesLoader);
   const staff = useAsync(staffLoader);
   const templates = useAsync(templatesLoader);
 
-  const templateList = templates.data ?? [];
+  const typeList = tableTypes.data ?? [];
+  const usedTemplateNames = new Set(typeList.map((t) => t.label));
+  const usedColors = new Set(typeList.map((t) => t.color));
+  const templateList = (templates.data ?? []).filter(
+    (t) => !usedTemplateNames.has(t.name) && !usedColors.has(t.defaultColor),
+  );
 
   // Admin picks a catalog table type; values below override the template defaults.
   const [tableTemplateId, setTableTemplateId] = useState('');
   const [tableLabel, setTableLabel] = useState('');
   const [tableCapacity, setTableCapacity] = useState(8);
   const [tablePriceCents, setTablePriceCents] = useState(0);
+  const [tableColor, setTableColor] = useState('');
   const [tableIsAllInclusive, setTableIsAllInclusive] = useState(true);
   const [tablePerAttendeeCents, setTablePerAttendeeCents] = useState(0);
   const [tableWidth, setTableWidth] = useState(80);
@@ -117,6 +123,7 @@ export function AdminEventManagePage() {
       setTableLabel(tpl.name);
       setTableCapacity(tpl.defaultCapacity);
       setTablePriceCents(tpl.defaultPriceCents);
+      setTableColor(tpl.defaultColor);
       setTableWidth(tpl.defaultWidth || 80);
       setTableHeight(tpl.defaultHeight || 80);
     }
@@ -182,15 +189,11 @@ export function AdminEventManagePage() {
       {event.data ? <EditSection event={event.data} onSaved={event.reload} /> : null}
 
       <PricingManager
-        key={pricingKey}
+        key={`pricing-${pricingKey}`}
         eventsId={eventsId}
         eventType={event.data?.eventType || 'Open'}
         timeZone={timeZone}
       />
-      {event.data && event.data.eventType !== 'Open' ? (
-        <FloorPlanPanel key={floorKey} eventsId={eventsId} onTypesChanged={() => setPricingKey((k) => k + 1)} />
-      ) : null}
-
       {event.data && event.data.eventType !== 'Table' ? (
         <TicketTypesManager eventsId={eventsId} />
       ) : null}
@@ -217,8 +220,13 @@ export function AdminEventManagePage() {
               </Select>
             </div>
             <div className="space-y-1">
-              <Label>Label</Label>
-              <Input value={tableLabel} onChange={(e) => setTableLabel(e.target.value)} />
+              <Label>Color</Label>
+              <span
+                className="flex h-9 w-14 items-center justify-center rounded-md border border-input"
+                title="Inherited from the catalog table type"
+              >
+                <span className="size-5 rounded-sm" style={{ backgroundColor: tableColor || 'transparent' }} />
+              </span>
             </div>
             <div className="space-y-1">
               <Label>Capacity</Label>
@@ -266,7 +274,7 @@ export function AdminEventManagePage() {
                       capacity: tableCapacity,
                       // Empty = inherit the catalog template's default shape.
                       shape: '',
-                      color: '#888888',
+                      color: tableColor,
                       priceCents: tablePriceCents,
                       feeFormulasId: '',
                       isAllInclusive: tableIsAllInclusive,
@@ -277,10 +285,11 @@ export function AdminEventManagePage() {
                     }).then(() => {
                       setTableTemplateId('');
                       setTableLabel('');
+                      setTableColor('');
                       setFloorKey((k) => k + 1);
                       setPricingKey((k) => k + 1);
                     }),
-                  tables.reload,
+                  tableTypes.reload,
                 )
               }
             >
@@ -288,12 +297,26 @@ export function AdminEventManagePage() {
             </Button>
           </div>
           <div className="space-y-1">
-            {(tables.data ?? []).map((table) => (
-              <div key={table.tablesId} className="flex items-center justify-between border-b py-1 text-sm">
-                <span>
-                  {table.label} · {table.status}
+            {typeList.map((type) => (
+              <div key={type.eventTablesId} className="flex items-center justify-between border-b py-1 text-sm">
+                <span className="flex items-center gap-2">
+                  <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
+                  {type.label} · {centsToUSD(type.priceCents)}
                 </span>
-                <Button size="sm" variant="ghost" onClick={() => guard(() => deleteEventTable(table.tablesId), tables.reload)}>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() =>
+                    guard(
+                      () =>
+                        deleteEventTable(type.eventTablesId).then(() => {
+                          setFloorKey((k) => k + 1);
+                          setPricingKey((k) => k + 1);
+                        }),
+                      tableTypes.reload,
+                    )
+                  }
+                >
                   Remove
                 </Button>
               </div>
@@ -301,6 +324,18 @@ export function AdminEventManagePage() {
           </div>
         </CardContent>
       </Card>
+      ) : null}
+
+      {event.data && event.data.eventType !== 'Open' ? (
+        <FloorPlanPanel
+          key={`floor-${floorKey}`}
+          eventsId={eventsId}
+          onTypesChanged={() => setPricingKey((k) => k + 1)}
+          onLayoutSaved={() => {
+            tableTypes.reload();
+            stats.reload();
+          }}
+        />
       ) : null}
 
       <Card>

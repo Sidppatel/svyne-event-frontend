@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createEvent, type EventDraft } from '@/features/admin/services/eventAdminService';
 import { listVenues } from '@/features/admin/services/catalogService';
@@ -9,7 +9,9 @@ import { rpcErrorMessage } from '@/shared/session';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Select } from '@/shared/ui/select';
-import { Label } from '@/shared/ui/label';
+import { Textarea } from '@/shared/ui/textarea';
+import { Separator } from '@/shared/ui/separator';
+import { Field, FieldLabel, FieldGroup } from '@/shared/ui/field';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
 
@@ -88,83 +90,127 @@ export function AdminEventWizardPage() {
   }
 
   return (
-    <Card className="mx-auto max-w-2xl">
-      <CardHeader>
-        <CardTitle>New event</CardTitle>
-      </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <Field label="Title" value={title} onChange={setTitle} />
-        <div className="space-y-1">
-          <Label>Category</Label>
-          <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-            {categories.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.value}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <div className="space-y-1">
-          <Label>Event type</Label>
-          <Select value={eventType} onChange={(e) => setEventType(e.target.value)}>
-            {eventTypes.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.value === 'Open'
-                  ? 'Open seating (ticket tiers)'
-                  : option.value === 'Table'
-                    ? 'Table based (floor plan)'
-                    : 'Both (tiers + tables)'}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <div className="space-y-1">
-          <Label>Venue</Label>
-          <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)}>
-            {venues.length === 0 ? <option value="">No venues — create one first</option> : null}
-            {venues.map((venue) => (
-              <option key={venue.venuesId} value={venue.venuesId}>
-                {venue.name}
-              </option>
-            ))}
-          </Select>
-        </div>
-        <div className="space-y-1">
-          <Label>Start</Label>
-          <DateTimePicker value={start} onChange={setStart} timeZone={venueTz} />
-        </div>
-        <div className="space-y-1">
-          <Label>End</Label>
-          <DateTimePicker value={end} onChange={setEnd} timeZone={venueTz} />
-        </div>
-        <div className="space-y-1 md:col-span-2">
-          <Label>Description</Label>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
-        </div>
-        {error ? <p className="text-sm text-destructive md:col-span-2">{error}</p> : null}
-        <div className="md:col-span-2">
-          <Button onClick={submit} disabled={submitting}>
-            {submitting ? 'Creating…' : 'Create event'}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="svyne-page mx-auto w-full max-w-2xl space-y-6">
+      <header className="space-y-1">
+        <h1 className="text-2xl font-semibold text-foreground">New event</h1>
+        <p className="text-sm text-muted-foreground">
+          Set up the basics now — tickets, tables and pricing come after you create the event.
+        </p>
+      </header>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Event details</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FieldGroup>
+            <SectionLabel>Details</SectionLabel>
+            <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+              <Field>
+                <FieldLabel htmlFor="title">Title</FieldLabel>
+                <Input
+                  id="title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Summer Gala 2026"
+                />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="category">Category</FieldLabel>
+                <Select
+                  id="category"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  {categories.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field className="md:col-span-2">
+                <FieldLabel htmlFor="eventType">Event type</FieldLabel>
+                <Select
+                  id="eventType"
+                  value={eventType}
+                  onChange={(e) => setEventType(e.target.value)}
+                >
+                  {eventTypes.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.value === 'Open'
+                        ? 'Open seating (ticket tiers)'
+                        : option.value === 'Table'
+                          ? 'Table based (floor plan)'
+                          : 'Both (tiers + tables)'}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field className="md:col-span-2">
+                <FieldLabel htmlFor="description">Description</FieldLabel>
+                <Textarea
+                  id="description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Tell guests what to expect…"
+                  rows={4}
+                />
+              </Field>
+            </div>
+
+            <Separator />
+
+            <SectionLabel>Venue &amp; schedule</SectionLabel>
+            <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
+              <Field className="md:col-span-2">
+                <FieldLabel htmlFor="venue">Venue</FieldLabel>
+                <Select id="venue" value={venuesId} onChange={(e) => setVenuesId(e.target.value)}>
+                  {venues.length === 0 ? (
+                    <option value="">No venues — create one first</option>
+                  ) : null}
+                  {venues.map((venue) => (
+                    <option key={venue.venuesId} value={venue.venuesId}>
+                      {venue.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field>
+                <FieldLabel>Start</FieldLabel>
+                <DateTimePicker value={start} onChange={setStart} timeZone={venueTz} />
+              </Field>
+              <Field>
+                <FieldLabel>End</FieldLabel>
+                <DateTimePicker value={end} onChange={setEnd} timeZone={venueTz} />
+              </Field>
+            </div>
+
+            {error ? (
+              <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {error}
+              </div>
+            ) : null}
+
+            <Separator />
+
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => navigate(-1)} disabled={submitting}>
+                Cancel
+              </Button>
+              <Button onClick={submit} disabled={submitting}>
+                {submitting ? 'Creating…' : 'Create event'}
+              </Button>
+            </div>
+          </FieldGroup>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <div className="space-y-1">
-      <Label>{label}</Label>
-      <Input value={value} onChange={(e) => onChange(e.target.value)} />
-    </div>
+    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{children}</p>
   );
 }

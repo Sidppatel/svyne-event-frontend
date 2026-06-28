@@ -131,14 +131,13 @@ export function themeVars(mode: ThemeMode): Record<string, string> {
   return vars;
 }
 
-export function applyTheme(mode: ThemeMode): void {
+// Color tokens are the single source of truth in index.css (:root). We intentionally
+// do NOT push them as inline styles here — inline styles would override the stylesheet.
+// Expo design is light-only, so this only syncs the native color-scheme hint.
+// ponytail: light-only; restore the themeVars() loop here if real dark mode returns.
+export function applyTheme(_mode: ThemeMode): void {
   if (typeof document === 'undefined') {
     return;
   }
-  const root = document.documentElement;
-  const vars = themeVars(mode);
-  for (const [name, value] of Object.entries(vars)) {
-    root.style.setProperty(name, value);
-  }
-  root.style.colorScheme = mode;
+  document.documentElement.style.colorScheme = 'light';
 }
