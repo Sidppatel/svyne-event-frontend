@@ -71,15 +71,23 @@ export function BookingDetailPage() {
               <span className="font-medium">{ticket.ticketCode}</span>
               <span className="text-muted-foreground">seat {ticket.seatNumber}</span>
               <span className="text-muted-foreground">{ticket.status}</span>
-              <Input
-                className="w-48"
-                placeholder="invite email"
-                value={emails[ticket.ticketsId] ?? ''}
-                onChange={(e) => setEmails((prev) => ({ ...prev, [ticket.ticketsId]: e.target.value }))}
-              />
-              <Button size="sm" variant="outline" onClick={() => invite(ticket.ticketsId)}>
-                Invite
-              </Button>
+              {ticket.status !== 'CheckedIn' ? (
+                <>
+                  <Input
+                    className="w-48"
+                    placeholder="invite email"
+                    value={emails[ticket.ticketsId] ?? ''}
+                    onChange={(e) => setEmails((prev) => ({ ...prev, [ticket.ticketsId]: e.target.value }))}
+                  />
+                  <Button size="sm" variant="outline" onClick={() => invite(ticket.ticketsId)}>
+                    Invite
+                  </Button>
+                </>
+              ) : (
+                <span className="text-success font-semibold px-2 py-0.5 bg-success/10 rounded-md">
+                  Checked In
+                </span>
+              )}
             </div>
           ))}
           {!tickets.loading && (tickets.data ?? []).length === 0 ? (

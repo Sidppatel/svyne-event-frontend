@@ -10,7 +10,7 @@ export async function listInvitations(): Promise<Invitation[]> {
 }
 
 export async function createInvitation(email: string, role: number): Promise<string> {
-  const response = await callRpc(() => invitationClient.createInvitation({ email, role }));
+  const response = await callRpc(() => invitationClient.createInvitation({ email, role, eventsId: '' }));
   return response.value;
 }
 

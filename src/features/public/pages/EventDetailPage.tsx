@@ -414,7 +414,7 @@ function TableSection({
                       available ? 'cursor-pointer hover:opacity-90' : 'cursor-not-allowed opacity-60'
                     } ${sel ? 'ring-2 ring-black ring-offset-1' : 'border-black/10'}`}
                   >
-                    {table.label}
+                    {available ? table.label : <span className="flex items-center gap-0.5"><span aria-hidden>🔒</span>{table.label}</span>}
                   </button>
                 );
               })}
@@ -436,9 +436,10 @@ function TableSection({
                   disabled={table.status !== 'Available' || pending === table.tablesId}
                   onClick={() => toggleTable(table)}
                 >
-                  {table.label} ·{' '}
+                  {table.status !== 'Available' ? '🔒 ' : ''}{table.label} ·{' '}
                   {centsToUSD(feesIncluded ? addCents(table.priceCents, table.platformFeeCents) : table.priceCents)}
                   {' · '}seats {capacityOf(table)}
+                  {table.status !== 'Available' ? ` · ${table.status}` : ''}
                 </Button>
               );
             })}

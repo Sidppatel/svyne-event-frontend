@@ -16,6 +16,10 @@ import type { PageRequest } from "./common";
 import type { AcceptInvitationRequest } from "./admin";
 import type { CreateInvitationRequest } from "./admin";
 import { StaffService } from "./admin";
+import type { AddOrInviteStaffResponse } from "./admin";
+import type { AddOrInviteStaffRequest } from "./admin";
+import type { AssignStaffByEmailResponse } from "./admin";
+import type { AssignStaffByEmailRequest } from "./admin";
 import type { AckResponse } from "./common";
 import type { AssignStaffRequest } from "./admin";
 import type { ListStaffResponse } from "./admin";
@@ -135,6 +139,22 @@ export interface IStaffServiceClient {
      * @generated from protobuf rpc: UnassignStaff(svyne.admin.AssignStaffRequest) returns (svyne.common.AckResponse);
      */
     unassignStaff(input: AssignStaffRequest, options?: RpcOptions): UnaryCall<AssignStaffRequest, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ListAllStaff(svyne.common.Empty) returns (svyne.admin.ListStaffResponse);
+     */
+    listAllStaff(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListStaffResponse>;
+    /**
+     * @generated from protobuf rpc: AssignStaffByEmail(svyne.admin.AssignStaffByEmailRequest) returns (svyne.admin.AssignStaffByEmailResponse);
+     */
+    assignStaffByEmail(input: AssignStaffByEmailRequest, options?: RpcOptions): UnaryCall<AssignStaffByEmailRequest, AssignStaffByEmailResponse>;
+    /**
+     * @generated from protobuf rpc: AddOrInviteStaff(svyne.admin.AddOrInviteStaffRequest) returns (svyne.admin.AddOrInviteStaffResponse);
+     */
+    addOrInviteStaff(input: AddOrInviteStaffRequest, options?: RpcOptions): UnaryCall<AddOrInviteStaffRequest, AddOrInviteStaffResponse>;
+    /**
+     * @generated from protobuf rpc: RemoveStaffRole(svyne.common.UuidValue) returns (svyne.common.AckResponse);
+     */
+    removeStaffRole(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse>;
 }
 /**
  * @generated from protobuf service svyne.admin.StaffService
@@ -165,6 +185,34 @@ export class StaffServiceClient implements IStaffServiceClient, ServiceInfo {
     unassignStaff(input: AssignStaffRequest, options?: RpcOptions): UnaryCall<AssignStaffRequest, AckResponse> {
         const method = this.methods[2], opt = this._transport.mergeOptions(options);
         return stackIntercept<AssignStaffRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListAllStaff(svyne.common.Empty) returns (svyne.admin.ListStaffResponse);
+     */
+    listAllStaff(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListStaffResponse> {
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, ListStaffResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: AssignStaffByEmail(svyne.admin.AssignStaffByEmailRequest) returns (svyne.admin.AssignStaffByEmailResponse);
+     */
+    assignStaffByEmail(input: AssignStaffByEmailRequest, options?: RpcOptions): UnaryCall<AssignStaffByEmailRequest, AssignStaffByEmailResponse> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<AssignStaffByEmailRequest, AssignStaffByEmailResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: AddOrInviteStaff(svyne.admin.AddOrInviteStaffRequest) returns (svyne.admin.AddOrInviteStaffResponse);
+     */
+    addOrInviteStaff(input: AddOrInviteStaffRequest, options?: RpcOptions): UnaryCall<AddOrInviteStaffRequest, AddOrInviteStaffResponse> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<AddOrInviteStaffRequest, AddOrInviteStaffResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: RemoveStaffRole(svyne.common.UuidValue) returns (svyne.common.AckResponse);
+     */
+    removeStaffRole(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
 }
 /**

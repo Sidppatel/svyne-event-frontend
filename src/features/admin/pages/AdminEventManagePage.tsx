@@ -28,9 +28,10 @@ import { EventMediaManager } from '@/features/admin/components/EventMediaManager
 import type { Event } from '@/shared/proto/event';
 import {
   listStaffForEvent,
-  assignStaff,
+  assignStaffByEmail,
   unassignStaff,
 } from '@/features/admin/services/staffAdminService';
+import { toast } from 'sonner';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
 import { cn } from '@/shared/lib/cn';
@@ -113,6 +114,9 @@ export function AdminEventManagePage() {
   const canPublish = hasTicketTypes || hasTablesInFloorPlan;
 
   const typeList = tableTypes.data ?? [];
+  const lockedTypeIds = new Set(
+    (layout.data?.tables ?? []).filter((t) => t.status && t.status !== 'Available').map((t) => t.eventTablesId),
+  );
   const usedTemplateNames = new Set(typeList.map((t) => t.label));
   const templateList = (templates.data ?? []).filter((t) => !usedTemplateNames.has(t.name));
 
@@ -139,7 +143,7 @@ export function AdminEventManagePage() {
       setTableHeight(tpl.defaultHeight || 80);
     }
   }
-  const [assignUserId, setAssignUserId] = useState('');
+  const [assignEmail, setAssignEmail] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
   // Bumped when a table type is added so the floor-plan palette reloads.
   const [floorKey, setFloorKey] = useState(0);
@@ -342,10 +346,15 @@ export function AdminEventManagePage() {
                   <span className="flex items-center gap-2">
                     <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
                     {type.label} · {centsToUSD(type.priceCents)}
+                    {lockedTypeIds.has(type.eventTablesId) ? (
+                      <span className="text-xs text-muted-foreground">🔒 sold/held</span>
+                    ) : null}
                   </span>
                   <Button
                     size="sm"
                     variant="ghost"
+                    disabled={lockedTypeIds.has(type.eventTablesId)}
+                    title={lockedTypeIds.has(type.eventTablesId) ? 'Has sold or held tables — can’t be removed' : undefined}
                     onClick={() =>
                       guard(
                         () =>
@@ -383,12 +392,28 @@ export function AdminEventManagePage() {
         <CardContent className="space-y-3">
           <div className="flex flex-wrap items-end gap-3">
             <div className="space-y-1">
-              <Label>User ID</Label>
-              <Input value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)} />
+              <Label>Staff Email</Label>
+              <Input
+                type="email"
+                placeholder="staff@example.com"
+                value={assignEmail}
+                onChange={(e) => setAssignEmail(e.target.value)}
+              />
             </div>
             <Button
               size="sm"
-              onClick={() => guard(() => assignStaff(assignUserId, eventsId).then(() => setAssignUserId('')), staff.reload)}
+              onClick={() => {
+                if (!assignEmail.trim()) return;
+                guard(async () => {
+                  const res = await assignStaffByEmail(assignEmail.trim(), eventsId);
+                  if (res.userExisted) {
+                    toast.success('Staff member assigned successfully.');
+                  } else {
+                    toast.success(res.message);
+                  }
+                  setAssignEmail('');
+                }, staff.reload);
+              }}
             >
               Assign staff
             </Button>
@@ -397,7 +422,9 @@ export function AdminEventManagePage() {
             {(staff.data ?? []).map((member) => (
               <div key={member.usersId} className="flex items-center justify-between border-b py-1 text-sm">
                 <span>
-                  {member.firstName} {member.lastName} · {member.email}
+                  {member.firstName || member.lastName 
+                    ? `${member.firstName} ${member.lastName}`.trim() 
+                    : 'Invited User'} · {member.email}
                 </span>
                 <Button size="sm" variant="ghost" onClick={() => guard(() => unassignStaff(member.usersId, eventsId), staff.reload)}>
                   Unassign

@@ -1,20 +1,27 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { PortalNav } from '@/shared/components/layouts/PortalNav';
 import { usePageEntrance } from '@/shared/hooks/usePageEntrance';
+import { useAuth } from '@/shared/auth/useAuth';
 
 export function PublicLayout() {
+  const { role, isAuthenticated } = useAuth();
   const { pathname } = useLocation();
   const page = usePageEntrance<HTMLElement>();
+
+  const links = [
+    { to: '/', label: 'Events' },
+    { to: '/my-bookings', label: 'My Bookings' },
+    { to: '/feedback', label: 'Feedback' },
+    { to: '/profile', label: 'Profile' },
+  ];
+
+  if (isAuthenticated && (role === 2 || role === 1 || role === 3)) {
+    links.push({ to: '/staff', label: 'Check-In' });
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      <PortalNav
-        links={[
-          { to: '/', label: 'Events' },
-          { to: '/my-bookings', label: 'My Bookings' },
-          { to: '/feedback', label: 'Feedback' },
-          { to: '/profile', label: 'Profile' },
-        ]}
-      />
+      <PortalNav links={links} />
       <main ref={page} key={pathname} className="mx-auto max-w-5xl px-4 py-6 md:px-6 md:py-8">
         <Outlet />
       </main>

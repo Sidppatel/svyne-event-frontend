@@ -178,6 +178,62 @@ export interface CreateInvitationRequest {
      * @generated from protobuf field: int32 role = 2;
      */
     role: number;
+    /**
+     * @generated from protobuf field: string events_id = 3;
+     */
+    eventsId: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.AssignStaffByEmailRequest
+ */
+export interface AssignStaffByEmailRequest {
+    /**
+     * @generated from protobuf field: string email = 1;
+     */
+    email: string;
+    /**
+     * @generated from protobuf field: string events_id = 2;
+     */
+    eventsId: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.AssignStaffByEmailResponse
+ */
+export interface AssignStaffByEmailResponse {
+    /**
+     * @generated from protobuf field: bool user_existed = 1;
+     */
+    userExisted: boolean;
+    /**
+     * @generated from protobuf field: string message = 2;
+     */
+    message: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.AddOrInviteStaffRequest
+ */
+export interface AddOrInviteStaffRequest {
+    /**
+     * @generated from protobuf field: string email = 1;
+     */
+    email: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.AddOrInviteStaffResponse
+ */
+export interface AddOrInviteStaffResponse {
+    /**
+     * @generated from protobuf field: bool user_existed = 1;
+     */
+    userExisted: boolean;
+    /**
+     * @generated from protobuf field: string users_id = 2;
+     */
+    usersId: string;
+    /**
+     * @generated from protobuf field: string message = 3;
+     */
+    message: string;
 }
 /**
  * @generated from protobuf message svyne.admin.AcceptInvitationRequest
@@ -957,13 +1013,15 @@ class CreateInvitationRequest$Type extends MessageType<CreateInvitationRequest> 
     constructor() {
         super("svyne.admin.CreateInvitationRequest", [
             { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "role", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 2, name: "role", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<CreateInvitationRequest>): CreateInvitationRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.email = "";
         message.role = 0;
+        message.eventsId = "";
         if (value !== undefined)
             reflectionMergePartial<CreateInvitationRequest>(this, message, value);
         return message;
@@ -978,6 +1036,9 @@ class CreateInvitationRequest$Type extends MessageType<CreateInvitationRequest> 
                     break;
                 case /* int32 role */ 2:
                     message.role = reader.int32();
+                    break;
+                case /* string events_id */ 3:
+                    message.eventsId = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -997,6 +1058,9 @@ class CreateInvitationRequest$Type extends MessageType<CreateInvitationRequest> 
         /* int32 role = 2; */
         if (message.role !== 0)
             writer.tag(2, WireType.Varint).int32(message.role);
+        /* string events_id = 3; */
+        if (message.eventsId !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.eventsId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1007,6 +1071,226 @@ class CreateInvitationRequest$Type extends MessageType<CreateInvitationRequest> 
  * @generated MessageType for protobuf message svyne.admin.CreateInvitationRequest
  */
 export const CreateInvitationRequest = new CreateInvitationRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AssignStaffByEmailRequest$Type extends MessageType<AssignStaffByEmailRequest> {
+    constructor() {
+        super("svyne.admin.AssignStaffByEmailRequest", [
+            { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AssignStaffByEmailRequest>): AssignStaffByEmailRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.email = "";
+        message.eventsId = "";
+        if (value !== undefined)
+            reflectionMergePartial<AssignStaffByEmailRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AssignStaffByEmailRequest): AssignStaffByEmailRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string email */ 1:
+                    message.email = reader.string();
+                    break;
+                case /* string events_id */ 2:
+                    message.eventsId = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AssignStaffByEmailRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string email = 1; */
+        if (message.email !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.email);
+        /* string events_id = 2; */
+        if (message.eventsId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.eventsId);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.AssignStaffByEmailRequest
+ */
+export const AssignStaffByEmailRequest = new AssignStaffByEmailRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AssignStaffByEmailResponse$Type extends MessageType<AssignStaffByEmailResponse> {
+    constructor() {
+        super("svyne.admin.AssignStaffByEmailResponse", [
+            { no: 1, name: "user_existed", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 2, name: "message", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AssignStaffByEmailResponse>): AssignStaffByEmailResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.userExisted = false;
+        message.message = "";
+        if (value !== undefined)
+            reflectionMergePartial<AssignStaffByEmailResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AssignStaffByEmailResponse): AssignStaffByEmailResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* bool user_existed */ 1:
+                    message.userExisted = reader.bool();
+                    break;
+                case /* string message */ 2:
+                    message.message = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AssignStaffByEmailResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* bool user_existed = 1; */
+        if (message.userExisted !== false)
+            writer.tag(1, WireType.Varint).bool(message.userExisted);
+        /* string message = 2; */
+        if (message.message !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.message);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.AssignStaffByEmailResponse
+ */
+export const AssignStaffByEmailResponse = new AssignStaffByEmailResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AddOrInviteStaffRequest$Type extends MessageType<AddOrInviteStaffRequest> {
+    constructor() {
+        super("svyne.admin.AddOrInviteStaffRequest", [
+            { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AddOrInviteStaffRequest>): AddOrInviteStaffRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.email = "";
+        if (value !== undefined)
+            reflectionMergePartial<AddOrInviteStaffRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AddOrInviteStaffRequest): AddOrInviteStaffRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string email */ 1:
+                    message.email = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AddOrInviteStaffRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string email = 1; */
+        if (message.email !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.email);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.AddOrInviteStaffRequest
+ */
+export const AddOrInviteStaffRequest = new AddOrInviteStaffRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AddOrInviteStaffResponse$Type extends MessageType<AddOrInviteStaffResponse> {
+    constructor() {
+        super("svyne.admin.AddOrInviteStaffResponse", [
+            { no: 1, name: "user_existed", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 2, name: "users_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "message", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<AddOrInviteStaffResponse>): AddOrInviteStaffResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.userExisted = false;
+        message.usersId = "";
+        message.message = "";
+        if (value !== undefined)
+            reflectionMergePartial<AddOrInviteStaffResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: AddOrInviteStaffResponse): AddOrInviteStaffResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* bool user_existed */ 1:
+                    message.userExisted = reader.bool();
+                    break;
+                case /* string users_id */ 2:
+                    message.usersId = reader.string();
+                    break;
+                case /* string message */ 3:
+                    message.message = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: AddOrInviteStaffResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* bool user_existed = 1; */
+        if (message.userExisted !== false)
+            writer.tag(1, WireType.Varint).bool(message.userExisted);
+        /* string users_id = 2; */
+        if (message.usersId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.usersId);
+        /* string message = 3; */
+        if (message.message !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.message);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.AddOrInviteStaffResponse
+ */
+export const AddOrInviteStaffResponse = new AddOrInviteStaffResponse$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class AcceptInvitationRequest$Type extends MessageType<AcceptInvitationRequest> {
     constructor() {
@@ -1742,7 +2026,11 @@ export const FinancialService = new ServiceType("svyne.admin.FinancialService", 
 export const StaffService = new ServiceType("svyne.admin.StaffService", [
     { name: "ListStaffForEvent", options: {}, I: UuidValue, O: ListStaffResponse },
     { name: "AssignStaff", options: {}, I: AssignStaffRequest, O: AckResponse },
-    { name: "UnassignStaff", options: {}, I: AssignStaffRequest, O: AckResponse }
+    { name: "UnassignStaff", options: {}, I: AssignStaffRequest, O: AckResponse },
+    { name: "ListAllStaff", options: {}, I: Empty, O: ListStaffResponse },
+    { name: "AssignStaffByEmail", options: {}, I: AssignStaffByEmailRequest, O: AssignStaffByEmailResponse },
+    { name: "AddOrInviteStaff", options: {}, I: AddOrInviteStaffRequest, O: AddOrInviteStaffResponse },
+    { name: "RemoveStaffRole", options: {}, I: UuidValue, O: AckResponse }
 ]);
 /**
  * @generated ServiceType for protobuf service svyne.admin.InvitationService

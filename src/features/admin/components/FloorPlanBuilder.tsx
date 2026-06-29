@@ -19,6 +19,7 @@ type PlacedTable = {
   height: number;
   shapeOverride: string;
   colorOverride: string;
+  status: string;
 };
 type PlacedObject = {
   layoutObjectsId: string;
@@ -123,6 +124,7 @@ export function FloorPlanBuilder({
           height: t.height || DEFAULT_SIZE,
           shapeOverride: t.shapeOverride || '',
           colorOverride: t.colorOverride || '',
+          status: t.status || 'Available',
         })),
       );
       setObjects(
@@ -151,6 +153,14 @@ export function FloorPlanBuilder({
     typeList.forEach((t) => m.set(t.eventTablesId, t));
     return m;
   }, [typeList]);
+
+  const lockedTypeIds = useMemo(() => {
+    const s = new Set<string>();
+    (layout.data?.tables ?? []).forEach((t) => {
+      if (t.status && t.status !== 'Available') s.add(t.eventTablesId);
+    });
+    return s;
+  }, [layout.data]);
 
   function nextTableLabel(typeId: string) {
     const typeName = typeById.get(typeId)?.label || 'Table';
@@ -191,7 +201,7 @@ export function FloorPlanBuilder({
       ...prev,
       {
         tablesId: '', eventTablesId: typeId, label: nextTableLabel(typeId),
-        posX: px, posY: py, width: w, height: h, shapeOverride: '', colorOverride: '',
+        posX: px, posY: py, width: w, height: h, shapeOverride: '', colorOverride: '', status: 'Available',
       },
     ]);
     setDirty(true);
@@ -242,6 +252,10 @@ export function FloorPlanBuilder({
     e.stopPropagation();
     const item = kind === 'table' ? tables[idx] : objects[idx];
     if (!item) return;
+    if (kind === 'table' && (item as PlacedTable).status !== 'Available') {
+      setNotice(`"${(item as PlacedTable).label}" is ${(item as PlacedTable).status.toLowerCase()} — sold/held tables can't be moved or removed`);
+      return;
+    }
     (e.target as Element).setPointerCapture(e.pointerId);
     dragRef.current = {
       kind, mode, idx,
@@ -326,6 +340,10 @@ export function FloorPlanBuilder({
   // Delete a table TYPE: removes the type and every placed table of it (server
   // cascades via sp_delete_event_table), then reloads palette + layout.
   async function deleteType(typeId: string, label: string) {
+    if (lockedTypeIds.has(typeId)) {
+      setNotice(`"${label}" can't be removed — it has sold or held tables`);
+      return;
+    }
     if (!window.confirm(`Delete table type "${label}" and all its placed tables?`)) return;
     setNotice(null);
     try {
@@ -409,10 +427,13 @@ export function FloorPlanBuilder({
               className="cursor-grab px-2 py-1 text-sm hover:bg-muted">
               {t.label} · {t.defaultWidth}×{t.defaultHeight}px · {centsToUSD(t.priceCents)}
             </button>
-            <button type="button" title="Delete table type and all its placed tables"
+            <button type="button" disabled={lockedTypeIds.has(t.eventTablesId)}
+              title={lockedTypeIds.has(t.eventTablesId)
+                ? 'Locked — this type has sold or held tables and can’t be removed'
+                : 'Delete table type and all its placed tables'}
               onClick={() => deleteType(t.eventTablesId, t.label)}
-              className="border-l border-input px-2 py-1 text-sm text-destructive hover:bg-destructive/10">
-              ×
+              className="border-l border-input px-2 py-1 text-sm text-destructive hover:bg-destructive/10 disabled:cursor-not-allowed disabled:text-muted-foreground disabled:hover:bg-transparent">
+              {lockedTypeIds.has(t.eventTablesId) ? '🔒' : '×'}
             </button>
           </span>
         ))}
@@ -445,22 +466,30 @@ export function FloorPlanBuilder({
             const type = typeById.get(t.eventTablesId);
             const fill = t.colorOverride || type?.color || '#4f46e5';
             const sh = t.shapeOverride || type?.shape || 'Rectangle';
+            const locked = !!t.status && t.status !== 'Available';
             return (
               <div
                 key={`t${i}`}
                 onPointerDown={(e) => onItemPointerDown(e, 'table', 'move', i)}
                 onPointerMove={onItemPointerMove}
                 onPointerUp={(e) => onItemPointerUp(e, 'table', i)}
-                title={`${t.label} · ${sh} (drag to move, corner to resize, click to select)`}
+                title={locked
+                  ? `${t.label} · ${t.status} — sold/held, can’t be moved or removed`
+                  : `${t.label} · ${sh} (drag to move, corner to resize, click to select)`}
                 style={{
                   position: 'absolute', left: t.posX, top: t.posY, width: t.width, height: t.height,
-                  backgroundColor: fill, touchAction: 'none',
+                  backgroundColor: locked ? '#9ca3af' : fill, touchAction: 'none',
                 }}
-                className={`flex cursor-move select-none items-center justify-center border text-xs font-medium text-white ${shapeClass(sh)} ${
-                  selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'
-                }`}
+                className={`flex select-none items-center justify-center border text-xs font-medium text-white ${shapeClass(sh)} ${
+                  locked ? 'cursor-not-allowed opacity-70' : 'cursor-move'
+                } ${selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'}`}
               >
-                {selected === `t${i}` ? (
+                {locked ? (
+                  <span className="pointer-events-none flex items-center gap-1">
+                    <span aria-hidden>🔒</span>
+                    {t.label}
+                  </span>
+                ) : selected === `t${i}` ? (
                   <input
                     value={t.label}
                     onPointerDown={(e) => e.stopPropagation()}
@@ -482,12 +511,14 @@ export function FloorPlanBuilder({
                     ×
                   </button>
                 ) : null}
-                <span
-                  onPointerDown={(e) => onItemPointerDown(e, 'table', 'resize', i)}
-                  onPointerMove={onItemPointerMove}
-                  onPointerUp={(e) => onItemPointerUp(e, 'table', i)}
-                  className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize rounded-sm border border-white bg-black/40"
-                />
+                {locked ? null : (
+                  <span
+                    onPointerDown={(e) => onItemPointerDown(e, 'table', 'resize', i)}
+                    onPointerMove={onItemPointerMove}
+                    onPointerUp={(e) => onItemPointerUp(e, 'table', i)}
+                    className="absolute bottom-0 right-0 h-3 w-3 cursor-se-resize rounded-sm border border-white bg-black/40"
+                  />
+                )}
               </div>
             );
           })}
@@ -542,7 +573,8 @@ export function FloorPlanBuilder({
       <p className="text-xs text-muted-foreground">
         Drag a table type or object from the palette onto the canvas. Drag placed items to move, drag the
         corner handle to resize. Tables can't overlap each other. Click an item to select it, then use × to
-        delete. Delete a palette table type (×) to remove it and all its placed tables.{dirty ? ' · Unsaved changes' : ''}
+        delete. Delete a palette table type (×) to remove it and all its placed tables. 🔒 Grey/locked tables are
+        sold or held — they can’t be moved, deleted, and their table type can’t be removed.{dirty ? ' · Unsaved changes' : ''}
       </p>
     </div>
   );

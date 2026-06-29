@@ -3,6 +3,10 @@
 // @generated from protobuf file "bookings.proto" (package "svyne.booking", syntax proto3)
 // tslint:disable
 import { CheckInService } from "./bookings";
+import type { CheckInGuestRequest } from "./bookings";
+import type { GetGuestListResponse } from "./bookings";
+import type { ListEventsForStaffResponse } from "./bookings";
+import type { Empty } from "./common";
 import type { CheckInStats } from "./bookings";
 import type { ScanResponse } from "./bookings";
 import type { ScanRequest } from "./bookings";
@@ -254,6 +258,18 @@ export interface ICheckInServiceClient {
      * @generated from protobuf rpc: GetCheckInStats(svyne.common.UuidValue) returns (svyne.booking.CheckInStats);
      */
     getCheckInStats(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, CheckInStats>;
+    /**
+     * @generated from protobuf rpc: ListEventsForStaff(svyne.common.Empty) returns (svyne.booking.ListEventsForStaffResponse);
+     */
+    listEventsForStaff(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListEventsForStaffResponse>;
+    /**
+     * @generated from protobuf rpc: GetGuestList(svyne.common.UuidValue) returns (svyne.booking.GetGuestListResponse);
+     */
+    getGuestList(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, GetGuestListResponse>;
+    /**
+     * @generated from protobuf rpc: CheckInGuest(svyne.booking.CheckInGuestRequest) returns (svyne.booking.ScanResponse);
+     */
+    checkInGuest(input: CheckInGuestRequest, options?: RpcOptions): UnaryCall<CheckInGuestRequest, ScanResponse>;
 }
 /**
  * @generated from protobuf service svyne.booking.CheckInService
@@ -277,5 +293,26 @@ export class CheckInServiceClient implements ICheckInServiceClient, ServiceInfo 
     getCheckInStats(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, CheckInStats> {
         const method = this.methods[1], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, CheckInStats>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListEventsForStaff(svyne.common.Empty) returns (svyne.booking.ListEventsForStaffResponse);
+     */
+    listEventsForStaff(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListEventsForStaffResponse> {
+        const method = this.methods[2], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, ListEventsForStaffResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetGuestList(svyne.common.UuidValue) returns (svyne.booking.GetGuestListResponse);
+     */
+    getGuestList(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, GetGuestListResponse> {
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UuidValue, GetGuestListResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: CheckInGuest(svyne.booking.CheckInGuestRequest) returns (svyne.booking.ScanResponse);
+     */
+    checkInGuest(input: CheckInGuestRequest, options?: RpcOptions): UnaryCall<CheckInGuestRequest, ScanResponse> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<CheckInGuestRequest, ScanResponse>("unary", this._transport, method, opt, input);
     }
 }

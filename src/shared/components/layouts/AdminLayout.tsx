@@ -21,6 +21,7 @@ export function AdminLayout() {
     { to: '/profile', label: 'Profile' },
   ];
   if (canManageTenantSettings(role)) {
+    links.push({ to: '/staff', label: 'Staff' });
     links.push({ to: '/invitations', label: 'Invitations' });
     links.push({ to: '/financial', label: 'Financial' });
     links.push({ to: '/settings', label: 'Settings' });
