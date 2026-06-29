@@ -18,6 +18,7 @@ import { Label } from '@/shared/ui/label';
 import { Select } from '@/shared/ui/select';
 import { Switch } from '@/shared/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { MapPin } from 'lucide-react';
 import {
   US_STATES,
   isValidEmail,
@@ -111,7 +112,10 @@ export function AdminVenuesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Add venue</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-muted-foreground" />
+            Add venue
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
@@ -221,9 +225,12 @@ function VenueRow({ venue, onChanged }: { venue: Venue; onChanged: () => void })
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="font-medium">{venue.name}</span>
-            <span className="ml-2 text-sm text-muted-foreground">
-              {[venue.city, venue.state].filter(Boolean).join(', ')}
-            </span>
+            {venue.city || venue.state ? (
+              <span className="ml-2 text-sm text-muted-foreground inline-flex items-center gap-1">
+                <MapPin className="h-3 w-3" />
+                {[venue.city, venue.state].filter(Boolean).join(', ')}
+              </span>
+            ) : null}
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={venue.isActive} onCheckedChange={(v) => persist(v)} label="Enabled" />

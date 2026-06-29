@@ -24,7 +24,7 @@ Warm, premium, **friendly** ticketing — not a cold dashboard. Every screen ans
 All color flows through CSS variables in `src/index.css`. **Never hardcode hex in components** — use the Tailwind token utilities (`bg-primary`, `text-foreground`, `border-border`, …).
 
 | Token | Hex | Use |
-|---|---|---|
+| --- | --- | --- |
 | `--background` | `#FBF6F0` | warm porcelain page canvas (60%) |
 | `--foreground` | `#241522` | plum ink — headlines + primary text |
 | `--card` / `--popover` | `#FFFFFF` | clean surfaces for depth on the warm canvas (30%) |
@@ -44,6 +44,7 @@ All color flows through CSS variables in `src/index.css`. **Never hardcode hex i
 `--amber` is kept as a back-compat alias of the marigold family (existing components use `text-amber-foreground`, `bg-amber/15`). New code should prefer `marigold`.
 
 ### Don'ts
+
 - **No pure black** (`#000`) for ink — plum `#241522` is warmer and premium.
 - **No blue links.** Inline links are cranberry (`text-text-link`). Blue breaks the warm ecosystem.
 - **Marigold is rationed.** It appears only at the ticket perforation, prices, urgency badges, and the active nav indicator. Cranberry is the only *action* color. Spend boldness in one place.
@@ -54,7 +55,7 @@ All color flows through CSS variables in `src/index.css`. **Never hardcode hex i
 ## 3. Typography
 
 | Role | Family | Where |
-|---|---|---|
+| --- | --- | --- |
 | Display | **Bricolage Grotesque** (`font-display`, var `--brand-font-display`) | `h1`–`h3`, prices, big numbers — the marquee voice |
 | Body / UI | **Inter** (`font-sans`) | paragraphs, labels, buttons, inputs |
 | Mono | **JetBrains Mono** (`font-mono`) | ticket codes, booking IDs, seat labels — reads as a serial number |
@@ -66,7 +67,7 @@ Headings already get `font-display`, `letter-spacing: -0.01em` from the base `h1
 ## 4. Responsive rules (375 → 1440)
 
 | Element | Mobile (375–768) | Desktop (768+) |
-|---|---|---|
+| --- | --- | --- |
 | Layout | single-column stack, 16px margins | up to 12-col, max-width ~1280px, 24px gutters |
 | Inputs | full-width, **≥48px** tall | inline multi-column, ~720px form wrapper |
 | Nav | bottom tab bar (public) / hamburger `Sheet` | sticky top header |
