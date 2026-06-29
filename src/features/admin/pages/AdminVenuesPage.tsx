@@ -160,10 +160,10 @@ function VenueFields({ draft, onChange }: { draft: VenueDraft; onChange: (d: Ven
         <div className="space-y-1">
           <Label>State</Label>
           <Select className="w-40" value={draft.state} onChange={(e) => onChange({ ...draft, state: e.target.value })}>
-            <option value="">—</option>
+            <option value="">Select State</option>
             {US_STATES.map((s) => (
               <option key={s.code} value={s.code}>
-                {s.code} — {s.name}
+                {s.code} - {s.name}
               </option>
             ))}
           </Select>
