@@ -23,6 +23,20 @@ export function formatEpoch(value: number | string): string {
   return new Date(seconds * 1000).toLocaleString();
 }
 
+export function formatEventDate(value: number | string): string {
+  const seconds = typeof value === 'string' ? Number(value) : value;
+  if (!Number.isFinite(seconds) || seconds === 0) {
+    return '';
+  }
+  return new Date(seconds * 1000).toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
 export function toEpochString(value: string): string {
   if (!value) {
     return '0';

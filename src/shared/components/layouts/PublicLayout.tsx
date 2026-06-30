@@ -11,6 +11,7 @@ export function PublicLayout() {
   const links = [
     { to: '/', label: 'Events' },
     { to: '/my-bookings', label: 'My Bookings' },
+    { to: '/my-tickets', label: 'My Tickets' },
     { to: '/feedback', label: 'Feedback' },
     { to: '/profile', label: 'Profile' },
   ];

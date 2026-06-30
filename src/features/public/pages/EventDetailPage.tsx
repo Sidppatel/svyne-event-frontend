@@ -1,4 +1,5 @@
-import { useCallback, useMemo, useState } from 'react';
+import { type ReactNode, useCallback, useMemo, useState } from 'react';
+import { FileText } from 'lucide-react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
@@ -7,7 +8,9 @@ import {
   calculatePrice,
   listEventTableTypes,
 } from '@/features/public/services/publicEventService';
-import { EventMediaCarousel } from '@/features/public/components/EventMediaCarousel';
+
+import { EventHero } from '@/features/public/components/EventHero';
+import { useEventReveal } from '@/features/public/hooks/useEventReveal';
 import { EventPerformers } from '@/features/public/components/EventPerformers';
 import { EventSponsors } from '@/features/public/components/EventSponsors';
 import { EventTimeline } from '@/features/public/components/EventTimeline';
@@ -36,6 +39,7 @@ export function EventDetailPage() {
   const { slug = '' } = useParams();
   const loader = useCallback(() => getEventBySlug(slug), [slug]);
   const { data: event, loading, error } = useAsync(loader);
+  const scope = useEventReveal<HTMLDivElement>(Boolean(event));
 
   if (loading) {
     return <p className="text-muted-foreground">Loading…</p>;
@@ -45,32 +49,63 @@ export function EventDetailPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div ref={scope} className="pb-24 md:pb-8">
       <Seo
         title={event.title}
         description={event.description}
         image={event.primaryImageId ? imageUrl(event.primaryImageId) : undefined}
       />
-      <EventMediaCarousel eventsId={event.eventsId} />
-      <Card>
-        <CardHeader>
-          <CardTitle>{event.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-foreground">{event.description}</p>
-          <p className="text-sm text-muted-foreground">Category: {event.category}</p>
-          <p className="text-sm text-muted-foreground">Status: {event.status}</p>
-        </CardContent>
-      </Card>
-      <EventPerformers performersJson={event.performersJson} />
-      <EventSponsors sponsorsJson={event.sponsorsJson} />
-      <EventTimeline eventsId={event.eventsId} />
-      <EventExtraInfo extraInfoJson={event.extraInfoJson} />
+      <EventHero event={event} />
       <CartBookingPanel
         eventsId={event.eventsId}
         eventType={event.eventType || 'Open'}
         feesIncluded={event.feesIncluded}
-      />
+      >
+        {event.description ? <AboutSection description={event.description} /> : null}
+        <div data-reveal>
+          <EventPerformers performersJson={event.performersJson} />
+        </div>
+        <div data-reveal>
+          <EventSponsors sponsorsJson={event.sponsorsJson} />
+        </div>
+        <div data-reveal>
+          <EventTimeline eventsId={event.eventsId} />
+        </div>
+        <div data-reveal>
+          <EventExtraInfo extraInfoJson={event.extraInfoJson} />
+        </div>
+      </CartBookingPanel>
+      <StickyBuyBar />
+    </div>
+  );
+}
+
+function AboutSection({ description }: { description: string }) {
+  return (
+    <div data-reveal>
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-2.5">
+          <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary [&_svg]:size-4">
+            <FileText />
+          </span>
+          <CardTitle>About this event</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="whitespace-pre-line leading-relaxed text-body">{description}</p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function StickyBuyBar() {
+  function scrollToBooking() {
+    document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-hairline-strong bg-card/95 px-4 py-3 backdrop-blur md:hidden">
+      <span className="text-sm font-medium text-body">Reserve your spot</span>
+      <Button onClick={scrollToBooking}>Buy tickets</Button>
     </div>
   );
 }
@@ -79,10 +114,12 @@ function CartBookingPanel({
   eventsId,
   eventType,
   feesIncluded,
+  children,
 }: {
   eventsId: string;
   eventType: string;
   feesIncluded: boolean;
+  children?: ReactNode;
 }) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -138,15 +175,23 @@ function CartBookingPanel({
   }
 
   return (
-    <div className="space-y-4">
-      {showTickets ? (
-        <TicketTierSection eventsId={eventsId} feesIncluded={feesIncluded} cart={cart} upsert={upsert} removeKey={removeKey} />
-      ) : null}
-      {showTables ? (
-        <TableSection eventsId={eventsId} feesIncluded={feesIncluded} inCart={inCart} upsert={upsert} removeKey={removeKey} />
-      ) : null}
+    <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+      <div className="min-w-0 space-y-6">
+        {children}
+        {showTickets ? (
+          <div data-reveal>
+            <TicketTierSection eventsId={eventsId} feesIncluded={feesIncluded} cart={cart} upsert={upsert} removeKey={removeKey} />
+          </div>
+        ) : null}
+        {showTables ? (
+          <div data-reveal>
+            <TableSection eventsId={eventsId} feesIncluded={feesIncluded} inCart={inCart} upsert={upsert} removeKey={removeKey} />
+          </div>
+        ) : null}
+      </div>
 
-      <Card>
+      <aside id="booking" data-reveal className="lg:sticky lg:top-6">
+        <Card>
         <CardHeader>
           <CardTitle>Your order</CardTitle>
         </CardHeader>
@@ -195,7 +240,8 @@ function CartBookingPanel({
             {busy ? 'Reserving…' : 'Continue to payment'}
           </Button>
         </CardContent>
-      </Card>
+        </Card>
+      </aside>
     </div>
   );
 }

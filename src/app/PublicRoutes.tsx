@@ -10,6 +10,7 @@ import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
 import { PerformerProfilePage } from '@/features/public/pages/PerformerProfilePage';
 import { SponsorProfilePage } from '@/features/public/pages/SponsorProfilePage';
 import { MyBookingsPage } from '@/features/public/pages/MyBookingsPage';
+import { MyTicketsPage } from '@/features/public/pages/MyTicketsPage';
 import { ProfilePage } from '@/features/public/pages/ProfilePage';
 import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
 import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
@@ -31,6 +32,14 @@ export default function PublicRoutes() {
           element={
             <ProtectedRoute allow={authenticated}>
               <MyBookingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="my-tickets"
+          element={
+            <ProtectedRoute allow={authenticated}>
+              <MyTicketsPage />
             </ProtectedRoute>
           }
         />

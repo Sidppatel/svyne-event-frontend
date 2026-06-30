@@ -26,3 +26,8 @@ export async function claimTicketSelf(ticketsId: string): Promise<void> {
 export async function revokeTicket(ticketsId: string): Promise<void> {
   await callRpc(() => ticketClient.revokeTicket({ value: ticketsId }));
 }
+
+export async function listMyTickets(): Promise<Ticket[]> {
+  const response = await callRpc(() => ticketClient.listMyTickets({}));
+  return response.tickets;
+}

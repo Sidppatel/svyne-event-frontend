@@ -14,6 +14,7 @@ import { centsToUSD } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 
 export function BookingDetailPage() {
   const { bookingsId = '' } = useParams();
@@ -23,6 +24,7 @@ export function BookingDetailPage() {
   const booking = useAsync(bookingLoader);
   const tickets = useAsync(ticketsLoader);
   const [emails, setEmails] = useState<Record<string, string>>({});
+  const [activeQr, setActiveQr] = useState<{ qrToken: string; label: string; bookingNumber?: string } | null>(null);
 
   async function invite(ticketId: string) {
     try {
@@ -97,6 +99,23 @@ export function BookingDetailPage() {
               const isClaimedByOthers = ticket.status === 'Claimed' && ticket.guestUsersId !== user?.usersId;
               return (
                 <div key={ticket.ticketsId} className="flex flex-wrap items-center gap-2 border-b py-2 text-sm">
+                  {ticket.qrToken && (
+                    <button
+                      type="button"
+                      onClick={() => setActiveQr({
+                        qrToken: ticket.qrToken,
+                        label: `Ticket: ${ticket.ticketCode}`,
+                        bookingNumber: booking.data?.bookingNumber,
+                      })}
+                      className="shrink-0 p-1 bg-white rounded border hover:bg-muted transition-colors cursor-pointer mr-1"
+                    >
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=32x32&data=${encodeURIComponent(ticket.qrToken)}`}
+                        alt="QR"
+                        className="w-8 h-8 object-contain"
+                      />
+                    </button>
+                  )}
                   <span className="font-medium">{ticket.ticketCode}</span>
                   <span className="text-muted-foreground">seat {ticket.seatNumber}</span>
                   <span className="text-muted-foreground">{ticket.status}</span>
@@ -144,6 +163,34 @@ export function BookingDetailPage() {
           ) : null}
         </CardContent>
       </Card>
+
+      <Dialog open={activeQr !== null} onOpenChange={(open) => { if (!open) setActiveQr(null); }}>
+        <DialogContent className="max-w-xs md:max-w-md flex flex-col items-center p-6 space-y-4 rounded-xl">
+          <DialogTitle className="text-center text-xl font-bold">Entry Pass</DialogTitle>
+          {activeQr && (
+            <>
+              <div className="bg-white p-4 rounded-xl border shadow-sm">
+                <img
+                  src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(activeQr.qrToken)}`}
+                  alt="QR Code"
+                  className="w-[250px] h-[250px]"
+                />
+              </div>
+              <div className="text-center space-y-1">
+                <p className="text-sm text-muted-foreground">Scan at the event gate</p>
+                <p className="font-mono text-lg font-bold text-foreground tracking-wide mt-2">
+                  {activeQr.label}
+                </p>
+                {activeQr.bookingNumber && (
+                  <p className="text-xs text-muted-foreground font-mono">
+                    Booking: #{activeQr.bookingNumber}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

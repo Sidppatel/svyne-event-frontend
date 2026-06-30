@@ -411,6 +411,26 @@ export interface Ticket {
      * @generated from protobuf field: string guest_users_id = 6;
      */
     guestUsersId: string;
+    /**
+     * @generated from protobuf field: string event_title = 7;
+     */
+    eventTitle: string;
+    /**
+     * @generated from protobuf field: int64 event_start_date = 8;
+     */
+    eventStartDate: string;
+    /**
+     * @generated from protobuf field: string venue_name = 9;
+     */
+    venueName: string;
+    /**
+     * @generated from protobuf field: string event_slug = 10;
+     */
+    eventSlug: string;
+    /**
+     * @generated from protobuf field: string booking_number = 11;
+     */
+    bookingNumber: string;
 }
 /**
  * @generated from protobuf message svyne.booking.ClaimTicketRequest
@@ -1799,7 +1819,12 @@ class Ticket$Type extends MessageType<Ticket> {
             { no: 3, name: "qr_token", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "seat_number", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 6, name: "guest_users_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 6, name: "guest_users_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "event_title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "event_start_date", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 9, name: "venue_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "event_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "booking_number", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Ticket>): Ticket {
@@ -1810,6 +1835,11 @@ class Ticket$Type extends MessageType<Ticket> {
         message.seatNumber = 0;
         message.status = "";
         message.guestUsersId = "";
+        message.eventTitle = "";
+        message.eventStartDate = "0";
+        message.venueName = "";
+        message.eventSlug = "";
+        message.bookingNumber = "";
         if (value !== undefined)
             reflectionMergePartial<Ticket>(this, message, value);
         return message;
@@ -1836,6 +1866,21 @@ class Ticket$Type extends MessageType<Ticket> {
                     break;
                 case /* string guest_users_id */ 6:
                     message.guestUsersId = reader.string();
+                    break;
+                case /* string event_title */ 7:
+                    message.eventTitle = reader.string();
+                    break;
+                case /* int64 event_start_date */ 8:
+                    message.eventStartDate = reader.int64().toString();
+                    break;
+                case /* string venue_name */ 9:
+                    message.venueName = reader.string();
+                    break;
+                case /* string event_slug */ 10:
+                    message.eventSlug = reader.string();
+                    break;
+                case /* string booking_number */ 11:
+                    message.bookingNumber = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1867,6 +1912,21 @@ class Ticket$Type extends MessageType<Ticket> {
         /* string guest_users_id = 6; */
         if (message.guestUsersId !== "")
             writer.tag(6, WireType.LengthDelimited).string(message.guestUsersId);
+        /* string event_title = 7; */
+        if (message.eventTitle !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.eventTitle);
+        /* int64 event_start_date = 8; */
+        if (message.eventStartDate !== "0")
+            writer.tag(8, WireType.Varint).int64(message.eventStartDate);
+        /* string venue_name = 9; */
+        if (message.venueName !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.venueName);
+        /* string event_slug = 10; */
+        if (message.eventSlug !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.eventSlug);
+        /* string booking_number = 11; */
+        if (message.bookingNumber !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.bookingNumber);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -2659,7 +2719,8 @@ export const TicketService = new ServiceType("svyne.booking.TicketService", [
     { name: "InviteTicket", options: {}, I: InviteTicketRequest, O: AckResponse },
     { name: "ListTickets", options: {}, I: UuidValue, O: ListTicketsResponse },
     { name: "ClaimTicketSelf", options: {}, I: UuidValue, O: AckResponse },
-    { name: "RevokeTicket", options: {}, I: UuidValue, O: AckResponse }
+    { name: "RevokeTicket", options: {}, I: UuidValue, O: AckResponse },
+    { name: "ListMyTickets", options: {}, I: Empty, O: ListTicketsResponse }
 ]);
 /**
  * @generated ServiceType for protobuf service svyne.booking.CheckInService

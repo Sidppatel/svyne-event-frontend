@@ -6,11 +6,11 @@ import { CheckInService } from "./bookings";
 import type { CheckInGuestRequest } from "./bookings";
 import type { GetGuestListResponse } from "./bookings";
 import type { ListEventsForStaffResponse } from "./bookings";
-import type { Empty } from "./common";
 import type { CheckInStats } from "./bookings";
 import type { ScanResponse } from "./bookings";
 import type { ScanRequest } from "./bookings";
 import { TicketService } from "./bookings";
+import type { Empty } from "./common";
 import type { ListTicketsResponse } from "./bookings";
 import type { InviteTicketRequest } from "./bookings";
 import type { ClaimTicketRequest } from "./bookings";
@@ -215,6 +215,10 @@ export interface ITicketServiceClient {
      * @generated from protobuf rpc: RevokeTicket(svyne.common.UuidValue) returns (svyne.common.AckResponse);
      */
     revokeTicket(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ListMyTickets(svyne.common.Empty) returns (svyne.booking.ListTicketsResponse);
+     */
+    listMyTickets(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListTicketsResponse>;
 }
 /**
  * @generated from protobuf service svyne.booking.TicketService
@@ -266,6 +270,13 @@ export class TicketServiceClient implements ITicketServiceClient, ServiceInfo {
     revokeTicket(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
         const method = this.methods[5], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListMyTickets(svyne.common.Empty) returns (svyne.booking.ListTicketsResponse);
+     */
+    listMyTickets(input: Empty, options?: RpcOptions): UnaryCall<Empty, ListTicketsResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, ListTicketsResponse>("unary", this._transport, method, opt, input);
     }
 }
 /**

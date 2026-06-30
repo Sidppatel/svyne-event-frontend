@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { useLocation } from 'react-router-dom';
 import { resolvePortalContext } from '@/shared/subdomain';
 import { Toaster } from '@/shared/ui/sonner';
 
@@ -21,6 +22,7 @@ function selectRoutes(portal: string) {
 }
 
 export function App() {
+  useLocation(); // Force re-render on navigation so portal is re-evaluated
   const { portal } = resolvePortalContext();
   return (
     <>
