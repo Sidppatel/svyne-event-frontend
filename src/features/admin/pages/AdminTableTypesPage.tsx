@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
   listTableTemplates,
@@ -11,7 +11,9 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Switch } from '@/shared/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { cn } from '@/shared/lib/cn';
+import { Palette, Edit3, X } from 'lucide-react';
 import type { TableTemplate } from '@/shared/proto/booking';
 
 const SHAPES = ['Round', 'Rectangle', 'Square', 'Cocktail'];
@@ -21,9 +23,61 @@ const COLOR_PALETTE = [
   '#06b6d4', '#3b82f6', '#6366f1', '#8b5cf6', '#a855f7', '#d946ef', '#ec4899', '#f43f5e',
 ];
 
+// Browser Audio Synthesizer for tactile tap feel
+function playTap(type: 'click' | 'toggle-on' | 'toggle-off' | 'focus' | 'success') {
+  try {
+    const ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    if (type === 'click') {
+      osc.frequency.setValueAtTime(600, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    } else if (type === 'toggle-on') {
+      osc.frequency.setValueAtTime(800, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.12);
+    } else if (type === 'toggle-off') {
+      osc.frequency.setValueAtTime(500, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.05, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.15);
+    } else if (type === 'focus') {
+      osc.frequency.setValueAtTime(450, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.02, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.05);
+    } else if (type === 'success') {
+      osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+      osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.06); // E5
+      osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.12); // G5
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    }
+  } catch {
+    // browser audio permissions blocked
+  }
+}
+
 function nextUnusedColor(used: string[]): string {
   const taken = new Set(used.map((c) => c.toLowerCase()));
-  return COLOR_PALETTE.find((c) => !taken.has(c.toLowerCase())) ?? '#4f46e5';
+  return COLOR_PALETTE.find((c) => !taken.has(c.toLowerCase())) ?? '#3b82f6';
 }
 
 export function AdminTableTypesPage() {
@@ -35,6 +89,7 @@ export function AdminTableTypesPage() {
   const [colorOverride, setColorOverride] = useState<string | null>(null);
   const suggestedColor = nextUnusedColor((data ?? []).map((t) => t.defaultColor || '').filter(Boolean));
   const color = colorOverride ?? suggestedColor;
+  
   const [capacity, setCapacity] = useState(8);
   const [priceUsd, setPriceUsd] = useState('0.00');
   const [width, setWidth] = useState(80);
@@ -42,8 +97,33 @@ export function AdminTableTypesPage() {
   const [shape, setShape] = useState('Round');
   const [allInclusive, setAllInclusive] = useState(true);
 
+  // Form tilt reference
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = formRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -3;
+    const rotateY = ((x - centerX) / centerX) * 3;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+    card.style.boxShadow = `0 25px 45px rgba(0, 0, 0, 0.08), 0 0 25px ${color}15`;
+  };
+
+  const handleMouseLeave = () => {
+    const card = formRef.current;
+    if (!card) return;
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    card.style.boxShadow = '';
+  };
+
   async function add() {
     setNotice(null);
+    playTap('success');
     try {
       await createTableTemplate({
         name,
@@ -65,46 +145,65 @@ export function AdminTableTypesPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Table Types</h1>
+    <div className="space-y-8 max-w-5xl mx-auto py-2">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-extrabold tracking-tight font-display text-foreground md:text-3xl">Table Types</h1>
+        <p className="text-xs text-muted-foreground">Configure lounge templates, seat counts, and baseline catalog rates.</p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Add table type</CardTitle>
+      {/* Interactive Form Card */}
+      <div
+        ref={formRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="svyne-float-card border border-border bg-card shadow-xl rounded-2xl overflow-hidden transition-all duration-300"
+      >
+        <CardHeader className="border-b border-border/20 px-6 py-4">
+          <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+            <Palette className="h-4.5 w-4.5 text-primary" /> Add Table Template
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="space-y-1">
-              <Label>Name (locked after creation)</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+        
+        <CardContent className="p-6 space-y-6">
+          {notice ? (
+            <p className="text-xs font-semibold text-destructive bg-destructive/10 border border-destructive/20 rounded-xl p-3 leading-normal animate-shake">
+              {notice}
+            </p>
+          ) : null}
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div className="space-y-1.5 md:col-span-2">
+              <Label>Name (Locked after creation)</Label>
+              <div className="svyne-spring-input">
+                <Input 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  onFocus={() => playTap('focus')}
+                  placeholder="e.g. VIP Center Lounge"
+                  className="h-10 bg-background border-border text-sm"
+                />
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label>Color</Label>
-              <Input type="color" className="h-9 w-16 p-1" value={color} onChange={(e) => setColorOverride(e.target.value)} />
+
+            <div className="space-y-1.5">
+              <Label>Color Swatch</Label>
+              <div className="flex items-center gap-2 h-10 border border-border bg-background rounded-lg px-2.5">
+                <Input 
+                  type="color" 
+                  value={color} 
+                  onChange={(e) => { playTap('click'); setColorOverride(e.target.value); }}
+                  className="h-6 w-9 p-0 border-0 cursor-pointer rounded" 
+                />
+                <span className="text-[11px] font-mono text-muted-foreground uppercase">{color}</span>
+              </div>
             </div>
-            <div className="space-y-1">
-              <Label>Capacity</Label>
-              <Input type="number" className="w-24" value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
-              <Label>Price (USD)</Label>
-              <Input className="w-28" value={priceUsd} onChange={(e) => setPriceUsd(e.target.value)} />
-            </div>
-            <div className="space-y-1">
-              <Label>Width</Label>
-              <Input type="number" className="w-24" value={width} onChange={(e) => setWidth(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
-              <Label>Height</Label>
-              <Input type="number" className="w-24" value={height} onChange={(e) => setHeight(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
+
+            <div className="space-y-1.5">
               <Label>Shape</Label>
               <select
-                className="h-9 rounded-md border px-2 text-sm"
+                className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm focus:ring-2 focus:ring-ring"
                 value={shape}
-                onChange={(e) => setShape(e.target.value)}
+                onChange={(e) => { playTap('click'); setShape(e.target.value); }}
               >
                 {SHAPES.map((s) => (
                   <option key={s} value={s}>
@@ -113,20 +212,97 @@ export function AdminTableTypesPage() {
                 ))}
               </select>
             </div>
-            <div className="flex items-center gap-2 pb-2">
-              <Switch checked={allInclusive} onCheckedChange={setAllInclusive} label="All-inclusive" />
-              <Label>All-inclusive</Label>
+
+            <div className="space-y-1.5">
+              <Label>Capacity (Seats)</Label>
+              <div className="svyne-spring-input">
+                <Input 
+                  type="number" 
+                  value={capacity} 
+                  onChange={(e) => setCapacity(Number(e.target.value))} 
+                  onFocus={() => playTap('focus')}
+                  className="h-10 bg-background border-border text-sm"
+                />
+              </div>
             </div>
-            <Button onClick={add} disabled={!name.trim()}>
-              Add
+
+            <div className="space-y-1.5">
+              <Label>Base Price (USD)</Label>
+              <div className="svyne-spring-input">
+                <Input 
+                  value={priceUsd} 
+                  onChange={(e) => setPriceUsd(e.target.value)} 
+                  onFocus={() => playTap('focus')}
+                  className="h-10 bg-background border-border text-sm font-mono"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Width (px)</Label>
+              <div className="svyne-spring-input">
+                <Input 
+                  type="number" 
+                  value={width} 
+                  onChange={(e) => setWidth(Number(e.target.value))} 
+                  onFocus={() => playTap('focus')}
+                  className="h-10 bg-background border-border text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label>Height (px)</Label>
+              <div className="svyne-spring-input">
+                <Input 
+                  type="number" 
+                  value={height} 
+                  onChange={(e) => setHeight(Number(e.target.value))} 
+                  onFocus={() => playTap('focus')}
+                  className="h-10 bg-background border-border text-sm"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Quick presets & toggle switch row */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-border/20 pt-4">
+            <div className="flex items-center gap-2 py-1.5">
+              <Switch 
+                checked={allInclusive} 
+                onCheckedChange={(val) => { playTap(val ? 'toggle-on' : 'toggle-off'); setAllInclusive(val); }} 
+                label="All-inclusive"
+              />
+              <Label className="text-xs font-semibold text-muted-foreground cursor-pointer">Bottle service and tax included</Label>
+            </div>
+            
+            <Button 
+              onClick={add} 
+              disabled={!name.trim()} 
+              className={cn(
+                "svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20",
+                !name.trim() && "opacity-40 cursor-not-allowed"
+              )}
+            >
+              Add Template
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </div>
 
-      {loading ? <p className="text-muted-foreground">Loading…</p> : null}
-      {error ? <p className="text-destructive">{error}</p> : null}
-      <div className="space-y-3">
+      {loading ? (
+        <div className="flex items-center gap-2 justify-center py-8">
+          <div className="size-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground font-semibold">Refreshing database catalog…</p>
+        </div>
+      ) : null}
+
+      {error ? (
+        <p className="text-xs font-semibold text-destructive bg-destructive/10 border border-destructive/20 rounded-xl p-3 leading-normal">{error}</p>
+      ) : null}
+
+      {/* Table Types Cards List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(data ?? []).map((template) => (
           <TableTypeRow key={template.tableTemplatesId} template={template} onChanged={reload} />
         ))}
@@ -138,7 +314,8 @@ export function AdminTableTypesPage() {
 function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChanged: () => void }) {
   const [editing, setEditing] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-  const [color, setColor] = useState(template.defaultColor || '#4f46e5');
+  
+  const [color, setColor] = useState(template.defaultColor || '#3b82f6');
   const [capacity, setCapacity] = useState(template.defaultCapacity);
   const [priceUsd, setPriceUsd] = useState(centsToUsdInput(template.defaultPriceCents));
   const [width, setWidth] = useState(template.defaultWidth);
@@ -146,8 +323,33 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
   const [shape, setShape] = useState(template.defaultShape || 'Round');
   const [allInclusive, setAllInclusive] = useState(template.defaultIsAllInclusive);
 
+  // Individual Card Tilt Ref
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -5;
+    const rotateY = ((x - centerX) / centerX) * 5;
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02) translateZ(10px)`;
+    card.style.boxShadow = `0 20px 30px rgba(0, 0, 0, 0.08), 0 0 15px ${color}10`;
+  };
+
+  const handleCardMouseLeave = () => {
+    const card = cardRef.current;
+    if (!card) return;
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateZ(0px)';
+    card.style.boxShadow = '';
+  };
+
   async function persist(isActive: boolean) {
     setNotice(null);
+    playTap('success');
     try {
       await updateTableTemplate({
         tableTemplatesId: template.tableTemplatesId,
@@ -167,71 +369,172 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
     }
   }
 
+  const activeColor = template.defaultColor || '#ccc';
+
   return (
-    <Card>
-      <CardContent className="space-y-3 py-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
+    <div
+      ref={cardRef}
+      onMouseMove={handleCardMouseMove}
+      onMouseLeave={handleCardMouseLeave}
+      className={cn(
+        "rounded-2xl border bg-card transition-all duration-300 overflow-hidden flex flex-col h-fit",
+        template.isActive 
+          ? "border-border shadow-md" 
+          : "border-border-soft opacity-60 bg-muted/30 shadow-none scale-[0.99] translate-y-1"
+      )}
+    >
+      <CardContent className="p-5 space-y-4">
+        {/* Main Card Header Info */}
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="inline-block h-5 w-5 rounded" style={{ backgroundColor: template.defaultColor || '#ccc' }} />
-            <span className="font-medium">{template.name}</span>
-            <span className="text-sm text-muted-foreground">
-              {template.defaultCapacity} seats · {template.defaultShape}
-            </span>
+            {/* Color Swatch displaying custom wheel on hover */}
+            <div className="relative group shrink-0">
+              <span 
+                className="inline-block h-6 w-6 rounded-full border border-black/10 transition-transform duration-200 group-hover:scale-125 shadow-inner" 
+                style={{ backgroundColor: activeColor }} 
+              />
+              {/* Quick swatch wheel popup */}
+              <div className="absolute top-1/2 left-8 -translate-y-1/2 hidden group-hover:flex items-center gap-1 bg-popover border border-border p-1.5 rounded-lg shadow-xl z-20">
+                {COLOR_PALETTE.slice(0, 8).map((paletteColor) => (
+                  <button
+                    key={paletteColor}
+                    onClick={() => { playTap('click'); setColor(paletteColor); }}
+                    style={{ backgroundColor: paletteColor }}
+                    className="size-3.5 rounded-full border-0 cursor-pointer hover:scale-110 transition-transform"
+                    title={paletteColor}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <span className="font-bold text-sm text-foreground font-display block">{template.name}</span>
+              <span className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">
+                {template.defaultCapacity} Seats · {template.defaultShape}
+              </span>
+            </div>
           </div>
+
           <div className="flex items-center gap-3">
-            <Switch checked={template.isActive} onCheckedChange={(v) => persist(v)} label="Enabled" />
-            <Button size="sm" variant="ghost" onClick={() => setEditing((v) => !v)}>
+            <Switch 
+              checked={template.isActive} 
+              onCheckedChange={(v) => { playTap(v ? 'toggle-on' : 'toggle-off'); persist(v); }} 
+              label="Enabled" 
+            />
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              onClick={() => { playTap('click'); setEditing((v) => !v); }}
+              className="h-8 text-xs font-semibold hover:bg-muted/40"
+            >
+              {editing ? <X className="h-3.5 w-3.5 mr-1" /> : <Edit3 className="h-3.5 w-3.5 mr-1" />}
               {editing ? 'Close' : 'Edit'}
             </Button>
           </div>
         </div>
-        {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
-        {editing ? (
-          <div className="flex flex-wrap items-end gap-3 border-t pt-3">
-            <div className="space-y-1">
-              <Label>Color</Label>
-              <Input type="color" className="h-9 w-16 p-1" value={color} onChange={(e) => setColor(e.target.value)} />
-            </div>
-            <div className="space-y-1">
-              <Label>Capacity</Label>
-              <Input type="number" className="w-24" value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
-              <Label>Price (USD)</Label>
-              <Input className="w-28" value={priceUsd} onChange={(e) => setPriceUsd(e.target.value)} />
-            </div>
-            <div className="space-y-1">
-              <Label>Width</Label>
-              <Input type="number" className="w-24" value={width} onChange={(e) => setWidth(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
-              <Label>Height</Label>
-              <Input type="number" className="w-24" value={height} onChange={(e) => setHeight(Number(e.target.value))} />
-            </div>
-            <div className="space-y-1">
-              <Label>Shape</Label>
-              <select
-                className="h-9 rounded-md border px-2 text-sm"
-                value={shape}
-                onChange={(e) => setShape(e.target.value)}
-              >
-                {SHAPES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-center gap-2 pb-2">
-              <Switch checked={allInclusive} onCheckedChange={setAllInclusive} label="All-inclusive" />
-              <Label>All-inclusive</Label>
-            </div>
-            <Button size="sm" onClick={() => persist(template.isActive)}>
-              Save
-            </Button>
-          </div>
+
+        {notice ? (
+          <p className="text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-lg p-2.5 leading-normal animate-shake">
+            {notice}
+          </p>
         ) : null}
+
+        {/* Dynamic Physics Drawer Form */}
+        <div className={cn(
+          "grid transition-all duration-300 ease-in-out overflow-hidden border-t border-border/20 pt-1.5",
+          editing ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"
+        )}>
+          <div className="overflow-hidden space-y-4 pt-2.5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="space-y-1">
+                <Label className="text-[10px]">Color</Label>
+                <div className="flex items-center gap-1.5 h-9 border border-border bg-background rounded-lg px-2">
+                  <Input 
+                    type="color" 
+                    value={color} 
+                    onChange={(e) => setColor(e.target.value)} 
+                    className="h-5 w-7 p-0 border-0 cursor-pointer rounded" 
+                  />
+                  <span className="text-[9px] font-mono text-muted-foreground uppercase">{color}</span>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-[10px]">Capacity</Label>
+                <Input 
+                  type="number" 
+                  value={capacity} 
+                  onChange={(e) => setCapacity(Number(e.target.value))} 
+                  className="h-9 bg-background text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-[10px]">Price (USD)</Label>
+                <Input 
+                  value={priceUsd} 
+                  onChange={(e) => setPriceUsd(e.target.value)} 
+                  className="h-9 bg-background text-xs font-mono"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-[10px]">Shape</Label>
+                <select
+                  className="h-9 w-full rounded-lg border border-border bg-background px-2 text-xs"
+                  value={shape}
+                  onChange={(e) => setShape(e.target.value)}
+                >
+                  {SHAPES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-[10px]">Width (px)</Label>
+                <Input 
+                  type="number" 
+                  value={width} 
+                  onChange={(e) => setWidth(Number(e.target.value))} 
+                  className="h-9 bg-background text-xs"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <Label className="text-[10px]">Height (px)</Label>
+                <Input 
+                  type="number" 
+                  value={height} 
+                  onChange={(e) => setHeight(Number(e.target.value))} 
+                  className="h-9 bg-background text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-3 border-t border-border/10 pt-3">
+              <div className="flex items-center gap-1.5">
+                <Switch 
+                  checked={allInclusive} 
+                  onCheckedChange={(val) => { playTap(val ? 'toggle-on' : 'toggle-off'); setAllInclusive(val); }} 
+                  label="All-inclusive"
+                />
+                <Label className="text-[10px] text-muted-foreground font-semibold">All-inclusive</Label>
+              </div>
+
+              <Button 
+                onClick={() => persist(template.isActive)} 
+                size="sm" 
+                className="svyne-spring-btn h-9 px-6 rounded-lg font-bold text-xs"
+              >
+                Save Settings
+              </Button>
+            </div>
+          </div>
+        </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }

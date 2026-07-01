@@ -18,6 +18,7 @@ import { Label } from '@/shared/ui/label';
 import { Select } from '@/shared/ui/select';
 import { Switch } from '@/shared/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { cn } from '@/shared/lib/cn';
 import { MapPin } from 'lucide-react';
 import {
   US_STATES,
@@ -240,19 +241,22 @@ function VenueRow({ venue, onChanged }: { venue: Venue; onChanged: () => void })
           </div>
         </div>
         {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
-        {editing ? (
-          <div className="space-y-4 border-t pt-3">
+        <div className={cn(
+          "grid transition-all duration-300 ease-in-out overflow-hidden border-t border-border/20 pt-1.5",
+          editing ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"
+        )}>
+          <div className="overflow-hidden space-y-4 pt-2.5">
             <div className="space-y-1">
               <Label>Name</Label>
               <Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
             </div>
             <VenueFields draft={draft} onChange={setDraft} />
-            <Button size="sm" onClick={() => persist(venue.isActive)}>
+            <Button size="sm" onClick={() => persist(venue.isActive)} className="svyne-spring-btn">
               Save
             </Button>
             <VenueGallery venuesId={venue.venuesId} />
           </div>
-        ) : null}
+        </div>
       </CardContent>
     </Card>
   );

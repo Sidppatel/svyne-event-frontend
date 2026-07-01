@@ -4,7 +4,7 @@ import { useAsync } from '@/shared/hooks/useAsync';
 import { listMyBookings } from '@/features/public/services/publicEventService';
 import { Skeleton } from '@/shared/ui/skeleton';
 
-const NOTCH = { ['--svyne-notch' as string]: '#ffffff' } as CSSProperties;
+const NOTCH = { ['--svyne-notch' as string]: 'var(--background)' } as CSSProperties;
 
 export function MyBookingsPage() {
   const loader = useCallback(() => listMyBookings(), []);

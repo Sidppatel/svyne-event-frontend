@@ -12,60 +12,65 @@
   --brand-font: 'Inter', -apple-system, system-ui, sans-serif;
   --brand-font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
   --brand-font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  --radius: 0.75rem; /* cards 12px (lg); buttons resolve to ~8px (md) */
+  --radius: 0.75rem;
 
-  /* Svyne Design Tokens */
-  --surface-900: #180d17;
-  --surface-800: #241522;
-  --surface-700: #2f1c2d;
-  --surface-canvas: #fbf6f0;
+  /* Svyne Premium Light-Mode Tokens */
+  --surface-900: #f8f9fa;
+  --surface-800: #fcfdfe;
+  --surface-700: #ffffff;
+  --surface-canvas: #f8f9fa;
   --surface-card: #ffffff;
-  --accent-burgundy: #a4123f;
-  --accent-gold: #f5a524;
-  --border-strong: #e7d9cb;
-  --border-soft: #f0e6db;
+  --accent-burgundy: #d32f2f; /* Cranberry */
+  --accent-gold: #f9a825;     /* Warm Gold */
+  --border-strong: #cbd5e1;   /* slate-300 */
+  --border-soft: #f1f5f9;     /* slate-100 */
 
-  /* Backgrounds */
-  --background: #fbf6f0; /* warm porcelain canvas */
-  --foreground: #241522; /* plum ink */
-  --card: #ffffff; /* clean surface for depth on warm canvas */
-  --card-foreground: #241522;
+  /* Backgrounds & Canvas */
+  --background: #f8f9fa;      /* Pristine cool gray-white */
+  --foreground: #0f172a;      /* Deep slate-900 */
+  --card: #ffffff;            /* Pure white surface */
+  --card-foreground: #1e293b; /* Slate-800 */
   --popover: #ffffff;
-  --popover-foreground: #241522;
+  --popover-foreground: #0f172a;
 
-  /* Actions — cranberry is the only CTA fill */
-  --primary: #a4123f; /* cranberry box-office CTA */
-  --primary-foreground: #fff7f2;
-  --secondary: #f0e6db; /* warm sand — secondary buttons/badges */
-  --secondary-foreground: #241522;
-  --muted: #f4ece3; /* soft warm panel */
-  --muted-foreground: #6b5a66; /* plum-gray body/meta */
-  --accent: #f4ece3; /* hover/highlight */
-  --accent-foreground: #241522;
+  /* Primary CTAs — Cranberry action color */
+  --primary: #d32f2f;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary — slate/outline actions */
+  --secondary: #f1f5f9;       /* slate-100 */
+  --secondary-foreground: #1e293b;
+  
+  /* Muted states */
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b; /* slate-500 */
+  --accent: #f1f5f9;
+  --accent-foreground: #0f172a;
 
-  /* Signature voltage — marigold; *-foreground is readable dark-gold TEXT on a marigold tint */
-  --marigold: #f5a524; /* prices, urgency, ticket perforation, active nav */
-  --marigold-foreground: #5a3b00;
-  /* Back-compat alias: existing components reference --amber */
-  --amber: #c9871f;
-  --amber-foreground: #5a3b00;
+  /* Signature voltage — Warm Gold */
+  --marigold: #f9a825;
+  --marigold-foreground: #201400;
+  
+  /* Back-compat aliases */
+  --amber: #d97706;
+  --amber-foreground: #451a03;
 
-  /* Status — *-foreground are readable TEXT on light tints, so dark not white */
-  --success: #2f7d5b;
+  /* Status */
+  --success: #2e7d32;         /* Vine Green */
   --success-foreground: #ffffff;
-  --warning: #c9871f;
-  --destructive: #b3261e;
+  --warning: #d97706;
+  --destructive: #d32f2f;
   --destructive-foreground: #ffffff;
 
-  /* Borders & focus */
-  --border: #e7d9cb; /* warm hairline */
-  --input: #e7d9cb;
-  --ring: #a4123f; /* focus = brand cranberry */
+  /* Borders & Focus */
+  --border: #e2e8f0;          /* slate-200 */
+  --input: #e2e8f0;
+  --ring: #2e7d32;            /* Vine Green focus ring */
 
-  /* Box Office: flat warm floor, no atmospheric wash */
-  --gradient-bg: none;
+  /* Light mode visual effects - subtle top gradient mesh */
+  --gradient-bg: radial-gradient(circle at top, rgba(46, 125, 50, 0.04) 0%, rgba(248, 249, 250, 0) 50%);
 
-  /* Brand vars consumed by wordmark/nav (LoginPage, PortalNav) */
+  /* Brand vars */
   --brand-primary: var(--primary);
   --brand-secondary: var(--accent);
   --brand-accent: var(--marigold);
@@ -95,6 +100,8 @@
   --color-warning: var(--warning);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-danger: var(--destructive);
+  --color-danger-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -111,20 +118,20 @@
   --color-border-soft: var(--border-soft);
 
   /* Box Office named surfaces (utilities: bg-/text-/border-<name>) */
-  --color-canvas: #fbf6f0;
-  --color-canvas-soft: #f4ece3;
-  --color-surface-strong: #f0e6db;
-  --color-surface-dark: #241522; /* dark plum panels, footers */
-  --color-surface-dark-elevated: #2e1b2c;
-  --color-ink: #241522;
-  --color-body: #6b5a66;
-  --color-on-dark: #fff7f2;
-  --color-on-dark-soft: #cdbcc6;
-  --color-text-link: #a4123f; /* inline body links — cranberry, never blue */
-  --color-text-link-secondary: #7f5539;
-  --color-hairline: #f0e6db;
-  --color-hairline-soft: #f4ece3;
-  --color-hairline-strong: #e7d9cb;
+  --color-canvas: #f8f9fa;
+  --color-canvas-soft: #f1f5f9;
+  --color-surface-strong: #e2e8f0;
+  --color-surface-dark: #0f172a;
+  --color-surface-dark-elevated: #1e293b;
+  --color-ink: #0f172a;
+  --color-body: #64748b;
+  --color-on-dark: #ffffff;
+  --color-on-dark-soft: #e2e8f0;
+  --color-text-link: #d32f2f;
+  --color-text-link-secondary: #f9a825;
+  --color-hairline: #e2e8f0;
+  --color-hairline-soft: #f1f5f9;
+  --color-hairline-strong: #cbd5e1;
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 4px); /* ~8px CTA */
@@ -245,6 +252,31 @@ h3 {
 
 .svyne-urgent {
   animation: svyne-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes svyne-float-3d {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(0.2deg); }
+}
+
+.svyne-float-card {
+  animation: svyne-float-3d 6s ease-in-out infinite;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.svyne-spring-btn {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+}
+.svyne-spring-btn:active {
+  transform: scale(0.94);
+  transition: transform 0.1s ease;
+}
+
+.svyne-spring-input {
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
+}
+.svyne-spring-input:focus-within {
+  transform: translateY(-2px) scale(1.02);
 }
 
 .svyne-overlay[data-state='open'] {

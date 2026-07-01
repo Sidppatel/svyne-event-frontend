@@ -28,11 +28,13 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground flex flex-col md:flex-row">
       <PortalNav section="admin" links={links} />
-      <main ref={page} key={pathname} className="mx-auto max-w-6xl px-4 py-6 md:px-6 md:py-8">
-        <Outlet />
-      </main>
+      <div className="flex-1 md:pl-64">
+        <main ref={page} key={pathname} className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-8">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

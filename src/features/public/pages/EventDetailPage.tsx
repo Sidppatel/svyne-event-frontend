@@ -240,9 +240,9 @@ function EventDetailPageContent({ event }: { event: Event }) {
           <div className="space-y-12">
             
             {/* Live Inventory Demand Alert */}
-            <div className="relative overflow-hidden rounded-2xl bg-white border border-border-strong p-5 shadow-sm flex items-start gap-4">
-              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-accent-burgundy" />
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-accent-burgundy/10 text-accent-burgundy border border-accent-burgundy/25">
+            <div className="relative overflow-hidden rounded-2xl bg-card border border-border p-5 shadow-sm flex items-start gap-4">
+              <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-primary" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/25">
                 <Flame className="size-5 animate-pulse" />
               </div>
               <div className="space-y-1">
@@ -376,10 +376,10 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
           {/* Right Column: Checkout Dock */}
           <aside className="lg:sticky lg:top-24 space-y-6">
-            <Card className="overflow-hidden border border-border-strong bg-card shadow-md rounded-2xl">
-              <div className="bg-muted px-6 py-4 border-b border-border-strong flex items-center justify-between">
+            <Card className="overflow-hidden border border-border bg-card shadow-md rounded-2xl">
+              <div className="bg-muted px-6 py-4 border-b border-border flex items-center justify-between">
                 <span className="text-[10px] font-black uppercase tracking-widest text-foreground font-display">Order Summary</span>
-                <span className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   <span className="size-1.5 rounded-full bg-emerald-500 animate-ping" /> secure server
                 </span>
               </div>
@@ -493,9 +493,9 @@ function EventDetailPageContent({ event }: { event: Event }) {
             </Card>
 
             {/* Booking Trust Signals */}
-            <div className="rounded-2xl border border-border-strong bg-card p-5 space-y-4 shadow-sm text-xs">
+            <div className="rounded-2xl border border-border bg-card p-5 space-y-4 shadow-sm text-xs">
               <div className="flex items-center gap-2 text-foreground font-bold uppercase tracking-wider border-b border-border-soft pb-3 font-display">
-                <ShieldCheck className="size-4 text-emerald-600" /> Guaranteed Verified Tickets
+                <ShieldCheck className="size-4 text-emerald-400" /> Guaranteed Verified Tickets
               </div>
               <div className="space-y-3 font-sans text-body">
                 <div className="flex gap-2">

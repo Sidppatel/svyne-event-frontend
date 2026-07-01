@@ -24,7 +24,13 @@ import {
   ChevronRight,
   Sparkles,
 } from 'lucide-react';
-import { toast } from 'sonner';
+import { cn } from '@/shared/lib/cn';
+
+interface ScanOverlayState {
+  show: boolean;
+  success: boolean;
+  message: string;
+}
 
 export function StaffCheckInPage() {
   const { eventsId = '' } = useParams();
@@ -35,6 +41,9 @@ export function StaffCheckInPage() {
   const [manualCode, setManualCode] = useState('');
   const [manualType, setManualType] = useState<'Booking' | 'Ticket'>('Ticket');
   const [checkingIn, setCheckingIn] = useState(false);
+  
+  // Full-screen bouncer flash overlay state
+  const [scanOverlay, setScanOverlay] = useState<ScanOverlayState | null>(null);
 
   // Load guest list & stats
   const guestListLoader = useCallback(() => getGuestList(eventsId), [eventsId]);
@@ -49,6 +58,24 @@ export function StaffCheckInPage() {
     stats.reload();
   }, [guestList, stats]);
 
+  const triggerOverlay = (success: boolean, message: string) => {
+    setScanOverlay({ show: true, success, message });
+    
+    // Haptic feedback
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      if (success) {
+        navigator.vibrate(150); // Single success pulse
+      } else {
+        navigator.vibrate([100, 50, 100]); // Double failure pulse
+      }
+    }
+    
+    // Clear overlay after 1.5s
+    setTimeout(() => {
+      setScanOverlay(null);
+    }, 1500);
+  };
+
   const notAuthorized = !!(guestList.error && guestList.error.includes('Not Authorized'));
 
   async function handleScan(e: React.FormEvent) {
@@ -59,14 +86,14 @@ export function StaffCheckInPage() {
     try {
       const res = await scanTicket(qrToken.trim(), eventsId);
       if (res.valid) {
-        toast.success(`Success: Checked in ${res.holderName || 'Guest'}`);
+        triggerOverlay(true, `Checked In: ${res.holderName || 'Guest'}`);
         setQrToken('');
         reloadAll();
       } else {
-        toast.error(res.message || 'Check-in failed.');
+        triggerOverlay(false, res.message || 'Check-in failed.');
       }
     } catch (err) {
-      toast.error(rpcErrorMessage(err));
+      triggerOverlay(false, rpcErrorMessage(err));
     } finally {
       setCheckingIn(false);
     }
@@ -80,14 +107,14 @@ export function StaffCheckInPage() {
     try {
       const res = await checkInGuest(eventsId, manualCode.trim(), manualType);
       if (res.valid) {
-        toast.success(`Success: Checked in ${res.holderName || 'Guest'}`);
+        triggerOverlay(true, `Checked In: ${res.holderName || 'Guest'}`);
         setManualCode('');
         reloadAll();
       } else {
-        toast.error(res.message || 'Check-in failed.');
+        triggerOverlay(false, res.message || 'Check-in failed.');
       }
     } catch (err) {
-      toast.error(rpcErrorMessage(err));
+      triggerOverlay(false, rpcErrorMessage(err));
     } finally {
       setCheckingIn(false);
     }
@@ -98,13 +125,13 @@ export function StaffCheckInPage() {
     try {
       const res = await checkInGuest(eventsId, codeOrId, type);
       if (res.valid) {
-        toast.success(`Checked in successfully!`);
+        triggerOverlay(true, `Successfully Checked In!`);
         reloadAll();
       } else {
-        toast.error(res.message || 'Check-in failed.');
+        triggerOverlay(false, res.message || 'Check-in failed.');
       }
     } catch (err) {
-      toast.error(rpcErrorMessage(err));
+      triggerOverlay(false, rpcErrorMessage(err));
     } finally {
       setCheckingIn(false);
     }
@@ -131,16 +158,16 @@ export function StaffCheckInPage() {
   if (notAuthorized) {
     return (
       <div className="max-w-md mx-auto mt-16 text-center space-y-6">
-        <div className="inline-flex p-4 bg-destructive/10 rounded-full text-destructive">
+        <div className="inline-flex p-4 bg-destructive/10 rounded-full text-destructive border border-destructive/20 animate-shake">
           <XCircle className="h-12 w-12" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold tracking-tight">Not Authorized</h2>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-2xl font-bold font-display tracking-tight text-foreground">Not Authorized</h2>
+          <p className="text-muted-foreground text-xs leading-normal">
             You do not have access to this event check-in, or the current time is outside the allowed window (24 hours before event start to 24 hours after event end).
           </p>
         </div>
-        <Button variant="outline" onClick={() => navigate('/staff')} className="w-full">
+        <Button variant="outline" onClick={() => navigate('/staff')} className="w-full h-11 text-xs">
           <ArrowLeft className="h-4 w-4 mr-2" /> Back to Staff Portal
         </Button>
       </div>
@@ -148,24 +175,49 @@ export function StaffCheckInPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-8 max-w-5xl mx-auto py-2 relative">
+      
+      {/* Bouncer Scan Overlay Portal */}
+      {scanOverlay && (
+        <div className={cn(
+          "fixed inset-0 z-50 flex flex-col items-center justify-center animate-fade-in p-6 backdrop-blur-md",
+          scanOverlay.success ? "bg-emerald-600/95" : "bg-destructive/95"
+        )}>
+          <div className="flex flex-col items-center gap-6 text-white text-center">
+            {scanOverlay.success ? (
+              <CheckCircle2 className="size-32 animate-bounce stroke-[1.5]" />
+            ) : (
+              <XCircle className="size-32 stroke-[1.5]" />
+            )}
+            <div className="space-y-2">
+              <h2 className="text-4xl font-extrabold tracking-tight font-display uppercase">
+                {scanOverlay.success ? 'Valid Ticket' : 'Invalid Ticket'}
+              </h2>
+              <p className="text-lg font-semibold opacity-90 max-w-md leading-normal">
+                {scanOverlay.message}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b pb-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/30 pb-4">
         <div className="space-y-1">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/staff')} className="-ml-2 mb-1 gap-1 text-muted-foreground">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/staff')} className="-ml-2 mb-1 gap-1 text-muted-foreground hover:bg-muted/30">
             <ArrowLeft className="h-4 w-4" /> Portal Home
           </Button>
-          <h1 className="font-display text-xl font-bold tracking-tight md:text-2xl flex items-center gap-2">
-            <Scan className="h-5 w-5 text-primary" />
+          <h1 className="font-display text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            <Scan className="h-5.5 w-5.5 text-primary" />
             Check-In Desk
           </h1>
         </div>
         {stats.data && (
           <div className="flex items-center gap-3">
-            <div className="bg-primary/10 text-primary px-3 py-1.5 rounded-lg text-sm font-semibold">
+            <div className="bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-xl text-xs font-bold font-display uppercase tracking-wider">
               {stats.data.checkedIn} Checked In
             </div>
-            <div className="bg-muted text-muted-foreground px-3 py-1.5 rounded-lg text-sm font-semibold">
+            <div className="bg-card border border-border px-4 py-2 rounded-xl text-xs font-bold text-muted-foreground font-display uppercase tracking-wider">
               {stats.data.remaining} Remaining
             </div>
           </div>
@@ -177,17 +229,17 @@ export function StaffCheckInPage() {
         {/* Scanners and Inputs */}
         <div className="space-y-6 md:col-span-1">
           {/* Simulated QR Scan */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
+          <Card className="border border-border bg-card shadow-lg rounded-2xl overflow-hidden">
+            <CardHeader className="pb-3 border-b border-border/20 px-5 py-4">
+              <CardTitle className="text-sm font-bold font-display flex items-center gap-2 text-foreground">
                 <Scan className="h-4 w-4 text-primary" />
                 Scan Ticket QR
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Simulate a camera scanner input.</p>
+              <p className="text-[11px] text-muted-foreground leading-normal">Simulate scanner inputs at the door.</p>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleScan} className="space-y-3">
-                <div className="space-y-1">
+            <CardContent className="p-5">
+              <form onSubmit={handleScan} className="space-y-4">
+                <div className="space-y-1.5">
                   <Label htmlFor="qr-input">Scan Token</Label>
                   <Input
                     id="qr-input"
@@ -195,38 +247,40 @@ export function StaffCheckInPage() {
                     value={qrToken}
                     onChange={(e) => setQrToken(e.target.value)}
                     required
+                    className="h-10 bg-background/50 border-border focus:border-primary text-sm"
                   />
                 </div>
-                <Button type="submit" className="w-full gap-1.5" disabled={checkingIn}>
-                  <FileCheck className="h-4 w-4" /> Check In Token
+                <Button type="submit" className="w-full h-10 text-xs font-semibold bg-primary hover:bg-primary/95 text-white" disabled={checkingIn}>
+                  <FileCheck className="h-4 w-4 mr-1.5" /> Check In Token
                 </Button>
               </form>
             </CardContent>
           </Card>
 
           {/* Manual Check-In Form */}
-          <Card className="shadow-sm">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
+          <Card className="border border-border bg-card shadow-lg rounded-2xl overflow-hidden">
+            <CardHeader className="pb-3 border-b border-border/20 px-5 py-4">
+              <CardTitle className="text-sm font-bold font-display flex items-center gap-2 text-foreground">
                 <Users className="h-4 w-4 text-primary" />
                 Manual Lookup Check-In
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Check in using Booking or Ticket ID.</p>
+              <p className="text-[11px] text-muted-foreground leading-normal">Override check-in using codes.</p>
             </CardHeader>
-            <CardContent>
-              <form onSubmit={handleManualCheckIn} className="space-y-3">
-                <div className="space-y-1">
+            <CardContent className="p-5">
+              <form onSubmit={handleManualCheckIn} className="space-y-4">
+                <div className="space-y-1.5">
                   <Label htmlFor="manual-type">Type</Label>
                   <Select
                     id="manual-type"
                     value={manualType}
                     onChange={(e) => setManualType(e.target.value as 'Booking' | 'Ticket')}
+                    className="h-10 bg-background/50 border-border"
                   >
                     <option value="Ticket">Single Ticket</option>
                     <option value="Booking">Whole Booking</option>
                   </Select>
                 </div>
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <Label htmlFor="manual-code">Code / Number</Label>
                   <Input
                     id="manual-code"
@@ -234,9 +288,10 @@ export function StaffCheckInPage() {
                     value={manualCode}
                     onChange={(e) => setManualCode(e.target.value)}
                     required
+                    className="h-10 bg-background/50 border-border focus:border-primary text-sm"
                   />
                 </div>
-                <Button type="submit" variant="outline" className="w-full" disabled={checkingIn}>
+                <Button type="submit" variant="outline" className="w-full h-10 text-xs font-semibold border-border hover:bg-muted" disabled={checkingIn}>
                   Check In Manual
                 </Button>
               </form>
@@ -247,52 +302,62 @@ export function StaffCheckInPage() {
         {/* Guest List Panel */}
         <div className="md:col-span-2 space-y-4">
           <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search by buyer name, guest name, booking number, or ticket code..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 bg-card"
+              className="pl-9 h-11 w-full bg-card border-border hover:border-neutral-800 focus:border-primary text-sm rounded-xl shadow-sm"
             />
           </div>
 
-          <Card className="shadow-sm overflow-hidden">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
+          <Card className="border border-border bg-card shadow-lg rounded-2xl overflow-hidden">
+            <CardHeader className="pb-3 border-b border-border/20 px-5 py-4">
+              <CardTitle className="text-sm font-bold font-display flex items-center gap-2 text-foreground">
                 <Users className="h-4 w-4 text-primary" />
                 Guest List
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Click to check in bookings or individual tickets.</p>
+              <p className="text-[11px] text-muted-foreground leading-normal">Browse and manage ticket check-ins.</p>
             </CardHeader>
             <CardContent className="p-0">
               {guestList.loading ? (
-                <p className="text-muted-foreground text-center py-12">Loading guest list...</p>
+                <div className="flex flex-col items-center justify-center py-16 space-y-3">
+                  <div className="size-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                  <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider animate-pulse">Loading guest list...</p>
+                </div>
               ) : guestList.error ? (
-                <p className="text-destructive text-center py-12">{guestList.error}</p>
+                <p className="text-destructive text-center py-12 text-xs font-semibold">{guestList.error}</p>
               ) : filteredBookings.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground space-y-2">
-                  <Sparkles className="h-8 w-8 mx-auto text-muted-foreground/60" />
-                  <p>No matching guests found.</p>
+                <div className="text-center py-16 text-muted-foreground space-y-3 max-w-sm mx-auto">
+                  <div className="inline-flex p-3 bg-muted/40 rounded-full text-muted-foreground/60">
+                    <Sparkles className="h-6 w-6" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-xs font-semibold text-foreground">No matching guests found</p>
+                    <p className="text-[11px] text-muted-foreground leading-normal">Try modifying search tags or check in codes manually.</p>
+                  </div>
                 </div>
               ) : (
-                <div className="divide-y divide-border max-h-[600px] overflow-y-auto">
+                <div className="divide-y divide-border/20 max-h-[600px] overflow-y-auto">
                   {filteredBookings.map((b) => (
                     <div key={b.bookingsId} className="p-4 space-y-3 hover:bg-muted/10 transition-colors">
                       {/* Booking Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-2 border-dashed">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-2 border-dashed border-border/20">
                         <div>
-                          <p className="font-semibold text-sm text-foreground">
+                          <p className="font-bold text-sm text-foreground">
                             {b.buyerName}
                           </p>
-                          <p className="text-xs text-muted-foreground">
-                            Booking Number: <span className="font-mono">{b.bookingNumber}</span>
+                          <p className="text-[10px] text-muted-foreground">
+                            Booking: <span className="font-mono text-foreground/80">{b.bookingNumber}</span>
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full ${
-                            b.status === 'CheckedIn' ? 'bg-success/15 text-success' : 'bg-primary/10 text-primary'
+                          <span className={`text-[9px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border ${
+                            b.status === 'CheckedIn' 
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/15' 
+                              : 'bg-primary/10 text-primary border-primary/15'
                           }`}>
-                            {b.status}
+                            {b.status === 'CheckedIn' ? 'All In' : b.status}
                           </span>
                           {b.status !== 'CheckedIn' && (
                             <Button
@@ -300,7 +365,7 @@ export function StaffCheckInPage() {
                               variant="outline"
                               onClick={() => handleActionCheckIn(b.bookingsId, 'Booking')}
                               disabled={checkingIn}
-                              className="h-7 text-xs font-semibold"
+                              className="h-7 px-3 text-[10px] font-semibold border-border hover:bg-muted"
                             >
                               Check In All
                             </Button>
@@ -313,22 +378,24 @@ export function StaffCheckInPage() {
                         {b.tickets.map((t) => (
                           <div key={t.ticketsId} className="flex items-center justify-between py-1 text-xs">
                             <div className="space-y-0.5">
-                              <p className="font-medium">
+                              <p className="font-semibold text-foreground">
                                 Seat #{t.seatNumber} : {t.guestName}
                               </p>
-                              <p className="text-[10px] text-muted-foreground font-mono">
+                              <p className="text-[9px] text-muted-foreground font-mono">
                                 Ticket Code: {t.ticketCode}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
                               {t.status === 'CheckedIn' ? (
-                                <span className="text-[10px] font-semibold text-success flex items-center gap-1">
-                                  <CheckCircle2 className="h-3 w-3" /> Checked In
+                                <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1 bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10">
+                                  <CheckCircle2 className="h-3.5 w-3.5" /> Checked In
                                 </span>
                               ) : (
                                 <>
-                                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${
-                                    t.status === 'Claimed' ? 'bg-amber/15 text-amber-foreground' : 'bg-muted text-muted-foreground'
+                                  <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${
+                                    t.status === 'Claimed' 
+                                      ? 'bg-marigold/10 text-marigold border-marigold/15' 
+                                      : 'bg-muted text-muted-foreground border-border'
                                   }`}>
                                     {t.status}
                                   </span>
@@ -337,7 +404,7 @@ export function StaffCheckInPage() {
                                     variant="ghost"
                                     onClick={() => handleActionCheckIn(t.ticketsId, 'Ticket')}
                                     disabled={checkingIn}
-                                    className="h-6 px-2 text-[10px] hover:bg-primary/10 hover:text-primary"
+                                    className="h-6 px-2 text-[10px] text-primary hover:bg-primary/10 rounded-md"
                                   >
                                     Check In <ChevronRight className="h-3 w-3 ml-0.5" />
                                   </Button>

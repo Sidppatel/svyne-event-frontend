@@ -145,7 +145,7 @@ function ConfirmationReceipt({
         </div>
 
         {/* Ticket Perforation Tear Edge */}
-        <div className="svyne-ticket-edge mx-4" style={{ '--svyne-notch': '#241522' } as React.CSSProperties} />
+        <div className="svyne-ticket-edge mx-4" style={{ '--svyne-notch': 'var(--background)' } as React.CSSProperties} />
 
         <div className="p-5 space-y-4">
           {/* Dynamic Tickets Barcode/QR List */}
