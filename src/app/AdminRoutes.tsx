@@ -17,6 +17,7 @@ import { AdminInvitationsPage } from '@/features/admin/pages/AdminInvitationsPag
 import { AdminFinancialPage } from '@/features/admin/pages/AdminFinancialPage';
 import { AdminProfilePage } from '@/features/admin/pages/AdminProfilePage';
 import { AdminTenantSettingsPage } from '@/features/admin/pages/AdminTenantSettingsPage';
+import { AdminBrandingPage } from '@/features/admin/pages/AdminBrandingPage';
 import { AdminFeedbackPage } from '@/features/admin/pages/AdminFeedbackPage';
 import { AdminLogsPage } from '@/features/admin/pages/AdminLogsPage';
 import AdminStaffPage from '@/features/admin/pages/AdminStaffPage';
@@ -58,6 +59,14 @@ export default function AdminRoutes() {
           element={
             <ProtectedRoute allow={canManageTenantSettings}>
               <AdminTenantSettingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="branding"
+          element={
+            <ProtectedRoute allow={canManageTenantSettings}>
+              <AdminBrandingPage />
             </ProtectedRoute>
           }
         />

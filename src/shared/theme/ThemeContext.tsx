@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { DEFAULT_BRANDING, applyBranding, type TenantBranding } from '@/shared/theme/branding';
-import { currentTenantSlug } from '@/shared/subdomain';
+import { resolvePortalContext } from '@/shared/subdomain';
+import { tenantClient } from '@/shared/apiClient';
 
 interface ThemeContextValue {
   branding: TenantBranding;
@@ -12,13 +13,58 @@ const ThemeContext = createContext<ThemeContextValue>({
   tenantSlug: '',
 });
 
+function mergeBranding(base: TenantBranding, fetched: Partial<TenantBranding>): TenantBranding {
+  const merged = { ...base };
+  for (const key of Object.keys(fetched) as (keyof TenantBranding)[]) {
+    const value = fetched[key];
+    if (value) {
+      merged[key] = value as never;
+    }
+  }
+  return merged;
+}
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const tenantSlug = currentTenantSlug();
-  const [branding] = useState<TenantBranding>(DEFAULT_BRANDING);
+  const { portal, tenantSlug } = resolvePortalContext();
+  const [branding, setBranding] = useState<TenantBranding>(DEFAULT_BRANDING);
 
   useEffect(() => {
+    if (portal !== 'public' || !tenantSlug) {
+      return;
+    }
+    let cancelled = false;
+    tenantClient
+      .getPublicTenantBranding({ slug: tenantSlug })
+      .response.then((fetched) => {
+        if (cancelled) {
+          return;
+        }
+        setBranding(
+          mergeBranding(DEFAULT_BRANDING, {
+            primary: fetched.brandPrimary,
+            secondary: fetched.brandSecondary,
+            accent: fetched.brandAccent,
+            background: fetched.brandBackground,
+            text: fetched.brandText,
+            button: fetched.brandButton,
+            highlight: fetched.brandHighlight,
+            logoUrl: fetched.logoUrl || null,
+            tenantName: fetched.name,
+          }),
+        );
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [portal, tenantSlug]);
+
+  useEffect(() => {
+    if (portal !== 'public') {
+      return;
+    }
     applyBranding(branding);
-  }, [branding]);
+  }, [portal, branding]);
 
   const value = useMemo(() => ({ branding, tenantSlug }), [branding, tenantSlug]);
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

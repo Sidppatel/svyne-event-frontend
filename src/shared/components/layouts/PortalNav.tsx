@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { NavLink as RouterNavLink, useNavigate } from 'react-router-dom';
-import { Menu, ChevronDown, LayoutDashboard, Calendar, Ticket, User, Settings, ShieldAlert, HeartHandshake, LogOut, Landmark, Users2, MapPin, Palette } from 'lucide-react';
+import { Menu, ChevronDown, LayoutDashboard, Calendar, Ticket, User, Settings, ShieldAlert, HeartHandshake, LogOut, Landmark, Users2, MapPin, Palette, Brush } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { useAuth } from '@/shared/auth/useAuth';
+import { useTenantBranding } from '@/shared/theme/ThemeContext';
 import { roleLabel } from '@/shared/roles';
 import { logout } from '@/features/auth/services/authService';
 import { cn } from '@/shared/lib/cn';
@@ -36,6 +37,8 @@ function getLinkIcon(label: string) {
       return <Users2 className={iconClass} />;
     case 'financial':
       return <Landmark className={iconClass} />;
+    case 'branding':
+      return <Brush className={iconClass} />;
     case 'settings':
       return <Settings className={iconClass} />;
     case 'logs':
@@ -73,6 +76,20 @@ function groupLinks(links: NavLink[], section?: string): LinkGroup[] {
 }
 
 function Brand({ section, className, onStage }: { section?: string; className?: string; onStage?: boolean }) {
+  const { branding, tenantSlug } = useTenantBranding();
+  const showTenantBrand = !section && tenantSlug !== '' && (branding.logoUrl !== null || branding.tenantName !== '');
+  if (showTenantBrand) {
+    return (
+      <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-2', className)}>
+        {branding.logoUrl ? (
+          <img src={branding.logoUrl} alt={branding.tenantName || 'Logo'} className="h-7 w-7 rounded object-contain" />
+        ) : null}
+        <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>
+          {branding.tenantName || tenantSlug}
+        </span>
+      </span>
+    );
+  }
   return (
     <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-1.5', className)}>
       <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>

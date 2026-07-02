@@ -55,8 +55,10 @@ import {
   Users,
   ChevronLeft,
   ChevronRight,
+  Eye,
   type LucideIcon,
 } from 'lucide-react';
+import { EventBrandingPreview } from '@/features/admin/components/branding/EventBrandingPreview';
 
 
 const STATUS_STYLES: Record<string, string> = {
@@ -163,6 +165,7 @@ export function AdminEventManagePage() {
     { id: 'pricing', label: 'Pricing & Tickets', icon: Ticket },
     { id: 'timeline', label: 'Timeline & Media', icon: CalendarCheck2 },
     { id: 'staff', label: 'Staff & Roster', icon: Users },
+    { id: 'preview', label: 'Preview', icon: Eye },
     { id: 'publish', label: 'Review & Publish', icon: Rocket },
   ];
 
@@ -503,6 +506,21 @@ export function AdminEventManagePage() {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {currentStep === 'preview' && event.data && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
+            <CardHeader className="border-b border-border/20 px-6 py-4">
+              <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+                <Eye className="h-4.5 w-4.5 text-primary" /> Branded Event Preview
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <EventBrandingPreview eventName={event.data.title} />
             </CardContent>
           </Card>
         </div>

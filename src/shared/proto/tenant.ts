@@ -170,6 +170,22 @@ export interface Tenant {
      * @generated from protobuf field: string brand_accent = 20;
      */
     brandAccent: string;
+    /**
+     * @generated from protobuf field: string brand_background = 21;
+     */
+    brandBackground: string;
+    /**
+     * @generated from protobuf field: string brand_text = 22;
+     */
+    brandText: string;
+    /**
+     * @generated from protobuf field: string brand_button = 23;
+     */
+    brandButton: string;
+    /**
+     * @generated from protobuf field: string brand_highlight = 24;
+     */
+    brandHighlight: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.UpdateMyTenantBrandingRequest
@@ -191,6 +207,76 @@ export interface UpdateMyTenantBrandingRequest {
      * @generated from protobuf field: string brand_accent = 4;
      */
     brandAccent: string;
+    /**
+     * @generated from protobuf field: string brand_background = 5;
+     */
+    brandBackground: string;
+    /**
+     * @generated from protobuf field: string brand_text = 6;
+     */
+    brandText: string;
+    /**
+     * @generated from protobuf field: string brand_button = 7;
+     */
+    brandButton: string;
+    /**
+     * @generated from protobuf field: string brand_highlight = 8;
+     */
+    brandHighlight: string;
+}
+/**
+ * @generated from protobuf message svyne.tenant.PublicTenantBrandingRequest
+ */
+export interface PublicTenantBrandingRequest {
+    /**
+     * @generated from protobuf field: string slug = 1;
+     */
+    slug: string;
+}
+/**
+ * @generated from protobuf message svyne.tenant.PublicTenantBranding
+ */
+export interface PublicTenantBranding {
+    /**
+     * @generated from protobuf field: string slug = 1;
+     */
+    slug: string;
+    /**
+     * @generated from protobuf field: string name = 2;
+     */
+    name: string;
+    /**
+     * @generated from protobuf field: string logo_url = 3;
+     */
+    logoUrl: string;
+    /**
+     * @generated from protobuf field: string brand_primary = 4;
+     */
+    brandPrimary: string;
+    /**
+     * @generated from protobuf field: string brand_secondary = 5;
+     */
+    brandSecondary: string;
+    /**
+     * @generated from protobuf field: string brand_accent = 6;
+     */
+    brandAccent: string;
+    /**
+     * @generated from protobuf field: string brand_background = 7;
+     */
+    brandBackground: string;
+    /**
+     * @generated from protobuf field: string brand_text = 8;
+     */
+    brandText: string;
+    /**
+     * @generated from protobuf field: string brand_button = 9;
+     */
+    brandButton: string;
+    /**
+     * @generated from protobuf field: string brand_highlight = 10;
+     */
+    brandHighlight: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.UpdateMyTenantContactRequest
@@ -618,7 +704,11 @@ class Tenant$Type extends MessageType<Tenant> {
             { no: 17, name: "logo_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 18, name: "brand_primary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 19, name: "brand_secondary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 20, name: "brand_accent", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 20, name: "brand_accent", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 21, name: "brand_background", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 22, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 23, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 24, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Tenant>): Tenant {
@@ -643,6 +733,10 @@ class Tenant$Type extends MessageType<Tenant> {
         message.brandPrimary = "";
         message.brandSecondary = "";
         message.brandAccent = "";
+        message.brandBackground = "";
+        message.brandText = "";
+        message.brandButton = "";
+        message.brandHighlight = "";
         if (value !== undefined)
             reflectionMergePartial<Tenant>(this, message, value);
         return message;
@@ -711,6 +805,18 @@ class Tenant$Type extends MessageType<Tenant> {
                     break;
                 case /* string brand_accent */ 20:
                     message.brandAccent = reader.string();
+                    break;
+                case /* string brand_background */ 21:
+                    message.brandBackground = reader.string();
+                    break;
+                case /* string brand_text */ 22:
+                    message.brandText = reader.string();
+                    break;
+                case /* string brand_button */ 23:
+                    message.brandButton = reader.string();
+                    break;
+                case /* string brand_highlight */ 24:
+                    message.brandHighlight = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -784,6 +890,18 @@ class Tenant$Type extends MessageType<Tenant> {
         /* string brand_accent = 20; */
         if (message.brandAccent !== "")
             writer.tag(20, WireType.LengthDelimited).string(message.brandAccent);
+        /* string brand_background = 21; */
+        if (message.brandBackground !== "")
+            writer.tag(21, WireType.LengthDelimited).string(message.brandBackground);
+        /* string brand_text = 22; */
+        if (message.brandText !== "")
+            writer.tag(22, WireType.LengthDelimited).string(message.brandText);
+        /* string brand_button = 23; */
+        if (message.brandButton !== "")
+            writer.tag(23, WireType.LengthDelimited).string(message.brandButton);
+        /* string brand_highlight = 24; */
+        if (message.brandHighlight !== "")
+            writer.tag(24, WireType.LengthDelimited).string(message.brandHighlight);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -801,7 +919,11 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
             { no: 1, name: "logo_images_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "brand_primary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "brand_secondary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "brand_accent", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "brand_accent", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "brand_background", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<UpdateMyTenantBrandingRequest>): UpdateMyTenantBrandingRequest {
@@ -810,6 +932,10 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
         message.brandPrimary = "";
         message.brandSecondary = "";
         message.brandAccent = "";
+        message.brandBackground = "";
+        message.brandText = "";
+        message.brandButton = "";
+        message.brandHighlight = "";
         if (value !== undefined)
             reflectionMergePartial<UpdateMyTenantBrandingRequest>(this, message, value);
         return message;
@@ -830,6 +956,18 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
                     break;
                 case /* string brand_accent */ 4:
                     message.brandAccent = reader.string();
+                    break;
+                case /* string brand_background */ 5:
+                    message.brandBackground = reader.string();
+                    break;
+                case /* string brand_text */ 6:
+                    message.brandText = reader.string();
+                    break;
+                case /* string brand_button */ 7:
+                    message.brandButton = reader.string();
+                    break;
+                case /* string brand_highlight */ 8:
+                    message.brandHighlight = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -855,6 +993,18 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
         /* string brand_accent = 4; */
         if (message.brandAccent !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.brandAccent);
+        /* string brand_background = 5; */
+        if (message.brandBackground !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.brandBackground);
+        /* string brand_text = 6; */
+        if (message.brandText !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.brandText);
+        /* string brand_button = 7; */
+        if (message.brandButton !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.brandButton);
+        /* string brand_highlight = 8; */
+        if (message.brandHighlight !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.brandHighlight);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -865,6 +1015,172 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
  * @generated MessageType for protobuf message svyne.tenant.UpdateMyTenantBrandingRequest
  */
 export const UpdateMyTenantBrandingRequest = new UpdateMyTenantBrandingRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class PublicTenantBrandingRequest$Type extends MessageType<PublicTenantBrandingRequest> {
+    constructor() {
+        super("svyne.tenant.PublicTenantBrandingRequest", [
+            { no: 1, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<PublicTenantBrandingRequest>): PublicTenantBrandingRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.slug = "";
+        if (value !== undefined)
+            reflectionMergePartial<PublicTenantBrandingRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: PublicTenantBrandingRequest): PublicTenantBrandingRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string slug */ 1:
+                    message.slug = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: PublicTenantBrandingRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string slug = 1; */
+        if (message.slug !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.slug);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.tenant.PublicTenantBrandingRequest
+ */
+export const PublicTenantBrandingRequest = new PublicTenantBrandingRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class PublicTenantBranding$Type extends MessageType<PublicTenantBranding> {
+    constructor() {
+        super("svyne.tenant.PublicTenantBranding", [
+            { no: 1, name: "slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "logo_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "brand_primary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "brand_secondary", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "brand_accent", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "brand_background", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<PublicTenantBranding>): PublicTenantBranding {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.slug = "";
+        message.name = "";
+        message.logoUrl = "";
+        message.brandPrimary = "";
+        message.brandSecondary = "";
+        message.brandAccent = "";
+        message.brandBackground = "";
+        message.brandText = "";
+        message.brandButton = "";
+        message.brandHighlight = "";
+        if (value !== undefined)
+            reflectionMergePartial<PublicTenantBranding>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: PublicTenantBranding): PublicTenantBranding {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string slug */ 1:
+                    message.slug = reader.string();
+                    break;
+                case /* string name */ 2:
+                    message.name = reader.string();
+                    break;
+                case /* string logo_url */ 3:
+                    message.logoUrl = reader.string();
+                    break;
+                case /* string brand_primary */ 4:
+                    message.brandPrimary = reader.string();
+                    break;
+                case /* string brand_secondary */ 5:
+                    message.brandSecondary = reader.string();
+                    break;
+                case /* string brand_accent */ 6:
+                    message.brandAccent = reader.string();
+                    break;
+                case /* string brand_background */ 7:
+                    message.brandBackground = reader.string();
+                    break;
+                case /* string brand_text */ 8:
+                    message.brandText = reader.string();
+                    break;
+                case /* string brand_button */ 9:
+                    message.brandButton = reader.string();
+                    break;
+                case /* string brand_highlight */ 10:
+                    message.brandHighlight = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: PublicTenantBranding, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string slug = 1; */
+        if (message.slug !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.slug);
+        /* string name = 2; */
+        if (message.name !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.name);
+        /* string logo_url = 3; */
+        if (message.logoUrl !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.logoUrl);
+        /* string brand_primary = 4; */
+        if (message.brandPrimary !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.brandPrimary);
+        /* string brand_secondary = 5; */
+        if (message.brandSecondary !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.brandSecondary);
+        /* string brand_accent = 6; */
+        if (message.brandAccent !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.brandAccent);
+        /* string brand_background = 7; */
+        if (message.brandBackground !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.brandBackground);
+        /* string brand_text = 8; */
+        if (message.brandText !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.brandText);
+        /* string brand_button = 9; */
+        if (message.brandButton !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.brandButton);
+        /* string brand_highlight = 10; */
+        if (message.brandHighlight !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.brandHighlight);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.tenant.PublicTenantBranding
+ */
+export const PublicTenantBranding = new PublicTenantBranding$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class UpdateMyTenantContactRequest$Type extends MessageType<UpdateMyTenantContactRequest> {
     constructor() {
@@ -1585,6 +1901,7 @@ export const TenantService = new ServiceType("svyne.tenant.TenantService", [
     { name: "GetMyTenant", options: {}, I: Empty, O: Tenant },
     { name: "UpdateMyTenantContact", options: {}, I: UpdateMyTenantContactRequest, O: AckResponse },
     { name: "UpdateMyTenantBranding", options: {}, I: UpdateMyTenantBrandingRequest, O: AckResponse },
+    { name: "GetPublicTenantBranding", options: {}, I: PublicTenantBrandingRequest, O: PublicTenantBranding },
     { name: "ListTenants", options: {}, I: PageRequest, O: ListTenantsResponse },
     { name: "ListPublicTenants", options: {}, I: Empty, O: ListPublicTenantsResponse },
     { name: "ListTenantMembers", options: {}, I: UuidValue, O: ListTenantMembersResponse },

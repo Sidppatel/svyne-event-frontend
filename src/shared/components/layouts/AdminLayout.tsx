@@ -24,6 +24,7 @@ export function AdminLayout() {
     links.push({ to: '/staff', label: 'Staff' });
     links.push({ to: '/invitations', label: 'Invitations' });
     links.push({ to: '/financial', label: 'Financial' });
+    links.push({ to: '/branding', label: 'Branding' });
     links.push({ to: '/settings', label: 'Settings' });
   }
 

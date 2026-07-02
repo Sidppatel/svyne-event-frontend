@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import {
   getMyTenant,
   updateMyTenantContact,
-  updateMyTenantBranding,
   getTenantStripeProfile,
   type TenantContactInput,
-  type TenantBrandingInput,
 } from '@/features/admin/services/tenantService';
 import { getStripeStatus, startStripeOnboarding } from '@/features/admin/services/financialService';
-import { uploadImage } from '@/shared/upload';
 import { useAuth } from '@/shared/auth/useAuth';
 import { rpcErrorMessage } from '@/shared/session';
 import type { Tenant, TenantStripeProfile } from '@/shared/proto/tenant';
@@ -28,21 +25,10 @@ const EMPTY: TenantContactInput = {
   zip: '',
 };
 
-const EMPTY_BRANDING: TenantBrandingInput = {
-  logoImagesId: '',
-  brandPrimary: '#000000',
-  brandSecondary: '#666666',
-  brandAccent: '#f59e0b',
-};
-
 export function AdminTenantSettingsPage() {
   const { tenantsId } = useAuth();
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [form, setForm] = useState<TenantContactInput>(EMPTY);
-  const [branding, setBranding] = useState<TenantBrandingInput>(EMPTY_BRANDING);
-  const [logoUrl, setLogoUrl] = useState('');
-  const [logoBusy, setLogoBusy] = useState(false);
-  const [savingBrand, setSavingBrand] = useState(false);
   const [stripe, setStripe] = useState<StripeStatus | null>(null);
   const [stripeProfile, setStripeProfile] = useState<TenantStripeProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -63,13 +49,6 @@ export function AdminTenantSettingsPage() {
           city: value.city,
           state: value.state,
           zip: value.zip,
-        });
-        setLogoUrl(value.logoUrl);
-        setBranding({
-          logoImagesId: value.logoUrl ? (value.logoUrl.split('/').pop() ?? '') : '',
-          brandPrimary: value.brandPrimary || EMPTY_BRANDING.brandPrimary,
-          brandSecondary: value.brandSecondary || EMPTY_BRANDING.brandSecondary,
-          brandAccent: value.brandAccent || EMPTY_BRANDING.brandAccent,
         });
       })
       .catch((caught) => setError(rpcErrorMessage(caught)))
@@ -109,41 +88,6 @@ export function AdminTenantSettingsPage() {
       setError(rpcErrorMessage(caught));
     } finally {
       setSaving(false);
-    }
-  }
-
-  function brandField(key: keyof TenantBrandingInput) {
-    return (value: string) => setBranding((prev) => ({ ...prev, [key]: value }));
-  }
-
-  async function onLogo(file: File | undefined) {
-    if (!file || !tenantsId) {
-      return;
-    }
-    setLogoBusy(true);
-    setError(null);
-    try {
-      const result = await uploadImage(file, 'tenant', tenantsId);
-      setBranding((prev) => ({ ...prev, logoImagesId: result.imagesId }));
-      setLogoUrl(URL.createObjectURL(file));
-    } catch (caught) {
-      setError(rpcErrorMessage(caught));
-    } finally {
-      setLogoBusy(false);
-    }
-  }
-
-  async function saveBranding() {
-    setSavingBrand(true);
-    setError(null);
-    setNotice(null);
-    try {
-      await updateMyTenantBranding(branding);
-      setNotice('Branding saved.');
-    } catch (caught) {
-      setError(rpcErrorMessage(caught));
-    } finally {
-      setSavingBrand(false);
     }
   }
 
@@ -201,37 +145,17 @@ export function AdminTenantSettingsPage() {
         <div className="border-b border-hairline px-6 py-4">
           <h2 className="font-display text-lg font-semibold text-ink">Branding</h2>
         </div>
-        <div className="p-6 space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-md bg-muted">
-              {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="h-full w-full object-contain" />
-              ) : (
-                <span className="text-xs text-muted-foreground">No logo</span>
-              )}
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="logo">Company logo</Label>
-              <Input
-                id="logo"
-                type="file"
-                accept="image/*"
-                disabled={logoBusy}
-                onChange={(e) => onLogo(e.target.files?.[0])}
-              />
-              {logoBusy ? <p className="text-xs text-muted-foreground">Uploading…</p> : null}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3">
-            <ColorField label="Primary" value={branding.brandPrimary} onChange={brandField('brandPrimary')} />
-            <ColorField label="Secondary" value={branding.brandSecondary} onChange={brandField('brandSecondary')} />
-            <ColorField label="Accent" value={branding.brandAccent} onChange={brandField('brandAccent')} />
-          </div>
-
-          <Button onClick={saveBranding} disabled={savingBrand}>
-            {savingBrand ? 'Saving…' : 'Save branding'}
-          </Button>
+        <div className="flex items-center justify-between gap-4 p-6">
+          <p className="text-sm text-muted-foreground">
+            Logo, color palette, and the live preview of your public pages now live in the branding
+            studio.
+          </p>
+          <Link
+            to="/branding"
+            className="shrink-0 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-[var(--shadow-e1)] hover:bg-brand-hover"
+          >
+            Open branding studio
+          </Link>
         </div>
       </div>
 
@@ -276,31 +200,6 @@ function Labeled({
     <div className="space-y-1">
       <Label>{label}</Label>
       <Input value={value} onChange={(e) => onChange(e.target.value)} />
-    </div>
-  );
-}
-
-function ColorField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="space-y-1">
-      <Label>{label}</Label>
-      <div className="flex items-center gap-2">
-        <Input
-          type="color"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="h-9 w-12 p-1"
-        />
-        <Input value={value} onChange={(e) => onChange(e.target.value)} className="flex-1" />
-      </div>
     </div>
   );
 }
