@@ -14,4 +14,17 @@ export default defineConfig({
     port: 5173,
     host: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id: string) {
+          if (id.includes('/shared/proto/')) {
+            const name = id.split('/shared/proto/')[1]?.split('.')[0];
+            return name ? `proto-${name}` : 'proto';
+          }
+          return undefined;
+        },
+      },
+    },
+  },
 });

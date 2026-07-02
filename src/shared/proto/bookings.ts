@@ -369,6 +369,13 @@ export interface EventTicketType {
      * @generated from protobuf field: int32 capacity = 8;
      */
     capacity: number; // seats this tier contributes to event capacity (0 = uncapped)
+    /**
+     * Current selling price after active price rules (equals price_cents when no
+     * discount applies). Display hint; QuoteCart is authoritative at booking time.
+     *
+     * @generated from protobuf field: int32 selling_price_cents = 9;
+     */
+    sellingPriceCents: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListEventTicketTypesResponse
@@ -1638,7 +1645,8 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
             { no: 5, name: "max_quantity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 7, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 8, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 8, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 9, name: "selling_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<EventTicketType>): EventTicketType {
@@ -1651,6 +1659,7 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         message.description = "";
         message.feeFormulasId = "";
         message.capacity = 0;
+        message.sellingPriceCents = 0;
         if (value !== undefined)
             reflectionMergePartial<EventTicketType>(this, message, value);
         return message;
@@ -1683,6 +1692,9 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
                     break;
                 case /* int32 capacity */ 8:
                     message.capacity = reader.int32();
+                    break;
+                case /* int32 selling_price_cents */ 9:
+                    message.sellingPriceCents = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1720,6 +1732,9 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         /* int32 capacity = 8; */
         if (message.capacity !== 0)
             writer.tag(8, WireType.Varint).int32(message.capacity);
+        /* int32 selling_price_cents = 9; */
+        if (message.sellingPriceCents !== 0)
+            writer.tag(9, WireType.Varint).int32(message.sellingPriceCents);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

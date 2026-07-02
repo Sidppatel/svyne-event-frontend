@@ -52,11 +52,13 @@ export function AdminFinancialPage() {
             </Button>
           </div>
           {report ? (
-            <div className="text-sm text-muted-foreground">
-              <p>Gross: {centsToUSD(report.grossCents)}</p>
-              <p>Fees: {centsToUSD(report.feesCents)}</p>
-              <p>Net: {centsToUSD(report.netCents)}</p>
-              <p>Tickets sold: {report.ticketsSold}</p>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <p>
+                Revenue: <span className="font-mono font-medium text-foreground">{centsToUSD(report.netCents)}</span>
+              </p>
+              <p>
+                Tickets sold: <span className="font-mono font-medium text-foreground">{report.ticketsSold}</span>
+              </p>
             </div>
           ) : null}
         </CardContent>

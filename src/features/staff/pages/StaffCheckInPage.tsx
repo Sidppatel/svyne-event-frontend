@@ -181,7 +181,7 @@ export function StaffCheckInPage() {
       {scanOverlay && (
         <div className={cn(
           "fixed inset-0 z-50 flex flex-col items-center justify-center animate-fade-in p-6 backdrop-blur-md",
-          scanOverlay.success ? "bg-emerald-600/95" : "bg-destructive/95"
+          scanOverlay.success ? "bg-success/95" : "bg-destructive/95"
         )}>
           <div className="flex flex-col items-center gap-6 text-white text-center">
             {scanOverlay.success ? (
@@ -307,7 +307,7 @@ export function StaffCheckInPage() {
               placeholder="Search by buyer name, guest name, booking number, or ticket code..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 h-11 w-full bg-card border-border hover:border-neutral-800 focus:border-primary text-sm rounded-xl shadow-sm"
+              className="pl-9 h-11 w-full bg-card border-border hover:border-hairline-strong focus:border-primary text-sm rounded-xl shadow-sm"
             />
           </div>
 
@@ -354,7 +354,7 @@ export function StaffCheckInPage() {
                         <div className="flex items-center gap-2">
                           <span className={`text-[9px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full border ${
                             b.status === 'CheckedIn' 
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/15' 
+                              ? 'bg-success/10 text-success border-success/15' 
                               : 'bg-primary/10 text-primary border-primary/15'
                           }`}>
                             {b.status === 'CheckedIn' ? 'All In' : b.status}
@@ -387,7 +387,7 @@ export function StaffCheckInPage() {
                             </div>
                             <div className="flex items-center gap-2">
                               {t.status === 'CheckedIn' ? (
-                                <span className="text-[10px] font-bold text-emerald-400 flex items-center gap-1 bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10">
+                                <span className="text-[10px] font-bold text-success flex items-center gap-1 bg-success/10 px-2 py-0.5 rounded border border-success/15">
                                   <CheckCircle2 className="h-3.5 w-3.5" /> Checked In
                                 </span>
                               ) : (

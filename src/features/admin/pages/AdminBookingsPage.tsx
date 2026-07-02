@@ -50,7 +50,7 @@ export function AdminBookingsPage() {
               <div className="text-sm">
                 <p className="font-medium">#{booking.bookingNumber}</p>
                 <p className="text-muted-foreground">
-                  {booking.status} · {centsToUSD(booking.totalCents)} · seats {booking.seatsReserved}
+                  {booking.status} · {centsToUSD(booking.subtotalCents)} · seats {booking.seatsReserved}
                 </p>
               </div>
               <div className="flex gap-2">

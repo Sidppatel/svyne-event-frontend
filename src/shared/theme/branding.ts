@@ -1,17 +1,17 @@
 export interface TenantBranding {
   primaryColor: string;
-  secondaryColor: string;
   accentColor: string;
   logoUrl: string | null;
   fontFamily: string;
+  voltage: number;
 }
 
 export const DEFAULT_BRANDING: TenantBranding = {
-  primaryColor: '#000000', // Expo: black is the only brand voltage
-  secondaryColor: '#f0f0f3', // surface-strong
-  accentColor: '#ab6400', // warning/amber accent
+  primaryColor: '#8a2d3b',
+  accentColor: '#e8940a',
   logoUrl: null,
   fontFamily: "'Inter', -apple-system, system-ui, sans-serif",
+  voltage: 0.5,
 };
 
 export function applyBranding(branding: TenantBranding): void {
@@ -19,8 +19,11 @@ export function applyBranding(branding: TenantBranding): void {
     return;
   }
   const root = document.documentElement;
+  root.style.setProperty('--brand', branding.primaryColor);
+  root.style.setProperty('--voltage-accent', branding.accentColor);
+  root.style.setProperty('--font-body-stack', branding.fontFamily);
+  root.style.setProperty('--voltage', String(branding.voltage));
   root.style.setProperty('--brand-primary', branding.primaryColor);
-  root.style.setProperty('--brand-secondary', branding.secondaryColor);
   root.style.setProperty('--brand-accent', branding.accentColor);
   root.style.setProperty('--brand-font', branding.fontFamily);
 }

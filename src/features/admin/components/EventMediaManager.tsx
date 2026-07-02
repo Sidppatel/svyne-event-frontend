@@ -188,7 +188,7 @@ function MediaSection({
                 {!img.isPrimary ? (
                   <button
                     type="button"
-                    className="rounded px-1 text-xs text-white hover:text-amber-300"
+                    className="rounded px-1 text-xs text-white hover:text-voltage"
                     onClick={() => onPrimary(img.imagesId)}
                   >
                     Set primary

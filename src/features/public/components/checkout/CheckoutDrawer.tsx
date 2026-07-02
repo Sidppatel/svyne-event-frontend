@@ -5,6 +5,7 @@ import { PaymentStep } from './PaymentStep';
 import { PriceBadge } from '../PriceBadge';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { listTickets, getBooking } from '@/features/public/services/ticketService';
+import { QrImage } from '@/features/public/components/wallet/QrImage';
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/cn';
@@ -124,7 +125,7 @@ function ConfirmationReceipt({
     <div className="flex flex-col h-full">
       <div className="flex-1 space-y-6 pt-4 text-center pb-6">
         <div className="space-y-2">
-          <CheckCircle2 className="size-12 mx-auto text-emerald-500 animate-[svyne-fade-up_0.5s_ease-out]" />
+          <CheckCircle2 className="size-12 mx-auto text-success animate-[svyne-fade-up_0.5s_ease-out]" />
           <h3 className="text-xl font-black text-white font-display uppercase tracking-tight">Booking Confirmed</h3>
           <p className="text-xs text-white/50">Your secure entries are verified and issued</p>
         </div>
@@ -158,12 +159,8 @@ function ConfirmationReceipt({
               {(tickets.data || []).map((t) => (
                 <div key={t.ticketsId} className="flex items-center gap-4 bg-white/5 p-3 rounded-xl border border-white/5">
                   {t.qrToken && (
-                    <div className="p-1 bg-white rounded border shrink-0">
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=50x50&data=${encodeURIComponent(t.qrToken)}`}
-                        alt="QR Code"
-                        className="w-10 h-10 object-contain"
-                      />
+                    <div className="shrink-0 rounded border bg-white p-1">
+                      <QrImage value={t.qrToken} size={40} className="h-10 w-10 object-contain" />
                     </div>
                   )}
                   <div className="text-xs min-w-0 flex-1">
@@ -171,7 +168,7 @@ function ConfirmationReceipt({
                     <p className="text-[10px] font-bold text-accent-gold uppercase mt-0.5">{t.ticketTypeLabel || 'General Entry'}</p>
                     <p className="text-[9px] text-white/40 mt-0.5">Pass #{t.seatNumber}</p>
                   </div>
-                  <span className="text-[9px] font-black uppercase tracking-wider text-emerald-400 border border-emerald-400/20 bg-emerald-400/5 px-2 py-0.5 rounded-md">
+                  <span className="rounded-md border border-success/20 bg-success/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-success">
                     Verified
                   </span>
                 </div>

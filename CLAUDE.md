@@ -74,5 +74,5 @@ Tenant + role + identity come from **JWT claims** (`tenants_id`, `role`, `tenant
 ## Known backend gaps (frontend is wired and waiting)
 
 - **Tenant branding**: no public colors/logo endpoint; `useTenantBranding()` applies defaults.
-- **Booking totals**: no quote RPC; reserve/create send `0` cents and rely on server-side computation.
-- **Anonymous public tenant**: middleware resolves tenant from JWT only; public browsing needs subdomain resolution server-side.
+- **Booking totals**: `QuoteCart` RPC provides server-computed totals/discounts (event page order summary uses it); reserve/create still send `0` cents and rely on server-side computation.
+- **Fee visibility**: platform-fee figures are developer-only in reports (`GetMonthlyReport` zeroes gross/fees for non-developers). Admin sees per-ticket-type / per-table-type fees in config UIs only; admin metrics use `subtotal_cents` (their prices), never fee-inclusive totals.

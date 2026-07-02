@@ -246,7 +246,7 @@ export function EventSeatingMap({
                           <span className="line-through text-white/40 text-xs font-semibold">
                             {centsToUSD(basePrice)}
                           </span>
-                          <span className="text-emerald-400">
+                          <span className="text-success">
                             {centsToUSD(displayPrice)}
                           </span>
                         </span>

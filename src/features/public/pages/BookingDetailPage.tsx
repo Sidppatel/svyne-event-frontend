@@ -1,5 +1,8 @@
-import { useCallback, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import { CheckCircle2 } from 'lucide-react';
+import { playSuccessChime } from '@/shared/lib/haptic';
+import { QrImage } from '@/features/public/components/wallet/QrImage';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { useAuth } from '@/shared/auth/useAuth';
 import {
@@ -16,9 +19,17 @@ import { Input } from '@/shared/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 
+const NOTCH = { ['--svyne-notch' as string]: 'var(--background)' } as CSSProperties;
+
 export function BookingDetailPage() {
   const { bookingsId = '' } = useParams();
+  const location = useLocation();
+  const justPaid = Boolean((location.state as { justPaid?: boolean } | null)?.justPaid);
   const { user } = useAuth();
+
+  useEffect(() => {
+    if (justPaid) playSuccessChime();
+  }, [justPaid]);
   const bookingLoader = useCallback(() => getBooking(bookingsId), [bookingsId]);
   const ticketsLoader = useCallback(() => listTickets(bookingsId), [bookingsId]);
   const booking = useAsync(bookingLoader);
@@ -55,6 +66,21 @@ export function BookingDetailPage() {
 
   return (
     <div className="space-y-4">
+      {justPaid ? (
+        <div className="svyne-page overflow-hidden rounded-lg border border-success/25 bg-surface shadow-[var(--shadow-e1)]">
+          <div className="flex items-center gap-3 p-5">
+            <CheckCircle2 className="size-6 shrink-0 text-success" />
+            <div>
+              <p className="font-display text-lg font-semibold text-ink">You're going.</p>
+              <p className="text-sm text-ink-soft">
+                Payment confirmed — your tickets are below and in your wallet.
+              </p>
+            </div>
+          </div>
+          <div className="svyne-ticket-edge" style={NOTCH} />
+          <div className="h-3" />
+        </div>
+      ) : null}
       {booking.loading ? <p className="text-muted-foreground">Loading…</p> : null}
       {booking.error ? <p className="text-destructive">{booking.error}</p> : null}
       {booking.data ? (
@@ -111,11 +137,7 @@ export function BookingDetailPage() {
                       })}
                       className="shrink-0 p-1 bg-white rounded border hover:bg-muted transition-colors cursor-pointer mr-1"
                     >
-                      <img
-                        src={`https://api.qrserver.com/v1/create-qr-code/?size=32x32&data=${encodeURIComponent(ticket.qrToken)}`}
-                        alt="QR"
-                        className="w-8 h-8 object-contain"
-                      />
+                      <QrImage value={ticket.qrToken} size={32} className="h-8 w-8 object-contain" />
                     </button>
                   )}
                   <span className="font-medium">{ticket.ticketCode}</span>
@@ -172,11 +194,7 @@ export function BookingDetailPage() {
           {activeQr && (
             <>
               <div className="bg-white p-4 rounded-xl border shadow-sm">
-                <img
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(activeQr.qrToken)}`}
-                  alt="QR Code"
-                  className="w-[250px] h-[250px]"
-                />
+                <QrImage value={activeQr.qrToken} size={250} />
               </div>
               <div className="text-center space-y-1">
                 <p className="text-sm text-muted-foreground">Scan at the event gate</p>

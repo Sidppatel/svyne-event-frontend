@@ -1,5 +1,4 @@
 import { cn } from '@/shared/lib/cn';
-import { playTap } from '@/shared/lib/haptic';
 
 interface SwitchProps {
   checked: boolean;
@@ -10,9 +9,7 @@ interface SwitchProps {
 
 export function Switch({ checked, onCheckedChange, disabled, label }: SwitchProps) {
   const handleClick = () => {
-    const nextVal = !checked;
-    playTap(nextVal ? 'toggle-on' : 'toggle-off');
-    onCheckedChange(nextVal);
+    onCheckedChange(!checked);
   };
 
   return (

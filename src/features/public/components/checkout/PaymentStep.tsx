@@ -219,7 +219,7 @@ function StripeCheckoutForm({
       <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
         <div>
           <h3 className="text-lg font-black text-white font-display uppercase tracking-tight">Secure Payment</h3>
-          <div className="flex items-center gap-1 text-[10px] text-emerald-400 font-bold uppercase tracking-widest mt-0.5">
+          <div className="flex items-center gap-1 text-[10px] text-success font-bold uppercase tracking-widest mt-0.5">
             <ShieldCheck className="size-3.5" /> 256-Bit SSL Connection
           </div>
         </div>

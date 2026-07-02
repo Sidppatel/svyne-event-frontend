@@ -44,12 +44,12 @@ export function TicketCard({
     <div
       data-ticket-tier-card
       className={cn(
-        'relative flex items-center justify-between rounded-2xl border p-5 overflow-hidden transition-all duration-300 bg-surface-card',
-        isSoldOut 
-          ? 'opacity-65 border-border-soft' 
+        'relative flex items-center justify-between overflow-hidden rounded-lg border bg-surface p-5 transition-[border-color,box-shadow,transform] duration-[280ms] ease-[var(--ease-out)]',
+        isSoldOut
+          ? 'border-hairline opacity-60'
           : isPopular
-            ? 'border-accent-burgundy/40 bg-gradient-to-r from-surface-card to-accent-burgundy/[0.02] shadow-md hover:shadow-lg'
-            : 'border-border-strong hover:border-accent-burgundy/20 shadow-sm hover:shadow-md'
+            ? 'border-brand/40 shadow-[var(--shadow-e1)] hover:shadow-[var(--shadow-e2)]'
+            : 'border-hairline hover:border-hairline-strong hover:shadow-[var(--shadow-e1)]',
       )}
     >
       {/* Ticket Stub Perforation Notches */}
@@ -64,13 +64,13 @@ export function TicketCard({
 
       <div className="pl-3 pr-4 relative min-w-0 flex-1">
         {isPopular && !isSoldOut && (
-          <span className="inline-flex items-center gap-1 rounded bg-accent-burgundy text-[8px] font-black uppercase tracking-wider text-white px-2 py-0.5 mb-2 border border-accent-burgundy/20 shadow-sm">
-            ★ Recommended Choice
+          <span className="mb-2 inline-flex items-center rounded-full bg-brand px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-ink">
+            Most popular
           </span>
         )}
-        
+
         <div className="flex flex-wrap items-center gap-2">
-          <span className="block font-black text-lg text-foreground font-display tracking-tight leading-tight">
+          <span className="block font-display text-lg font-semibold leading-tight text-foreground">
             {label}
           </span>
           <AvailabilityBadge quantityLeft={availableQuantity} maxQuantity={maxQuantity} />
@@ -82,48 +82,45 @@ export function TicketCard({
           </span>
         )}
 
-        <span className="block text-sm font-black mt-2">
+        <span className="mt-2 block font-mono text-sm font-medium">
           {displayDiscounted !== undefined && displayDiscounted !== displayPrice ? (
             <span className="inline-flex items-baseline gap-2">
-              <span className="line-through text-muted-foreground/60 text-xs font-semibold font-display">
-                {centsToUSD(displayPrice)}
-              </span>
-              <PriceBadge priceCents={displayDiscounted} className="text-emerald-500 font-extrabold text-sm" />
+              <span className="text-xs text-ink-faint line-through">{centsToUSD(displayPrice)}</span>
+              <PriceBadge priceCents={displayDiscounted} className="text-sm font-medium text-success" />
             </span>
           ) : (
-            <PriceBadge priceCents={displayPrice} className="text-accent-gold font-extrabold text-sm" />
+            <PriceBadge priceCents={displayPrice} className="text-sm font-medium text-ink" />
           )}
-          <span className="text-[10px] text-muted-foreground font-semibold"> each</span>
+          <span className="font-sans text-xs text-ink-soft"> each</span>
           {!feesIncluded && platformFeeCents > 0 && (
-            <span className="text-[9px] text-muted-foreground font-medium block sm:inline">
+            <span className="block font-sans text-xs text-ink-soft sm:inline">
               {' '}(+ <PriceBadge priceCents={platformFeeCents} /> service fee)
             </span>
           )}
         </span>
       </div>
 
-      {/* Perforation vertical separation line and controls */}
-      <div className="flex items-center gap-2 border-l border-dashed border-border-strong pl-6 py-4 relative shrink-0">
+      <div className="relative flex shrink-0 items-center gap-2 border-l border-dashed border-hairline-strong py-4 pl-6">
         <Button
           type="button"
           size="sm"
           variant="outline"
+          aria-label={`Remove one ${label} ticket`}
           disabled={qty <= 0 || isSoldOut}
           onClick={() => onQuantityChange(qty - 1)}
-          className="size-9 rounded-xl border-border-strong hover:border-accent-burgundy hover:bg-accent-burgundy hover:text-white transition-all duration-200 active:scale-90 font-black cursor-pointer"
+          className="size-9 cursor-pointer"
         >
           <Minus className="size-3.5" />
         </Button>
-        <div className="w-8 text-center font-black text-sm text-foreground select-none font-display">
-          {qty}
-        </div>
+        <div className="w-8 select-none text-center font-mono text-sm font-medium text-foreground">{qty}</div>
         <Button
           type="button"
           size="sm"
           variant="outline"
+          aria-label={`Add one ${label} ticket`}
           disabled={isSoldOut || (maxQuantity !== undefined && qty >= maxQuantity) || (availableQuantity !== undefined && qty >= availableQuantity)}
           onClick={() => onQuantityChange(qty + 1)}
-          className="size-9 rounded-xl border-border-strong hover:border-accent-burgundy hover:bg-accent-burgundy hover:text-white transition-all duration-200 active:scale-90 font-black cursor-pointer"
+          className="size-9 cursor-pointer"
         >
           <Plus className="size-3.5" />
         </Button>

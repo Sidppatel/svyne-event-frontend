@@ -34,6 +34,7 @@ import {
 import { toast } from 'sonner';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
+import { addCents } from '@/shared/lib/math';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -346,6 +347,12 @@ export function AdminEventManagePage() {
                   <span className="flex items-center gap-2">
                     <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
                     {type.label} · {centsToUSD(type.priceCents)}
+                    {type.platformFeeCents > 0 ? (
+                      <span className="text-xs text-muted-foreground">
+                        + fee {centsToUSD(type.platformFeeCents)} ={' '}
+                        {centsToUSD(addCents(type.priceCents, type.platformFeeCents))}
+                      </span>
+                    ) : null}
                     {lockedTypeIds.has(type.eventTablesId) ? (
                       <span className="text-xs text-muted-foreground">🔒 sold/held</span>
                     ) : null}

@@ -72,14 +72,16 @@ function groupLinks(links: NavLink[], section?: string): LinkGroup[] {
   return groups;
 }
 
-function Brand({ section, className }: { section?: string; className?: string }) {
+function Brand({ section, className, onStage }: { section?: string; className?: string; onStage?: boolean }) {
   return (
     <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-1.5', className)}>
-      <span className="text-foreground hover:opacity-80 transition-opacity">svyne</span>
+      <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>
+        svyne
+      </span>
       {section ? (
         <>
-          <span className="text-marigold font-light">·</span>
-          <span className="text-muted-foreground text-sm font-medium tracking-normal">{section}</span>
+          <span className="font-light text-voltage">·</span>
+          <span className="text-sm font-medium tracking-normal text-muted-foreground">{section}</span>
         </>
       ) : null}
     </span>
@@ -218,30 +220,33 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
 
   // Render Horizontal Header for Public Pages
   return (
-    <header 
+    <header
       className={cn(
-        'sticky top-0 z-40 w-full transition-all duration-300 border-b border-border/40 backdrop-blur-md',
+        'top-0 z-40 w-full border-b transition-all duration-300',
+        transparent ? 'fixed' : 'sticky',
         isHeaderTransparent
-          ? 'bg-transparent border-transparent py-4'
-          : 'bg-background/85 py-2 shadow-lg shadow-black/5'
+          ? 'border-transparent bg-transparent py-4'
+          : 'border-border/40 bg-background/85 py-2 shadow-lg shadow-black/5 backdrop-blur-md'
       )}
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-6">
-          <Brand />
+          <Brand onStage={isHeaderTransparent} />
           <nav className="hidden items-center gap-1 md:flex">
             {links.length > 5 ? (
               <>
                 {links.slice(0, 4).map((link) => (
-                  <RouterNavLink 
-                    key={link.to} 
-                    to={link.to} 
-                    end={link.to === '/'} 
+                  <RouterNavLink
+                    key={link.to}
+                    to={link.to}
+                    end={link.to === '/'}
                     className={({ isActive }) => cn(
                       'rounded-md px-3 py-1.5 text-xs font-medium transition-all',
                       isActive
-                        ? 'text-marigold border-b-2 border-marigold rounded-none px-1 py-1'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
+                        ? cn('rounded-none border-b-2 border-brand px-1 py-1', isHeaderTransparent ? 'border-voltage text-on-stage' : 'text-ink')
+                        : isHeaderTransparent
+                          ? 'text-on-stage-soft hover:text-on-stage'
+                          : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
                     )}
                   >
                     {link.label}
@@ -276,15 +281,17 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
               </>
             ) : (
               links.map((link) => (
-                <RouterNavLink 
-                  key={link.to} 
-                  to={link.to} 
-                  end={link.to === '/'} 
+                <RouterNavLink
+                  key={link.to}
+                  to={link.to}
+                  end={link.to === '/'}
                   className={({ isActive }) => cn(
                     'rounded-md px-3 py-1.5 text-xs font-medium transition-all',
                     isActive
-                      ? 'text-marigold border-b-2 border-marigold rounded-none px-1 py-1'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
+                      ? cn('rounded-none border-b-2 border-brand px-1 py-1', isHeaderTransparent ? 'border-voltage text-on-stage' : 'text-ink')
+                      : isHeaderTransparent
+                        ? 'text-on-stage-soft hover:text-on-stage'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
                   )}
                 >
                   {link.label}

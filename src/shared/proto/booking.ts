@@ -229,6 +229,10 @@ export interface EventTableType {
      * @generated from protobuf field: double default_height = 9;
      */
     defaultHeight: number;
+    /**
+     * @generated from protobuf field: int32 platform_fee_cents = 10;
+     */
+    platformFeeCents: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListEventTableTypesResponse
@@ -1126,7 +1130,8 @@ class EventTableType$Type extends MessageType<EventTableType> {
             { no: 6, name: "price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "prices_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "default_width", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
-            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
+            { no: 9, name: "default_height", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "platform_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<EventTableType>): EventTableType {
@@ -1140,6 +1145,7 @@ class EventTableType$Type extends MessageType<EventTableType> {
         message.pricesId = "";
         message.defaultWidth = 0;
         message.defaultHeight = 0;
+        message.platformFeeCents = 0;
         if (value !== undefined)
             reflectionMergePartial<EventTableType>(this, message, value);
         return message;
@@ -1175,6 +1181,9 @@ class EventTableType$Type extends MessageType<EventTableType> {
                     break;
                 case /* double default_height */ 9:
                     message.defaultHeight = reader.double();
+                    break;
+                case /* int32 platform_fee_cents */ 10:
+                    message.platformFeeCents = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1215,6 +1224,9 @@ class EventTableType$Type extends MessageType<EventTableType> {
         /* double default_height = 9; */
         if (message.defaultHeight !== 0)
             writer.tag(9, WireType.Bit64).double(message.defaultHeight);
+        /* int32 platform_fee_cents = 10; */
+        if (message.platformFeeCents !== 0)
+            writer.tag(10, WireType.Varint).int32(message.platformFeeCents);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

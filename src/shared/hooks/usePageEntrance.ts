@@ -17,12 +17,13 @@ export function usePageEntrance<T extends HTMLElement = HTMLElement>() {
         const first = root.firstElementChild;
         const targets =
           first && first.children.length > 1 ? first.children : root.children;
-        gsap.from(targets, {
+        const limited = Array.from(targets).slice(0, 6);
+        gsap.from(limited, {
           opacity: 0,
-          y: 16,
-          duration: 0.5,
-          ease: 'power2.out',
-          stagger: 0.06,
+          y: 12,
+          duration: 0.48,
+          ease: 'power3.out',
+          stagger: 0.04,
         });
       });
       return () => mm.revert();

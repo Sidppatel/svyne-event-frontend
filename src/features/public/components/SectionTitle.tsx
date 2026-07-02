@@ -11,32 +11,15 @@ interface SectionTitleProps {
 
 export function SectionTitle({ title, subtitle, icon: Icon, light = false, className }: SectionTitleProps) {
   return (
-    <div className={cn('space-y-2 pb-4 border-b', light ? 'border-border-soft' : 'border-border-strong', className)}>
-      <div className="flex items-center gap-3">
-        {Icon && (
-          <span className={cn(
-            'flex size-10 items-center justify-center rounded-xl border',
-            light 
-              ? 'bg-white/5 text-white border-white/10' 
-              : 'bg-accent-burgundy/10 text-accent-burgundy border-accent-burgundy/20'
-          )}>
-            <Icon className="size-5" />
-          </span>
-        )}
-        <h2 className={cn(
-          'text-2xl md:text-3xl font-black tracking-tighter uppercase font-display',
-          light ? 'text-white' : 'text-foreground'
-        )}>
+    <div className={cn('space-y-1.5 border-b pb-4', light ? 'border-on-stage/15' : 'border-hairline', className)}>
+      <div className="flex items-center gap-2.5">
+        {Icon && <Icon className={cn('size-5', light ? 'text-voltage' : 'text-brand')} />}
+        <h2 className={cn('font-display text-2xl font-semibold md:text-3xl', light ? 'text-on-stage' : 'text-foreground')}>
           {title}
         </h2>
       </div>
       {subtitle && (
-        <p className={cn(
-          'text-xs font-medium',
-          light ? 'text-white/60' : 'text-muted-foreground'
-        )}>
-          {subtitle}
-        </p>
+        <p className={cn('text-sm', light ? 'text-on-stage-soft' : 'text-ink-soft')}>{subtitle}</p>
       )}
     </div>
   );

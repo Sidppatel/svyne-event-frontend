@@ -97,7 +97,7 @@ export function CatalogEntityManager<T extends CatalogEntity>(props: ManagerProp
           <CardTitle>Add {props.title.toLowerCase().replace(/s$/, '')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
+          {notice ? <p className="text-sm text-warning">{notice}</p> : null}
           <div className="space-y-1">
             <Label>Name</Label>
             <Input value={name} onChange={(e) => setName(e.target.value)} />
@@ -191,7 +191,7 @@ function EntityRow<T extends CatalogEntity>({
             </Button>
           </div>
         </div>
-        {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
+        {notice ? <p className="text-sm text-warning">{notice}</p> : null}
         {editing ? (
           <div className="space-y-4 border-t pt-3">
             <div className="space-y-1">
@@ -245,7 +245,7 @@ function ImageField({
         {imagesId ? <img src={imageUrl(imagesId)} alt="" className="h-16 w-16 rounded object-cover" /> : null}
         <Input type="file" accept="image/*" disabled={busy} onChange={(e) => upload(e.target.files?.[0])} />
       </div>
-      {error ? <p className="text-sm text-amber-600">{error}</p> : null}
+      {error ? <p className="text-sm text-warning">{error}</p> : null}
     </div>
   );
 }

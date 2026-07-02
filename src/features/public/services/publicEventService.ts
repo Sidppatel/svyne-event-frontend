@@ -11,9 +11,9 @@ export async function calculatePrice(pricesId: string, seats: number): Promise<P
   return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at: '0', remaining: -1 }));
 }
 
-export async function listPublicEvents(search: string): Promise<Event[]> {
+export async function listPublicEvents(search: string, category = ''): Promise<Event[]> {
   const response = await callRpc(() =>
-    eventClient.listEvents({ page: { offset: 0, limit: 50, search }, status: 'Published', category: '' }),
+    eventClient.listEvents({ page: { offset: 0, limit: 50, search }, status: 'Published', category }),
   );
   return response.events;
 }

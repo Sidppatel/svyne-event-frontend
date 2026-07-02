@@ -1,20 +1,22 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { PortalNav } from '@/shared/components/layouts/PortalNav';
+import { MobileTabBar } from '@/shared/components/layouts/MobileTabBar';
 import { usePageEntrance } from '@/shared/hooks/usePageEntrance';
 import { useAuth } from '@/shared/auth/useAuth';
 import { cn } from '@/shared/lib/cn';
-import { FLAGS } from '@/shared/lib/flags';
+import { acquireLenis } from '@/shared/motion/lenis';
 
 export function PublicLayout() {
   const { role, isAuthenticated } = useAuth();
   const { pathname } = useLocation();
   const page = usePageEntrance<HTMLElement>();
 
+  useEffect(() => acquireLenis(), []);
+
   const links = [
     { to: '/', label: 'Events' },
-    { to: '/my-bookings', label: 'My Bookings' },
-    { to: '/my-tickets', label: 'My Tickets' },
-    { to: '/feedback', label: 'Feedback' },
+    { to: '/tickets', label: 'Tickets' },
     { to: '/profile', label: 'Profile' },
   ];
 
@@ -26,17 +28,18 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      <PortalNav links={links} transparent={isFullBleedPage && FLAGS.newEventPage} />
-      <main 
-        ref={page} 
-        key={pathname} 
+      <PortalNav links={links} transparent={isFullBleedPage} />
+      <main
+        ref={page}
+        key={pathname}
         className={cn(
-          "mx-auto w-full",
-          isFullBleedPage ? "" : "max-w-7xl px-4 py-6 md:px-6 md:py-8"
+          'mx-auto w-full',
+          isFullBleedPage ? 'pb-16 md:pb-0' : 'max-w-7xl px-4 py-6 pb-24 md:px-6 md:py-8',
         )}
       >
         <Outlet />
       </main>
+      {!isFullBleedPage && <MobileTabBar />}
     </div>
   );
 }

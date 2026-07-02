@@ -1,150 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @import 'tailwindcss';
-
-/*
- * SINGLE SOURCE OF TRUTH for all colors — Box Office design system (DESIGN.md).
- * Warm porcelain canvas, deep plum ink, CRANBERRY primary CTAs (the only action color),
- * MARIGOLD as the single signature voltage (prices, urgency, ticket perforation).
- * Bricolage Grotesque (display) + Inter (body) + JetBrains Mono (ticket codes).
- * Light mode only.
- */
-:root {
-  --brand-font: 'Inter', -apple-system, system-ui, sans-serif;
-  --brand-font-display: 'Bricolage Grotesque', 'Inter', system-ui, sans-serif;
-  --brand-font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-  --radius: 0.75rem;
-
-  /* Svyne Premium Light-Mode Tokens */
-  --surface-900: #f8f9fa;
-  --surface-800: #fcfdfe;
-  --surface-700: #ffffff;
-  --surface-canvas: #f8f9fa;
-  --surface-card: #ffffff;
-  --accent-burgundy: #d32f2f; /* Cranberry */
-  --accent-gold: #f9a825;     /* Warm Gold */
-  --border-strong: #cbd5e1;   /* slate-300 */
-  --border-soft: #f1f5f9;     /* slate-100 */
-
-  /* Backgrounds & Canvas */
-  --background: #f8f9fa;      /* Pristine cool gray-white */
-  --foreground: #0f172a;      /* Deep slate-900 */
-  --card: #ffffff;            /* Pure white surface */
-  --card-foreground: #1e293b; /* Slate-800 */
-  --popover: #ffffff;
-  --popover-foreground: #0f172a;
-
-  /* Primary CTAs — Cranberry action color */
-  --primary: #d32f2f;
-  --primary-foreground: #ffffff;
-  
-  /* Secondary — slate/outline actions */
-  --secondary: #f1f5f9;       /* slate-100 */
-  --secondary-foreground: #1e293b;
-  
-  /* Muted states */
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b; /* slate-500 */
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-
-  /* Signature voltage — Warm Gold */
-  --marigold: #f9a825;
-  --marigold-foreground: #201400;
-  
-  /* Back-compat aliases */
-  --amber: #d97706;
-  --amber-foreground: #451a03;
-
-  /* Status */
-  --success: #2e7d32;         /* Vine Green */
-  --success-foreground: #ffffff;
-  --warning: #d97706;
-  --destructive: #d32f2f;
-  --destructive-foreground: #ffffff;
-
-  /* Borders & Focus */
-  --border: #e2e8f0;          /* slate-200 */
-  --input: #e2e8f0;
-  --ring: #2e7d32;            /* Vine Green focus ring */
-
-  /* Light mode visual effects - subtle top gradient mesh */
-  --gradient-bg: radial-gradient(circle at top, rgba(46, 125, 50, 0.04) 0%, rgba(248, 249, 250, 0) 50%);
-
-  /* Brand vars */
-  --brand-primary: var(--primary);
-  --brand-secondary: var(--accent);
-  --brand-accent: var(--marigold);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-marigold: var(--marigold);
-  --color-marigold-foreground: var(--marigold-foreground);
-  --color-amber: var(--amber);
-  --color-amber-foreground: var(--amber-foreground);
-  --color-success: var(--success);
-  --color-success-foreground: var(--success-foreground);
-  --color-warning: var(--warning);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-danger: var(--destructive);
-  --color-danger-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-
-  /* Svyne Redesign named surfaces */
-  --color-surface-900: var(--surface-900);
-  --color-surface-800: var(--surface-800);
-  --color-surface-700: var(--surface-700);
-  --color-surface-canvas: var(--surface-canvas);
-  --color-surface-card: var(--surface-card);
-  --color-accent-burgundy: var(--accent-burgundy);
-  --color-accent-gold: var(--accent-gold);
-  --color-border-strong: var(--border-strong);
-  --color-border-soft: var(--border-soft);
-
-  /* Box Office named surfaces (utilities: bg-/text-/border-<name>) */
-  --color-canvas: #f8f9fa;
-  --color-canvas-soft: #f1f5f9;
-  --color-surface-strong: #e2e8f0;
-  --color-surface-dark: #0f172a;
-  --color-surface-dark-elevated: #1e293b;
-  --color-ink: #0f172a;
-  --color-body: #64748b;
-  --color-on-dark: #ffffff;
-  --color-on-dark-soft: #e2e8f0;
-  --color-text-link: #d32f2f;
-  --color-text-link-secondary: #f9a825;
-  --color-hairline: #e2e8f0;
-  --color-hairline-soft: #f1f5f9;
-  --color-hairline-strong: #cbd5e1;
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 4px); /* ~8px CTA */
-  --radius-sm: calc(var(--radius) - 6px);
-  --font-sans: var(--brand-font);
-  --font-display: var(--brand-font-display);
-  --font-mono: var(--brand-font-mono);
-}
+@import './shared/theme/tokens.css';
 
 @keyframes svyne-fade-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -179,12 +40,6 @@
   }
 }
 
-@keyframes svyne-orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes svyne-shimmer {
   100% {
     transform: translateX(100%);
@@ -204,33 +59,28 @@
 body {
   margin: 0;
   background-color: var(--background);
-  background-image: var(--gradient-bg);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
   color: var(--foreground);
-  font-family: var(--brand-font);
+  font-family: var(--font-body-stack);
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--brand-font-display);
-  letter-spacing: -0.01em;
+  font-family: var(--font-display-stack);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
 }
 
 .svyne-page {
-  animation: svyne-fade-up 0.4s ease-out both;
+  animation: svyne-fade-up var(--t-scene) var(--ease-out) both;
 }
 
-/* Signature: ticket-stub perforation — a marigold dashed tear line with two
-   notches bitten out at the ends. Place between the stub and the event body.
-   The notch fill defaults to the page canvas; override --svyne-notch on a
-   non-canvas surface (e.g. inside a white card use --svyne-notch:#ffffff). */
 .svyne-ticket-edge {
   --svyne-notch: var(--background);
   position: relative;
   height: 0;
-  border-top: 2px dashed var(--marigold);
+  border-top: 2px dashed var(--voltage-accent);
 }
 .svyne-ticket-edge::before,
 .svyne-ticket-edge::after {
@@ -254,41 +104,39 @@ h3 {
   animation: svyne-pulse 1.8s ease-in-out infinite;
 }
 
-@keyframes svyne-float-3d {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(0.2deg); }
-}
-
 .svyne-float-card {
-  animation: svyne-float-3d 6s ease-in-out infinite;
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition:
+    transform var(--t-move) var(--ease-out),
+    box-shadow var(--t-move) var(--ease-out);
 }
 
 .svyne-spring-btn {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+  transition:
+    transform var(--t-quick) var(--ease-spring),
+    box-shadow var(--t-quick) var(--ease-out),
+    background-color var(--t-quick) ease;
 }
 .svyne-spring-btn:active {
-  transform: scale(0.94);
-  transition: transform 0.1s ease;
+  transform: scale(0.97);
+  transition: transform var(--t-instant) ease;
 }
 
 .svyne-spring-input {
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
-}
-.svyne-spring-input:focus-within {
-  transform: translateY(-2px) scale(1.02);
+  transition:
+    border-color var(--t-quick) ease,
+    box-shadow var(--t-quick) var(--ease-out);
 }
 
 .svyne-overlay[data-state='open'] {
-  animation: svyne-fade 0.2s ease-out;
+  animation: svyne-fade var(--t-quick) ease-out;
 }
 
 .svyne-sheet-left[data-state='open'] {
-  animation: svyne-slide-left 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: svyne-slide-left var(--t-move) var(--ease-in-out);
 }
 
 .svyne-sheet-right[data-state='open'] {
-  animation: svyne-slide-right 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+  animation: svyne-slide-right var(--t-move) var(--ease-in-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -298,5 +146,10 @@ h3 {
   .svyne-sheet-right[data-state='open'],
   .svyne-urgent {
     animation: none;
+  }
+  .svyne-float-card,
+  .svyne-spring-btn,
+  .svyne-spring-input {
+    transition: none;
   }
 }

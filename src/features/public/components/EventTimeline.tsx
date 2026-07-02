@@ -32,7 +32,7 @@ const TYPE_STYLES: Record<string, { ring: string; dotBg: string; text: string; b
   },
   'DJ Set': {
     ring: 'ring-success/20',
-    dotBg: 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]',
+    dotBg: 'bg-success shadow-[0_0_10px_rgba(16,185,129,0.5)]',
     text: 'text-success',
     bg: 'bg-success/5',
     icon: Radio,

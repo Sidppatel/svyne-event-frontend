@@ -119,7 +119,7 @@ export function AdminVenuesPage() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
+          {notice ? <p className="text-sm text-warning">{notice}</p> : null}
           <div className="space-y-1">
             <Label>Name</Label>
             <Input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} />
@@ -240,7 +240,7 @@ function VenueRow({ venue, onChanged }: { venue: Venue; onChanged: () => void })
             </Button>
           </div>
         </div>
-        {notice ? <p className="text-sm text-amber-600">{notice}</p> : null}
+        {notice ? <p className="text-sm text-warning">{notice}</p> : null}
         <div className={cn(
           "grid transition-all duration-300 ease-in-out overflow-hidden border-t border-border/20 pt-1.5",
           editing ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"
@@ -299,7 +299,7 @@ function VenueGallery({ venuesId }: { venuesId: string }) {
     <div className="space-y-2 border-t pt-3">
       <Label>Images</Label>
       <Input type="file" accept="image/*" disabled={busy} onChange={(e) => upload(e.target.files?.[0])} />
-      {error ? <p className="text-sm text-amber-600">{error}</p> : null}
+      {error ? <p className="text-sm text-warning">{error}</p> : null}
       <div className="flex flex-wrap gap-3">
         {(data ?? []).map((image) => (
           <div key={image.imagesId} className="w-28 space-y-1">

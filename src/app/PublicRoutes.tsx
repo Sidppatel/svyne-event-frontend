@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { NotFoundPage } from '@/shared/components/StatusPages';
 import { PublicLayout } from '@/shared/components/layouts/PublicLayout';
@@ -9,8 +9,7 @@ import { currentTenantSlug } from '@/shared/subdomain';
 import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
 import { PerformerProfilePage } from '@/features/public/pages/PerformerProfilePage';
 import { SponsorProfilePage } from '@/features/public/pages/SponsorProfilePage';
-import { MyBookingsPage } from '@/features/public/pages/MyBookingsPage';
-import { MyTicketsPage } from '@/features/public/pages/MyTicketsPage';
+import { WalletPage } from '@/features/public/pages/WalletPage';
 import { ProfilePage } from '@/features/public/pages/ProfilePage';
 import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
 import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
@@ -28,21 +27,15 @@ export default function PublicRoutes() {
         <Route path="sponsors/:slug" element={<SponsorProfilePage />} />
         <Route path="claim" element={<ClaimTicketPage />} />
         <Route
-          path="my-bookings"
+          path="tickets"
           element={
             <ProtectedRoute allow={authenticated}>
-              <MyBookingsPage />
+              <WalletPage />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="my-tickets"
-          element={
-            <ProtectedRoute allow={authenticated}>
-              <MyTicketsPage />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="my-bookings" element={<Navigate to="/tickets" replace />} />
+        <Route path="my-tickets" element={<Navigate to="/tickets" replace />} />
         <Route
           path="bookings/:bookingsId"
           element={

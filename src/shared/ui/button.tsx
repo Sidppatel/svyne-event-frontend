@@ -1,16 +1,15 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/shared/lib/cn';
-import { playTap } from '@/shared/lib/haptic';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 active:scale-[0.94] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:size-4 [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[transform,background-color,border-color,box-shadow] duration-[180ms] ease-[var(--ease-out)] active:scale-[0.97] active:duration-[90ms] disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background [&_svg]:size-4 [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md hover:shadow-primary/25',
-        outline: 'border border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
-        ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
+        default: 'bg-primary text-primary-foreground shadow-[var(--shadow-e1)] hover:bg-brand-hover',
+        outline: 'border border-hairline-strong bg-surface text-foreground hover:bg-surface-sunken',
+        ghost: 'text-foreground hover:bg-surface-sunken',
         destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
       },
       size: {
@@ -32,19 +31,8 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, onClick, ...props }, ref) => {
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      playTap('click');
-      if (onClick) onClick(e);
-    };
-    return (
-      <button
-        ref={ref}
-        className={cn(buttonVariants({ variant, size }), className)}
-        onClick={handleClick}
-        {...props}
-      />
-    );
+  ({ className, variant, size, ...props }, ref) => {
+    return <button ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />;
   },
 );
 Button.displayName = 'Button';
