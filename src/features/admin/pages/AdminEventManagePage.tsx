@@ -51,8 +51,13 @@ import {
   TicketCheck,
   Undo2,
   UserCog,
+  MapPin,
+  Users,
+  ChevronLeft,
+  ChevronRight,
   type LucideIcon,
 } from 'lucide-react';
+
 
 const STATUS_STYLES: Record<string, string> = {
   Published: 'bg-success/15 text-success ring-success/30',
@@ -74,16 +79,7 @@ function StatusPill({ status }: { status: string }) {
   );
 }
 
-function SectionHeader({ icon: Icon, title }: { icon: LucideIcon; title: string }) {
-  return (
-    <CardHeader className="flex flex-row items-center gap-2.5">
-      <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary [&_svg]:size-4">
-        <Icon />
-      </span>
-      <CardTitle>{title}</CardTitle>
-    </CardHeader>
-  );
-}
+
 
 export function AdminEventManagePage() {
   const { eventsId = '' } = useParams();
@@ -161,286 +157,403 @@ export function AdminEventManagePage() {
     }
   }
 
+  const STEPS = [
+    { id: 'basics', label: 'Basics', icon: MapPin },
+    ...(event.data?.eventType !== 'Open' ? [{ id: 'layout', label: 'Floor Plan', icon: LayoutGrid }] : []),
+    { id: 'pricing', label: 'Pricing & Tickets', icon: Ticket },
+    { id: 'timeline', label: 'Timeline & Media', icon: CalendarCheck2 },
+    { id: 'staff', label: 'Staff & Roster', icon: Users },
+    { id: 'publish', label: 'Review & Publish', icon: Rocket },
+  ];
+
+  const [currentStep, setCurrentStep] = useState(STEPS[0].id);
+
+  function goNext() {
+    const idx = STEPS.findIndex(s => s.id === currentStep);
+    if (idx !== -1 && idx < STEPS.length - 1) setCurrentStep(STEPS[idx + 1].id);
+  }
+
+  function goPrev() {
+    const idx = STEPS.findIndex(s => s.id === currentStep);
+    if (idx > 0) setCurrentStep(STEPS[idx - 1].id);
+  }
+
   return (
-    <div className="space-y-6">
-      {event.loading ? <p className="text-muted-foreground">Loading…</p> : null}
-      {event.error ? <p className="text-destructive">{event.error}</p> : null}
-      {notice ? <p className="text-sm text-amber-foreground">{notice}</p> : null}
+    <div className="space-y-8 max-w-5xl mx-auto py-2">
+      {event.loading ? (
+        <div className="flex items-center gap-2 justify-center py-8">
+          <div className="size-4 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+          <p className="text-xs text-muted-foreground font-semibold">Loading event data…</p>
+        </div>
+      ) : null}
+      {event.error ? <p className="text-xs font-semibold text-destructive bg-destructive/10 border border-destructive/20 rounded-xl p-3 leading-normal animate-shake">{event.error}</p> : null}
+      {notice ? <p className="text-xs font-semibold text-warning bg-warning/10 border border-warning/20 rounded-xl p-3 leading-normal">{notice}</p> : null}
 
       {event.data ? (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <div className="bg-gradient-to-br from-primary/10 via-card to-amber/5 p-5 md:p-6">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+          <div className="bg-muted/30 p-5 md:p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
                 <StatusPill status={event.data.status} />
                 <h1 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
                   {event.data.title}
                 </h1>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   {event.data.eventType || 'Open'} event · {event.data.category || 'Uncategorised'}
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">
                 <Button
                   size="sm"
+                  className={cn("svyne-spring-btn h-9 px-4 rounded-lg font-bold text-xs", event.data.status === 'Published' ? "hidden" : "")}
                   disabled={!canPublish || event.data.status === 'Published'}
                   title={event.data.status === 'Published' ? "Event is already published" : canPublish ? "Publish this event" : "Cannot publish until you add at least one ticket type or place a table on the floor plan"}
                   onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
                 >
-                  <Rocket /> Publish
+                  <Rocket className="mr-1 h-4 w-4" /> Publish
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => guard(() => changeEventStatus(eventsId, 'Draft'), event.reload)}>
-                  <Undo2 /> Set draft
-                </Button>
+                {event.data.status === 'Published' && (
+                  <Button size="sm" variant="outline" className="h-9 px-4 rounded-lg font-bold text-xs border-border bg-background" onClick={() => guard(() => changeEventStatus(eventsId, 'Draft'), event.reload)}>
+                    <Undo2 className="mr-1 h-4 w-4" /> Revert to draft
+                  </Button>
+                )}
               </div>
             </div>
           </div>
         </div>
       ) : null}
 
-      {stats.data ? (
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <Stat icon={CalendarCheck2} label="Bookings" value={stats.data.totalBookings} />
-          <Stat icon={Ticket} label="Tickets sold" value={stats.data.ticketsSold} />
-          <Stat icon={TicketCheck} label="Checked in" value={stats.data.checkedIn} />
-          <Stat icon={DollarSign} label="Revenue" value={centsToUSD(stats.data.revenueCents)} accent />
-        </div>
-      ) : null}
-
-      {event.data ? <EditSection event={event.data} timeZone={timeZone} onSaved={event.reload} /> : null}
-
-      {event.data ? (
-        <EventCatalogLinks
-          eventsId={eventsId}
-          performersJson={event.data.performersJson}
-          sponsorsJson={event.data.sponsorsJson}
-          onChanged={event.reload}
-        />
-      ) : null}
-
-      {event.data ? <EventExtraInfoEditor event={event.data} onSaved={event.reload} /> : null}
-
-      <EventMediaManager eventsId={eventsId} />
-
-      {event.data ? (
-        <ScheduleTimeline
-          eventsId={eventsId}
-          eventStart={event.data.startDate}
-          eventEnd={event.data.endDate}
-          timeZone={timeZone}
-        />
-      ) : null}
-
-      <PricingManager
-        key={`pricing-${pricingKey}`}
-        eventsId={eventsId}
-        eventType={event.data?.eventType || 'Open'}
-        timeZone={timeZone}
-      />
-      {event.data && event.data.eventType !== 'Table' ? (
-        <TicketTypesManager eventsId={eventsId} />
-      ) : null}
-
-      {event.data && event.data.eventType !== 'Open' ? (
-        <Card>
-          <SectionHeader icon={LayoutGrid} title="Tables" />
-          <CardContent className="space-y-3">
-            {/* Admin reuses a catalog table type and overrides values; cannot create new types. */}
-            <div className="flex flex-wrap items-end gap-3">
-              <div className="space-y-1">
-                <Label>Table Type</Label>
-                <Select
-                  className="w-48"
-                  value={tableTemplateId}
-                  onChange={(e) => selectTemplate(e.target.value)}
-                >
-                  <option value="">— select —</option>
-                  {templateList.map((t) => (
-                    <option key={t.tableTemplatesId} value={t.tableTemplatesId}>
-                      {t.name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="space-y-1">
-                <Label>Table Type Name</Label>
-                <Input className="w-32" value={tableLabel} disabled readOnly />
-              </div>
-              <div className="space-y-1">
-                <Label>Color</Label>
-                <span
-                  className="flex h-9 w-14 items-center justify-center rounded-md border border-input"
-                  title="Inherited from the catalog table type"
-                >
-                  <span className="size-5 rounded-sm" style={{ backgroundColor: tableColor || 'transparent' }} />
-                </span>
-              </div>
-              <div className="space-y-1">
-                <Label>Capacity</Label>
-                <Input
-                  type="number"
-                  disabled={!tableTemplateId}
-                  value={tableCapacity}
-                  onChange={(e) => setTableCapacity(Number(e.target.value))}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label>Price (USD)</Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  disabled={!tableTemplateId}
-                  value={centsToUsdInput(tablePriceCents)}
-                  onChange={(e) => setTablePriceCents(usdToCents(e.target.value))}
-                />
-              </div>
-              <div className="space-y-1">
-                <Label>Width (px)</Label>
-                <Input className="w-20" type="number" value={tableWidth} disabled readOnly />
-              </div>
-              <div className="space-y-1">
-                <Label>Height (px)</Label>
-                <Input className="w-20" type="number" value={tableHeight} disabled readOnly />
-              </div>
-              <label className="flex items-center gap-2 self-center text-sm">
-                <input type="checkbox" checked={tableIsAllInclusive} disabled readOnly />
-                All-inclusive (flat table price)
-              </label>
-              <Button
-                size="sm"
-                disabled={!tableTemplateId}
-                onClick={() =>
-                  guard(
-                    () =>
-                      createEventTable({
-                        eventsId,
-                        label: tableLabel,
-                        capacity: tableCapacity,
-                        // Empty = inherit the catalog template's default shape.
-                        shape: '',
-                        color: tableColor,
-                        priceCents: tablePriceCents,
-                        feeFormulasId: '',
-                        isAllInclusive: tableIsAllInclusive,
-                        perAttendeeCents: tablePerAttendeeCents,
-                        tableTemplatesId: tableTemplateId,
-                        width: tableWidth,
-                        height: tableHeight,
-                      }).then(() => {
-                        setTableTemplateId('');
-                        setTableLabel('');
-                        setTableColor('');
-                        setFloorKey((k) => k + 1);
-                        setPricingKey((k) => k + 1);
-                      }),
-                    tableTypes.reload,
-                  )
-                }
-              >
-                Add table
-              </Button>
-            </div>
-            <div className="space-y-1">
-              {typeList.map((type) => (
-                <div key={type.eventTablesId} className="flex items-center justify-between border-b py-1 text-sm">
-                  <span className="flex items-center gap-2">
-                    <span className="inline-block size-3 rounded-sm" style={{ backgroundColor: type.color }} />
-                    {type.label} · {centsToUSD(type.priceCents)}
-                    {type.platformFeeCents > 0 ? (
-                      <span className="text-xs text-muted-foreground">
-                        + fee {centsToUSD(type.platformFeeCents)} ={' '}
-                        {centsToUSD(addCents(type.priceCents, type.platformFeeCents))}
-                      </span>
-                    ) : null}
-                    {lockedTypeIds.has(type.eventTablesId) ? (
-                      <span className="text-xs text-muted-foreground">🔒 sold/held</span>
-                    ) : null}
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    disabled={lockedTypeIds.has(type.eventTablesId)}
-                    title={lockedTypeIds.has(type.eventTablesId) ? 'Has sold or held tables — can’t be removed' : undefined}
-                    onClick={() =>
-                      guard(
-                        () =>
-                          deleteEventTable(type.eventTablesId).then(() => {
-                            setFloorKey((k) => k + 1);
-                            setPricingKey((k) => k + 1);
-                          }),
-                        tableTypes.reload,
-                      )
-                    }
-                  >
-                    Remove
-                  </Button>
+      {event.data && (
+        <div className="flex items-center justify-between overflow-x-auto pb-2 border-b border-border/20 sticky top-0 bg-background z-10 py-2">
+          {STEPS.map((step, index) => {
+            const isActive = step.id === currentStep;
+            return (
+              <div key={step.id} className="flex items-center cursor-pointer" onClick={() => setCurrentStep(step.id)}>
+                <div className={cn(
+                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-all duration-200",
+                  isActive ? "bg-primary/10 text-primary scale-105" : "text-muted-foreground opacity-60 hover:opacity-100 hover:bg-muted/50"
+                )}>
+                  <step.icon className="h-4.5 w-4.5" />
+                  <span>{step.label}</span>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
+                {index < STEPS.length - 1 && (
+                  <div className="w-8 h-px bg-border/40 mx-2" />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
-      {event.data && event.data.eventType !== 'Open' ? (
-        <FloorPlanPanel
-          key={`floor-${floorKey}`}
-          eventsId={eventsId}
-          onTypesChanged={() => setPricingKey((k) => k + 1)}
-          onLayoutSaved={() => {
-            tableTypes.reload();
-            stats.reload();
-          }}
-        />
-      ) : null}
+      {currentStep === 'basics' && event.data && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <EditSection event={event.data} timeZone={timeZone} onSaved={event.reload} />
+          <EventExtraInfoEditor event={event.data} onSaved={event.reload} />
+        </div>
+      )}
 
-      <Card>
-        <SectionHeader icon={UserCog} title="Staff" />
-        <CardContent className="space-y-3">
-          <div className="flex flex-wrap items-end gap-3">
-            <div className="space-y-1">
-              <Label>Staff Email</Label>
-              <Input
-                type="email"
-                placeholder="staff@example.com"
-                value={assignEmail}
-                onChange={(e) => setAssignEmail(e.target.value)}
-              />
-            </div>
-            <Button
-              size="sm"
-              onClick={() => {
-                if (!assignEmail.trim()) return;
-                guard(async () => {
-                  const res = await assignStaffByEmail(assignEmail.trim(), eventsId);
-                  if (res.userExisted) {
-                    toast.success('Staff member assigned successfully.');
-                  } else {
-                    toast.success(res.message);
+      {currentStep === 'layout' && event.data && event.data.eventType !== 'Open' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
+            <CardHeader className="border-b border-border/20 px-6 py-4">
+              <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+                <LayoutGrid className="h-4.5 w-4.5 text-primary" /> Event Tables
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              {/* Admin reuses a catalog table type and overrides values; cannot create new types. */}
+              <div className="flex flex-wrap items-end gap-3 p-4 border border-border/50 bg-muted/20 rounded-xl">
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Table Type</Label>
+                  <Select
+                    className="h-9 w-48 text-xs bg-background"
+                    value={tableTemplateId}
+                    onChange={(e) => selectTemplate(e.target.value)}
+                  >
+                    <option value="">— select —</option>
+                    {templateList.map((t) => (
+                      <option key={t.tableTemplatesId} value={t.tableTemplatesId}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Table Name</Label>
+                  <Input className="h-9 w-32 text-xs bg-background" value={tableLabel} disabled readOnly />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Color</Label>
+                  <span
+                    className="flex h-9 w-14 items-center justify-center rounded-md border border-input bg-background"
+                    title="Inherited from the catalog table type"
+                  >
+                    <span className="size-5 rounded-sm" style={{ backgroundColor: tableColor || 'transparent' }} />
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Capacity</Label>
+                  <Input
+                    type="number"
+                    className="h-9 w-20 text-xs bg-background"
+                    disabled={!tableTemplateId}
+                    value={tableCapacity}
+                    onChange={(e) => setTableCapacity(Number(e.target.value))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Price (USD)</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    className="h-9 w-28 text-xs bg-background"
+                    disabled={!tableTemplateId}
+                    value={centsToUsdInput(tablePriceCents)}
+                    onChange={(e) => setTablePriceCents(usdToCents(e.target.value))}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Width (px)</Label>
+                  <Input className="h-9 w-20 text-xs bg-background" type="number" value={tableWidth} disabled readOnly />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px]">Height (px)</Label>
+                  <Input className="h-9 w-20 text-xs bg-background" type="number" value={tableHeight} disabled readOnly />
+                </div>
+                <div className="flex items-center h-9 px-2 text-xs font-semibold text-muted-foreground">
+                  <input type="checkbox" className="mr-2" checked={tableIsAllInclusive} disabled readOnly />
+                  All-inclusive
+                </div>
+                <Button
+                  size="sm"
+                  disabled={!tableTemplateId}
+                  className="svyne-spring-btn h-9 px-4 rounded-lg font-bold text-xs"
+                  onClick={() =>
+                    guard(
+                      () =>
+                        createEventTable({
+                          eventsId,
+                          label: tableLabel,
+                          capacity: tableCapacity,
+                          // Empty = inherit the catalog template's default shape.
+                          shape: '',
+                          color: tableColor,
+                          priceCents: tablePriceCents,
+                          feeFormulasId: '',
+                          isAllInclusive: tableIsAllInclusive,
+                          perAttendeeCents: tablePerAttendeeCents,
+                          tableTemplatesId: tableTemplateId,
+                          width: tableWidth,
+                          height: tableHeight,
+                        }).then(() => {
+                          setTableTemplateId('');
+                          setTableLabel('');
+                          setTableColor('');
+                          setFloorKey((k) => k + 1);
+                          setPricingKey((k) => k + 1);
+                        }),
+                      tableTypes.reload,
+                    )
                   }
-                  setAssignEmail('');
-                }, staff.reload);
-              }}
+                >
+                  Add table
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {typeList.map((type) => (
+                  <div key={type.eventTablesId} className="flex items-center justify-between border border-border/50 bg-card rounded-lg px-4 py-3 shadow-sm">
+                    <span className="flex items-center gap-3">
+                      <span className="inline-block size-4 rounded shadow-sm border border-black/10" style={{ backgroundColor: type.color }} />
+                      <span className="font-bold text-sm">{type.label}</span>
+                      <span className="text-xs font-semibold text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full">{centsToUSD(type.priceCents)}</span>
+                      {type.platformFeeCents > 0 ? (
+                        <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                          + fee {centsToUSD(type.platformFeeCents)} ={' '}
+                          <span className="text-foreground">{centsToUSD(addCents(type.priceCents, type.platformFeeCents))}</span>
+                        </span>
+                      ) : null}
+                      {lockedTypeIds.has(type.eventTablesId) ? (
+                        <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full flex items-center gap-1">🔒 In use</span>
+                      ) : null}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 text-xs font-semibold text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      disabled={lockedTypeIds.has(type.eventTablesId)}
+                      title={lockedTypeIds.has(type.eventTablesId) ? 'Has sold or held tables — can’t be removed' : undefined}
+                      onClick={() =>
+                        guard(
+                          () =>
+                            deleteEventTable(type.eventTablesId).then(() => {
+                              setFloorKey((k) => k + 1);
+                              setPricingKey((k) => k + 1);
+                            }),
+                          tableTypes.reload,
+                        )
+                      }
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <FloorPlanPanel
+            key={`floor-${floorKey}`}
+            eventsId={eventsId}
+            onTypesChanged={() => setPricingKey((k) => k + 1)}
+            onLayoutSaved={() => {
+              tableTypes.reload();
+              stats.reload();
+            }}
+          />
+        </div>
+      )}
+
+      {currentStep === 'pricing' && event.data && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <PricingManager
+            key={`pricing-${pricingKey}`}
+            eventsId={eventsId}
+            eventType={event.data.eventType || 'Open'}
+            timeZone={timeZone}
+          />
+          {event.data.eventType !== 'Table' ? (
+            <TicketTypesManager eventsId={eventsId} />
+          ) : null}
+        </div>
+      )}
+
+
+
+      {currentStep === 'timeline' && event.data && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <EventMediaManager eventsId={eventsId} />
+          
+          <EventCatalogLinks
+            eventsId={eventsId}
+            performersJson={event.data.performersJson}
+            sponsorsJson={event.data.sponsorsJson}
+            onChanged={event.reload}
+          />
+          
+          <ScheduleTimeline
+            eventsId={eventsId}
+            eventStart={event.data.startDate}
+            eventEnd={event.data.endDate}
+            timeZone={timeZone}
+          />
+        </div>
+      )}
+
+      {currentStep === 'staff' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
+            <CardHeader className="border-b border-border/20 px-6 py-4">
+              <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+                <UserCog className="h-4.5 w-4.5 text-primary" /> Staff & Assignments
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div className="flex flex-col sm:flex-row sm:items-end gap-3 p-4 border border-border/50 bg-muted/20 rounded-xl">
+                <div className="space-y-1.5 flex-1">
+                  <Label className="text-[10px]">Staff Email</Label>
+                  <Input
+                    type="email"
+                    placeholder="staff@example.com"
+                    value={assignEmail}
+                    onChange={(e) => setAssignEmail(e.target.value)}
+                    className="h-10 bg-background text-sm"
+                  />
+                </div>
+                <Button
+                  className="svyne-spring-btn h-10 px-6 rounded-lg font-bold text-xs"
+                  onClick={() => {
+                    if (!assignEmail.trim()) return;
+                    guard(async () => {
+                      const res = await assignStaffByEmail(assignEmail.trim(), eventsId);
+                      if (res.userExisted) {
+                        toast.success('Staff member assigned successfully.');
+                      } else {
+                        toast.success(res.message);
+                      }
+                      setAssignEmail('');
+                    }, staff.reload);
+                  }}
+                >
+                  Assign staff
+                </Button>
+              </div>
+              <div className="space-y-2">
+                {(staff.data ?? []).map((member) => (
+                  <div key={member.usersId} className="flex items-center justify-between border border-border/50 bg-card rounded-lg px-4 py-3 shadow-sm">
+                    <span className="font-semibold text-sm">
+                      {member.firstName || member.lastName 
+                        ? `${member.firstName} ${member.lastName}`.trim() 
+                        : 'Invited User'} 
+                      <span className="text-muted-foreground ml-2 font-normal">{member.email}</span>
+                    </span>
+                    <Button size="sm" variant="ghost" className="h-8 text-xs font-semibold text-destructive hover:bg-destructive/10" onClick={() => guard(() => unassignStaff(member.usersId, eventsId), staff.reload)}>
+                      Unassign
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {currentStep === 'publish' && (
+        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-muted/40 border border-border rounded-2xl p-8 text-center space-y-4">
+            <h2 className="font-display text-2xl font-bold">Review &amp; Publish</h2>
+            <p className="text-sm text-muted-foreground max-w-md mx-auto">
+              Once everything is configured, you can publish your event to make it visible to customers and start accepting bookings.
+            </p>
+            <Button
+              size="lg"
+              className={cn("svyne-spring-btn h-12 px-8 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md shadow-primary/20 mt-4", event.data?.status === 'Published' && "opacity-50 cursor-not-allowed")}
+              disabled={!canPublish || event.data?.status === 'Published'}
+              onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
             >
-              Assign staff
+              {event.data?.status === 'Published' ? "Already Published" : "Publish Event Now"}
             </Button>
           </div>
-          <div className="space-y-1">
-            {(staff.data ?? []).map((member) => (
-              <div key={member.usersId} className="flex items-center justify-between border-b py-1 text-sm">
-                <span>
-                  {member.firstName || member.lastName 
-                    ? `${member.firstName} ${member.lastName}`.trim() 
-                    : 'Invited User'} · {member.email}
-                </span>
-                <Button size="sm" variant="ghost" onClick={() => guard(() => unassignStaff(member.usersId, eventsId), staff.reload)}>
-                  Unassign
-                </Button>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+
+          {stats.data ? (
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              <Stat icon={CalendarCheck2} label="Bookings" value={stats.data.totalBookings} />
+              <Stat icon={Ticket} label="Tickets sold" value={stats.data.ticketsSold} />
+              <Stat icon={TicketCheck} label="Checked in" value={stats.data.checkedIn} />
+              <Stat icon={DollarSign} label="Revenue" value={centsToUSD(stats.data.revenueCents)} accent />
+            </div>
+          ) : null}
+        </div>
+      )}
+
+      {/* Stepper Footer Navigation */}
+      {event.data && (
+        <div className="flex items-center justify-between border-t border-border/20 pt-6 mt-12 pb-8">
+          <Button
+            variant="outline"
+            className={cn("h-11 px-6 rounded-xl font-bold text-xs border-border bg-card", currentStep === STEPS[0].id ? "invisible" : "")}
+            onClick={goPrev}
+          >
+            <ChevronLeft className="mr-1 h-4 w-4" /> Previous Step
+          </Button>
+          <Button
+            className={cn("svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20", currentStep === STEPS[STEPS.length - 1].id ? "invisible" : "")}
+            onClick={goNext}
+          >
+            Next Step <ChevronRight className="ml-1 h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -504,32 +617,42 @@ function EditSection({
   }
 
   return (
-    <Card>
-      <SectionHeader icon={FileEdit} title="Edit details" />
-      <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <div className="space-y-1">
-          <Label>Title</Label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+    <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
+      <CardHeader className="border-b border-border/20 px-6 py-4">
+        <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+          <FileEdit className="h-4.5 w-4.5 text-primary" /> Edit Details
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 p-6">
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Title</Label>
+          <div className="svyne-spring-input">
+            <Input value={title} onChange={(e) => setTitle(e.target.value)} className="h-10 bg-background border-border text-sm" />
+          </div>
         </div>
-        <div className="space-y-1">
-          <Label>Category</Label>
-          <Input value={category} onChange={(e) => setCategory(e.target.value)} />
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Category</Label>
+          <div className="svyne-spring-input">
+            <Input value={category} onChange={(e) => setCategory(e.target.value)} className="h-10 bg-background border-border text-sm" />
+          </div>
         </div>
-        <div className="space-y-1">
-          <Label>Event capacity</Label>
-          <Input type="number" value={event.totalCapacity} readOnly disabled />
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Event capacity</Label>
+          <div className="svyne-spring-input">
+            <Input type="number" value={event.totalCapacity} readOnly disabled className="h-10 bg-background border-border text-sm" />
+          </div>
         </div>
-        <div className="space-y-1">
-          <Label>Event type</Label>
-          <Select value={eventType} onChange={(e) => setEventType(e.target.value)}>
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Event type</Label>
+          <Select value={eventType} onChange={(e) => setEventType(e.target.value)} className="h-10 bg-background border-border text-sm">
             <option value="Open">Open seating (ticket tiers)</option>
             <option value="Table">Table based (floor plan)</option>
             <option value="Both">Both (tiers + tables)</option>
           </Select>
         </div>
-        <div className="space-y-1">
-          <Label>Venue</Label>
-          <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)}>
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Venue</Label>
+          <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)} className="h-10 bg-background border-border text-sm">
             <option value="">— select venue —</option>
             {(venues.data ?? [])
               .filter((v) => v.isActive || v.venuesId === venuesId)
@@ -540,41 +663,42 @@ function EditSection({
               ))}
           </Select>
         </div>
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex items-baseline justify-between">
-            <Label>Event starts</Label>
-            <span className="text-xs text-muted-foreground">Times in {zoneAbbrev(timeZone)}</span>
+            <Label className="text-[10px]">Event starts</Label>
+            <span className="text-[10px] text-muted-foreground uppercase">Times in {zoneAbbrev(timeZone)}</span>
           </div>
           <DateTimePicker value={start} onChange={setStart} timeZone={timeZone} />
         </div>
-        <div className="space-y-1">
-          <Label>Event ends</Label>
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Event ends</Label>
           <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} />
         </div>
-        <div className="space-y-1 md:col-span-2">
-          <Label>Description</Label>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        <div className="space-y-1.5 md:col-span-2">
+          <Label className="text-[10px]">Description</Label>
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} className="h-10 bg-background border-border text-sm" />
         </div>
-        <div className="md:col-span-2">
-          <label className="flex items-start gap-2 text-sm">
+        <div className="md:col-span-2 p-4 rounded-xl border border-border/50 bg-muted/20">
+          <label className="flex items-start gap-3 text-sm cursor-pointer">
             <input
               type="checkbox"
-              className="mt-0.5"
+              className="mt-1"
               checked={feesIncluded}
               onChange={(e) => toggleFeesIncluded(e.target.checked)}
             />
             <span>
-              <span className="font-medium">Show fees included in price</span>
-              <span className="block text-muted-foreground">
+              <span className="font-bold text-sm block">Show fees included in price</span>
+              <span className="block text-xs text-muted-foreground mt-1 leading-relaxed">
                 On = buyers see one all-in total. Off = price + fee shown separately. The developer fee amount is
                 unchanged either way.
               </span>
             </span>
           </label>
         </div>
-        {error ? <p className="text-sm text-destructive md:col-span-2">{error}</p> : null}
-        <div className="md:col-span-2">
-          <Button size="sm" onClick={save} disabled={saving}>
+        {error ? <p className="text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-lg p-2.5 leading-normal animate-shake md:col-span-2">{error}</p> : null}
+        
+        <div className="md:col-span-2 flex justify-end border-t border-border/10 pt-4 mt-2">
+          <Button onClick={save} disabled={saving} className="svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20">
             {saving ? 'Saving…' : 'Save details'}
           </Button>
         </div>
@@ -595,18 +719,20 @@ function Stat({
   accent?: boolean;
 }) {
   return (
-    <Card className={cn('relative overflow-hidden', accent && 'border-amber/40')}>
-      <CardContent className="space-y-1">
-        <span
-          className={cn(
-            'flex size-8 items-center justify-center rounded-md [&_svg]:size-4',
-            accent ? 'bg-amber/15 text-amber-foreground' : 'bg-primary/10 text-primary',
-          )}
-        >
-          <Icon />
-        </span>
-        <p className="pt-1 font-display text-2xl font-semibold tracking-tight">{value}</p>
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
+    <Card className={cn('relative overflow-hidden border border-border shadow-sm rounded-2xl', accent && 'border-amber/40 bg-amber/5')}>
+      <CardContent className="space-y-2 p-6">
+        <div className="flex items-center gap-3">
+          <span
+            className={cn(
+              'flex size-10 items-center justify-center rounded-xl [&_svg]:size-5 shadow-sm border border-black/5',
+              accent ? 'bg-amber/20 text-amber-600' : 'bg-primary/10 text-primary',
+            )}
+          >
+            <Icon />
+          </span>
+          <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">{label}</p>
+        </div>
+        <p className="font-display text-3xl font-extrabold tracking-tight">{value}</p>
       </CardContent>
     </Card>
   );

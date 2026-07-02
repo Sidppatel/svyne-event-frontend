@@ -6,7 +6,9 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Switch } from '@/shared/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { cn } from '@/shared/lib/cn';
+import { Upload } from 'lucide-react';
 import type { NamedDraft } from '@/features/admin/services/catalogService';
 
 interface MetaRow {
@@ -89,30 +91,44 @@ export function CatalogEntityManager<T extends CatalogEntity>(props: ManagerProp
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-xl font-semibold">{props.title}</h1>
+    <div className="space-y-8 max-w-5xl mx-auto py-2">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-extrabold tracking-tight font-display text-foreground md:text-3xl">{props.title}</h1>
+        <p className="text-xs text-muted-foreground">Manage {props.title.toLowerCase()} for the catalog.</p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Add {props.title.toLowerCase().replace(/s$/, '')}</CardTitle>
+      <div className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden transition-all duration-300">
+        <CardHeader className="border-b border-border/20 px-6 py-4">
+          <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+            Add {props.title.toLowerCase().replace(/s$/, '')}
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {notice ? <p className="text-sm text-warning">{notice}</p> : null}
-          <div className="space-y-1">
-            <Label>Name</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+        <CardContent className="p-6 space-y-6">
+          {notice ? <p className="text-xs font-semibold text-destructive bg-destructive/10 border border-destructive/20 rounded-xl p-3 leading-normal animate-shake">{notice}</p> : null}
+          
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <Label>Name</Label>
+              <div className="svyne-spring-input">
+                <Input value={name} onChange={(e) => setName(e.target.value)} className="h-10 bg-background border-border text-sm" />
+              </div>
+            </div>
+            
+            <ImageField entityType={props.entityType} imagesId={imagesId} onChange={setImagesId} />
+            <MetaEditor rows={meta} onChange={setMeta} suggestedKeys={props.suggestedKeys} />
           </div>
-          <ImageField entityType={props.entityType} imagesId={imagesId} onChange={setImagesId} />
-          <MetaEditor rows={meta} onChange={setMeta} suggestedKeys={props.suggestedKeys} />
-          <Button onClick={add} disabled={!name.trim()}>
-            Add
-          </Button>
+
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 border-t border-border/20 pt-4">
+            <Button onClick={add} disabled={!name.trim()} className={cn("svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20", !name.trim() && "opacity-40 cursor-not-allowed")}>
+              Add {props.title.toLowerCase().replace(/s$/, '')}
+            </Button>
+          </div>
         </CardContent>
-      </Card>
+      </div>
 
       {loading ? <p className="text-muted-foreground">Loading…</p> : null}
       {error ? <p className="text-destructive">{error}</p> : null}
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {(data ?? []).map((item) => (
           <EntityRow
             key={props.idOf(item)}
@@ -172,41 +188,61 @@ function EntityRow<T extends CatalogEntity>({
   }
 
   return (
-    <Card>
-      <CardContent className="space-y-3 py-4">
+    <div
+      className={cn(
+        "rounded-2xl border bg-card transition-all duration-300 overflow-hidden flex flex-col h-fit",
+        item.isActive 
+          ? "border-border shadow-sm" 
+          : "border-border-soft opacity-60 bg-muted/30 shadow-none scale-[0.99] translate-y-1"
+      )}
+    >
+      <CardContent className="p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             {item.primaryImagePath ? (
-              <img src={imageUrl(item.primaryImagePath)} alt="" className="h-10 w-10 rounded object-cover" />
-            ) : null}
-            <span className="font-medium">{item.name}</span>
+              <img src={imageUrl(item.primaryImagePath)} alt="" className="h-10 w-10 rounded-lg object-cover shadow-sm" />
+            ) : (
+              <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-muted-foreground text-[10px] font-bold uppercase">No Img</div>
+            )}
+            <div>
+              <span className="font-bold text-sm text-foreground font-display block">{item.name}</span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={item.isActive} onCheckedChange={(v) => persist(v)} label="Enabled" />
-            <Button size="sm" variant="ghost" onClick={() => setEditing((v) => !v)}>
+            <Button size="sm" variant="ghost" onClick={() => setEditing((v) => !v)} className="h-8 text-xs font-semibold hover:bg-muted/40">
               {editing ? 'Close' : 'Edit'}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => guard(onRemove)}>
+            <Button size="sm" variant="ghost" onClick={() => guard(onRemove)} className="h-8 text-xs font-semibold text-destructive hover:bg-destructive/10">
               Remove
             </Button>
           </div>
         </div>
-        {notice ? <p className="text-sm text-warning">{notice}</p> : null}
-        {editing ? (
-          <div className="space-y-4 border-t pt-3">
-            <div className="space-y-1">
-              <Label>Name</Label>
-              <Input value={name} onChange={(e) => setName(e.target.value)} />
+        
+        {notice ? <p className="text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-lg p-2.5 leading-normal animate-shake">{notice}</p> : null}
+        
+        <div className={cn(
+          "grid transition-all duration-300 ease-in-out overflow-hidden border-t border-border/20 pt-1.5",
+          editing ? "grid-rows-[1fr] opacity-100 mt-2" : "grid-rows-[0fr] opacity-0"
+        )}>
+          <div className="overflow-hidden space-y-4 pt-2.5">
+            <div className="space-y-1.5">
+              <Label className="text-[10px]">Name</Label>
+              <Input value={name} onChange={(e) => setName(e.target.value)} className="h-9 bg-background text-xs" />
             </div>
+            
             <ImageField entityType={entityType} imagesId={imagesId} onChange={setImagesId} />
             <MetaEditor rows={meta} onChange={setMeta} suggestedKeys={suggestedKeys} />
-            <Button size="sm" onClick={() => persist(item.isActive)}>
-              Save
-            </Button>
+            
+            <div className="flex items-center justify-end border-t border-border/10 pt-3">
+              <Button size="sm" onClick={() => persist(item.isActive)} className="svyne-spring-btn h-9 px-6 rounded-lg font-bold text-xs">
+                Save Settings
+              </Button>
+            </div>
           </div>
-        ) : null}
+        </div>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
@@ -239,13 +275,20 @@ function ImageField({
   }
 
   return (
-    <div className="space-y-1">
-      <Label>Image</Label>
+    <div className="space-y-1.5">
+      <Label className="text-[10px]">Image</Label>
       <div className="flex items-center gap-3">
-        {imagesId ? <img src={imageUrl(imagesId)} alt="" className="h-16 w-16 rounded object-cover" /> : null}
-        <Input type="file" accept="image/*" disabled={busy} onChange={(e) => upload(e.target.files?.[0])} />
+        {imagesId ? (
+          <img src={imageUrl(imagesId)} alt="" className="h-14 w-14 rounded-lg object-cover shadow-sm" />
+        ) : (
+          <div className="h-14 w-14 rounded-lg bg-muted flex flex-col items-center justify-center text-muted-foreground border border-border">
+            <Upload className="h-4 w-4 mb-1" />
+            <span className="text-[8px] font-bold uppercase">Upload</span>
+          </div>
+        )}
+        <Input type="file" accept="image/*" disabled={busy} onChange={(e) => upload(e.target.files?.[0])} className="text-xs h-9" />
       </div>
-      {error ? <p className="text-sm text-warning">{error}</p> : null}
+      {error ? <p className="text-[10px] text-destructive bg-destructive/10 p-1.5 rounded">{error}</p> : null}
     </div>
   );
 }
@@ -264,19 +307,24 @@ function MetaEditor({
   }
 
   return (
-    <div className="space-y-2">
-      <Label>Metadata, links &amp; social</Label>
+    <div className="space-y-2.5">
+      <Label className="text-[10px]">Metadata, links &amp; social</Label>
       {rows.map((row, index) => (
         <div key={index} className="flex gap-2">
           <Input
-            className="w-44"
+            className="w-32 h-9 text-xs bg-background"
             placeholder="key"
             list="catalog-meta-keys"
             value={row.key}
             onChange={(e) => update(index, { key: e.target.value })}
           />
-          <Input placeholder="value" value={row.value} onChange={(e) => update(index, { value: e.target.value })} />
-          <Button size="sm" variant="ghost" onClick={() => onChange(rows.filter((_, i) => i !== index))}>
+          <Input 
+            className="flex-1 h-9 text-xs bg-background"
+            placeholder="value" 
+            value={row.value} 
+            onChange={(e) => update(index, { value: e.target.value })} 
+          />
+          <Button size="icon" variant="ghost" className="h-9 w-9 text-muted-foreground hover:text-destructive" onClick={() => onChange(rows.filter((_, i) => i !== index))}>
             ✕
           </Button>
         </div>
@@ -286,8 +334,8 @@ function MetaEditor({
           <option key={key} value={key} />
         ))}
       </datalist>
-      <Button size="sm" variant="outline" onClick={() => onChange([...rows, { key: '', value: '' }])}>
-        Add field
+      <Button size="sm" variant="outline" className="h-8 text-xs w-full border-dashed" onClick={() => onChange([...rows, { key: '', value: '' }])}>
+        + Add field
       </Button>
     </div>
   );

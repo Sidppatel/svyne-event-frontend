@@ -12,8 +12,11 @@ import { Select } from '@/shared/ui/select';
 import { Textarea } from '@/shared/ui/textarea';
 import { Separator } from '@/shared/ui/separator';
 import { Field, FieldLabel, FieldGroup } from '@/shared/ui/field';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardContent } from '@/shared/ui/card';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
+import { cn } from '@/shared/lib/cn';
+import { CalendarCheck2, LayoutGrid, MapPin, Rocket, Ticket, Users } from 'lucide-react';
+
 
 export function AdminEventWizardPage() {
   const navigate = useNavigate();
@@ -30,6 +33,16 @@ export function AdminEventWizardPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const venueTz = tzForState(venues.find((v) => v.venuesId === venuesId)?.state);
+
+  const STEPS = [
+    { id: 'basics', label: 'Basics', icon: MapPin },
+    ...(eventType !== 'Open' ? [{ id: 'layout', label: 'Floor Plan', icon: LayoutGrid }] : []),
+    { id: 'pricing', label: 'Pricing & Tickets', icon: Ticket },
+    { id: 'timeline', label: 'Timeline & Media', icon: CalendarCheck2 },
+    { id: 'staff', label: 'Staff & Roster', icon: Users },
+    { id: 'publish', label: 'Review & Publish', icon: Rocket },
+  ];
+
 
   useEffect(() => {
     listVenues()
@@ -90,37 +103,58 @@ export function AdminEventWizardPage() {
   }
 
   return (
-    <div className="svyne-page mx-auto w-full max-w-2xl space-y-6">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold text-foreground">New event</h1>
-        <p className="text-sm text-muted-foreground">
-          Set up the basics now — tickets, tables and pricing come after you create the event.
-        </p>
-      </header>
+    <div className="space-y-8 max-w-4xl mx-auto py-2">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-extrabold tracking-tight font-display text-foreground md:text-3xl">New Event</h1>
+        <p className="text-xs text-muted-foreground">Follow the steps to configure a new event.</p>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Event details</CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* Stepper Header */}
+      <div className="flex items-center justify-between overflow-x-auto pb-2 border-b border-border/20">
+        {STEPS.map((step, index) => {
+          const isActive = index === 0;
+
+          return (
+            <div key={step.id} className="flex items-center">
+              <div className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-colors",
+                isActive ? "bg-primary/10 text-primary" : "text-muted-foreground opacity-60"
+              )}>
+                <step.icon className="h-4.5 w-4.5" />
+                <span>{step.label}</span>
+              </div>
+              {index < STEPS.length - 1 && (
+                <div className="w-8 h-px bg-border/40 mx-2" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
+        <CardContent className="p-8">
           <FieldGroup>
             <SectionLabel>Details</SectionLabel>
             <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
               <Field>
-                <FieldLabel htmlFor="title">Title</FieldLabel>
-                <Input
-                  id="title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Summer Gala 2026"
-                />
+                <FieldLabel htmlFor="title" className="text-[10px]">Title</FieldLabel>
+                <div className="svyne-spring-input">
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Summer Gala 2026"
+                    className="h-10 bg-background border-border text-sm"
+                  />
+                </div>
               </Field>
               <Field>
-                <FieldLabel htmlFor="category">Category</FieldLabel>
+                <FieldLabel htmlFor="category" className="text-[10px]">Category</FieldLabel>
                 <Select
                   id="category"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
+                  className="h-10 bg-background border-border text-sm"
                 >
                   {categories.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -130,11 +164,12 @@ export function AdminEventWizardPage() {
                 </Select>
               </Field>
               <Field className="md:col-span-2">
-                <FieldLabel htmlFor="eventType">Event type</FieldLabel>
+                <FieldLabel htmlFor="eventType" className="text-[10px]">Event type</FieldLabel>
                 <Select
                   id="eventType"
                   value={eventType}
                   onChange={(e) => setEventType(e.target.value)}
+                  className="h-10 bg-background border-border text-sm"
                 >
                   {eventTypes.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -148,13 +183,14 @@ export function AdminEventWizardPage() {
                 </Select>
               </Field>
               <Field className="md:col-span-2">
-                <FieldLabel htmlFor="description">Description</FieldLabel>
+                <FieldLabel htmlFor="description" className="text-[10px]">Description</FieldLabel>
                 <Textarea
                   id="description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Tell guests what to expect…"
                   rows={4}
+                  className="bg-background border-border text-sm"
                 />
               </Field>
             </div>
@@ -164,8 +200,8 @@ export function AdminEventWizardPage() {
             <SectionLabel>Venue &amp; schedule</SectionLabel>
             <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
               <Field className="md:col-span-2">
-                <FieldLabel htmlFor="venue">Venue</FieldLabel>
-                <Select id="venue" value={venuesId} onChange={(e) => setVenuesId(e.target.value)}>
+                <FieldLabel htmlFor="venue" className="text-[10px]">Venue</FieldLabel>
+                <Select id="venue" value={venuesId} onChange={(e) => setVenuesId(e.target.value)} className="h-10 bg-background border-border text-sm">
                   {venues.length === 0 ? (
                     <option value="">No venues — create one first</option>
                   ) : null}
@@ -177,34 +213,34 @@ export function AdminEventWizardPage() {
                 </Select>
               </Field>
               <Field>
-                <FieldLabel>Start</FieldLabel>
+                <FieldLabel className="text-[10px]">Start</FieldLabel>
                 <DateTimePicker value={start} onChange={setStart} timeZone={venueTz} />
               </Field>
               <Field>
-                <FieldLabel>End</FieldLabel>
+                <FieldLabel className="text-[10px]">End</FieldLabel>
                 <DateTimePicker value={end} onChange={setEnd} timeZone={venueTz} />
               </Field>
             </div>
 
             {error ? (
-              <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              <div className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-xs font-bold text-destructive animate-shake">
                 {error}
               </div>
             ) : null}
 
-            <Separator />
+            <Separator className="bg-border/20" />
 
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => navigate(-1)} disabled={submitting}>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button variant="ghost" onClick={() => navigate(-1)} disabled={submitting} className="h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs">
                 Cancel
               </Button>
-              <Button onClick={submit} disabled={submitting}>
-                {submitting ? 'Creating…' : 'Create event'}
+              <Button onClick={submit} disabled={submitting} className="svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20">
+                {submitting ? 'Creating…' : 'Next Step →'}
               </Button>
             </div>
           </FieldGroup>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
   listTableTemplates,
@@ -50,30 +50,6 @@ export function AdminTableTypesPage() {
   const [shape, setShape] = useState('Round');
   const [allInclusive, setAllInclusive] = useState(true);
 
-  // Form tilt reference
-  const formRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = formRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -3;
-    const rotateY = ((x - centerX) / centerX) * 3;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
-    card.style.boxShadow = `0 25px 45px rgba(0, 0, 0, 0.08), 0 0 25px ${color}15`;
-  };
-
-  const handleMouseLeave = () => {
-    const card = formRef.current;
-    if (!card) return;
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    card.style.boxShadow = '';
-  };
-
   async function add() {
     setNotice(null);
     playTap('success');
@@ -106,9 +82,6 @@ export function AdminTableTypesPage() {
 
       {/* Interactive Form Card */}
       <div
-        ref={formRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
         className="svyne-float-card border border-border bg-card shadow-xl rounded-2xl overflow-hidden transition-all duration-300"
       >
         <CardHeader className="border-b border-border/20 px-6 py-4">
@@ -276,30 +249,6 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
   const [shape, setShape] = useState(template.defaultShape || 'Round');
   const [allInclusive, setAllInclusive] = useState(template.defaultIsAllInclusive);
 
-  // Individual Card Tilt Ref
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -5;
-    const rotateY = ((x - centerX) / centerX) * 5;
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02) translateZ(10px)`;
-    card.style.boxShadow = `0 20px 30px rgba(0, 0, 0, 0.08), 0 0 15px ${color}10`;
-  };
-
-  const handleCardMouseLeave = () => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1) translateZ(0px)';
-    card.style.boxShadow = '';
-  };
-
   async function persist(isActive: boolean) {
     setNotice(null);
     playTap('success');
@@ -326,9 +275,6 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
 
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleCardMouseMove}
-      onMouseLeave={handleCardMouseLeave}
       className={cn(
         "rounded-2xl border bg-card transition-all duration-300 overflow-hidden flex flex-col h-fit",
         template.isActive 
