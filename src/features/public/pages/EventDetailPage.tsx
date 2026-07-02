@@ -25,6 +25,8 @@ import { imageUrl } from '@/shared/upload';
 import { createMultiBooking, quoteCart } from '@/features/public/services/paymentService';
 import {
   type CartItem,
+  DEFAULT_HOLD_SECONDS,
+  clearOtherPendingCarts,
   savePendingCart,
   takePendingCart,
 } from '@/features/public/services/pendingCart';
@@ -76,14 +78,13 @@ function EventDetailPageContent({ event }: { event: Event }) {
   const [checkoutBookingsId, setCheckoutBookingsId] = useState('');
 
   // Cart & Booking States: Initialize cart synchronously from pending cart on mount
-  const [cart, setCart] = useState<CartItem[]>(() => takePendingCart(event.eventsId));
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    clearOtherPendingCarts(event.eventsId);
+    return takePendingCart(event.eventsId);
+  });
   const [delta] = useState(() => rememberEventVisit(event));
   const [busy, setBusy] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
-
-  useEffect(() => {
-    savePendingCart(event.eventsId, cart);
-  }, [cart, event.eventsId]);
 
   const ticketTypesLoader = useCallback(() => {
     return listEventTicketTypes(event.eventsId);
@@ -116,6 +117,12 @@ function EventDetailPageContent({ event }: { event: Event }) {
   }, [cartKey, event.eventsId]);
   const { data: quote } = useAsync(quoteLoader);
 
+  const holdSeconds = quote?.holdSeconds || DEFAULT_HOLD_SECONDS;
+
+  useEffect(() => {
+    savePendingCart(event.eventsId, cart, holdSeconds);
+  }, [cart, event.eventsId, holdSeconds]);
+
   const subtotal = quote?.subtotalCents ?? 0;
   const fee = quote?.feeCents ?? 0;
   const total = quote?.totalCents ?? 0;
@@ -123,7 +130,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
   async function handleCheckout() {
     if (!isAuthenticated) {
-      savePendingCart(event.eventsId, cart);
+      savePendingCart(event.eventsId, cart, holdSeconds);
       setReturnTo(location.pathname + location.search);
       navigate('/login');
       return;

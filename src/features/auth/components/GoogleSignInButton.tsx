@@ -17,19 +17,23 @@ declare global {
 
 const GIS_SRC = 'https://accounts.google.com/gsi/client';
 
+let gisLoad: Promise<void> | null = null;
+
 function loadScript(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (document.querySelector(`script[src="${GIS_SRC}"]`)) {
-      resolve();
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = GIS_SRC;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load Google Identity Services'));
-    document.head.appendChild(script);
-  });
+  if (!gisLoad) {
+    gisLoad = new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = GIS_SRC;
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => {
+        gisLoad = null;
+        reject(new Error('Failed to load Google Identity Services'));
+      };
+      document.head.appendChild(script);
+    });
+  }
+  return gisLoad;
 }
 
 export function GoogleSignInButton({ onToken }: { onToken: (idToken: string) => void }) {

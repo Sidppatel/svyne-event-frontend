@@ -143,7 +143,7 @@ export function EventSeatingMap({
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-xs text-white/50 font-bold uppercase tracking-widest animate-pulse">
+      <div className="py-12 text-center text-xs text-ink-soft font-bold uppercase tracking-widest animate-pulse">
         Loading interactive Seating Floorplan…
       </div>
     );
@@ -161,9 +161,9 @@ export function EventSeatingMap({
         </div>
       )}
 
-      <div className="relative overflow-hidden rounded-3xl border border-border-soft bg-surface-900 shadow-2xl min-h-[500px]">
+      <div className="relative overflow-hidden rounded-3xl border border-border-soft bg-stage shadow-2xl min-h-[500px]">
         {/* Floorplan Controls Overlay */}
-        <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-surface-800/90 backdrop-blur-md p-1.5 rounded-xl border border-white/5 shadow-lg">
+        <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-stage-elevated/90 backdrop-blur-md p-1.5 rounded-xl border border-white/5 shadow-lg">
           <Button
             type="button"
             variant="ghost"
@@ -197,7 +197,7 @@ export function EventSeatingMap({
         </div>
 
         {/* Legend Overlay */}
-        <div className="absolute bottom-4 left-4 z-30 hidden sm:flex items-center gap-4 bg-surface-800/90 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-[10px] uppercase font-bold tracking-wider text-white/70">
+        <div className="absolute bottom-4 left-4 z-30 hidden sm:flex items-center gap-4 bg-stage-elevated/90 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-[10px] uppercase font-bold tracking-wider text-on-stage-soft">
           <div className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full bg-white border border-accent-gold" />
             <span>Available</span>
@@ -214,7 +214,7 @@ export function EventSeatingMap({
 
         {/* Dynamic Detail Card overlay on table hover */}
         {hoveredTable && (
-          <div className="absolute top-4 right-4 z-30 w-56 bg-surface-800/95 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl text-xs space-y-2 animate-in fade-in duration-200">
+          <div className="absolute top-4 right-4 z-30 w-56 bg-stage-elevated/95 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl text-xs space-y-2 animate-in fade-in duration-200">
             <div className="flex items-center justify-between">
               <span className="font-black text-sm text-white font-display uppercase">{hoveredTable.label}</span>
               <span className="inline-flex items-center gap-1 rounded bg-accent-gold/10 text-accent-gold text-[8px] font-black uppercase tracking-wider px-2 py-0.5 border border-accent-gold/20">
@@ -314,7 +314,7 @@ export function EventSeatingMap({
                   width: o.width || 80,
                   height: o.height || 80,
                 }}
-                className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-surface-800 text-white/50 text-[10px] font-extrabold uppercase tracking-wider shadow-md"
+                className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/20 bg-stage-elevated text-white/50 text-[10px] font-extrabold uppercase tracking-wider shadow-md"
               >
                 <span className="text-lg mb-1">{OBJECT_GLYPH[o.objectType] || '⚙'}</span>
                 {o.objectType}

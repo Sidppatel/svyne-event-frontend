@@ -68,6 +68,28 @@ export interface Booking {
      * @generated from protobuf field: repeated svyne.booking.BookingLine lines = 11;
      */
     lines: BookingLine[];
+    /**
+     * @generated from protobuf field: string event_title = 12;
+     */
+    eventTitle: string;
+    /**
+     * @generated from protobuf field: string event_slug = 13;
+     */
+    eventSlug: string;
+    /**
+     * @generated from protobuf field: int64 event_start_date = 14;
+     */
+    eventStartDate: string;
+    /**
+     * @generated from protobuf field: int32 tickets_total = 15;
+     */
+    ticketsTotal: number;
+    /**
+     * Tickets on this booking with status Claimed or CheckedIn.
+     *
+     * @generated from protobuf field: int32 tickets_claimed = 16;
+     */
+    ticketsClaimed: number;
 }
 /**
  * One line of a booking, for display on checkout / booking detail. Carries the
@@ -240,6 +262,12 @@ export interface CartQuote {
      * @generated from protobuf field: string currency = 11;
      */
     currency: string;
+    /**
+     * Cart hold window in seconds, from app_settings.booking_hold_seconds.
+     *
+     * @generated from protobuf field: int32 hold_seconds = 12;
+     */
+    holdSeconds: number;
 }
 /**
  * @generated from protobuf message svyne.booking.BookingLineInput
@@ -778,7 +806,12 @@ class Booking$Type extends MessageType<Booking> {
             { no: 8, name: "fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "total_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "seats_reserved", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 11, name: "lines", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => BookingLine }
+            { no: 11, name: "lines", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => BookingLine },
+            { no: 12, name: "event_title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 13, name: "event_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "event_start_date", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 15, name: "tickets_total", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 16, name: "tickets_claimed", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<Booking>): Booking {
@@ -794,6 +827,11 @@ class Booking$Type extends MessageType<Booking> {
         message.totalCents = 0;
         message.seatsReserved = 0;
         message.lines = [];
+        message.eventTitle = "";
+        message.eventSlug = "";
+        message.eventStartDate = "0";
+        message.ticketsTotal = 0;
+        message.ticketsClaimed = 0;
         if (value !== undefined)
             reflectionMergePartial<Booking>(this, message, value);
         return message;
@@ -835,6 +873,21 @@ class Booking$Type extends MessageType<Booking> {
                     break;
                 case /* repeated svyne.booking.BookingLine lines */ 11:
                     message.lines.push(BookingLine.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* string event_title */ 12:
+                    message.eventTitle = reader.string();
+                    break;
+                case /* string event_slug */ 13:
+                    message.eventSlug = reader.string();
+                    break;
+                case /* int64 event_start_date */ 14:
+                    message.eventStartDate = reader.int64().toString();
+                    break;
+                case /* int32 tickets_total */ 15:
+                    message.ticketsTotal = reader.int32();
+                    break;
+                case /* int32 tickets_claimed */ 16:
+                    message.ticketsClaimed = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -881,6 +934,21 @@ class Booking$Type extends MessageType<Booking> {
         /* repeated svyne.booking.BookingLine lines = 11; */
         for (let i = 0; i < message.lines.length; i++)
             BookingLine.internalBinaryWrite(message.lines[i], writer.tag(11, WireType.LengthDelimited).fork(), options).join();
+        /* string event_title = 12; */
+        if (message.eventTitle !== "")
+            writer.tag(12, WireType.LengthDelimited).string(message.eventTitle);
+        /* string event_slug = 13; */
+        if (message.eventSlug !== "")
+            writer.tag(13, WireType.LengthDelimited).string(message.eventSlug);
+        /* int64 event_start_date = 14; */
+        if (message.eventStartDate !== "0")
+            writer.tag(14, WireType.Varint).int64(message.eventStartDate);
+        /* int32 tickets_total = 15; */
+        if (message.ticketsTotal !== 0)
+            writer.tag(15, WireType.Varint).int32(message.ticketsTotal);
+        /* int32 tickets_claimed = 16; */
+        if (message.ticketsClaimed !== 0)
+            writer.tag(16, WireType.Varint).int32(message.ticketsClaimed);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1221,7 +1289,8 @@ class CartQuote$Type extends MessageType<CartQuote> {
             { no: 8, name: "fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "total_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "organizer_net_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 11, name: "currency", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 11, name: "currency", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 12, name: "hold_seconds", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<CartQuote>): CartQuote {
@@ -1237,6 +1306,7 @@ class CartQuote$Type extends MessageType<CartQuote> {
         message.totalCents = 0;
         message.organizerNetCents = 0;
         message.currency = "";
+        message.holdSeconds = 0;
         if (value !== undefined)
             reflectionMergePartial<CartQuote>(this, message, value);
         return message;
@@ -1278,6 +1348,9 @@ class CartQuote$Type extends MessageType<CartQuote> {
                     break;
                 case /* string currency */ 11:
                     message.currency = reader.string();
+                    break;
+                case /* int32 hold_seconds */ 12:
+                    message.holdSeconds = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1324,6 +1397,9 @@ class CartQuote$Type extends MessageType<CartQuote> {
         /* string currency = 11; */
         if (message.currency !== "")
             writer.tag(11, WireType.LengthDelimited).string(message.currency);
+        /* int32 hold_seconds = 12; */
+        if (message.holdSeconds !== 0)
+            writer.tag(12, WireType.Varint).int32(message.holdSeconds);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

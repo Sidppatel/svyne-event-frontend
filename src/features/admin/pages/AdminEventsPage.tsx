@@ -41,7 +41,12 @@ export function AdminEventsPage() {
                 <span className="ml-2 text-sm text-muted-foreground">{event.status}</span>
               </div>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'Published'))}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={event.status === 'Published'}
+                  onClick={() => act(() => changeEventStatus(event.eventsId, 'Published'))}
+                >
                   Publish
                 </Button>
                 <Button size="sm" variant="outline" onClick={() => act(() => changeEventStatus(event.eventsId, 'Cancelled'))}>

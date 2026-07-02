@@ -78,7 +78,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
               onClick={() => {
                 window.location.href = `/login?returnTo=${encodeURIComponent(window.location.pathname)}`;
               }}
-              className="bg-accent-gold hover:bg-accent-gold/90 text-surface-900 text-[10px] font-black uppercase tracking-wider py-2 h-auto px-3 rounded-lg"
+              className="bg-accent-gold hover:bg-accent-gold/90 text-voltage-ink text-[10px] font-black uppercase tracking-wider py-2 h-auto px-3 rounded-lg"
             >
               Sign In / Sign Up
             </Button>

@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { Compass, Ticket, User } from 'lucide-react';
+import { Compass, Ticket, CalendarCheck2, User } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 
 const TABS = [
   { to: '/', label: 'Events', icon: Compass, end: true },
   { to: '/tickets', label: 'Tickets', icon: Ticket, end: false },
+  { to: '/bookings', label: 'Bookings', icon: CalendarCheck2, end: false },
   { to: '/profile', label: 'Profile', icon: User, end: false },
 ];
 

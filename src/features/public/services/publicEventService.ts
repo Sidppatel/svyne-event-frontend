@@ -32,9 +32,16 @@ export async function listScheduleItems(eventsId: string): Promise<ScheduleItem[
   return response.items;
 }
 
-export async function listMyBookings(): Promise<Booking[]> {
+export async function listMyBookings(options?: {
+  status?: string;
+  search?: string;
+}): Promise<Booking[]> {
   const response = await callRpc(() =>
-    bookingClient.listBookings({ page: { offset: 0, limit: 50, search: '' }, eventsId: '', status: '' }),
+    bookingClient.listBookings({
+      page: { offset: 0, limit: 50, search: options?.search ?? '' },
+      eventsId: '',
+      status: options?.status ?? '',
+    }),
   );
   return response.bookings;
 }

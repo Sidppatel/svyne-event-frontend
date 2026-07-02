@@ -183,8 +183,8 @@ export function AdminEventManagePage() {
               <div className="flex shrink-0 gap-2">
                 <Button
                   size="sm"
-                  disabled={!canPublish}
-                  title={canPublish ? "Publish this event" : "Cannot publish until you add at least one ticket type or place a table on the floor plan"}
+                  disabled={!canPublish || event.data.status === 'Published'}
+                  title={event.data.status === 'Published' ? "Event is already published" : canPublish ? "Publish this event" : "Cannot publish until you add at least one ticket type or place a table on the floor plan"}
                   onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
                 >
                   <Rocket /> Publish

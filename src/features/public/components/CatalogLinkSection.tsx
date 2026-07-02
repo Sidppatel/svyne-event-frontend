@@ -86,7 +86,7 @@ export function CatalogLinkSection({
     return (
       <div 
         ref={containerRef} 
-        className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-surface-900 text-white py-16 md:py-24 overflow-hidden border-y border-white/5"
+        className="w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-stage text-white py-16 md:py-24 overflow-hidden border-y border-white/5"
       >
         <div className="max-w-7xl mx-auto px-4 md:px-8 mb-10 flex items-center justify-between">
           <SectionTitle

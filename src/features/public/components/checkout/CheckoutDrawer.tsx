@@ -55,7 +55,7 @@ export function CheckoutDrawer({
     <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(false); }}>
       <SheetContent
         side="right"
-        className="w-full sm:max-w-md bg-surface-900 border-l border-white/5 text-white flex flex-col p-6"
+        className="w-full sm:max-w-md bg-stage border-l border-white/5 text-white flex flex-col p-6"
       >
         <SheetTitle className="sr-only">Checkout Process</SheetTitle>
 
@@ -131,7 +131,7 @@ function ConfirmationReceipt({
         </div>
 
       {/* Visual Perforated Ticket Stub Receipt */}
-      <div className="overflow-hidden rounded-2xl border border-white/10 bg-surface-800 text-left shadow-2xl">
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-stage-elevated text-left shadow-2xl">
         <div className="p-5 space-y-3">
           <div className="flex justify-between items-center text-xs">
             <span className="text-white/40 uppercase tracking-wider font-bold">Entry Pass receipt</span>
@@ -184,7 +184,7 @@ function ConfirmationReceipt({
       </div>
       </div>
 
-      <div className="flex flex-col gap-2 pt-4 mt-auto border-t border-white/5 shrink-0 bg-surface-900 sticky bottom-0 z-10 pb-2">
+      <div className="flex flex-col gap-2 pt-4 mt-auto border-t border-white/5 shrink-0 bg-stage sticky bottom-0 z-10 pb-2">
         <Button onClick={() => window.print()} className="bg-white/5 hover:bg-white/10 text-white border border-white/10 py-4 w-full hover:text-white">
           Print Entry Passes
         </Button>

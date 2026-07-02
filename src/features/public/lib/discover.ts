@@ -40,6 +40,30 @@ export function upcomingLabel(startEpoch: string): string | null {
   return null;
 }
 
+export function partitionTicketsByUpcoming<T extends { eventStartDate: string }>(
+  tickets: T[],
+): { upcoming: T[]; previous: T[] } {
+  const now = Date.now() / 1000;
+  const upcoming = tickets
+    .filter((t) => epochSeconds(t.eventStartDate) >= now)
+    .sort((a, b) => epochSeconds(a.eventStartDate) - epochSeconds(b.eventStartDate));
+  const previous = tickets
+    .filter((t) => epochSeconds(t.eventStartDate) < now)
+    .sort((a, b) => epochSeconds(b.eventStartDate) - epochSeconds(a.eventStartDate));
+  return { upcoming, previous };
+}
+
+export function hasUnclaimedTickets(booking: {
+  ticketsTotal: number;
+  ticketsClaimed: number;
+}): boolean {
+  return booking.ticketsTotal > 0 && booking.ticketsClaimed < booking.ticketsTotal;
+}
+
+export function claimedSummary(booking: { ticketsTotal: number; ticketsClaimed: number }): string {
+  return `${booking.ticketsClaimed} of ${booking.ticketsTotal} claimed`;
+}
+
 export function minTicketPriceCents(
   tiers: Array<{ priceCents: number; sellingPriceCents?: number }>,
 ): number | undefined {

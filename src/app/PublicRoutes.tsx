@@ -9,7 +9,8 @@ import { currentTenantSlug } from '@/shared/subdomain';
 import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
 import { PerformerProfilePage } from '@/features/public/pages/PerformerProfilePage';
 import { SponsorProfilePage } from '@/features/public/pages/SponsorProfilePage';
-import { WalletPage } from '@/features/public/pages/WalletPage';
+import { TicketsPage } from '@/features/public/pages/TicketsPage';
+import { BookingsPage } from '@/features/public/pages/BookingsPage';
 import { ProfilePage } from '@/features/public/pages/ProfilePage';
 import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
 import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
@@ -30,11 +31,19 @@ export default function PublicRoutes() {
           path="tickets"
           element={
             <ProtectedRoute allow={authenticated}>
-              <WalletPage />
+              <TicketsPage />
             </ProtectedRoute>
           }
         />
-        <Route path="my-bookings" element={<Navigate to="/tickets" replace />} />
+        <Route
+          path="bookings"
+          element={
+            <ProtectedRoute allow={authenticated}>
+              <BookingsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="my-bookings" element={<Navigate to="/bookings" replace />} />
         <Route path="my-tickets" element={<Navigate to="/tickets" replace />} />
         <Route
           path="bookings/:bookingsId"
