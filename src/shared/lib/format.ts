@@ -11,7 +11,7 @@ export function centsToUsdInput(cents: number): string {
 }
 
 export function usdToCents(value: string): number {
-  const dollars = parseFloat(value);
+  const dollars = parseFloat(value.replace(/,/g, ''));
   return Number.isFinite(dollars) ? Math.round(dollars * 100) : 0;
 }
 

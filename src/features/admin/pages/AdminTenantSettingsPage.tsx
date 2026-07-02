@@ -17,7 +17,7 @@ import type { StripeStatus } from '@/shared/proto/admin';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+
 
 const EMPTY: TenantContactInput = {
   phone: '',
@@ -164,15 +164,17 @@ export function AdminTenantSettingsPage() {
   const hasAccount = stripeProfile?.hasAccount ?? false;
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-xl font-semibold">Tenant Settings</h1>
+    <div className="mx-auto max-w-2xl space-y-6">
+      <div className="space-y-1">
+        <h1 className="font-display text-2xl font-semibold text-ink">Tenant Settings</h1>
+      </div>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Business profile</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="overflow-hidden rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e1)]">
+        <div className="border-b border-hairline px-6 py-4">
+          <h2 className="font-display text-lg font-semibold text-ink">Business profile</h2>
+        </div>
+        <div className="p-6 space-y-4">
           <div className="grid grid-cols-3 gap-3">
             <ReadOnly label="Slug" value={tenant?.slug ?? ''} />
             <ReadOnly label="Company name" value={tenant?.name ?? ''} />
@@ -192,14 +194,14 @@ export function AdminTenantSettingsPage() {
           <Button onClick={save} disabled={saving}>
             {saving ? 'Saving…' : 'Save changes'}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Branding</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <div className="overflow-hidden rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e1)]">
+        <div className="border-b border-hairline px-6 py-4">
+          <h2 className="font-display text-lg font-semibold text-ink">Branding</h2>
+        </div>
+        <div className="p-6 space-y-4">
           <div className="flex items-center gap-4">
             <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-md bg-muted">
               {logoUrl ? (
@@ -230,14 +232,14 @@ export function AdminTenantSettingsPage() {
           <Button onClick={saveBranding} disabled={savingBrand}>
             {savingBrand ? 'Saving…' : 'Save branding'}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Stripe</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
+      <div className="overflow-hidden rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e1)]">
+        <div className="border-b border-hairline px-6 py-4">
+          <h2 className="font-display text-lg font-semibold text-ink">Stripe</h2>
+        </div>
+        <div className="p-6 space-y-3">
           {hasAccount ? (
             <div className="text-sm text-muted-foreground">
               <p>Account: {stripeProfile?.businessName || '—'}</p>
@@ -255,8 +257,8 @@ export function AdminTenantSettingsPage() {
           <Button size="sm" onClick={openStripe}>
             {hasAccount ? 'Manage on Stripe' : 'Connect Stripe account'}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

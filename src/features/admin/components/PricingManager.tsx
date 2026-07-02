@@ -272,7 +272,7 @@ function RuleGroupItem({
             if (!price) return null;
             return (
               <RulePriceRow
-                key={rule.priceRulesId}
+                key={`${rule.priceRulesId}-${rule.priceCents}`}
                 priceName={price.name}
                 basePriceCents={price.basePriceCents}
                 rule={rule}
@@ -302,6 +302,7 @@ function RulePriceRow({
 }) {
   const [value, setValue] = useState(centsToUsdInput(rule.priceCents));
   const dirty = usdToCents(value) !== rule.priceCents;
+
 
   const fetchBreakdown = useCallback(() => {
     return calculatePrice(rule.pricesId, 1, rule.activeFrom?.toString());
@@ -346,6 +347,7 @@ function RulePriceRow({
             inputMode="decimal"
             value={value}
             onChange={(e) => setValue(e.target.value)}
+            onBlur={() => setValue(new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(usdToCents(value) / 100))}
           />
         </div>
         <Button
