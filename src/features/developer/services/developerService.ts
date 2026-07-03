@@ -7,7 +7,13 @@ import type {
   TenantStripeStatus,
   TenantStripeProfile,
 } from '@/shared/proto/tenant';
-import type { LogEntry, DeveloperDashboard } from '@/shared/proto/admin';
+import type {
+  LogEntry,
+  DeveloperDashboard,
+  ErrorLogEntry,
+  ErrorLogPage,
+  ErrorLogStats,
+} from '@/shared/proto/admin';
 import type { TenantReportingAccessRow } from '@/shared/proto/reporting';
 
 export const TENANT_TIERS = ['free', 'starter', 'professional', 'business', 'enterprise'] as const;
@@ -134,6 +140,67 @@ export async function createTenant(input: NewTenantInput): Promise<CreateTenantR
       supportEmail: input.supportEmail ?? '',
     }),
   );
+}
+
+export type { ErrorLogEntry, ErrorLogPage, ErrorLogStats };
+
+export const ERROR_SEVERITIES = ['Critical', 'High', 'Medium', 'Low', 'Warning', 'Info', 'Error'] as const;
+export const ERROR_SOURCES = ['backend', 'frontend'] as const;
+export const RESOLVED_FILTER_ALL = 0;
+export const RESOLVED_FILTER_UNRESOLVED = 1;
+export const RESOLVED_FILTER_RESOLVED = 2;
+
+export interface ErrorLogFilters {
+  severity: string;
+  source: string;
+  resolvedFilter: number;
+  search: string;
+  offset: number;
+  limit: number;
+}
+
+export async function getErrorLogs(filters: ErrorLogFilters): Promise<ErrorLogPage> {
+  return callRpc(() =>
+    logClient.getErrorLogs({
+      page: { offset: filters.offset, limit: filters.limit, search: '' },
+      severity: filters.severity,
+      source: filters.source,
+      resolvedFilter: filters.resolvedFilter,
+      search: filters.search,
+      from: '0',
+      to: '0',
+    }),
+  );
+}
+
+export async function getErrorLogStats(): Promise<ErrorLogStats> {
+  return callRpc(() => logClient.getErrorLogStats({}));
+}
+
+export async function resolveErrorLog(errorLogId: string, notes: string): Promise<string> {
+  const response = await callRpc(() => logClient.resolveErrorLog({ errorLogId, notes }));
+  return response.message;
+}
+
+export function nextPageOffset(offset: number, limit: number): number {
+  return offset + limit;
+}
+
+export function previousPageOffset(offset: number, limit: number): number {
+  return Math.max(0, offset - limit);
+}
+
+export function hasNextPage(offset: number, limit: number, total: number): boolean {
+  return offset + limit < total;
+}
+
+export function pageLabel(offset: number, limit: number, total: number): string {
+  if (total === 0) {
+    return 'No entries';
+  }
+  const first = offset + 1;
+  const last = Math.min(offset + limit, total);
+  return `${first}–${last} of ${total}`;
 }
 
 export async function getDeveloperLogs(): Promise<LogEntry[]> {

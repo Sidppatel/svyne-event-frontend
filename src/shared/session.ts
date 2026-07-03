@@ -1,6 +1,9 @@
 import { RpcError, type UnaryCall } from '@protobuf-ts/runtime-rpc';
 import { authClient } from '@/shared/apiClient';
 import { useAuthStore } from '@/shared/auth/store';
+import { reportRpcFailure } from '@/shared/errorReporter';
+
+const REPORTABLE_RPC_CODES = ['INTERNAL', 'UNKNOWN', 'UNAVAILABLE', 'DEADLINE_EXCEEDED'];
 
 let refreshInFlight: Promise<boolean> | null = null;
 
@@ -47,6 +50,9 @@ export async function callRpc<I extends object, O extends object>(
       }
       if (error.code === 'PERMISSION_DENIED') {
         redirect('/not-authorized');
+      }
+      if (REPORTABLE_RPC_CODES.includes(error.code)) {
+        reportRpcFailure(error.methodName ?? 'rpc', error);
       }
     }
     throw error;

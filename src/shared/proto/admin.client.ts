@@ -8,6 +8,11 @@ import { FeedbackService } from "./admin";
 import type { ListFeedbackResponse } from "./admin";
 import type { CreateFeedbackRequest } from "./admin";
 import { LogService } from "./admin";
+import type { ClientErrorBatch } from "./admin";
+import type { ResolveErrorLogRequest } from "./admin";
+import type { ErrorLogStats } from "./admin";
+import type { ErrorLogPage } from "./admin";
+import type { ErrorLogQuery } from "./admin";
 import type { LogPage } from "./admin";
 import type { LogQuery } from "./admin";
 import { InvitationService } from "./admin";
@@ -290,6 +295,22 @@ export interface ILogServiceClient {
      * @generated from protobuf rpc: GetSystemLogs(svyne.admin.LogQuery) returns (svyne.admin.LogPage);
      */
     getSystemLogs(input: LogQuery, options?: RpcOptions): UnaryCall<LogQuery, LogPage>;
+    /**
+     * @generated from protobuf rpc: GetErrorLogs(svyne.admin.ErrorLogQuery) returns (svyne.admin.ErrorLogPage);
+     */
+    getErrorLogs(input: ErrorLogQuery, options?: RpcOptions): UnaryCall<ErrorLogQuery, ErrorLogPage>;
+    /**
+     * @generated from protobuf rpc: GetErrorLogStats(svyne.common.Empty) returns (svyne.admin.ErrorLogStats);
+     */
+    getErrorLogStats(input: Empty, options?: RpcOptions): UnaryCall<Empty, ErrorLogStats>;
+    /**
+     * @generated from protobuf rpc: ResolveErrorLog(svyne.admin.ResolveErrorLogRequest) returns (svyne.common.AckResponse);
+     */
+    resolveErrorLog(input: ResolveErrorLogRequest, options?: RpcOptions): UnaryCall<ResolveErrorLogRequest, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ReportClientErrors(svyne.admin.ClientErrorBatch) returns (svyne.common.AckResponse);
+     */
+    reportClientErrors(input: ClientErrorBatch, options?: RpcOptions): UnaryCall<ClientErrorBatch, AckResponse>;
 }
 /**
  * @generated from protobuf service svyne.admin.LogService
@@ -320,6 +341,34 @@ export class LogServiceClient implements ILogServiceClient, ServiceInfo {
     getSystemLogs(input: LogQuery, options?: RpcOptions): UnaryCall<LogQuery, LogPage> {
         const method = this.methods[2], opt = this._transport.mergeOptions(options);
         return stackIntercept<LogQuery, LogPage>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetErrorLogs(svyne.admin.ErrorLogQuery) returns (svyne.admin.ErrorLogPage);
+     */
+    getErrorLogs(input: ErrorLogQuery, options?: RpcOptions): UnaryCall<ErrorLogQuery, ErrorLogPage> {
+        const method = this.methods[3], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ErrorLogQuery, ErrorLogPage>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: GetErrorLogStats(svyne.common.Empty) returns (svyne.admin.ErrorLogStats);
+     */
+    getErrorLogStats(input: Empty, options?: RpcOptions): UnaryCall<Empty, ErrorLogStats> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, ErrorLogStats>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ResolveErrorLog(svyne.admin.ResolveErrorLogRequest) returns (svyne.common.AckResponse);
+     */
+    resolveErrorLog(input: ResolveErrorLogRequest, options?: RpcOptions): UnaryCall<ResolveErrorLogRequest, AckResponse> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ResolveErrorLogRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ReportClientErrors(svyne.admin.ClientErrorBatch) returns (svyne.common.AckResponse);
+     */
+    reportClientErrors(input: ClientErrorBatch, options?: RpcOptions): UnaryCall<ClientErrorBatch, AckResponse> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ClientErrorBatch, AckResponse>("unary", this._transport, method, opt, input);
     }
 }
 /**

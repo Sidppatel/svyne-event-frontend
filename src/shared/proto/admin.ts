@@ -362,6 +362,254 @@ export interface LogPage {
     meta?: PageMeta;
 }
 /**
+ * @generated from protobuf message svyne.admin.ErrorLogQuery
+ */
+export interface ErrorLogQuery {
+    /**
+     * @generated from protobuf field: svyne.common.PageRequest page = 1;
+     */
+    page?: PageRequest;
+    /**
+     * @generated from protobuf field: string severity = 2;
+     */
+    severity: string;
+    /**
+     * @generated from protobuf field: string source = 3;
+     */
+    source: string;
+    /**
+     * @generated from protobuf field: int32 resolved_filter = 4;
+     */
+    resolvedFilter: number;
+    /**
+     * @generated from protobuf field: string search = 5;
+     */
+    search: string;
+    /**
+     * @generated from protobuf field: int64 from = 6;
+     */
+    from: string;
+    /**
+     * @generated from protobuf field: int64 to = 7;
+     */
+    to: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.ErrorLogEntry
+ */
+export interface ErrorLogEntry {
+    /**
+     * @generated from protobuf field: string id = 1;
+     */
+    id: string;
+    /**
+     * @generated from protobuf field: int64 timestamp = 2;
+     */
+    timestamp: string;
+    /**
+     * @generated from protobuf field: string severity = 3;
+     */
+    severity: string;
+    /**
+     * @generated from protobuf field: string message = 4;
+     */
+    message: string;
+    /**
+     * @generated from protobuf field: string exception_type = 5;
+     */
+    exceptionType: string;
+    /**
+     * @generated from protobuf field: string stack_trace = 6;
+     */
+    stackTrace: string;
+    /**
+     * @generated from protobuf field: string request_path = 7;
+     */
+    requestPath: string;
+    /**
+     * @generated from protobuf field: string request_method = 8;
+     */
+    requestMethod: string;
+    /**
+     * @generated from protobuf field: int32 status_code = 9;
+     */
+    statusCode: number;
+    /**
+     * @generated from protobuf field: string users_id = 10;
+     */
+    usersId: string;
+    /**
+     * @generated from protobuf field: string tenants_id = 11;
+     */
+    tenantsId: string;
+    /**
+     * @generated from protobuf field: string ip_address = 12;
+     */
+    ipAddress: string;
+    /**
+     * @generated from protobuf field: string correlation_id = 13;
+     */
+    correlationId: string;
+    /**
+     * @generated from protobuf field: string source = 14;
+     */
+    source: string;
+    /**
+     * @generated from protobuf field: bool resolved = 15;
+     */
+    resolved: boolean;
+    /**
+     * @generated from protobuf field: string resolved_notes = 16;
+     */
+    resolvedNotes: string;
+    /**
+     * @generated from protobuf field: string resolved_by = 17;
+     */
+    resolvedBy: string;
+    /**
+     * @generated from protobuf field: int64 resolved_at = 18;
+     */
+    resolvedAt: string;
+    /**
+     * @generated from protobuf field: string metadata_json = 19;
+     */
+    metadataJson: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.ErrorLogPage
+ */
+export interface ErrorLogPage {
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ErrorLogEntry entries = 1;
+     */
+    entries: ErrorLogEntry[];
+    /**
+     * @generated from protobuf field: svyne.common.PageMeta meta = 2;
+     */
+    meta?: PageMeta;
+}
+/**
+ * @generated from protobuf message svyne.admin.ErrorLogCount
+ */
+export interface ErrorLogCount {
+    /**
+     * @generated from protobuf field: string key = 1;
+     */
+    key: string;
+    /**
+     * @generated from protobuf field: int32 count = 2;
+     */
+    count: number;
+}
+/**
+ * @generated from protobuf message svyne.admin.ErrorLogStats
+ */
+export interface ErrorLogStats {
+    /**
+     * @generated from protobuf field: int32 total_today = 1;
+     */
+    totalToday: number;
+    /**
+     * @generated from protobuf field: int32 total_week = 2;
+     */
+    totalWeek: number;
+    /**
+     * @generated from protobuf field: int32 total_month = 3;
+     */
+    totalMonth: number;
+    /**
+     * @generated from protobuf field: int32 unresolved = 4;
+     */
+    unresolved: number;
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ErrorLogCount by_severity = 5;
+     */
+    bySeverity: ErrorLogCount[];
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ErrorLogCount daily = 6;
+     */
+    daily: ErrorLogCount[];
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ErrorLogCount top_types = 7;
+     */
+    topTypes: ErrorLogCount[];
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ErrorLogCount top_tenants = 8;
+     */
+    topTenants: ErrorLogCount[];
+}
+/**
+ * @generated from protobuf message svyne.admin.ResolveErrorLogRequest
+ */
+export interface ResolveErrorLogRequest {
+    /**
+     * @generated from protobuf field: string error_log_id = 1;
+     */
+    errorLogId: string;
+    /**
+     * @generated from protobuf field: string notes = 2;
+     */
+    notes: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.ClientErrorReport
+ */
+export interface ClientErrorReport {
+    /**
+     * @generated from protobuf field: string error_type = 1;
+     */
+    errorType: string;
+    /**
+     * @generated from protobuf field: string message = 2;
+     */
+    message: string;
+    /**
+     * @generated from protobuf field: string stack_trace = 3;
+     */
+    stackTrace: string;
+    /**
+     * @generated from protobuf field: string severity = 4;
+     */
+    severity: string;
+    /**
+     * @generated from protobuf field: string page_url = 5;
+     */
+    pageUrl: string;
+    /**
+     * @generated from protobuf field: string previous_url = 6;
+     */
+    previousUrl: string;
+    /**
+     * @generated from protobuf field: string screen_size = 7;
+     */
+    screenSize: string;
+    /**
+     * @generated from protobuf field: string viewport_size = 8;
+     */
+    viewportSize: string;
+    /**
+     * @generated from protobuf field: string session_id = 9;
+     */
+    sessionId: string;
+    /**
+     * @generated from protobuf field: string breadcrumbs_json = 10;
+     */
+    breadcrumbsJson: string;
+    /**
+     * @generated from protobuf field: int64 occurred_at = 11;
+     */
+    occurredAt: string;
+}
+/**
+ * @generated from protobuf message svyne.admin.ClientErrorBatch
+ */
+export interface ClientErrorBatch {
+    /**
+     * @generated from protobuf field: repeated svyne.admin.ClientErrorReport reports = 1;
+     */
+    reports: ClientErrorReport[];
+}
+/**
  * @generated from protobuf message svyne.admin.CreateFeedbackRequest
  */
 export interface CreateFeedbackRequest {
@@ -1715,6 +1963,732 @@ class LogPage$Type extends MessageType<LogPage> {
  */
 export const LogPage = new LogPage$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class ErrorLogQuery$Type extends MessageType<ErrorLogQuery> {
+    constructor() {
+        super("svyne.admin.ErrorLogQuery", [
+            { no: 1, name: "page", kind: "message", T: () => PageRequest },
+            { no: 2, name: "severity", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "source", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "resolved_filter", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "search", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "from", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 7, name: "to", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ErrorLogQuery>): ErrorLogQuery {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.severity = "";
+        message.source = "";
+        message.resolvedFilter = 0;
+        message.search = "";
+        message.from = "0";
+        message.to = "0";
+        if (value !== undefined)
+            reflectionMergePartial<ErrorLogQuery>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ErrorLogQuery): ErrorLogQuery {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* svyne.common.PageRequest page */ 1:
+                    message.page = PageRequest.internalBinaryRead(reader, reader.uint32(), options, message.page);
+                    break;
+                case /* string severity */ 2:
+                    message.severity = reader.string();
+                    break;
+                case /* string source */ 3:
+                    message.source = reader.string();
+                    break;
+                case /* int32 resolved_filter */ 4:
+                    message.resolvedFilter = reader.int32();
+                    break;
+                case /* string search */ 5:
+                    message.search = reader.string();
+                    break;
+                case /* int64 from */ 6:
+                    message.from = reader.int64().toString();
+                    break;
+                case /* int64 to */ 7:
+                    message.to = reader.int64().toString();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ErrorLogQuery, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* svyne.common.PageRequest page = 1; */
+        if (message.page)
+            PageRequest.internalBinaryWrite(message.page, writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* string severity = 2; */
+        if (message.severity !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.severity);
+        /* string source = 3; */
+        if (message.source !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.source);
+        /* int32 resolved_filter = 4; */
+        if (message.resolvedFilter !== 0)
+            writer.tag(4, WireType.Varint).int32(message.resolvedFilter);
+        /* string search = 5; */
+        if (message.search !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.search);
+        /* int64 from = 6; */
+        if (message.from !== "0")
+            writer.tag(6, WireType.Varint).int64(message.from);
+        /* int64 to = 7; */
+        if (message.to !== "0")
+            writer.tag(7, WireType.Varint).int64(message.to);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ErrorLogQuery
+ */
+export const ErrorLogQuery = new ErrorLogQuery$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ErrorLogEntry$Type extends MessageType<ErrorLogEntry> {
+    constructor() {
+        super("svyne.admin.ErrorLogEntry", [
+            { no: 1, name: "id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "timestamp", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 3, name: "severity", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "message", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "exception_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "stack_trace", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "request_path", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "request_method", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "status_code", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 10, name: "users_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "tenants_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 12, name: "ip_address", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 13, name: "correlation_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "source", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 15, name: "resolved", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 16, name: "resolved_notes", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 17, name: "resolved_by", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 18, name: "resolved_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 19, name: "metadata_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ErrorLogEntry>): ErrorLogEntry {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.id = "";
+        message.timestamp = "0";
+        message.severity = "";
+        message.message = "";
+        message.exceptionType = "";
+        message.stackTrace = "";
+        message.requestPath = "";
+        message.requestMethod = "";
+        message.statusCode = 0;
+        message.usersId = "";
+        message.tenantsId = "";
+        message.ipAddress = "";
+        message.correlationId = "";
+        message.source = "";
+        message.resolved = false;
+        message.resolvedNotes = "";
+        message.resolvedBy = "";
+        message.resolvedAt = "0";
+        message.metadataJson = "";
+        if (value !== undefined)
+            reflectionMergePartial<ErrorLogEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ErrorLogEntry): ErrorLogEntry {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string id */ 1:
+                    message.id = reader.string();
+                    break;
+                case /* int64 timestamp */ 2:
+                    message.timestamp = reader.int64().toString();
+                    break;
+                case /* string severity */ 3:
+                    message.severity = reader.string();
+                    break;
+                case /* string message */ 4:
+                    message.message = reader.string();
+                    break;
+                case /* string exception_type */ 5:
+                    message.exceptionType = reader.string();
+                    break;
+                case /* string stack_trace */ 6:
+                    message.stackTrace = reader.string();
+                    break;
+                case /* string request_path */ 7:
+                    message.requestPath = reader.string();
+                    break;
+                case /* string request_method */ 8:
+                    message.requestMethod = reader.string();
+                    break;
+                case /* int32 status_code */ 9:
+                    message.statusCode = reader.int32();
+                    break;
+                case /* string users_id */ 10:
+                    message.usersId = reader.string();
+                    break;
+                case /* string tenants_id */ 11:
+                    message.tenantsId = reader.string();
+                    break;
+                case /* string ip_address */ 12:
+                    message.ipAddress = reader.string();
+                    break;
+                case /* string correlation_id */ 13:
+                    message.correlationId = reader.string();
+                    break;
+                case /* string source */ 14:
+                    message.source = reader.string();
+                    break;
+                case /* bool resolved */ 15:
+                    message.resolved = reader.bool();
+                    break;
+                case /* string resolved_notes */ 16:
+                    message.resolvedNotes = reader.string();
+                    break;
+                case /* string resolved_by */ 17:
+                    message.resolvedBy = reader.string();
+                    break;
+                case /* int64 resolved_at */ 18:
+                    message.resolvedAt = reader.int64().toString();
+                    break;
+                case /* string metadata_json */ 19:
+                    message.metadataJson = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ErrorLogEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string id = 1; */
+        if (message.id !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.id);
+        /* int64 timestamp = 2; */
+        if (message.timestamp !== "0")
+            writer.tag(2, WireType.Varint).int64(message.timestamp);
+        /* string severity = 3; */
+        if (message.severity !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.severity);
+        /* string message = 4; */
+        if (message.message !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.message);
+        /* string exception_type = 5; */
+        if (message.exceptionType !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.exceptionType);
+        /* string stack_trace = 6; */
+        if (message.stackTrace !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.stackTrace);
+        /* string request_path = 7; */
+        if (message.requestPath !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.requestPath);
+        /* string request_method = 8; */
+        if (message.requestMethod !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.requestMethod);
+        /* int32 status_code = 9; */
+        if (message.statusCode !== 0)
+            writer.tag(9, WireType.Varint).int32(message.statusCode);
+        /* string users_id = 10; */
+        if (message.usersId !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.usersId);
+        /* string tenants_id = 11; */
+        if (message.tenantsId !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.tenantsId);
+        /* string ip_address = 12; */
+        if (message.ipAddress !== "")
+            writer.tag(12, WireType.LengthDelimited).string(message.ipAddress);
+        /* string correlation_id = 13; */
+        if (message.correlationId !== "")
+            writer.tag(13, WireType.LengthDelimited).string(message.correlationId);
+        /* string source = 14; */
+        if (message.source !== "")
+            writer.tag(14, WireType.LengthDelimited).string(message.source);
+        /* bool resolved = 15; */
+        if (message.resolved !== false)
+            writer.tag(15, WireType.Varint).bool(message.resolved);
+        /* string resolved_notes = 16; */
+        if (message.resolvedNotes !== "")
+            writer.tag(16, WireType.LengthDelimited).string(message.resolvedNotes);
+        /* string resolved_by = 17; */
+        if (message.resolvedBy !== "")
+            writer.tag(17, WireType.LengthDelimited).string(message.resolvedBy);
+        /* int64 resolved_at = 18; */
+        if (message.resolvedAt !== "0")
+            writer.tag(18, WireType.Varint).int64(message.resolvedAt);
+        /* string metadata_json = 19; */
+        if (message.metadataJson !== "")
+            writer.tag(19, WireType.LengthDelimited).string(message.metadataJson);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ErrorLogEntry
+ */
+export const ErrorLogEntry = new ErrorLogEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ErrorLogPage$Type extends MessageType<ErrorLogPage> {
+    constructor() {
+        super("svyne.admin.ErrorLogPage", [
+            { no: 1, name: "entries", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ErrorLogEntry },
+            { no: 2, name: "meta", kind: "message", T: () => PageMeta }
+        ]);
+    }
+    create(value?: PartialMessage<ErrorLogPage>): ErrorLogPage {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.entries = [];
+        if (value !== undefined)
+            reflectionMergePartial<ErrorLogPage>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ErrorLogPage): ErrorLogPage {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.admin.ErrorLogEntry entries */ 1:
+                    message.entries.push(ErrorLogEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* svyne.common.PageMeta meta */ 2:
+                    message.meta = PageMeta.internalBinaryRead(reader, reader.uint32(), options, message.meta);
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ErrorLogPage, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.admin.ErrorLogEntry entries = 1; */
+        for (let i = 0; i < message.entries.length; i++)
+            ErrorLogEntry.internalBinaryWrite(message.entries[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* svyne.common.PageMeta meta = 2; */
+        if (message.meta)
+            PageMeta.internalBinaryWrite(message.meta, writer.tag(2, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ErrorLogPage
+ */
+export const ErrorLogPage = new ErrorLogPage$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ErrorLogCount$Type extends MessageType<ErrorLogCount> {
+    constructor() {
+        super("svyne.admin.ErrorLogCount", [
+            { no: 1, name: "key", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "count", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ErrorLogCount>): ErrorLogCount {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.key = "";
+        message.count = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ErrorLogCount>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ErrorLogCount): ErrorLogCount {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string key */ 1:
+                    message.key = reader.string();
+                    break;
+                case /* int32 count */ 2:
+                    message.count = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ErrorLogCount, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string key = 1; */
+        if (message.key !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.key);
+        /* int32 count = 2; */
+        if (message.count !== 0)
+            writer.tag(2, WireType.Varint).int32(message.count);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ErrorLogCount
+ */
+export const ErrorLogCount = new ErrorLogCount$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ErrorLogStats$Type extends MessageType<ErrorLogStats> {
+    constructor() {
+        super("svyne.admin.ErrorLogStats", [
+            { no: 1, name: "total_today", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 2, name: "total_week", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "total_month", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "unresolved", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "by_severity", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ErrorLogCount },
+            { no: 6, name: "daily", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ErrorLogCount },
+            { no: 7, name: "top_types", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ErrorLogCount },
+            { no: 8, name: "top_tenants", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ErrorLogCount }
+        ]);
+    }
+    create(value?: PartialMessage<ErrorLogStats>): ErrorLogStats {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.totalToday = 0;
+        message.totalWeek = 0;
+        message.totalMonth = 0;
+        message.unresolved = 0;
+        message.bySeverity = [];
+        message.daily = [];
+        message.topTypes = [];
+        message.topTenants = [];
+        if (value !== undefined)
+            reflectionMergePartial<ErrorLogStats>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ErrorLogStats): ErrorLogStats {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int32 total_today */ 1:
+                    message.totalToday = reader.int32();
+                    break;
+                case /* int32 total_week */ 2:
+                    message.totalWeek = reader.int32();
+                    break;
+                case /* int32 total_month */ 3:
+                    message.totalMonth = reader.int32();
+                    break;
+                case /* int32 unresolved */ 4:
+                    message.unresolved = reader.int32();
+                    break;
+                case /* repeated svyne.admin.ErrorLogCount by_severity */ 5:
+                    message.bySeverity.push(ErrorLogCount.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated svyne.admin.ErrorLogCount daily */ 6:
+                    message.daily.push(ErrorLogCount.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated svyne.admin.ErrorLogCount top_types */ 7:
+                    message.topTypes.push(ErrorLogCount.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated svyne.admin.ErrorLogCount top_tenants */ 8:
+                    message.topTenants.push(ErrorLogCount.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ErrorLogStats, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int32 total_today = 1; */
+        if (message.totalToday !== 0)
+            writer.tag(1, WireType.Varint).int32(message.totalToday);
+        /* int32 total_week = 2; */
+        if (message.totalWeek !== 0)
+            writer.tag(2, WireType.Varint).int32(message.totalWeek);
+        /* int32 total_month = 3; */
+        if (message.totalMonth !== 0)
+            writer.tag(3, WireType.Varint).int32(message.totalMonth);
+        /* int32 unresolved = 4; */
+        if (message.unresolved !== 0)
+            writer.tag(4, WireType.Varint).int32(message.unresolved);
+        /* repeated svyne.admin.ErrorLogCount by_severity = 5; */
+        for (let i = 0; i < message.bySeverity.length; i++)
+            ErrorLogCount.internalBinaryWrite(message.bySeverity[i], writer.tag(5, WireType.LengthDelimited).fork(), options).join();
+        /* repeated svyne.admin.ErrorLogCount daily = 6; */
+        for (let i = 0; i < message.daily.length; i++)
+            ErrorLogCount.internalBinaryWrite(message.daily[i], writer.tag(6, WireType.LengthDelimited).fork(), options).join();
+        /* repeated svyne.admin.ErrorLogCount top_types = 7; */
+        for (let i = 0; i < message.topTypes.length; i++)
+            ErrorLogCount.internalBinaryWrite(message.topTypes[i], writer.tag(7, WireType.LengthDelimited).fork(), options).join();
+        /* repeated svyne.admin.ErrorLogCount top_tenants = 8; */
+        for (let i = 0; i < message.topTenants.length; i++)
+            ErrorLogCount.internalBinaryWrite(message.topTenants[i], writer.tag(8, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ErrorLogStats
+ */
+export const ErrorLogStats = new ErrorLogStats$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ResolveErrorLogRequest$Type extends MessageType<ResolveErrorLogRequest> {
+    constructor() {
+        super("svyne.admin.ResolveErrorLogRequest", [
+            { no: 1, name: "error_log_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "notes", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ResolveErrorLogRequest>): ResolveErrorLogRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.errorLogId = "";
+        message.notes = "";
+        if (value !== undefined)
+            reflectionMergePartial<ResolveErrorLogRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ResolveErrorLogRequest): ResolveErrorLogRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string error_log_id */ 1:
+                    message.errorLogId = reader.string();
+                    break;
+                case /* string notes */ 2:
+                    message.notes = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ResolveErrorLogRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string error_log_id = 1; */
+        if (message.errorLogId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.errorLogId);
+        /* string notes = 2; */
+        if (message.notes !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.notes);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ResolveErrorLogRequest
+ */
+export const ResolveErrorLogRequest = new ResolveErrorLogRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ClientErrorReport$Type extends MessageType<ClientErrorReport> {
+    constructor() {
+        super("svyne.admin.ClientErrorReport", [
+            { no: 1, name: "error_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "message", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "stack_trace", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "severity", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "page_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "previous_url", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "screen_size", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 8, name: "viewport_size", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "session_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "breadcrumbs_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "occurred_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ClientErrorReport>): ClientErrorReport {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.errorType = "";
+        message.message = "";
+        message.stackTrace = "";
+        message.severity = "";
+        message.pageUrl = "";
+        message.previousUrl = "";
+        message.screenSize = "";
+        message.viewportSize = "";
+        message.sessionId = "";
+        message.breadcrumbsJson = "";
+        message.occurredAt = "0";
+        if (value !== undefined)
+            reflectionMergePartial<ClientErrorReport>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ClientErrorReport): ClientErrorReport {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string error_type */ 1:
+                    message.errorType = reader.string();
+                    break;
+                case /* string message */ 2:
+                    message.message = reader.string();
+                    break;
+                case /* string stack_trace */ 3:
+                    message.stackTrace = reader.string();
+                    break;
+                case /* string severity */ 4:
+                    message.severity = reader.string();
+                    break;
+                case /* string page_url */ 5:
+                    message.pageUrl = reader.string();
+                    break;
+                case /* string previous_url */ 6:
+                    message.previousUrl = reader.string();
+                    break;
+                case /* string screen_size */ 7:
+                    message.screenSize = reader.string();
+                    break;
+                case /* string viewport_size */ 8:
+                    message.viewportSize = reader.string();
+                    break;
+                case /* string session_id */ 9:
+                    message.sessionId = reader.string();
+                    break;
+                case /* string breadcrumbs_json */ 10:
+                    message.breadcrumbsJson = reader.string();
+                    break;
+                case /* int64 occurred_at */ 11:
+                    message.occurredAt = reader.int64().toString();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ClientErrorReport, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string error_type = 1; */
+        if (message.errorType !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.errorType);
+        /* string message = 2; */
+        if (message.message !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.message);
+        /* string stack_trace = 3; */
+        if (message.stackTrace !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.stackTrace);
+        /* string severity = 4; */
+        if (message.severity !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.severity);
+        /* string page_url = 5; */
+        if (message.pageUrl !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.pageUrl);
+        /* string previous_url = 6; */
+        if (message.previousUrl !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.previousUrl);
+        /* string screen_size = 7; */
+        if (message.screenSize !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.screenSize);
+        /* string viewport_size = 8; */
+        if (message.viewportSize !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.viewportSize);
+        /* string session_id = 9; */
+        if (message.sessionId !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.sessionId);
+        /* string breadcrumbs_json = 10; */
+        if (message.breadcrumbsJson !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.breadcrumbsJson);
+        /* int64 occurred_at = 11; */
+        if (message.occurredAt !== "0")
+            writer.tag(11, WireType.Varint).int64(message.occurredAt);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ClientErrorReport
+ */
+export const ClientErrorReport = new ClientErrorReport$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ClientErrorBatch$Type extends MessageType<ClientErrorBatch> {
+    constructor() {
+        super("svyne.admin.ClientErrorBatch", [
+            { no: 1, name: "reports", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => ClientErrorReport }
+        ]);
+    }
+    create(value?: PartialMessage<ClientErrorBatch>): ClientErrorBatch {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.reports = [];
+        if (value !== undefined)
+            reflectionMergePartial<ClientErrorBatch>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ClientErrorBatch): ClientErrorBatch {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.admin.ClientErrorReport reports */ 1:
+                    message.reports.push(ClientErrorReport.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ClientErrorBatch, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.admin.ClientErrorReport reports = 1; */
+        for (let i = 0; i < message.reports.length; i++)
+            ClientErrorReport.internalBinaryWrite(message.reports[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.admin.ClientErrorBatch
+ */
+export const ClientErrorBatch = new ClientErrorBatch$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class CreateFeedbackRequest$Type extends MessageType<CreateFeedbackRequest> {
     constructor() {
         super("svyne.admin.CreateFeedbackRequest", [
@@ -2047,7 +3021,11 @@ export const InvitationService = new ServiceType("svyne.admin.InvitationService"
 export const LogService = new ServiceType("svyne.admin.LogService", [
     { name: "GetAdminLogs", options: {}, I: LogQuery, O: LogPage },
     { name: "GetDeveloperLogs", options: {}, I: LogQuery, O: LogPage },
-    { name: "GetSystemLogs", options: {}, I: LogQuery, O: LogPage }
+    { name: "GetSystemLogs", options: {}, I: LogQuery, O: LogPage },
+    { name: "GetErrorLogs", options: {}, I: ErrorLogQuery, O: ErrorLogPage },
+    { name: "GetErrorLogStats", options: {}, I: Empty, O: ErrorLogStats },
+    { name: "ResolveErrorLog", options: {}, I: ResolveErrorLogRequest, O: AckResponse },
+    { name: "ReportClientErrors", options: {}, I: ClientErrorBatch, O: AckResponse }
 ]);
 /**
  * @generated ServiceType for protobuf service svyne.admin.FeedbackService

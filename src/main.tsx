@@ -5,8 +5,11 @@ import { App } from '@/App';
 import { ThemeProvider } from '@/shared/theme/ThemeContext';
 import { applyTheme } from '@/shared/theme/colors';
 import { initialThemeMode } from '@/shared/hooks/useDarkMode';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
+import { initErrorReporter } from '@/shared/errorReporter';
 import '@/index.css';
 
+initErrorReporter();
 applyTheme(initialThemeMode());
 
 const container = document.getElementById('root');
@@ -16,10 +19,12 @@ if (!container) {
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>,
 );
