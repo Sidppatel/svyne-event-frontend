@@ -1,3 +1,5 @@
+import { useState, type ReactNode } from 'react';
+import { ChevronDown } from 'lucide-react';
 import { useReports } from '@/features/admin/hooks/useReports';
 import {
   percentChange,
@@ -8,6 +10,7 @@ import {
   type Bucket,
 } from '@/features/admin/services/reportingService';
 import { centsToUSD, formatEpoch, formatEventDate } from '@/shared/lib/format';
+import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { Input } from '@/shared/ui/input';
@@ -16,7 +19,30 @@ import { Select } from '@/shared/ui/select';
 import { Switch } from '@/shared/ui/switch';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { RevenueLineChart, BarList, MetricCard } from '@/features/admin/components/ReportCharts';
+import { RevenueLineChart, MetricCard } from '@/features/admin/components/ReportCharts';
+import type { EventPerformanceRow, TicketTypeBreakdownRow } from '@/shared/proto/reporting';
+
+function Drilldown({ open, children }: { open: boolean; children: ReactNode }) {
+  return (
+    <div
+      className={cn(
+        'grid overflow-hidden transition-all duration-300 ease-in-out',
+        open ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0',
+      )}
+    >
+      <div className="overflow-hidden">{children}</div>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="text-[10px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="text-sm font-medium">{value}</p>
+    </div>
+  );
+}
 
 const PRESETS: { value: RangePreset; label: string }[] = [
   { value: 'today', label: 'Today' },
@@ -227,9 +253,11 @@ export function AdminFinancialPage() {
                 Revenue over time
                 {advanced ? <span className="text-xs font-normal text-muted-foreground">with trend line</span> : null}
               </CardTitle>
-              <Button size="sm" variant="outline" onClick={exportTimeseriesCsv}>
-                Export CSV
-              </Button>
+              {advanced ? (
+                <Button size="sm" variant="outline" onClick={exportTimeseriesCsv}>
+                  Export CSV
+                </Button>
+              ) : null}
             </CardHeader>
             <CardContent>
               <RevenueLineChart
@@ -244,124 +272,113 @@ export function AdminFinancialPage() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Event performance</CardTitle>
-              <Button size="sm" variant="outline" onClick={exportEventsCsv}>
-                Export CSV
-              </Button>
-            </CardHeader>
-            <CardContent className="overflow-x-auto">
-              {data.events.rows.length === 0 ? (
-                <p className="py-6 text-center text-sm text-muted-foreground">No events in this period.</p>
-              ) : (
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b text-left text-xs uppercase tracking-wide text-muted-foreground">
-                      <th className="py-2 pr-3">Event</th>
-                      <th className="py-2 pr-3">Start</th>
-                      <th className="py-2 pr-3">Status</th>
-                      <th className="py-2 pr-3 text-right">Revenue</th>
-                      <th className="py-2 pr-3 text-right">Tickets</th>
-                      <th className="py-2 pr-3 text-right">Attendance</th>
-                      {advanced ? (
-                        <>
-                          <th className="py-2 pr-3 text-right">Capacity used</th>
-                          <th className="py-2 pr-3 text-right">Velocity</th>
-                          <th className="py-2 pr-3 text-right">Rev / attendee</th>
-                          <th className="py-2 text-right">Refunded</th>
-                        </>
-                      ) : null}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.events.rows.map((row) => (
-                      <tr key={row.eventsId} className="border-b last:border-0">
-                        <td className="py-2 pr-3 font-medium">{row.eventTitle}</td>
-                        <td className="py-2 pr-3 text-muted-foreground">{formatEventDate(row.eventStartEpochSeconds)}</td>
-                        <td className="py-2 pr-3">{row.eventStatus}</td>
-                        <td className="py-2 pr-3 text-right font-mono">{centsToUSD(row.revenueCents)}</td>
-                        <td className="py-2 pr-3 text-right">{row.ticketsSold}</td>
-                        <td className="py-2 pr-3 text-right">{bpsToPercentLabel(row.attendanceRateBps)}</td>
-                        {advanced ? (
-                          <>
-                            <td className="py-2 pr-3 text-right">{bpsToPercentLabel(row.capacityUsedBps)}</td>
-                            <td className="py-2 pr-3 text-right">{salesVelocityLabel(row.salesPerDayMilli)}</td>
-                            <td className="py-2 pr-3 text-right font-mono">{centsToUSD(row.revenuePerAttendeeCents)}</td>
-                            <td className="py-2 text-right font-mono">{centsToUSD(row.refundedCents)}</td>
-                          </>
-                        ) : null}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </CardContent>
-          </Card>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          {advanced ? (
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>Revenue by ticket type</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  Event performance <ProBadge />
+                </CardTitle>
+                <Button size="sm" variant="outline" onClick={exportEventsCsv}>
+                  Export CSV
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {data.events.rows.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">No events in this period.</p>
+                ) : (
+                  <div className="divide-y">
+                    {data.events.rows.map((row) => (
+                      <EventRow key={row.eventsId} row={row} />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
+
+          {advanced ? (
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  Revenue by ticket type <ProBadge />
+                </CardTitle>
                 <Button size="sm" variant="outline" onClick={exportTicketTypesCsv}>
                   Export CSV
                 </Button>
               </CardHeader>
               <CardContent>
-                <BarList
-                  rows={data.ticketTypes.rows.map((row) => ({
-                    label: `${row.label} — ${row.eventTitle}`,
-                    detail: `${row.quantitySold} sold · ${centsToUSD(row.revenueCents)}`,
-                    valueCents: Number(row.revenueCents),
-                  }))}
-                />
-                {advanced && data.ticketTypes.rows.some((row) => row.refundedQuantity > 0) ? (
-                  <div className="mt-4 border-t pt-3">
-                    <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Refunds & cancellations
-                    </p>
-                    {data.ticketTypes.rows
-                      .filter((row) => row.refundedQuantity > 0)
-                      .map((row) => (
-                        <p key={`${row.eventTicketTypesId}-${row.eventsId}`} className="text-sm text-muted-foreground">
-                          {row.label} — {row.eventTitle}: {row.refundedQuantity} refunded (
-                          {centsToUSD(row.refundedCents)})
-                        </p>
-                      ))}
-                  </div>
-                ) : null}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center gap-2">
-                <CardTitle>Sales by channel</CardTitle>
-                <ProBadge />
-              </CardHeader>
-              <CardContent>
-                {advanced && data.channels ? (
-                  <BarList
-                    rows={data.channels.rows.map((row) => ({
-                      label: row.channel,
-                      detail: `${row.orders} orders · ${row.ticketsSold} tickets · ${centsToUSD(row.revenueCents)}`,
-                      valueCents: Number(row.revenueCents),
-                    }))}
-                  />
+                {data.ticketTypes.rows.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">Nothing to show for this period.</p>
                 ) : (
-                  <div className="py-8 text-center">
-                    <p className="text-sm text-muted-foreground">
-                      See where your sales come from — direct, social, email, QR, and partners.
-                    </p>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      Included with Professional plans and above.
-                    </p>
+                  <div className="divide-y">
+                    {data.ticketTypes.rows.map((row) => (
+                      <TicketTypeRow key={`${row.eventTicketTypesId}-${row.eventsId}`} row={row} />
+                    ))}
                   </div>
                 )}
               </CardContent>
             </Card>
-          </div>
+          ) : null}
         </>
       )}
+    </div>
+  );
+}
+
+function EventRow({ row }: { row: EventPerformanceRow }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-3 py-2 text-left text-sm hover:bg-muted/40"
+      >
+        <ChevronDown className={cn('h-4 w-4 shrink-0 transition-transform', open ? 'rotate-180' : '')} />
+        <span className="flex-1 font-medium">{row.eventTitle}</span>
+        <span className="text-muted-foreground">{formatEventDate(row.eventStartEpochSeconds)}</span>
+        <span className="w-24 text-right font-mono">{centsToUSD(row.revenueCents)}</span>
+      </button>
+      <Drilldown open={open}>
+        <div className="grid grid-cols-2 gap-3 border-l-2 border-primary/30 py-3 pl-7 sm:grid-cols-4">
+          <Stat label="Status" value={row.eventStatus} />
+          <Stat label="Orders" value={String(row.orders)} />
+          <Stat label="Tickets" value={String(row.ticketsSold)} />
+          <Stat label="Checked in" value={String(row.checkedIn)} />
+          <Stat label="Attendance" value={bpsToPercentLabel(row.attendanceRateBps)} />
+          <Stat label="Capacity used" value={bpsToPercentLabel(row.capacityUsedBps)} />
+          <Stat label="Velocity" value={salesVelocityLabel(row.salesPerDayMilli)} />
+          <Stat label="Rev / attendee" value={centsToUSD(row.revenuePerAttendeeCents)} />
+          <Stat label="Refunded" value={centsToUSD(row.refundedCents)} />
+        </div>
+      </Drilldown>
+    </div>
+  );
+}
+
+function TicketTypeRow({ row }: { row: TicketTypeBreakdownRow }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-3 py-2 text-left text-sm hover:bg-muted/40"
+      >
+        <ChevronDown className={cn('h-4 w-4 shrink-0 transition-transform', open ? 'rotate-180' : '')} />
+        <span className="flex-1 font-medium">
+          {row.label} <span className="text-muted-foreground">— {row.eventTitle}</span>
+        </span>
+        <span className="w-24 text-right font-mono">{centsToUSD(row.revenueCents)}</span>
+      </button>
+      <Drilldown open={open}>
+        <div className="grid grid-cols-2 gap-3 border-l-2 border-primary/30 py-3 pl-7 sm:grid-cols-4">
+          <Stat label="Price" value={centsToUSD(row.priceCents)} />
+          <Stat label="Quantity sold" value={String(row.quantitySold)} />
+          <Stat label="Refunded qty" value={String(row.refundedQuantity)} />
+          <Stat label="Refunded" value={centsToUSD(row.refundedCents)} />
+        </div>
+      </Drilldown>
     </div>
   );
 }

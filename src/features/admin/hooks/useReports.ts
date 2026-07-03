@@ -8,7 +8,6 @@ import {
   getRevenueTimeseries,
   getEventPerformance,
   getTicketTypeBreakdown,
-  getSalesByChannel,
   type RangePreset,
   type Bucket,
 } from '@/features/admin/services/reportingService';
@@ -18,7 +17,6 @@ import type {
   RevenueTimeseries,
   EventPerformanceList,
   TicketTypeBreakdownList,
-  SalesByChannelList,
 } from '@/shared/proto/reporting';
 
 export interface ReportsData {
@@ -29,7 +27,6 @@ export interface ReportsData {
   comparisonTimeseries: RevenueTimeseries | null;
   events: EventPerformanceList;
   ticketTypes: TicketTypeBreakdownList;
-  channels: SalesByChannelList | null;
 }
 
 export interface ReportsControls {
@@ -60,21 +57,19 @@ export function useReports() {
   const loader = useCallback(async (): Promise<ReportsData> => {
     const range = resolveRange(preset, customFrom, customTo);
     const access = await getReportingAccess();
-    const wantChannels = access.hasAdvancedReporting;
     const wantComparison = access.hasAdvancedReporting && compareEnabled;
-    const [summary, previousSummary, timeseries, events, ticketTypes, channels, comparisonTimeseries] =
+    const [summary, previousSummary, timeseries, events, ticketTypes, comparisonTimeseries] =
       await Promise.all([
         getReportSummary(range.fromEpochSeconds, range.toEpochSeconds),
         getReportSummary(range.previousFromEpochSeconds, range.previousToEpochSeconds),
         getRevenueTimeseries(range.fromEpochSeconds, range.toEpochSeconds, bucket),
         getEventPerformance(range.fromEpochSeconds, range.toEpochSeconds),
         getTicketTypeBreakdown(range.fromEpochSeconds, range.toEpochSeconds),
-        wantChannels ? getSalesByChannel(range.fromEpochSeconds, range.toEpochSeconds) : Promise.resolve(null),
         wantComparison
           ? getRevenueTimeseries(range.previousFromEpochSeconds, range.previousToEpochSeconds, bucket)
           : Promise.resolve(null),
       ]);
-    return { access, summary, previousSummary, timeseries, comparisonTimeseries, events, ticketTypes, channels };
+    return { access, summary, previousSummary, timeseries, comparisonTimeseries, events, ticketTypes };
   }, [preset, bucket, compareEnabled, customFrom, customTo]);
 
   const state = useAsync(loader);
