@@ -3,6 +3,8 @@
 // @generated from protobuf file "bookings.proto" (package "svyne.booking", syntax proto3)
 // tslint:disable
 import { CheckInService } from "./bookings";
+import type { ListCheckInLogsResponse } from "./bookings";
+import type { ListCheckInLogsRequest } from "./bookings";
 import type { CheckInGuestRequest } from "./bookings";
 import type { GetGuestListResponse } from "./bookings";
 import type { ListEventsForStaffResponse } from "./bookings";
@@ -323,6 +325,10 @@ export interface ICheckInServiceClient {
      * @generated from protobuf rpc: CheckInGuest(svyne.booking.CheckInGuestRequest) returns (svyne.booking.ScanResponse);
      */
     checkInGuest(input: CheckInGuestRequest, options?: RpcOptions): UnaryCall<CheckInGuestRequest, ScanResponse>;
+    /**
+     * @generated from protobuf rpc: ListCheckInLogs(svyne.booking.ListCheckInLogsRequest) returns (svyne.booking.ListCheckInLogsResponse);
+     */
+    listCheckInLogs(input: ListCheckInLogsRequest, options?: RpcOptions): UnaryCall<ListCheckInLogsRequest, ListCheckInLogsResponse>;
 }
 /**
  * @generated from protobuf service svyne.booking.CheckInService
@@ -367,5 +373,12 @@ export class CheckInServiceClient implements ICheckInServiceClient, ServiceInfo 
     checkInGuest(input: CheckInGuestRequest, options?: RpcOptions): UnaryCall<CheckInGuestRequest, ScanResponse> {
         const method = this.methods[4], opt = this._transport.mergeOptions(options);
         return stackIntercept<CheckInGuestRequest, ScanResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListCheckInLogs(svyne.booking.ListCheckInLogsRequest) returns (svyne.booking.ListCheckInLogsResponse);
+     */
+    listCheckInLogs(input: ListCheckInLogsRequest, options?: RpcOptions): UnaryCall<ListCheckInLogsRequest, ListCheckInLogsResponse> {
+        const method = this.methods[5], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ListCheckInLogsRequest, ListCheckInLogsResponse>("unary", this._transport, method, opt, input);
     }
 }

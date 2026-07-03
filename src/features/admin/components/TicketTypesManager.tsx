@@ -14,7 +14,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Pencil, Ticket, Trash2 } from 'lucide-react';
+import { Lock, Pencil, Ticket, Trash2 } from 'lucide-react';
 
 export function TicketTypesManager({ eventsId }: { eventsId: string }) {
   const loader = useCallback(() => listTicketTypes(eventsId), [eventsId]);
@@ -137,6 +137,7 @@ function TicketTypeRow({
   const [priceUsd, setPriceUsd] = useState(centsToUsdInput(tt.priceCents));
   const [description, setDescription] = useState(tt.description);
   const [capacity, setCapacity] = useState(tt.capacity);
+  const isLockedBySales = tt.soldCount > 0;
 
   async function guard(action: () => Promise<void>) {
     try {
@@ -149,13 +150,27 @@ function TicketTypeRow({
   if (editing) {
     return (
       <div className="flex flex-wrap items-end gap-3 rounded-lg border border-primary/40 bg-primary/5 p-3">
+        {isLockedBySales ? (
+          <p className="w-full text-xs text-amber-foreground">
+            <Lock className="mr-1 inline size-3" aria-hidden />
+            {tt.soldCount} sold — name and price are locked. Create a new ticket type to change pricing.
+          </p>
+        ) : null}
         <div className="space-y-1">
           <Label>Label</Label>
-          <Input className="w-40" value={label} onChange={(e) => setLabel(e.target.value)} />
+          <Input className="w-40" value={label} disabled={isLockedBySales} onChange={(e) => setLabel(e.target.value)} />
         </div>
         <div className="space-y-1">
           <Label>Price (USD)</Label>
-          <Input className="w-28" type="number" min={0} step="0.01" value={priceUsd} onChange={(e) => setPriceUsd(e.target.value)} />
+          <Input
+            className="w-28"
+            type="number"
+            min={0}
+            step="0.01"
+            value={priceUsd}
+            disabled={isLockedBySales}
+            onChange={(e) => setPriceUsd(e.target.value)}
+          />
         </div>
         <div className="space-y-1">
           <Label>Capacity</Label>
@@ -201,6 +216,12 @@ function TicketTypeRow({
         <span className="font-medium">{tt.label}</span>
         {tt.description ? <span className="block truncate text-xs text-muted-foreground">{tt.description}</span> : null}
         {tt.capacity ? <span className="block text-xs text-muted-foreground">Capacity {tt.capacity}</span> : null}
+        {isLockedBySales ? (
+          <span className="block text-xs text-amber-foreground">
+            <Lock className="mr-1 inline size-3" aria-hidden />
+            {tt.soldCount} sold — locked
+          </span>
+        ) : null}
       </div>
       <div className="flex shrink-0 items-center gap-3">
         <span className="text-muted-foreground tabular-nums">

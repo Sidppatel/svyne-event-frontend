@@ -23,6 +23,7 @@ import type { TableTemplate } from '@/shared/proto/booking';
 import { PricingManager } from '@/features/admin/components/PricingManager';
 import { ScheduleTimeline } from '@/features/admin/components/ScheduleTimeline';
 import { TicketTypesManager } from '@/features/admin/components/TicketTypesManager';
+import { CheckInLogsPanel } from '@/features/admin/components/CheckInLogsPanel';
 import { FloorPlanPanel } from '@/features/admin/components/FloorPlanPanel';
 import { EventMediaManager } from '@/features/admin/components/EventMediaManager';
 import type { Event } from '@/shared/proto/event';
@@ -508,6 +509,8 @@ export function AdminEventManagePage() {
               </div>
             </CardContent>
           </Card>
+
+          {event.data ? <CheckInLogsPanel eventsId={eventsId} eventTitle={event.data.title} /> : null}
         </div>
       )}
 

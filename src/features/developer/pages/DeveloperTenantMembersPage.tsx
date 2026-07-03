@@ -135,6 +135,7 @@ function TenantBasicForm({ tenantsId }: { tenantsId: string }) {
 function TenantDefaultFeeForm({ tenantsId }: { tenantsId: string }) {
   const [formulas, setFormulas] = useState<FeeFormula[]>([]);
   const [selected, setSelected] = useState('');
+  const [reason, setReason] = useState('');
   const [status, setStatus] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -153,10 +154,14 @@ function TenantDefaultFeeForm({ tenantsId }: { tenantsId: string }) {
       setStatus('Pick a formula first.');
       return;
     }
+    if (!reason.trim()) {
+      setStatus('Enter a reason for this fee change.');
+      return;
+    }
     setSaving(true);
     setStatus(null);
     try {
-      await setTenantDefaultFeeFormula(tenantsId, selected);
+      await setTenantDefaultFeeFormula(tenantsId, selected, reason.trim());
       setStatus('Default fee saved — auto-applies to every new event price.');
     } catch (e) {
       setStatus(rpcErrorMessage(e));
@@ -194,6 +199,15 @@ function TenantDefaultFeeForm({ tenantsId }: { tenantsId: string }) {
               </option>
             ))}
           </select>
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="default-fee-reason">Reason</Label>
+          <Input
+            id="default-fee-reason"
+            value={reason}
+            placeholder="e.g. Strategic partner volume discount"
+            onChange={(e) => setReason(e.target.value)}
+          />
         </div>
         {status ? <p className="text-sm text-muted-foreground">{status}</p> : null}
         <Button onClick={save} disabled={saving}>

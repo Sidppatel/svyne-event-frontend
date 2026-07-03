@@ -167,6 +167,10 @@ export interface AssignFeeFormulaRequest {
      * @generated from protobuf field: string fee_formulas_id = 3;
      */
     feeFormulasId: string; // empty clears the formula
+    /**
+     * @generated from protobuf field: string reason = 4;
+     */
+    reason: string; // required audit note for developer overrides
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class FeeFormula$Type extends MessageType<FeeFormula> {
@@ -616,7 +620,8 @@ class AssignFeeFormulaRequest$Type extends MessageType<AssignFeeFormulaRequest> 
         super("svyne.fees.AssignFeeFormulaRequest", [
             { no: 1, name: "kind", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "target_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 3, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 3, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "reason", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<AssignFeeFormulaRequest>): AssignFeeFormulaRequest {
@@ -624,6 +629,7 @@ class AssignFeeFormulaRequest$Type extends MessageType<AssignFeeFormulaRequest> 
         message.kind = "";
         message.targetId = "";
         message.feeFormulasId = "";
+        message.reason = "";
         if (value !== undefined)
             reflectionMergePartial<AssignFeeFormulaRequest>(this, message, value);
         return message;
@@ -641,6 +647,9 @@ class AssignFeeFormulaRequest$Type extends MessageType<AssignFeeFormulaRequest> 
                     break;
                 case /* string fee_formulas_id */ 3:
                     message.feeFormulasId = reader.string();
+                    break;
+                case /* string reason */ 4:
+                    message.reason = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -663,6 +672,9 @@ class AssignFeeFormulaRequest$Type extends MessageType<AssignFeeFormulaRequest> 
         /* string fee_formulas_id = 3; */
         if (message.feeFormulasId !== "")
             writer.tag(3, WireType.LengthDelimited).string(message.feeFormulasId);
+        /* string reason = 4; */
+        if (message.reason !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.reason);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

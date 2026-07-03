@@ -408,6 +408,10 @@ export interface EventTicketType {
      * @generated from protobuf field: int32 selling_price_cents = 9;
      */
     sellingPriceCents: number;
+    /**
+     * @generated from protobuf field: int32 sold_count = 10;
+     */
+    soldCount: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListEventTicketTypesResponse
@@ -673,6 +677,93 @@ export interface CheckInStats {
      * @generated from protobuf field: int32 remaining = 3;
      */
     remaining: number;
+}
+/**
+ * @generated from protobuf message svyne.booking.ListCheckInLogsRequest
+ */
+export interface ListCheckInLogsRequest {
+    /**
+     * @generated from protobuf field: string events_id = 1;
+     */
+    eventsId: string;
+    /**
+     * @generated from protobuf field: string staff_user_id = 2;
+     */
+    staffUserId: string;
+    /**
+     * @generated from protobuf field: string method = 3;
+     */
+    method: string;
+    /**
+     * @generated from protobuf field: string status = 4;
+     */
+    status: string;
+    /**
+     * @generated from protobuf field: int32 page = 5;
+     */
+    page: number;
+    /**
+     * @generated from protobuf field: int32 page_size = 6;
+     */
+    pageSize: number;
+}
+/**
+ * @generated from protobuf message svyne.booking.CheckInLogEntry
+ */
+export interface CheckInLogEntry {
+    /**
+     * @generated from protobuf field: string checkin_logs_id = 1;
+     */
+    checkinLogsId: string;
+    /**
+     * @generated from protobuf field: string staff_name = 2;
+     */
+    staffName: string;
+    /**
+     * @generated from protobuf field: string attendee_name = 3;
+     */
+    attendeeName: string;
+    /**
+     * @generated from protobuf field: string booking_number = 4;
+     */
+    bookingNumber: string;
+    /**
+     * @generated from protobuf field: string ticket_code = 5;
+     */
+    ticketCode: string;
+    /**
+     * @generated from protobuf field: string ticket_type_label = 6;
+     */
+    ticketTypeLabel: string;
+    /**
+     * @generated from protobuf field: int64 timestamp = 7;
+     */
+    timestamp: string;
+    /**
+     * @generated from protobuf field: string method = 8;
+     */
+    method: string;
+    /**
+     * @generated from protobuf field: string status = 9;
+     */
+    status: string;
+    /**
+     * @generated from protobuf field: string failure_reason = 10;
+     */
+    failureReason: string;
+}
+/**
+ * @generated from protobuf message svyne.booking.ListCheckInLogsResponse
+ */
+export interface ListCheckInLogsResponse {
+    /**
+     * @generated from protobuf field: repeated svyne.booking.CheckInLogEntry logs = 1;
+     */
+    logs: CheckInLogEntry[];
+    /**
+     * @generated from protobuf field: int32 total_count = 2;
+     */
+    totalCount: number;
 }
 /**
  * @generated from protobuf message svyne.booking.StaffEvent
@@ -1734,7 +1825,8 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
             { no: 6, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 7, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 9, name: "selling_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 9, name: "selling_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 10, name: "sold_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<EventTicketType>): EventTicketType {
@@ -1748,6 +1840,7 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         message.feeFormulasId = "";
         message.capacity = 0;
         message.sellingPriceCents = 0;
+        message.soldCount = 0;
         if (value !== undefined)
             reflectionMergePartial<EventTicketType>(this, message, value);
         return message;
@@ -1783,6 +1876,9 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
                     break;
                 case /* int32 selling_price_cents */ 9:
                     message.sellingPriceCents = reader.int32();
+                    break;
+                case /* int32 sold_count */ 10:
+                    message.soldCount = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1823,6 +1919,9 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         /* int32 selling_price_cents = 9; */
         if (message.sellingPriceCents !== 0)
             writer.tag(9, WireType.Varint).int32(message.sellingPriceCents);
+        /* int32 sold_count = 10; */
+        if (message.soldCount !== 0)
+            writer.tag(10, WireType.Varint).int32(message.soldCount);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -2785,6 +2884,267 @@ class CheckInStats$Type extends MessageType<CheckInStats> {
  */
 export const CheckInStats = new CheckInStats$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class ListCheckInLogsRequest$Type extends MessageType<ListCheckInLogsRequest> {
+    constructor() {
+        super("svyne.booking.ListCheckInLogsRequest", [
+            { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "staff_user_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "method", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "page", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 6, name: "page_size", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ListCheckInLogsRequest>): ListCheckInLogsRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.eventsId = "";
+        message.staffUserId = "";
+        message.method = "";
+        message.status = "";
+        message.page = 0;
+        message.pageSize = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ListCheckInLogsRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ListCheckInLogsRequest): ListCheckInLogsRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string events_id */ 1:
+                    message.eventsId = reader.string();
+                    break;
+                case /* string staff_user_id */ 2:
+                    message.staffUserId = reader.string();
+                    break;
+                case /* string method */ 3:
+                    message.method = reader.string();
+                    break;
+                case /* string status */ 4:
+                    message.status = reader.string();
+                    break;
+                case /* int32 page */ 5:
+                    message.page = reader.int32();
+                    break;
+                case /* int32 page_size */ 6:
+                    message.pageSize = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ListCheckInLogsRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string events_id = 1; */
+        if (message.eventsId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.eventsId);
+        /* string staff_user_id = 2; */
+        if (message.staffUserId !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.staffUserId);
+        /* string method = 3; */
+        if (message.method !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.method);
+        /* string status = 4; */
+        if (message.status !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.status);
+        /* int32 page = 5; */
+        if (message.page !== 0)
+            writer.tag(5, WireType.Varint).int32(message.page);
+        /* int32 page_size = 6; */
+        if (message.pageSize !== 0)
+            writer.tag(6, WireType.Varint).int32(message.pageSize);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.booking.ListCheckInLogsRequest
+ */
+export const ListCheckInLogsRequest = new ListCheckInLogsRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class CheckInLogEntry$Type extends MessageType<CheckInLogEntry> {
+    constructor() {
+        super("svyne.booking.CheckInLogEntry", [
+            { no: 1, name: "checkin_logs_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "staff_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "attendee_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "booking_number", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "ticket_code", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "ticket_type_label", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "timestamp", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 8, name: "method", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "status", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "failure_reason", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<CheckInLogEntry>): CheckInLogEntry {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.checkinLogsId = "";
+        message.staffName = "";
+        message.attendeeName = "";
+        message.bookingNumber = "";
+        message.ticketCode = "";
+        message.ticketTypeLabel = "";
+        message.timestamp = "0";
+        message.method = "";
+        message.status = "";
+        message.failureReason = "";
+        if (value !== undefined)
+            reflectionMergePartial<CheckInLogEntry>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: CheckInLogEntry): CheckInLogEntry {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string checkin_logs_id */ 1:
+                    message.checkinLogsId = reader.string();
+                    break;
+                case /* string staff_name */ 2:
+                    message.staffName = reader.string();
+                    break;
+                case /* string attendee_name */ 3:
+                    message.attendeeName = reader.string();
+                    break;
+                case /* string booking_number */ 4:
+                    message.bookingNumber = reader.string();
+                    break;
+                case /* string ticket_code */ 5:
+                    message.ticketCode = reader.string();
+                    break;
+                case /* string ticket_type_label */ 6:
+                    message.ticketTypeLabel = reader.string();
+                    break;
+                case /* int64 timestamp */ 7:
+                    message.timestamp = reader.int64().toString();
+                    break;
+                case /* string method */ 8:
+                    message.method = reader.string();
+                    break;
+                case /* string status */ 9:
+                    message.status = reader.string();
+                    break;
+                case /* string failure_reason */ 10:
+                    message.failureReason = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: CheckInLogEntry, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string checkin_logs_id = 1; */
+        if (message.checkinLogsId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.checkinLogsId);
+        /* string staff_name = 2; */
+        if (message.staffName !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.staffName);
+        /* string attendee_name = 3; */
+        if (message.attendeeName !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.attendeeName);
+        /* string booking_number = 4; */
+        if (message.bookingNumber !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.bookingNumber);
+        /* string ticket_code = 5; */
+        if (message.ticketCode !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.ticketCode);
+        /* string ticket_type_label = 6; */
+        if (message.ticketTypeLabel !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.ticketTypeLabel);
+        /* int64 timestamp = 7; */
+        if (message.timestamp !== "0")
+            writer.tag(7, WireType.Varint).int64(message.timestamp);
+        /* string method = 8; */
+        if (message.method !== "")
+            writer.tag(8, WireType.LengthDelimited).string(message.method);
+        /* string status = 9; */
+        if (message.status !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.status);
+        /* string failure_reason = 10; */
+        if (message.failureReason !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.failureReason);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.booking.CheckInLogEntry
+ */
+export const CheckInLogEntry = new CheckInLogEntry$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class ListCheckInLogsResponse$Type extends MessageType<ListCheckInLogsResponse> {
+    constructor() {
+        super("svyne.booking.ListCheckInLogsResponse", [
+            { no: 1, name: "logs", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => CheckInLogEntry },
+            { no: 2, name: "total_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<ListCheckInLogsResponse>): ListCheckInLogsResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.logs = [];
+        message.totalCount = 0;
+        if (value !== undefined)
+            reflectionMergePartial<ListCheckInLogsResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: ListCheckInLogsResponse): ListCheckInLogsResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.booking.CheckInLogEntry logs */ 1:
+                    message.logs.push(CheckInLogEntry.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* int32 total_count */ 2:
+                    message.totalCount = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: ListCheckInLogsResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.booking.CheckInLogEntry logs = 1; */
+        for (let i = 0; i < message.logs.length; i++)
+            CheckInLogEntry.internalBinaryWrite(message.logs[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        /* int32 total_count = 2; */
+        if (message.totalCount !== 0)
+            writer.tag(2, WireType.Varint).int32(message.totalCount);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.booking.ListCheckInLogsResponse
+ */
+export const ListCheckInLogsResponse = new ListCheckInLogsResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class StaffEvent$Type extends MessageType<StaffEvent> {
     constructor() {
         super("svyne.booking.StaffEvent", [
@@ -3240,5 +3600,6 @@ export const CheckInService = new ServiceType("svyne.booking.CheckInService", [
     { name: "GetCheckInStats", options: {}, I: UuidValue, O: CheckInStats },
     { name: "ListEventsForStaff", options: {}, I: Empty, O: ListEventsForStaffResponse },
     { name: "GetGuestList", options: {}, I: UuidValue, O: GetGuestListResponse },
-    { name: "CheckInGuest", options: {}, I: CheckInGuestRequest, O: ScanResponse }
+    { name: "CheckInGuest", options: {}, I: CheckInGuestRequest, O: ScanResponse },
+    { name: "ListCheckInLogs", options: {}, I: ListCheckInLogsRequest, O: ListCheckInLogsResponse }
 ]);

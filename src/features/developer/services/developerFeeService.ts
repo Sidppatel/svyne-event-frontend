@@ -39,8 +39,9 @@ export async function assignFeeFormula(
   kind: 'ticket' | 'table',
   targetId: string,
   feeFormulasId: string,
+  reason: string,
 ): Promise<void> {
-  await callRpc(() => feeClient.assignFeeFormula({ kind, targetId, feeFormulasId }));
+  await callRpc(() => feeClient.assignFeeFormula({ kind, targetId, feeFormulasId, reason }));
 }
 
 /** fee = round(price * percentBps / 10000) + flatCents, clamped to [min,max]. */

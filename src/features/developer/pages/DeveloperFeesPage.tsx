@@ -27,6 +27,7 @@ export function DeveloperFeesPage() {
   const events = useAsync(eventsLoader);
 
   const [form, setForm] = useState(EMPTY_FORM);
+  const [overrideReason, setOverrideReason] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -74,8 +75,12 @@ export function DeveloperFeesPage() {
   }
 
   async function assign(kind: 'ticket' | 'table', targetId: string, feeFormulasId: string) {
+    if (!overrideReason.trim()) {
+      setError('Enter an override reason before changing a fee assignment.');
+      return;
+    }
     try {
-      await assignFeeFormula(kind, targetId, feeFormulasId);
+      await assignFeeFormula(kind, targetId, feeFormulasId, overrideReason.trim());
       events.reload();
     } catch (caught) {
       setError(rpcErrorMessage(caught));
@@ -155,6 +160,15 @@ export function DeveloperFeesPage() {
           <CardTitle>All events</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="space-y-1 max-w-md">
+            <Label htmlFor="override-reason">Override reason (required to change assignments)</Label>
+            <Input
+              id="override-reason"
+              value={overrideReason}
+              placeholder="e.g. Non-profit fundraiser discount"
+              onChange={(e) => setOverrideReason(e.target.value)}
+            />
+          </div>
           {events.loading ? <p className="text-muted-foreground">Loading…</p> : null}
           {(events.data ?? []).map((ev) => (
             <div key={ev.eventsId} className="rounded-md border">

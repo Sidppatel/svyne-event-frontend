@@ -89,6 +89,10 @@ export async function calculatePrice(
   return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at, remaining }));
 }
 
-export async function setTenantDefaultFeeFormula(tenantsId: string, feeFormulasId: string): Promise<void> {
-  await callRpc(() => pricingClient.setTenantDefaultFeeFormula({ tenantsId, feeFormulasId }));
+export async function setTenantDefaultFeeFormula(
+  tenantsId: string,
+  feeFormulasId: string,
+  reason: string,
+): Promise<void> {
+  await callRpc(() => pricingClient.setTenantDefaultFeeFormula({ tenantsId, feeFormulasId, reason }));
 }

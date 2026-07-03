@@ -413,6 +413,10 @@ export interface SetTenantDefaultFeeFormulaRequest {
      * @generated from protobuf field: string fee_formulas_id = 2;
      */
     feeFormulasId: string; // empty = clear default
+    /**
+     * @generated from protobuf field: string reason = 3;
+     */
+    reason: string; // required audit note
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class Price$Type extends MessageType<Price> {
@@ -1465,13 +1469,15 @@ class SetTenantDefaultFeeFormulaRequest$Type extends MessageType<SetTenantDefaul
     constructor() {
         super("svyne.pricing.SetTenantDefaultFeeFormulaRequest", [
             { no: 1, name: "tenants_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "reason", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<SetTenantDefaultFeeFormulaRequest>): SetTenantDefaultFeeFormulaRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.tenantsId = "";
         message.feeFormulasId = "";
+        message.reason = "";
         if (value !== undefined)
             reflectionMergePartial<SetTenantDefaultFeeFormulaRequest>(this, message, value);
         return message;
@@ -1486,6 +1492,9 @@ class SetTenantDefaultFeeFormulaRequest$Type extends MessageType<SetTenantDefaul
                     break;
                 case /* string fee_formulas_id */ 2:
                     message.feeFormulasId = reader.string();
+                    break;
+                case /* string reason */ 3:
+                    message.reason = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1505,6 +1514,9 @@ class SetTenantDefaultFeeFormulaRequest$Type extends MessageType<SetTenantDefaul
         /* string fee_formulas_id = 2; */
         if (message.feeFormulasId !== "")
             writer.tag(2, WireType.LengthDelimited).string(message.feeFormulasId);
+        /* string reason = 3; */
+        if (message.reason !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.reason);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
