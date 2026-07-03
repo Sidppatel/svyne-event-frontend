@@ -490,7 +490,7 @@ function InlineRuleBuilder({
 
         <div className="space-y-1.5">
           <Label className="text-[10px]">Ends</Label>
-          <DateTimePicker value={until} onChange={setUntil} timeZone={timeZone} />
+          <DateTimePicker value={until} onChange={setUntil} timeZone={timeZone} fallbackDate={from} />
         </div>
       </div>
 

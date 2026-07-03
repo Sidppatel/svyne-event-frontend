@@ -17,7 +17,7 @@ import { getVenue, listVenues } from '@/features/admin/services/catalogService';
 import { EventCatalogLinks } from '@/features/admin/components/EventCatalogLinks';
 import { EventExtraInfoEditor } from '@/features/admin/components/EventExtraInfoEditor';
 import { getEventLayout } from '@/features/admin/services/layoutService';
-import { tzForState, epochToZonedInput, zonedInputToEpoch, zoneAbbrev } from '@/shared/lib/timezone';
+import { tzForState, epochToZonedInput, zonedInputToEpoch } from '@/shared/lib/timezone';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
 import type { TableTemplate } from '@/shared/proto/booking';
 import { PricingManager } from '@/features/admin/components/PricingManager';
@@ -39,6 +39,7 @@ import { addCents } from '@/shared/lib/math';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
+import { Textarea } from '@/shared/ui/textarea';
 import { Select } from '@/shared/ui/select';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
@@ -639,10 +640,13 @@ function EditSection({
 
   return (
     <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
-      <CardHeader className="border-b border-border/20 px-6 py-4">
+      <CardHeader className="border-b border-border/20 px-6 py-4 flex flex-row items-center justify-between gap-2">
         <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
           <FileEdit className="h-4.5 w-4.5 text-primary" /> Edit Details
         </CardTitle>
+        <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+          Capacity {event.totalCapacity}
+        </span>
       </CardHeader>
       <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 p-6">
         <div className="space-y-1.5">
@@ -658,20 +662,6 @@ function EditSection({
           </div>
         </div>
         <div className="space-y-1.5">
-          <Label className="text-[10px]">Event capacity</Label>
-          <div className="svyne-spring-input">
-            <Input type="number" value={event.totalCapacity} readOnly disabled className="h-10 bg-background border-border text-sm" />
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Event type</Label>
-          <Select value={eventType} onChange={(e) => setEventType(e.target.value)} className="h-10 bg-background border-border text-sm">
-            <option value="Open">Open seating (ticket tiers)</option>
-            <option value="Table">Table based (floor plan)</option>
-            <option value="Both">Both (tiers + tables)</option>
-          </Select>
-        </div>
-        <div className="space-y-1.5">
           <Label className="text-[10px]">Venue</Label>
           <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)} className="h-10 bg-background border-border text-sm">
             <option value="">— select venue —</option>
@@ -685,19 +675,24 @@ function EditSection({
           </Select>
         </div>
         <div className="space-y-1.5">
-          <div className="flex items-baseline justify-between">
-            <Label className="text-[10px]">Event starts</Label>
-            <span className="text-[10px] text-muted-foreground uppercase">Times in {zoneAbbrev(timeZone)}</span>
-          </div>
+          <Label className="text-[10px]">Event type</Label>
+          <Select value={eventType} onChange={(e) => setEventType(e.target.value)} className="h-10 bg-background border-border text-sm">
+            <option value="Open">Open seating (ticket tiers)</option>
+            <option value="Table">Table based (floor plan)</option>
+            <option value="Both">Both (tiers + tables)</option>
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label className="text-[10px]">Event starts</Label>
           <DateTimePicker value={start} onChange={setStart} timeZone={timeZone} />
         </div>
         <div className="space-y-1.5">
           <Label className="text-[10px]">Event ends</Label>
-          <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} />
+          <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} fallbackDate={start} />
         </div>
         <div className="space-y-1.5 md:col-span-2">
           <Label className="text-[10px]">Description</Label>
-          <Input value={description} onChange={(e) => setDescription(e.target.value)} className="h-10 bg-background border-border text-sm" />
+          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="min-h-24 bg-background border-border text-sm" />
         </div>
         <div className="md:col-span-2 p-4 rounded-xl border border-border/50 bg-muted/20">
           <label className="flex items-start gap-3 text-sm cursor-pointer">

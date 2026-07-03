@@ -47,7 +47,7 @@ export function TimelineItem({
       <div 
         data-timeline-card
         className={cn(
-          'w-full rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm transition-all duration-300 md:order-1',
+          'w-full rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm md:order-1',
           isLeft ? 'md:col-start-1' : 'md:col-start-2',
           !isLeft && 'md:order-2'
         )}

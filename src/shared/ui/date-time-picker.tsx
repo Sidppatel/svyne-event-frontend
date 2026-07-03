@@ -1,10 +1,8 @@
 import * as React from 'react';
-import { format, parse } from 'date-fns';
+import { format, parse, isValid } from 'date-fns';
 import { CalendarIcon, Clock } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
 import { Calendar } from '@/shared/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { cn } from '@/shared/lib/cn';
 import { zoneAbbrev } from '@/shared/lib/timezone';
 
 const FORMAT = "yyyy-MM-dd'T'HH:mm";
@@ -13,12 +11,16 @@ export function DateTimePicker({
   value,
   onChange,
   timeZone,
+  fallbackDate,
 }: {
   value: string;
   onChange: (value: string) => void;
   timeZone?: string;
+  fallbackDate?: string;
 }) {
   const parsed = value ? parse(value, FORMAT, new Date(0)) : undefined;
+  const fallbackParsed = fallbackDate ? parse(fallbackDate, FORMAT, new Date(0)) : undefined;
+  const defaultMonth = parsed ?? fallbackParsed ?? undefined;
 
   const h24 = parsed ? parsed.getHours() : 0;
   const m = parsed ? parsed.getMinutes() : 0;
@@ -27,10 +29,13 @@ export function DateTimePicker({
 
   const [hourStr, setHourStr] = React.useState('');
   const [minStr, setMinStr] = React.useState('');
+  const [dateStr, setDateStr] = React.useState(parsed ? format(parsed, 'yyyy-MM-dd') : '');
+  const [open, setOpen] = React.useState(false);
   const [prevValue, setPrevValue] = React.useState(value);
 
   if (value !== prevValue) {
     setPrevValue(value);
+    setDateStr(parsed ? format(parsed, 'yyyy-MM-dd') : '');
     if (parsed) {
       const p_h12 = parsed.getHours() % 12 || 12;
       const p_m = parsed.getMinutes();
@@ -63,6 +68,25 @@ export function DateTimePicker({
       return;
     }
     onChange(`${format(day, 'yyyy-MM-dd')}T${h24.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+  }
+
+  function handleDateChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = e.target.value;
+    setDateStr(v);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(v) && isValid(parse(v, 'yyyy-MM-dd', new Date(0)))) {
+      onChange(`${v}T${h24.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+    }
+  }
+
+  function handleDateBlur() {
+    if (dateStr === '') {
+      onChange('');
+      return;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr) && isValid(parse(dateStr, 'yyyy-MM-dd', new Date(0)))) {
+      return;
+    }
+    setDateStr(parsed ? format(parsed, 'yyyy-MM-dd') : '');
   }
 
   function handleHourChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -109,19 +133,37 @@ export function DateTimePicker({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className={cn('w-40 justify-start font-normal', !parsed && 'text-muted-foreground')}
-          >
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            {parsed ? format(parsed, 'PP') : 'Pick date'}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-3">
-          <Calendar mode="single" selected={parsed} onSelect={setDay} autoFocus />
+      <Popover open={open} onOpenChange={setOpen}>
+        <div className="relative w-40">
+          <input
+            className="h-10 w-full rounded-md border border-input bg-transparent pl-3 pr-9 text-sm shadow-sm tabular-nums placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            placeholder="YYYY-MM-DD"
+            inputMode="numeric"
+            value={dateStr}
+            onChange={handleDateChange}
+            onBlur={handleDateBlur}
+          />
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              aria-label="Open calendar"
+              className="absolute right-1 top-1/2 -translate-y-1/2 rounded p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+            >
+              <CalendarIcon className="h-4 w-4" />
+            </button>
+          </PopoverTrigger>
+        </div>
+        <PopoverContent className="w-auto p-3" align="start">
+          <Calendar
+            mode="single"
+            selected={parsed}
+            defaultMonth={defaultMonth}
+            onSelect={(d) => {
+              setDay(d);
+              setOpen(false);
+            }}
+            autoFocus
+          />
         </PopoverContent>
       </Popover>
 

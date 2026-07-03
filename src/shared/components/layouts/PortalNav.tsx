@@ -320,14 +320,9 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
 
         <div className="flex items-center gap-2">
           {isAuthenticated ? (
-            <>
-              <span className="hidden text-xs text-muted-foreground lg:inline font-medium px-2 py-1 rounded bg-muted/30">
-                {roleLabel(role)}
-              </span>
-              <Button variant="outline" size="sm" className="hidden md:inline-flex text-xs h-8" onClick={handleLogout}>
-                Sign Out
-              </Button>
-            </>
+            <Button variant="outline" size="sm" className="hidden md:inline-flex text-xs h-8" onClick={handleLogout}>
+              Sign Out
+            </Button>
           ) : (
             <Button size="sm" className="hidden md:inline-flex text-xs h-8" onClick={() => navigate('/login')}>
               Sign in
@@ -366,7 +361,6 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
                   <div className="space-y-3">
                     <p className="truncate text-xs font-semibold text-foreground">
                       {user?.email}
-                      <span className="block text-[10px] text-muted-foreground">{roleLabel(role)}</span>
                     </p>
                     <Button variant="outline" size="sm" className="w-full text-xs h-8" onClick={handleLogout}>
                       Sign Out

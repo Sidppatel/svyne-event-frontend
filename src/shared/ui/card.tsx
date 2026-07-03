@@ -5,7 +5,7 @@ const MAX_TILT_DEG = 3.5;
 
 export function Card({
   className,
-  interactive = true,
+  interactive = false,
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { interactive?: boolean }) {
   const cardRef = React.useRef<HTMLDivElement>(null);

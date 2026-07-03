@@ -218,7 +218,7 @@ export function AdminEventWizardPage() {
               </Field>
               <Field>
                 <FieldLabel className="text-[10px]">End</FieldLabel>
-                <DateTimePicker value={end} onChange={setEnd} timeZone={venueTz} />
+                <DateTimePicker value={end} onChange={setEnd} timeZone={venueTz} fallbackDate={start} />
               </Field>
             </div>
 

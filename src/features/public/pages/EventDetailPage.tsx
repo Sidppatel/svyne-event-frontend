@@ -207,6 +207,8 @@ function EventDetailPageContent({ event }: { event: Event }) {
                   ) : (
                     admissionTiers.map((tt, index) => {
                       const qty = cart.find((i) => i.key === `Ticket:${tt.eventTicketTypesId}`)?.seats || 0;
+                      const availableQuantity = tt.capacity > 0 ? Math.max(0, tt.capacity - tt.soldCount) : undefined;
+                      
                       return (
                         <TicketCard
                           key={tt.eventTicketTypesId}
@@ -217,6 +219,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                           feesIncluded={event.feesIncluded}
                           quantity={qty}
                           maxQuantity={tt.maxQuantity || undefined}
+                          availableQuantity={availableQuantity}
                           isPopular={index === 0}
                           discountedPriceCents={
                             tt.sellingPriceCents > 0 && tt.sellingPriceCents < tt.priceCents

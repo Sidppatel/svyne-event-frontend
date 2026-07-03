@@ -5,8 +5,11 @@ import { listScheduleItems } from '@/features/public/services/publicEventService
 import { formatEpoch } from '@/shared/lib/format';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TimelineItem } from './TimelineItem';
 import { SectionTitle } from './SectionTitle';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const TYPE_STYLES: Record<string, { ring: string; dotBg: string; text: string; bg: string; icon: ComponentType<{ className?: string }> }> = {
   Performance: {
@@ -87,17 +90,26 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
         );
 
         // Staggered timeline card entry
-        gsap.from(timelineCards, {
-          opacity: 0,
-          x: (index) => (index % 2 === 0 ? -25 : 25),
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: timeline,
-            start: 'top 80%',
+        gsap.fromTo(timelineCards, 
+          {
+            opacity: 0,
+            x: (index) => (index % 2 === 0 ? -25 : 25),
+          },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: timeline,
+              start: 'top 80%',
+            }
           }
-        });
+        );
+        
+        // Refresh ScrollTrigger to recalculate positions
+        setTimeout(() => ScrollTrigger.refresh(), 100);
       }
 
       // Card hover micro-animations

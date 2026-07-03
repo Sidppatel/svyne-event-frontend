@@ -79,7 +79,7 @@ export function CheckoutPage() {
   if (error) {
     return (
       <div className="mx-auto max-w-md py-12">
-        <Card interactive={false} className="border-destructive/20">
+        <Card className="border-destructive/20">
           <CardHeader>
             <CardTitle className="text-xl text-destructive">Checkout unavailable</CardTitle>
           </CardHeader>
@@ -303,7 +303,7 @@ function CheckoutForm({ bookingsId, intent }: { bookingsId: string; intent: Inte
   const ss = secondsLeft === null ? null : secondsLeft % 60;
 
   return (
-    <Card interactive={false} className="overflow-hidden shadow-[var(--shadow-e1)]">
+    <Card className="overflow-hidden shadow-[var(--shadow-e1)]">
       <CardHeader className="flex flex-row items-center justify-between px-6 py-4">
         <CardTitle className="text-lg">Payment</CardTitle>
         <span className="font-mono text-lg font-medium text-foreground">{centsToUSD(intent.amountCents)}</span>

@@ -44,7 +44,7 @@ export function AdminDashboardPage() {
         ) : null}
       </div>
 
-      <Card interactive={false} className="overflow-hidden shadow-[var(--shadow-e1)]">
+      <Card className="overflow-hidden shadow-[var(--shadow-e1)]">
         <CardHeader className="flex flex-row items-center justify-between px-6 py-4">
           <CardTitle className="flex items-center gap-2 text-base">
             <Bell className="h-4 w-4 text-brand" /> Recent bookings
@@ -94,7 +94,7 @@ export function AdminDashboardPage() {
 
 function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: number | string }) {
   return (
-    <Card interactive={false} className="transition-colors hover:border-hairline-strong">
+    <Card className="transition-colors hover:border-hairline-strong">
       <CardContent className="space-y-3 p-5">
         <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand/10 text-brand [&_svg]:size-4.5">
           {icon}
@@ -112,7 +112,7 @@ function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; va
 
 function StatSkeleton() {
   return (
-    <Card interactive={false}>
+    <Card>
       <CardContent className="space-y-3 p-5">
         <div className="h-9 w-9 animate-pulse rounded-lg bg-muted" />
         <div className="h-7 w-20 animate-pulse rounded bg-muted" />

@@ -145,20 +145,38 @@ export function ScheduleTimeline({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-2.5">
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2.5">
           <span className="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary [&_svg]:size-4">
             <CalendarClock />
           </span>
           <CardTitle>Schedule timeline</CardTitle>
         </div>
-        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Times in {zoneAbbrev(timeZone)}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Times in {zoneAbbrev(timeZone)}
+          </span>
+          <Button size="sm" onClick={openCreate} disabled={dialogOpen && !dialogItem}>
+            <Plus /> Add item
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         {notice ? <p className="text-sm text-amber-foreground">{notice}</p> : null}
         {items.loading ? <p className="text-sm text-muted-foreground">Loading…</p> : null}
+
+        {dialogOpen ? (
+          <InlineScheduleForm
+            item={dialogItem}
+            eventStart={eventStart}
+            eventEnd={eventEnd}
+            siblings={list}
+            timeZone={timeZone}
+            onCancel={() => setDialogOpen(false)}
+            onSubmit={handleSubmit}
+          />
+        ) : null}
+
         <div className="flex items-center gap-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 px-4 py-2 text-sm">
           <span className="size-2 rounded-full bg-primary" />
           <span className="font-medium">Event starts</span>
@@ -207,34 +225,18 @@ export function ScheduleTimeline({
             {formatEpochInZone(eventEnd, timeZone)}
           </span>
         </div>
-
-        <Button variant="outline" className="w-full" onClick={openCreate}>
-          <Plus /> Add item
-        </Button>
       </CardContent>
-
-      {dialogOpen ? (
-        <ScheduleItemDialog
-          item={dialogItem}
-          eventStart={eventStart}
-          eventEnd={eventEnd}
-          siblings={list}
-          timeZone={timeZone}
-          onClose={() => setDialogOpen(false)}
-          onSubmit={handleSubmit}
-        />
-      ) : null}
     </Card>
   );
 }
 
-function ScheduleItemDialog({
+function InlineScheduleForm({
   item,
   eventStart,
   eventEnd,
   siblings,
   timeZone,
-  onClose,
+  onCancel,
   onSubmit,
 }: {
   item: ScheduleItem | null;
@@ -242,11 +244,9 @@ function ScheduleItemDialog({
   eventEnd: string;
   siblings: ScheduleItem[];
   timeZone: string;
-  onClose: () => void;
+  onCancel: () => void;
   onSubmit: (draft: ScheduleItemDraft) => Promise<void>;
 }) {
-  const overlay = useRef<HTMLDivElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
   const firstField = useRef<HTMLInputElement>(null);
 
   const [title, setTitle] = useState(item?.title ?? '');
@@ -256,37 +256,9 @@ function ScheduleItemDialog({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  useGSAP(
-    () => {
-      if (reduced()) {
-        firstField.current?.focus();
-        return;
-      }
-      gsap.from(overlay.current, { autoAlpha: 0, duration: 0.2, ease: 'power1.out' });
-      gsap.from(panel.current, {
-        autoAlpha: 0,
-        y: 24,
-        scale: 0.96,
-        duration: 0.32,
-        ease: 'power3.out',
-        onComplete: () => firstField.current?.focus(),
-      });
-    },
-    { scope: overlay },
-  );
-
-  function animateOut(done: () => void) {
-    if (reduced()) {
-      done();
-      return;
-    }
-    gsap
-      .timeline({ onComplete: done })
-      .to(panel.current, { autoAlpha: 0, y: 16, scale: 0.97, duration: 0.2, ease: 'power2.in' }, 0)
-      .to(overlay.current, { autoAlpha: 0, duration: 0.2, ease: 'power1.in' }, 0.04);
-  }
-
-  const requestClose = () => animateOut(onClose);
+  useGSAP(() => {
+    firstField.current?.focus();
+  });
 
   function validate(startEpoch: number, endEpoch: number): string | null {
     if (!title.trim()) {
@@ -339,78 +311,68 @@ function ScheduleItemDialog({
 
   return (
     <div
-      ref={overlay}
-      role="dialog"
-      aria-modal="true"
+      role="group"
       aria-label={item ? 'Edit schedule item' : 'Add schedule item'}
       onKeyDown={(e) => {
         if (e.key === 'Escape') {
-          requestClose();
+          onCancel();
+        }
+        if (e.key === 'Enter' && !(e.target instanceof HTMLTextAreaElement)) {
+          void submit();
         }
       }}
-      className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 backdrop-blur-sm sm:items-center sm:p-4"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
-          requestClose();
-        }
-      }}
+      className="rounded-xl border border-border/50 bg-muted/10 p-5 space-y-5 animate-in fade-in slide-in-from-top-2 duration-200"
     >
-      <div
-        ref={panel}
-        className="w-full max-w-md rounded-t-2xl border border-border bg-card p-5 shadow-xl sm:rounded-2xl"
-      >
-        <div className="mb-4 space-y-1">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-primary">
-            Run of show
-          </p>
-          <h3 className="font-display text-xl tracking-tight">
-            {item ? 'Edit schedule item' : 'Add schedule item'}
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            Must fall within the event window and not overlap another item.
-          </p>
-        </div>
+      <div className="space-y-1">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary">Run of show</p>
+        <h3 className="font-display text-base font-bold tracking-tight">
+          {item ? 'Edit schedule item' : 'Add schedule item'}
+        </h3>
+        <p className="text-[10px] text-muted-foreground font-semibold">
+          Must fall within the event window and not overlap another item.
+        </p>
+      </div>
 
-        <div className="space-y-3">
-          <div className="space-y-1">
-            <Label htmlFor="schedule-title">Title</Label>
-            <Input
-              id="schedule-title"
-              ref={firstField}
-              value={title}
-              placeholder="Doors Open & Welcome"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="schedule-type">Type</Label>
-            <Select id="schedule-type" value={type} onChange={(e) => setType(e.target.value)}>
-              {TYPE_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </Select>
-          </div>
-          <div className="space-y-1">
-            <Label>Starts</Label>
-            <DateTimePicker value={start} onChange={setStart} timeZone={timeZone} />
-          </div>
-          <div className="space-y-1">
-            <Label>Ends</Label>
-            <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} />
-          </div>
-          {error ? <p className="text-sm text-destructive">{error}</p> : null}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-1.5 md:col-span-2">
+          <Label htmlFor="schedule-title">Title</Label>
+          <Input
+            id="schedule-title"
+            ref={firstField}
+            value={title}
+            placeholder="Doors Open & Welcome"
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
+        <div className="space-y-1.5 md:col-span-2">
+          <Label htmlFor="schedule-type">Type</Label>
+          <Select id="schedule-type" value={type} onChange={(e) => setType(e.target.value)}>
+            {TYPE_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </Select>
+        </div>
+        <div className="space-y-1.5">
+          <Label>Starts</Label>
+          <DateTimePicker value={start} onChange={setStart} timeZone={timeZone} />
+        </div>
+        <div className="space-y-1.5">
+          <Label>Ends</Label>
+          <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} fallbackDate={start} />
+        </div>
+      </div>
 
-        <div className="mt-5 flex justify-end gap-2">
-          <Button variant="ghost" onClick={requestClose} disabled={busy}>
-            Cancel
-          </Button>
-          <Button onClick={submit} disabled={busy}>
-            {busy ? 'Saving…' : item ? 'Save item' : 'Add item'}
-          </Button>
-        </div>
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
+
+      <div className="flex justify-end gap-3 pt-2">
+        <Button variant="ghost" onClick={onCancel} disabled={busy}>
+          Cancel
+        </Button>
+        <Button onClick={submit} disabled={busy}>
+          {busy ? 'Saving…' : item ? 'Save item' : 'Add item'}
+        </Button>
       </div>
     </div>
   );
