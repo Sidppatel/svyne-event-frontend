@@ -118,9 +118,12 @@ export function AdminFinancialPage() {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <h1 className="text-xl font-semibold">Reports</h1>
-          {advanced ? <ProBadge /> : null}
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2.5">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-foreground md:text-4xl">Financial</h1>
+            {advanced ? <ProBadge /> : null}
+          </div>
+          <p className="text-sm text-ink-soft">Where your money comes from — revenue, tickets, and the events driving it.</p>
         </div>
         {data ? (
           <p className="text-xs text-muted-foreground">

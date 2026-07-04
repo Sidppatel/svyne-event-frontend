@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { useAuthFlow } from '@/features/auth/hooks/useAuthFlow';
 import { GoogleSignInButton } from '@/features/auth/components/GoogleSignInButton';
 import { currentTenantSlug } from '@/shared/subdomain';
+import { AuthShell } from '@/features/auth/components/AuthShell';
 
 export function RegisterPage() {
   const { register, magicLink, google, loading, error, notice } = useAuthFlow();
@@ -37,7 +38,12 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-sm">
+    <AuthShell
+      eyebrow="Start your journey"
+      title="Start your event journey today"
+      blurb="Create your account and start selling tickets in minutes. No credit card needed."
+      quote="The best time to start was yesterday. The next best time is now."
+    >
       <Card>
         <CardHeader>
           <CardTitle>Create account</CardTitle>
@@ -79,7 +85,7 @@ export function RegisterPage() {
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
             {notice ? <p className="text-sm text-success">{notice}</p> : null}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating…' : 'Create account'}
+              {loading ? 'Creating…' : 'Start creating events'}
             </Button>
           </form>
           <Button variant="outline" className="w-full" disabled={loading || !email} onClick={() => magicLink(email)}>
@@ -87,10 +93,10 @@ export function RegisterPage() {
           </Button>
           <GoogleSignInButton onToken={google} />
           <div className="text-sm text-muted-foreground">
-            <Link to="/login">Back to sign in</Link>
+            Already have an account? <Link to="/login" className="font-medium text-primary hover:underline">Sign in</Link>
           </div>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }

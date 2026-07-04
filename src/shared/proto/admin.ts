@@ -318,6 +318,10 @@ export interface LogQuery {
      * @generated from protobuf field: int64 to = 5;
      */
     to: string;
+    /**
+     * @generated from protobuf field: string events_id = 6;
+     */
+    eventsId: string;
 }
 /**
  * @generated from protobuf message svyne.admin.LogEntry
@@ -347,6 +351,10 @@ export interface LogEntry {
      * @generated from protobuf field: string detail = 6;
      */
     detail: string;
+    /**
+     * @generated from protobuf field: string events_id = 7;
+     */
+    eventsId: string;
 }
 /**
  * @generated from protobuf message svyne.admin.LogPage
@@ -1751,7 +1759,8 @@ class LogQuery$Type extends MessageType<LogQuery> {
             { no: 2, name: "action", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "entity_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "from", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
-            { no: 5, name: "to", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+            { no: 5, name: "to", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 6, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<LogQuery>): LogQuery {
@@ -1760,6 +1769,7 @@ class LogQuery$Type extends MessageType<LogQuery> {
         message.entityType = "";
         message.from = "0";
         message.to = "0";
+        message.eventsId = "";
         if (value !== undefined)
             reflectionMergePartial<LogQuery>(this, message, value);
         return message;
@@ -1783,6 +1793,9 @@ class LogQuery$Type extends MessageType<LogQuery> {
                     break;
                 case /* int64 to */ 5:
                     message.to = reader.int64().toString();
+                    break;
+                case /* string events_id */ 6:
+                    message.eventsId = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1811,6 +1824,9 @@ class LogQuery$Type extends MessageType<LogQuery> {
         /* int64 to = 5; */
         if (message.to !== "0")
             writer.tag(5, WireType.Varint).int64(message.to);
+        /* string events_id = 6; */
+        if (message.eventsId !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.eventsId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1830,7 +1846,8 @@ class LogEntry$Type extends MessageType<LogEntry> {
             { no: 3, name: "action", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 4, name: "entity_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 5, name: "actor_email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 6, name: "detail", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 6, name: "detail", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<LogEntry>): LogEntry {
@@ -1841,6 +1858,7 @@ class LogEntry$Type extends MessageType<LogEntry> {
         message.entityType = "";
         message.actorEmail = "";
         message.detail = "";
+        message.eventsId = "";
         if (value !== undefined)
             reflectionMergePartial<LogEntry>(this, message, value);
         return message;
@@ -1867,6 +1885,9 @@ class LogEntry$Type extends MessageType<LogEntry> {
                     break;
                 case /* string detail */ 6:
                     message.detail = reader.string();
+                    break;
+                case /* string events_id */ 7:
+                    message.eventsId = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1898,6 +1919,9 @@ class LogEntry$Type extends MessageType<LogEntry> {
         /* string detail = 6; */
         if (message.detail !== "")
             writer.tag(6, WireType.LengthDelimited).string(message.detail);
+        /* string events_id = 7; */
+        if (message.eventsId !== "")
+            writer.tag(7, WireType.LengthDelimited).string(message.eventsId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

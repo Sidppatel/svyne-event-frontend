@@ -211,6 +211,7 @@ export async function getDeveloperLogs(): Promise<LogEntry[]> {
       entityType: '',
       from: '0',
       to: '0',
+      eventsId: '',
     }),
   );
   return response.entries;

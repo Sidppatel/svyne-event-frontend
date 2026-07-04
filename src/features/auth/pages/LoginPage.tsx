@@ -7,23 +7,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { useAuthFlow } from '@/features/auth/hooks/useAuthFlow';
 import { GoogleSignInButton } from '@/features/auth/components/GoogleSignInButton';
 import { resolvePortalContext } from '@/shared/subdomain';
-import { usePageEntrance } from '@/shared/hooks/usePageEntrance';
+import { AuthShell } from '@/features/auth/components/AuthShell';
 
 export function LoginPage() {
-  const page = usePageEntrance<HTMLDivElement>();
   const { login, google, loading, error } = useAuthFlow();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const allowRegister = resolvePortalContext().portal === 'public';
 
   return (
-    <div ref={page} className="mx-auto mt-10 max-w-sm sm:mt-16">
-      <div className="mb-6 text-center">
-        <span className="text-2xl font-bold tracking-tight" style={{ color: 'var(--brand-primary)' }}>
-          svyne
-        </span>
-        <p className="mt-1 text-sm text-muted-foreground">Welcome back. Sign in to continue.</p>
-      </div>
+    <AuthShell
+      eyebrow="Welcome back"
+      title="Welcome back, friend"
+      blurb="We missed you. Ready to create something amazing today?"
+      quote="Every great event starts with a single ticket."
+    >
       <Card className="shadow-md">
         <CardHeader>
           <CardTitle>Sign in</CardTitle>
@@ -79,6 +77,6 @@ export function LoginPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </AuthShell>
   );
 }
