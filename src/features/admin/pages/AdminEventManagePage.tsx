@@ -24,11 +24,9 @@ import { TicketTypesManager } from '@/features/admin/components/TicketTypesManag
 import { CheckInLogsPanel } from '@/features/admin/components/CheckInLogsPanel';
 import { FloorPlanPanel } from '@/features/admin/components/FloorPlanPanel';
 import { EventMediaManager } from '@/features/admin/components/EventMediaManager';
-import {
-  listStaffForEvent,
-  assignStaffByEmail,
-  unassignStaff,
-} from '@/features/admin/services/staffAdminService';
+import { listStaffForEvent } from '@/features/admin/services/staffAdminService';
+import { EventTeamPanel } from '@/features/admin/components/EventTeamPanel';
+import { isEventManager } from '@/shared/roles';
 import { toast } from 'sonner';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD, centsToUsdInput, usdToCents, formatEventDate } from '@/shared/lib/format';
@@ -45,7 +43,6 @@ import {
   LayoutGrid,
   Ticket,
   TicketCheck,
-  UserCog,
   MapPin,
   Users,
   Eye,
@@ -62,10 +59,14 @@ import { buildCompletion, buildVoice, buildSuggestions, type SectionId } from '@
 
 export function AdminEventManagePage() {
   const { eventsId = '' } = useParams();
+  const { tenantSlug, role } = useAuth();
   const eventLoader = useCallback(() => getEvent(eventsId), [eventsId]);
   const statsLoader = useCallback(() => getEventStats(eventsId), [eventsId]);
   const tableTypesLoader = useCallback(() => listEventTableTypes(eventsId), [eventsId]);
-  const staffLoader = useCallback(() => listStaffForEvent(eventsId), [eventsId]);
+  const staffLoader = useCallback(
+    () => (isEventManager(role) ? Promise.resolve([]) : listStaffForEvent(eventsId)),
+    [eventsId, role],
+  );
   const templatesLoader = useCallback(() => listTableTemplates().then((items) => items.filter((t) => t.isActive)), []);
   const ticketTypesLoader = useCallback(() => listTicketTypes(eventsId), [eventsId]);
   const layoutLoader = useCallback(() => getEventLayout(eventsId), [eventsId]);
@@ -118,7 +119,6 @@ export function AdminEventManagePage() {
       setTableHeight(tpl.defaultHeight || 80);
     }
   }
-  const [assignEmail, setAssignEmail] = useState('');
   const [notice, setNotice] = useState<string | null>(null);
   // Bumped when a table type is added so the floor-plan palette reloads.
   const [floorKey, setFloorKey] = useState(0);
@@ -134,8 +134,6 @@ export function AdminEventManagePage() {
       setNotice(rpcErrorMessage(caught));
     }
   }
-
-  const { tenantSlug } = useAuth();
 
   const SECTIONS: { id: SectionId; label: string; icon: LucideIcon; hint: string }[] = [
     { id: 'basics', label: 'Basics', icon: MapPin, hint: 'Name, venue, dates & description' },
@@ -483,63 +481,19 @@ export function AdminEventManagePage() {
         </div>
       )}
 
-      {activeSection === 'staff' && (
+      {activeSection === 'staff' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
-            <CardHeader className="border-b border-border/20 px-6 py-4">
-              <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
-                <UserCog className="h-4.5 w-4.5 text-primary" /> Staff & Assignments
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-end gap-3 p-4 border border-border/50 bg-muted/20 rounded-xl">
-                <div className="space-y-1.5 flex-1">
-                  <Label className="text-[10px]">Staff Email</Label>
-                  <Input
-                    type="email"
-                    placeholder="staff@example.com"
-                    value={assignEmail}
-                    onChange={(e) => setAssignEmail(e.target.value)}
-                    className="h-10 bg-background text-sm"
-                  />
-                </div>
-                <Button
-                  className="svyne-spring-btn h-10 px-6 rounded-lg font-bold text-xs"
-                  onClick={() => {
-                    if (!assignEmail.trim()) return;
-                    guard(async () => {
-                      const res = await assignStaffByEmail(assignEmail.trim(), eventsId);
-                      if (res.userExisted) {
-                        toast.success('Staff member assigned successfully.');
-                      } else {
-                        toast.success(res.message);
-                      }
-                      setAssignEmail('');
-                    }, staff.reload);
-                  }}
-                >
-                  Assign staff
-                </Button>
-              </div>
-              <div className="space-y-2">
-                {(staff.data ?? []).map((member) => (
-                  <div key={member.usersId} className="flex items-center justify-between border border-border/50 bg-card rounded-lg px-4 py-3 shadow-sm">
-                    <span className="font-semibold text-sm">
-                      {member.firstName || member.lastName 
-                        ? `${member.firstName} ${member.lastName}`.trim() 
-                        : 'Invited User'} 
-                      <span className="text-muted-foreground ml-2 font-normal">{member.email}</span>
-                    </span>
-                    <Button size="sm" variant="ghost" className="h-8 text-xs font-semibold text-destructive hover:bg-destructive/10" onClick={() => guard(() => unassignStaff(member.usersId, eventsId), staff.reload)}>
-                      Unassign
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {event.data ? <CheckInLogsPanel eventsId={eventsId} eventTitle={event.data.title} /> : null}
+          {isEventManager(role) ? null : (
+            <EventTeamPanel
+              eventsId={eventsId}
+              startDate={event.data.startDate}
+              endDate={event.data.endDate}
+              staff={staff.data ?? []}
+              loading={staff.loading}
+              onChanged={staff.reload}
+            />
+          )}
+          <CheckInLogsPanel eventsId={eventsId} eventTitle={event.data.title} />
         </div>
       )}
 

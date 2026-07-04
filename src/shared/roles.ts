@@ -3,6 +3,7 @@ export const Roles = {
   Admin: 1,
   Staff: 2,
   SubTenant: 3,
+  EventManager: 4,
   Developer: 99,
 } as const;
 
@@ -19,11 +20,15 @@ export function isStaff(role: number): boolean {
 }
 
 export function canAccessAdmin(role: number): boolean {
-  return role === Roles.Admin || role === Roles.SubTenant;
+  return role === Roles.Admin || role === Roles.SubTenant || role === Roles.EventManager;
 }
 
 export function isSubTenant(role: number): boolean {
   return role === Roles.SubTenant;
+}
+
+export function isEventManager(role: number): boolean {
+  return role === Roles.EventManager;
 }
 
 export function canManageTenantSettings(role: number): boolean {
@@ -33,6 +38,9 @@ export function canManageTenantSettings(role: number): boolean {
 export function homePathForRole(role: number): string {
   if (isDeveloper(role)) {
     return '/';
+  }
+  if (isEventManager(role)) {
+    return '/events';
   }
   if (canAccessAdmin(role)) {
     return '/';
@@ -53,6 +61,8 @@ export function roleLabel(role: number): string {
       return 'Staff';
     case Roles.SubTenant:
       return 'Sub-Tenant';
+    case Roles.EventManager:
+      return 'Event Manager';
     case Roles.Developer:
       return 'Developer';
     default:

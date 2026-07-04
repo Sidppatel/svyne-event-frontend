@@ -1,27 +1,31 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { PortalNav } from '@/shared/components/layouts/PortalNav';
 import { useAuth } from '@/shared/auth/useAuth';
-import { canManageTenantSettings } from '@/shared/roles';
+import { canManageTenantSettings, isEventManager } from '@/shared/roles';
 import { usePageEntrance } from '@/shared/hooks/usePageEntrance';
 
 export function AdminLayout() {
   const { role } = useAuth();
   const { pathname } = useLocation();
   const page = usePageEntrance<HTMLElement>();
-  const links = [
-    { to: '/', label: 'Dashboard' },
-    { to: '/events', label: 'Events' },
-    { to: '/bookings', label: 'Bookings' },
-    { to: '/venues', label: 'Venues' },
-    { to: '/table-types', label: 'Table Types' },
-    { to: '/performers', label: 'Performers' },
-    { to: '/sponsors', label: 'Sponsors' },
-    { to: '/feedback', label: 'Feedback' },
-    { to: '/logs', label: 'Logs' },
-    { to: '/profile', label: 'Profile' },
-  ];
+  const links = isEventManager(role)
+    ? [
+        { to: '/events', label: 'Events' },
+        { to: '/profile', label: 'Profile' },
+      ]
+    : [
+        { to: '/', label: 'Dashboard' },
+        { to: '/events', label: 'Events' },
+        { to: '/bookings', label: 'Bookings' },
+        { to: '/venues', label: 'Venues' },
+        { to: '/table-types', label: 'Table Types' },
+        { to: '/performers', label: 'Performers' },
+        { to: '/sponsors', label: 'Sponsors' },
+        { to: '/feedback', label: 'Feedback' },
+        { to: '/logs', label: 'Logs' },
+        { to: '/profile', label: 'Profile' },
+      ];
   if (canManageTenantSettings(role)) {
-    links.push({ to: '/staff', label: 'Staff' });
     links.push({ to: '/invitations', label: 'Invitations' });
     links.push({ to: '/financial', label: 'Financial' });
     links.push({ to: '/branding', label: 'Branding' });

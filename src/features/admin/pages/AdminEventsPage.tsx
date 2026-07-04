@@ -4,6 +4,7 @@ import { Plus, Search, Ticket, ArrowRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { useAuth } from '@/shared/auth/useAuth';
+import { isEventManager } from '@/shared/roles';
 import { listAdminEvents } from '@/features/admin/services/adminService';
 import { deleteEvent, changeEventStatus } from '@/features/admin/services/eventAdminService';
 import { filterEvents, countEvents, type EventFilter } from '@/features/admin/lib/dashboardInsights';
@@ -24,7 +25,7 @@ const FILTERS: { id: EventFilter; label: string }[] = [
 ];
 
 export function AdminEventsPage() {
-  const { tenantSlug } = useAuth();
+  const { tenantSlug, role } = useAuth();
   const loader = useCallback(() => listAdminEvents(), []);
   const { data, loading, error, reload } = useAsync(loader);
 
@@ -81,11 +82,13 @@ export function AdminEventsPage() {
               : `${counts.total} ${counts.total === 1 ? 'event' : 'events'} · ${counts.active} live right now.`}
           </p>
         </div>
-        <Link to="/events/new">
-          <Button size="lg">
-            <Plus /> New event
-          </Button>
-        </Link>
+        {isEventManager(role) ? null : (
+          <Link to="/events/new">
+            <Button size="lg">
+              <Plus /> New event
+            </Button>
+          </Link>
+        )}
       </section>
 
       <section className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -150,7 +153,7 @@ export function AdminEventsPage() {
           ) : null}
         </>
       ) : events.length === 0 ? (
-        <EmptyEvents />
+        <EmptyEvents canCreate={!isEventManager(role)} />
       ) : (
         <p className="rounded-lg border border-dashed border-hairline-strong p-10 text-center text-sm text-ink-soft">
           Nothing matches that. Try another filter or search.
@@ -160,7 +163,7 @@ export function AdminEventsPage() {
   );
 }
 
-function EmptyEvents() {
+function EmptyEvents({ canCreate }: { canCreate: boolean }) {
   return (
     <Card className="border-dashed">
       <CardContent className="flex flex-col items-center gap-5 px-6 py-14 text-center">
@@ -170,14 +173,18 @@ function EmptyEvents() {
         <div className="space-y-1.5">
           <h3 className="font-display text-xl font-semibold tracking-tight text-foreground">No events yet</h3>
           <p className="max-w-md text-sm text-ink-soft">
-            Creating the first one takes a couple of minutes — add a title and date, set your ticket prices, and publish.
+            {canCreate
+              ? 'Creating the first one takes a couple of minutes — add a title and date, set your ticket prices, and publish.'
+              : 'Once an admin assigns you to an event, it will show up here.'}
           </p>
         </div>
-        <Link to="/events/new">
-          <Button size="lg">
-            <Plus /> Create your first event <ArrowRight />
-          </Button>
-        </Link>
+        {canCreate ? (
+          <Link to="/events/new">
+            <Button size="lg">
+              <Plus /> Create your first event <ArrowRight />
+            </Button>
+          </Link>
+        ) : null}
       </CardContent>
     </Card>
   );

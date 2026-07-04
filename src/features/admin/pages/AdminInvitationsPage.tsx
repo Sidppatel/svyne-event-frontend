@@ -16,7 +16,7 @@ import { Select } from '@/shared/ui/select';
 import { Badge } from '@/shared/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-const INVITABLE_ROLES = [Roles.Admin, Roles.Staff, Roles.SubTenant];
+const INVITABLE_ROLES = [Roles.Admin, Roles.Staff, Roles.SubTenant, Roles.EventManager];
 
 function statusVariant(status: string): 'success' | 'warn' | 'neutral' | 'danger' {
   const s = status.toLowerCase();

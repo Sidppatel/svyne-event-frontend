@@ -37,6 +37,28 @@ export function formatEventDate(value: number | string): string {
   });
 }
 
+export function accessWindow(
+  startEpoch: number | string,
+  endEpoch: number | string,
+): { from: string; to: string } | null {
+  const start = typeof startEpoch === 'string' ? Number(startEpoch) : startEpoch;
+  const end = typeof endEpoch === 'string' ? Number(endEpoch) : endEpoch;
+  if (!Number.isFinite(start) || !Number.isFinite(end) || start === 0 || end === 0) {
+    return null;
+  }
+  const oneDaySeconds = 86400;
+  return { from: formatEventDate(start - oneDaySeconds), to: formatEventDate(end + oneDaySeconds) };
+}
+
+export function initials(firstName: string, lastName: string, email: string): string {
+  const first = firstName.trim();
+  const last = lastName.trim();
+  if (first || last) {
+    return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase() || first.charAt(0).toUpperCase();
+  }
+  return (email.trim().charAt(0) || '?').toUpperCase();
+}
+
 export function toEpochString(value: string): string {
   if (!value) {
     return '0';

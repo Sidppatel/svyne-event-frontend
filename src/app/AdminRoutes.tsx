@@ -2,7 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { NotFoundPage } from '@/shared/components/StatusPages';
 import { AdminLayout } from '@/shared/components/layouts/AdminLayout';
-import { canAccessAdmin, canManageTenantSettings } from '@/shared/roles';
+import { canAccessAdmin, canManageTenantSettings, isEventManager } from '@/shared/roles';
+import { useAuth } from '@/shared/auth/useAuth';
 import { authRoutes } from '@/app/authRoutes';
 import { AdminDashboardPage } from '@/features/admin/pages/AdminDashboardPage';
 import { AdminEventsPage } from '@/features/admin/pages/AdminEventsPage';
@@ -20,7 +21,11 @@ import { AdminTenantSettingsPage } from '@/features/admin/pages/AdminTenantSetti
 import { AdminBrandingPage } from '@/features/admin/pages/AdminBrandingPage';
 import { AdminFeedbackPage } from '@/features/admin/pages/AdminFeedbackPage';
 import { AdminLogsPage } from '@/features/admin/pages/AdminLogsPage';
-import AdminStaffPage from '@/features/admin/pages/AdminStaffPage';
+
+function AdminHome() {
+  const { role } = useAuth();
+  return isEventManager(role) ? <Navigate to="/events" replace /> : <AdminDashboardPage />;
+}
 
 export default function AdminRoutes() {
   return (
@@ -33,7 +38,7 @@ export default function AdminRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<AdminDashboardPage />} />
+        <Route index element={<AdminHome />} />
         <Route path="events" element={<AdminEventsPage />} />
         <Route path="events/new" element={<AdminEventWizardPage />} />
         <Route path="events/:eventsId" element={<AdminEventManagePage />} />
@@ -46,14 +51,6 @@ export default function AdminRoutes() {
         <Route path="invitations" element={<AdminInvitationsPage />} />
         <Route path="financial" element={<AdminFinancialPage />} />
         <Route path="profile" element={<AdminProfilePage />} />
-        <Route
-          path="staff"
-          element={
-            <ProtectedRoute allow={canManageTenantSettings}>
-              <AdminStaffPage />
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="settings"
           element={

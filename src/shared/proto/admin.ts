@@ -143,6 +143,10 @@ export interface StaffMember {
      * @generated from protobuf field: string email = 4;
      */
     email: string;
+    /**
+     * @generated from protobuf field: int32 role = 5;
+     */
+    role: number;
 }
 /**
  * @generated from protobuf message svyne.admin.ListStaffResponse
@@ -195,6 +199,10 @@ export interface AssignStaffByEmailRequest {
      * @generated from protobuf field: string events_id = 2;
      */
     eventsId: string;
+    /**
+     * @generated from protobuf field: int32 role = 3;
+     */
+    role: number;
 }
 /**
  * @generated from protobuf message svyne.admin.AssignStaffByEmailResponse
@@ -1098,7 +1106,8 @@ class StaffMember$Type extends MessageType<StaffMember> {
             { no: 1, name: "users_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "first_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "last_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 4, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 4, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "role", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<StaffMember>): StaffMember {
@@ -1107,6 +1116,7 @@ class StaffMember$Type extends MessageType<StaffMember> {
         message.firstName = "";
         message.lastName = "";
         message.email = "";
+        message.role = 0;
         if (value !== undefined)
             reflectionMergePartial<StaffMember>(this, message, value);
         return message;
@@ -1127,6 +1137,9 @@ class StaffMember$Type extends MessageType<StaffMember> {
                     break;
                 case /* string email */ 4:
                     message.email = reader.string();
+                    break;
+                case /* int32 role */ 5:
+                    message.role = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1152,6 +1165,9 @@ class StaffMember$Type extends MessageType<StaffMember> {
         /* string email = 4; */
         if (message.email !== "")
             writer.tag(4, WireType.LengthDelimited).string(message.email);
+        /* int32 role = 5; */
+        if (message.role !== 0)
+            writer.tag(5, WireType.Varint).int32(message.role);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1332,13 +1348,15 @@ class AssignStaffByEmailRequest$Type extends MessageType<AssignStaffByEmailReque
     constructor() {
         super("svyne.admin.AssignStaffByEmailRequest", [
             { no: 1, name: "email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 2, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 2, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "role", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<AssignStaffByEmailRequest>): AssignStaffByEmailRequest {
         const message = globalThis.Object.create((this.messagePrototype!));
         message.email = "";
         message.eventsId = "";
+        message.role = 0;
         if (value !== undefined)
             reflectionMergePartial<AssignStaffByEmailRequest>(this, message, value);
         return message;
@@ -1353,6 +1371,9 @@ class AssignStaffByEmailRequest$Type extends MessageType<AssignStaffByEmailReque
                     break;
                 case /* string events_id */ 2:
                     message.eventsId = reader.string();
+                    break;
+                case /* int32 role */ 3:
+                    message.role = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1372,6 +1393,9 @@ class AssignStaffByEmailRequest$Type extends MessageType<AssignStaffByEmailReque
         /* string events_id = 2; */
         if (message.eventsId !== "")
             writer.tag(2, WireType.LengthDelimited).string(message.eventsId);
+        /* int32 role = 3; */
+        if (message.role !== 0)
+            writer.tag(3, WireType.Varint).int32(message.role);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
