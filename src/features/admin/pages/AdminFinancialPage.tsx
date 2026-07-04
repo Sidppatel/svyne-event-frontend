@@ -180,7 +180,7 @@ export function AdminFinancialPage() {
           <Label htmlFor="report-bucket">Granularity</Label>
           <Select
             id="report-bucket"
-            className="h-8 w-32"
+            className="w-auto"
             value={controls.bucket}
             onChange={(e) => controls.setBucket(e.target.value as Bucket)}
           >

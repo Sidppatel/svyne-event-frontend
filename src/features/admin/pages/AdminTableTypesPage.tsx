@@ -12,6 +12,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Switch } from '@/shared/ui/switch';
+import { Select } from '@/shared/ui/select';
 import { CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { cn } from '@/shared/lib/cn';
 import { Palette, Edit3, X } from 'lucide-react';
@@ -126,8 +127,7 @@ export function AdminTableTypesPage() {
 
             <div className="space-y-1.5">
               <Label>Shape</Label>
-              <select
-                className="h-10 w-full rounded-lg border border-border bg-background px-3 text-sm focus:ring-2 focus:ring-ring"
+              <Select
                 value={shape}
                 onChange={(e) => { playTap('click'); setShape(e.target.value); }}
               >
@@ -136,7 +136,7 @@ export function AdminTableTypesPage() {
                     {s}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
 
             <div className="space-y-1.5">
@@ -379,8 +379,8 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
 
               <div className="space-y-1">
                 <Label className="text-[10px]">Shape</Label>
-                <select
-                  className="h-9 w-full rounded-lg border border-border bg-background px-2 text-xs"
+                <Select
+                  className="h-9 text-xs"
                   value={shape}
                   onChange={(e) => setShape(e.target.value)}
                 >
@@ -389,7 +389,7 @@ function TableTypeRow({ template, onChanged }: { template: TableTemplate; onChan
                       {s}
                     </option>
                   ))}
-                </select>
+                </Select>
               </div>
 
               <div className="space-y-1">

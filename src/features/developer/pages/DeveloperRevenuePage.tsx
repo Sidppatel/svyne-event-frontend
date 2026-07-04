@@ -164,7 +164,7 @@ export function DeveloperRevenuePage() {
           aria-label="Search tenants"
         />
         <Select
-          className="w-44"
+          className="w-auto"
           aria-label="Filter by tier"
           value={tierFilter}
           onChange={(event) => setTierFilter(event.target.value)}

@@ -277,7 +277,7 @@ export function DeveloperFeesPage() {
               aria-label="Search tenants"
             />
             <Select
-              className="h-9 w-48"
+              className="h-9 w-auto"
               value={sort}
               onChange={(e) => setSort(e.target.value as CardSort)}
               aria-label="Sort tenants"

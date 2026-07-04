@@ -17,6 +17,7 @@ import { centsToUSD } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { Select } from '@/shared/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
 export function DeveloperTenantMembersPage() {
@@ -184,9 +185,8 @@ function TenantDefaultFeeForm({ tenantsId }: { tenantsId: string }) {
         </p>
         <div className="space-y-1">
           <Label htmlFor="default-fee">Formula</Label>
-          <select
+          <Select
             id="default-fee"
-            className="h-9 w-full rounded-md border border-input px-2 text-sm"
             value={selected}
             onChange={(e) => setSelected(e.target.value)}
           >
@@ -198,7 +198,7 @@ function TenantDefaultFeeForm({ tenantsId }: { tenantsId: string }) {
                 {f.isActive ? '' : ' · inactive'}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="space-y-1">
           <Label htmlFor="default-fee-reason">Reason</Label>
@@ -280,15 +280,14 @@ function StripeProfileForm({ tenantsId }: { tenantsId: string }) {
 
         <div className="space-y-1">
           <Label htmlFor="s-businessType">Business type</Label>
-          <select
+          <Select
             id="s-businessType"
-            className="h-9 w-full rounded-md border border-input px-2 text-sm"
             value={form.businessType}
             onChange={(e) => setForm((p) => ({ ...p, businessType: e.target.value }))}
           >
             <option value="individual">Individual / sole proprietorship</option>
             <option value="company">Company</option>
-          </select>
+          </Select>
         </div>
 
         {(
