@@ -1,24 +1,22 @@
 import { useCallback, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '@/shared/auth/useAuth';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
   getEvent,
   getEventStats,
   changeEventStatus,
-  updateEvent,
   listEventTableTypes,
   createEventTable,
   deleteEventTable,
-  setEventFeesIncluded,
   listTicketTypes,
 } from '@/features/admin/services/eventAdminService';
 import { listTableTemplates } from '@/features/admin/services/tableTemplateService';
-import { getVenue, listVenues } from '@/features/admin/services/catalogService';
+import { getVenue } from '@/features/admin/services/catalogService';
 import { EventCatalogLinks } from '@/features/admin/components/EventCatalogLinks';
 import { EventExtraInfoEditor } from '@/features/admin/components/EventExtraInfoEditor';
 import { getEventLayout } from '@/features/admin/services/layoutService';
-import { tzForState, epochToZonedInput, zonedInputToEpoch } from '@/shared/lib/timezone';
-import { DateTimePicker } from '@/shared/ui/date-time-picker';
+import { tzForState } from '@/shared/lib/timezone';
 import type { TableTemplate } from '@/shared/proto/booking';
 import { PricingManager } from '@/features/admin/components/PricingManager';
 import { ScheduleTimeline } from '@/features/admin/components/ScheduleTimeline';
@@ -26,7 +24,6 @@ import { TicketTypesManager } from '@/features/admin/components/TicketTypesManag
 import { CheckInLogsPanel } from '@/features/admin/components/CheckInLogsPanel';
 import { FloorPlanPanel } from '@/features/admin/components/FloorPlanPanel';
 import { EventMediaManager } from '@/features/admin/components/EventMediaManager';
-import type { Event } from '@/shared/proto/event';
 import {
   listStaffForEvent,
   assignStaffByEmail,
@@ -34,55 +31,33 @@ import {
 } from '@/features/admin/services/staffAdminService';
 import { toast } from 'sonner';
 import { rpcErrorMessage } from '@/shared/session';
-import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
+import { centsToUSD, centsToUsdInput, usdToCents, formatEventDate } from '@/shared/lib/format';
 import { addCents } from '@/shared/lib/math';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
-import { Textarea } from '@/shared/ui/textarea';
 import { Select } from '@/shared/ui/select';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import {
   CalendarCheck2,
   DollarSign,
-  FileEdit,
   LayoutGrid,
-  Rocket,
   Ticket,
   TicketCheck,
-  Undo2,
   UserCog,
   MapPin,
   Users,
-  ChevronLeft,
-  ChevronRight,
   Eye,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  AlertCircle,
   type LucideIcon,
 } from 'lucide-react';
 import { EventBrandingPreview } from '@/features/admin/components/branding/EventBrandingPreview';
-
-
-const STATUS_STYLES: Record<string, string> = {
-  Published: 'bg-success/15 text-success ring-success/30',
-  Draft: 'bg-amber/15 text-amber-foreground ring-amber/30',
-  Cancelled: 'bg-destructive/15 text-destructive ring-destructive/30',
-};
-
-function StatusPill({ status }: { status: string }) {
-  return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ring-1 ring-inset',
-        STATUS_STYLES[status] ?? 'bg-muted text-muted-foreground ring-border',
-      )}
-    >
-      <span className="size-1.5 rounded-full bg-current" />
-      {status}
-    </span>
-  );
-}
-
+import { VoiceZone, WhatsNext, EditSection, Stat } from '@/features/admin/components/EventManageParts';
+import { buildCompletion, buildVoice, buildSuggestions, type SectionId } from '@/features/admin/lib/eventInsights';
 
 
 export function AdminEventManagePage() {
@@ -112,7 +87,6 @@ export function AdminEventManagePage() {
 
   const hasTicketTypes = (ticketTypes.data ?? []).length > 0;
   const hasTablesInFloorPlan = (layout.data?.tables ?? []).length > 0;
-  const canPublish = hasTicketTypes || hasTablesInFloorPlan;
 
   const typeList = tableTypes.data ?? [];
   const lockedTypeIds = new Set(
@@ -161,26 +135,49 @@ export function AdminEventManagePage() {
     }
   }
 
-  const STEPS = [
-    { id: 'basics', label: 'Basics', icon: MapPin },
-    ...(event.data?.eventType !== 'Open' ? [{ id: 'layout', label: 'Floor Plan', icon: LayoutGrid }] : []),
-    { id: 'pricing', label: 'Pricing & Tickets', icon: Ticket },
-    { id: 'timeline', label: 'Timeline & Media', icon: CalendarCheck2 },
-    { id: 'staff', label: 'Staff & Roster', icon: Users },
-    { id: 'preview', label: 'Preview', icon: Eye },
-    { id: 'publish', label: 'Review & Publish', icon: Rocket },
+  const { tenantSlug } = useAuth();
+
+  const SECTIONS: { id: SectionId; label: string; icon: LucideIcon; hint: string }[] = [
+    { id: 'basics', label: 'Basics', icon: MapPin, hint: 'Name, venue, dates & description' },
+    ...(event.data?.eventType !== 'Open'
+      ? [{ id: 'layout' as SectionId, label: 'Floor Plan', icon: LayoutGrid, hint: 'Tables & seating layout' }]
+      : []),
+    { id: 'pricing', label: 'Pricing & Tickets', icon: Ticket, hint: 'Tiers, prices & fees' },
+    { id: 'timeline', label: 'Timeline & Media', icon: CalendarCheck2, hint: 'Schedule, photos & lineup' },
+    { id: 'staff', label: 'Staff & Roster', icon: Users, hint: 'Assignments & check-in logs' },
+    { id: 'preview', label: 'Preview', icon: Eye, hint: 'See the branded event page' },
   ];
 
-  const [currentStep, setCurrentStep] = useState(STEPS[0].id);
+  const [activeSection, setActiveSection] = useState<SectionId>('basics');
 
-  function goNext() {
-    const idx = STEPS.findIndex(s => s.id === currentStep);
-    if (idx !== -1 && idx < STEPS.length - 1) setCurrentStep(STEPS[idx + 1].id);
+  const insightInput = { hasTicketTypes, hasFloorTables: hasTablesInFloorPlan, staffCount: (staff.data ?? []).length };
+  const completion = event.data ? buildCompletion(event.data, insightInput) : null;
+  const voice = event.data && completion ? buildVoice(event.data, stats.data, completion) : null;
+  const suggestions = event.data && completion ? buildSuggestions(event.data, stats.data, insightInput, completion) : [];
+
+  function openSection(section: SectionId) {
+    setActiveSection(section);
+    if (typeof document !== 'undefined') {
+      document.getElementById('section-canvas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
-  function goPrev() {
-    const idx = STEPS.findIndex(s => s.id === currentStep);
-    if (idx > 0) setCurrentStep(STEPS[idx - 1].id);
+  function previewHref(): string | null {
+    if (!event.data || !tenantSlug) return null;
+    const { protocol, host } = window.location;
+    const labels = host.split('.');
+    labels[0] = tenantSlug;
+    return `${protocol}//${labels.join('.')}/events/${event.data.slug}`;
+  }
+
+  function copyShareLink() {
+    const href = previewHref();
+    if (!href) {
+      toast.error('Publish or set a tenant to get a shareable link.');
+      return;
+    }
+    void navigator.clipboard.writeText(href);
+    toast.success('Share link copied to clipboard.');
   }
 
   return (
@@ -194,70 +191,101 @@ export function AdminEventManagePage() {
       {event.error ? <p className="text-xs font-semibold text-destructive bg-destructive/10 border border-destructive/20 rounded-xl p-3 leading-normal animate-shake">{event.error}</p> : null}
       {notice ? <p className="text-xs font-semibold text-warning bg-warning/10 border border-warning/20 rounded-xl p-3 leading-normal">{notice}</p> : null}
 
-      {event.data ? (
-        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-          <div className="bg-muted/30 p-5 md:p-6">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-              <div className="space-y-2">
-                <StatusPill status={event.data.status} />
-                <h1 className="font-display text-2xl font-semibold tracking-tight md:text-3xl">
-                  {event.data.title}
-                </h1>
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  {event.data.eventType || 'Open'} event · {event.data.category || 'Uncategorised'}
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <Button
-                  size="sm"
-                  className={cn("svyne-spring-btn h-9 px-4 rounded-lg font-bold text-xs", event.data.status === 'Published' ? "hidden" : "")}
-                  disabled={!canPublish || event.data.status === 'Published'}
-                  title={event.data.status === 'Published' ? "Event is already published" : canPublish ? "Publish this event" : "Cannot publish until you add at least one ticket type or place a table on the floor plan"}
-                  onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
-                >
-                  <Rocket className="mr-1 h-4 w-4" /> Publish
-                </Button>
-                {event.data.status === 'Published' && (
-                  <Button size="sm" variant="outline" className="h-9 px-4 rounded-lg font-bold text-xs border-border bg-background" onClick={() => guard(() => changeEventStatus(eventsId, 'Draft'), event.reload)}>
-                    <Undo2 className="mr-1 h-4 w-4" /> Revert to draft
-                  </Button>
-                )}
-              </div>
-            </div>
-          </div>
+      {event.data && voice && completion ? (
+        <VoiceZone
+          event={event.data}
+          voice={voice}
+          completion={completion}
+          startLabel={Number(event.data.startDate) > 0 ? formatEventDate(event.data.startDate) : null}
+          venueName={venue.data?.name ?? null}
+          previewHref={previewHref()}
+          onPublish={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
+          onRevert={() => guard(() => changeEventStatus(eventsId, 'Draft'), event.reload)}
+          onCopyLink={copyShareLink}
+        />
+      ) : null}
+
+      {suggestions.length > 0 ? (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {suggestions.map((s) => (
+            <button
+              key={s.id}
+              onClick={() => openSection(s.section)}
+              className="group flex items-start gap-3 rounded-2xl border border-amber/30 bg-amber/5 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-amber/50 hover:shadow-sm"
+            >
+              <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-amber/15 text-amber-foreground">
+                <Sparkles className="size-4" />
+              </span>
+              <span className="space-y-1.5">
+                <span className="block text-sm font-semibold leading-snug text-foreground">{s.text}</span>
+                <span className="inline-flex items-center gap-1 text-xs font-bold text-primary">
+                  {s.actionLabel}
+                  <ArrowRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+                </span>
+              </span>
+            </button>
+          ))}
         </div>
       ) : null}
 
-      {event.data && (
-        <div className="flex items-center justify-between overflow-x-auto pb-2 border-b border-border/20 sticky top-0 bg-background z-10 py-2">
-          {STEPS.map((step, index) => {
-            const isActive = step.id === currentStep;
+      {event.data && stats.data && (event.data.status === 'Published' || stats.data.totalBookings > 0) ? (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+          <Stat icon={CalendarCheck2} label="Bookings" value={stats.data.totalBookings} />
+          <Stat icon={Ticket} label="Tickets sold" value={stats.data.ticketsSold} />
+          <Stat icon={TicketCheck} label="Checked in" value={stats.data.checkedIn} />
+          <Stat icon={DollarSign} label="Revenue" value={centsToUSD(stats.data.revenueCents)} accent />
+        </div>
+      ) : null}
+
+      {event.data && completion ? (
+        <div id="section-canvas" className="scroll-mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {SECTIONS.map((section) => {
+            const items = completion.items.filter((i) => i.section === section.id);
+            const needsAttention = items.some((i) => i.weight === 'critical' && !i.done);
+            const allDone = items.length > 0 && items.every((i) => i.done);
+            const isActive = section.id === activeSection;
             return (
-              <div key={step.id} className="flex items-center cursor-pointer" onClick={() => setCurrentStep(step.id)}>
-                <div className={cn(
-                  "flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap transition-all duration-200",
-                  isActive ? "bg-primary/10 text-primary scale-105" : "text-muted-foreground opacity-60 hover:opacity-100 hover:bg-muted/50"
-                )}>
-                  <step.icon className="h-4.5 w-4.5" />
-                  <span>{step.label}</span>
-                </div>
-                {index < STEPS.length - 1 && (
-                  <div className="w-8 h-px bg-border/40 mx-2" />
+              <button
+                key={section.id}
+                onClick={() => openSection(section.id)}
+                className={cn(
+                  'group flex items-center gap-3 rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm',
+                  isActive ? 'border-primary/50 bg-primary/5 ring-1 ring-primary/20' : 'border-border bg-card',
                 )}
-              </div>
+              >
+                <span
+                  className={cn(
+                    'flex size-10 shrink-0 items-center justify-center rounded-xl [&_svg]:size-5',
+                    isActive ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground group-hover:text-foreground',
+                  )}
+                >
+                  <section.icon />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5 text-sm font-bold text-foreground">
+                    {section.label}
+                    {needsAttention ? (
+                      <AlertCircle className="size-3.5 text-amber-foreground" />
+                    ) : allDone ? (
+                      <CheckCircle2 className="size-3.5 text-success" />
+                    ) : null}
+                  </span>
+                  <span className="block truncate text-xs text-muted-foreground">{section.hint}</span>
+                </span>
+              </button>
             );
           })}
         </div>
-      )}
+      ) : null}
 
-      {currentStep === 'basics' && event.data && (
+      {activeSection === 'basics' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <EditSection event={event.data} timeZone={timeZone} onSaved={event.reload} />
           <EventExtraInfoEditor event={event.data} onSaved={event.reload} />
         </div>
       )}
 
-      {currentStep === 'layout' && event.data && event.data.eventType !== 'Open' && (
+      {activeSection === 'layout' && event.data && event.data.eventType !== 'Open' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-border/20 px-6 py-4">
@@ -419,7 +447,7 @@ export function AdminEventManagePage() {
         </div>
       )}
 
-      {currentStep === 'pricing' && event.data && (
+      {activeSection === 'pricing' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <PricingManager
             key={`pricing-${pricingKey}`}
@@ -435,7 +463,7 @@ export function AdminEventManagePage() {
 
 
 
-      {currentStep === 'timeline' && event.data && (
+      {activeSection === 'timeline' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <EventMediaManager eventsId={eventsId} />
           
@@ -455,7 +483,7 @@ export function AdminEventManagePage() {
         </div>
       )}
 
-      {currentStep === 'staff' && (
+      {activeSection === 'staff' && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-border/20 px-6 py-4">
@@ -515,7 +543,7 @@ export function AdminEventManagePage() {
         </div>
       )}
 
-      {currentStep === 'preview' && event.data && (
+      {activeSection === 'preview' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
             <CardHeader className="border-b border-border/20 px-6 py-4">
@@ -530,226 +558,14 @@ export function AdminEventManagePage() {
         </div>
       )}
 
-      {currentStep === 'publish' && (
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-muted/40 border border-border rounded-2xl p-8 text-center space-y-4">
-            <h2 className="font-display text-2xl font-bold">Review &amp; Publish</h2>
-            <p className="text-sm text-muted-foreground max-w-md mx-auto">
-              Once everything is configured, you can publish your event to make it visible to customers and start accepting bookings.
-            </p>
-            <Button
-              size="lg"
-              className={cn("svyne-spring-btn h-12 px-8 rounded-xl font-bold uppercase tracking-wider text-sm shadow-md shadow-primary/20 mt-4", event.data?.status === 'Published' && "opacity-50 cursor-not-allowed")}
-              disabled={!canPublish || event.data?.status === 'Published'}
-              onClick={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
-            >
-              {event.data?.status === 'Published' ? "Already Published" : "Publish Event Now"}
-            </Button>
-          </div>
-
-          {stats.data ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Stat icon={CalendarCheck2} label="Bookings" value={stats.data.totalBookings} />
-              <Stat icon={Ticket} label="Tickets sold" value={stats.data.ticketsSold} />
-              <Stat icon={TicketCheck} label="Checked in" value={stats.data.checkedIn} />
-              <Stat icon={DollarSign} label="Revenue" value={centsToUSD(stats.data.revenueCents)} accent />
-            </div>
-          ) : null}
-        </div>
-      )}
-
-      {/* Stepper Footer Navigation */}
-      {event.data && (
-        <div className="flex items-center justify-between border-t border-border/20 pt-6 mt-12 pb-8">
-          <Button
-            variant="outline"
-            className={cn("h-11 px-6 rounded-xl font-bold text-xs border-border bg-card", currentStep === STEPS[0].id ? "invisible" : "")}
-            onClick={goPrev}
-          >
-            <ChevronLeft className="mr-1 h-4 w-4" /> Previous Step
-          </Button>
-          <Button
-            className={cn("svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20", currentStep === STEPS[STEPS.length - 1].id ? "invisible" : "")}
-            onClick={goNext}
-          >
-            Next Step <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </div>
-      )}
+      {event.data && completion ? (
+        <WhatsNext
+          completion={completion}
+          published={event.data.status === 'Published'}
+          onOpen={openSection}
+          onPublish={() => guard(() => changeEventStatus(eventsId, 'Published'), event.reload)}
+        />
+      ) : null}
     </div>
-  );
-}
-
-function EditSection({
-  event,
-  timeZone,
-  onSaved,
-}: {
-  event: Event;
-  timeZone: string;
-  onSaved: () => void;
-}) {
-  const venuesLoader = useCallback(() => listVenues(), []);
-  const venues = useAsync(venuesLoader);
-  const [title, setTitle] = useState(event.title);
-  const [description, setDescription] = useState(event.description);
-  const [category, setCategory] = useState(event.category);
-  const [eventType, setEventType] = useState(event.eventType || 'Open');
-  const [venuesId, setVenuesId] = useState(event.venuesId);
-  const [feesIncluded, setFeesIncluded] = useState(event.feesIncluded);
-  const [start, setStart] = useState(epochToZonedInput(event.startDate, timeZone));
-  const [end, setEnd] = useState(epochToZonedInput(event.endDate, timeZone));
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  async function toggleFeesIncluded(next: boolean) {
-    setFeesIncluded(next);
-    try {
-      await setEventFeesIncluded(event.eventsId, next);
-    } catch (caught) {
-      setFeesIncluded(!next);
-      setError(rpcErrorMessage(caught));
-    }
-  }
-
-  async function save() {
-    setSaving(true);
-    setError(null);
-    try {
-      await updateEvent(event.eventsId, {
-        title,
-        slug: event.slug,
-        description,
-        status: event.status,
-        category,
-        startDate: zonedInputToEpoch(start, timeZone),
-        endDate: zonedInputToEpoch(end, timeZone),
-        // Open has no floor plan; Table/Both need the grid layout.
-        layoutMode: eventType === 'Open' ? 'Open' : 'Grid',
-        eventType,
-        venuesId,
-        imagePath: event.imagePath,
-      });
-      onSaved();
-    } catch (caught) {
-      setError(rpcErrorMessage(caught));
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  return (
-    <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
-      <CardHeader className="border-b border-border/20 px-6 py-4 flex flex-row items-center justify-between gap-2">
-        <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
-          <FileEdit className="h-4.5 w-4.5 text-primary" /> Edit Details
-        </CardTitle>
-        <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-          Capacity {event.totalCapacity}
-        </span>
-      </CardHeader>
-      <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 p-6">
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Title</Label>
-          <div className="svyne-spring-input">
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} className="h-10 bg-background border-border text-sm" />
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Category</Label>
-          <div className="svyne-spring-input">
-            <Input value={category} onChange={(e) => setCategory(e.target.value)} className="h-10 bg-background border-border text-sm" />
-          </div>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Venue</Label>
-          <Select value={venuesId} onChange={(e) => setVenuesId(e.target.value)} className="h-10 bg-background border-border text-sm">
-            <option value="">— select venue —</option>
-            {(venues.data ?? [])
-              .filter((v) => v.isActive || v.venuesId === venuesId)
-              .map((v) => (
-                <option key={v.venuesId} value={v.venuesId}>
-                  {v.name}
-                </option>
-              ))}
-          </Select>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Event type</Label>
-          <Select value={eventType} onChange={(e) => setEventType(e.target.value)} className="h-10 bg-background border-border text-sm">
-            <option value="Open">Open seating (ticket tiers)</option>
-            <option value="Table">Table based (floor plan)</option>
-            <option value="Both">Both (tiers + tables)</option>
-          </Select>
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Event starts</Label>
-          <DateTimePicker value={start} onChange={setStart} timeZone={timeZone} />
-        </div>
-        <div className="space-y-1.5">
-          <Label className="text-[10px]">Event ends</Label>
-          <DateTimePicker value={end} onChange={setEnd} timeZone={timeZone} fallbackDate={start} />
-        </div>
-        <div className="space-y-1.5 md:col-span-2">
-          <Label className="text-[10px]">Description</Label>
-          <Textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className="min-h-24 bg-background border-border text-sm" />
-        </div>
-        <div className="md:col-span-2 p-4 rounded-xl border border-border/50 bg-muted/20">
-          <label className="flex items-start gap-3 text-sm cursor-pointer">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={feesIncluded}
-              onChange={(e) => toggleFeesIncluded(e.target.checked)}
-            />
-            <span>
-              <span className="font-bold text-sm block">Show fees included in price</span>
-              <span className="block text-xs text-muted-foreground mt-1 leading-relaxed">
-                On = buyers see one all-in total. Off = price + fee shown separately. The developer fee amount is
-                unchanged either way.
-              </span>
-            </span>
-          </label>
-        </div>
-        {error ? <p className="text-[10px] font-bold text-destructive bg-destructive/10 border border-destructive/20 rounded-lg p-2.5 leading-normal animate-shake md:col-span-2">{error}</p> : null}
-        
-        <div className="md:col-span-2 flex justify-end border-t border-border/10 pt-4 mt-2">
-          <Button onClick={save} disabled={saving} className="svyne-spring-btn h-11 px-8 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20">
-            {saving ? 'Saving…' : 'Save details'}
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-function Stat({
-  icon: Icon,
-  label,
-  value,
-  accent,
-}: {
-  icon: LucideIcon;
-  label: string;
-  value: number | string;
-  accent?: boolean;
-}) {
-  return (
-    <Card className={cn('relative overflow-hidden border border-border shadow-sm rounded-2xl', accent && 'border-amber/40 bg-amber/5')}>
-      <CardContent className="space-y-2 p-6">
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              'flex size-10 items-center justify-center rounded-xl [&_svg]:size-5 shadow-sm border border-black/5',
-              accent ? 'bg-amber/20 text-amber-600' : 'bg-primary/10 text-primary',
-            )}
-          >
-            <Icon />
-          </span>
-          <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">{label}</p>
-        </div>
-        <p className="font-display text-3xl font-extrabold tracking-tight">{value}</p>
-      </CardContent>
-    </Card>
   );
 }
