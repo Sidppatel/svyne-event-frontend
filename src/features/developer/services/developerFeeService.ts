@@ -1,4 +1,4 @@
-import { feeClient } from '@/shared/apiClient';
+import { feeClient, pricingClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
 import type { FeeFormula, DeveloperEvent } from '@/shared/proto/fees';
 
@@ -44,6 +44,14 @@ export async function assignFeeFormula(
   await callRpc(() => feeClient.assignFeeFormula({ kind, targetId, feeFormulasId, reason }));
 }
 
+
+export async function setTenantDefaultFeeFormula(
+  tenantsId: string,
+  feeFormulasId: string,
+  reason: string,
+): Promise<void> {
+  await callRpc(() => pricingClient.setTenantDefaultFeeFormula({ tenantsId, feeFormulasId, reason }));
+}
 
 export function previewFee(priceCents: number, formula: FeeFormula | undefined): number {
   if (!formula) return 0;

@@ -8,7 +8,7 @@ import {
   setTenantAch,
   achEnabledCount,
 } from '@/features/developer/services/developerService';
-import { listFeeFormulas } from '@/features/developer/services/developerFeeService';
+import { listFeeFormulas, setTenantDefaultFeeFormula } from '@/features/developer/services/developerFeeService';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
@@ -81,6 +81,25 @@ export function DeveloperTenantsPage() {
       setFormError(rpcErrorMessage(caught));
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function changeDefaultFormula(tenantsId: string, feeFormulasId: string, revert: () => void) {
+    const reason = window.prompt('Why is this tenant getting a different pricing formula?');
+    if (!reason || !reason.trim()) {
+      revert();
+      return;
+    }
+    setBusyTenantId(tenantsId);
+    setFormError(null);
+    try {
+      await setTenantDefaultFeeFormula(tenantsId, feeFormulasId, reason.trim());
+      reload();
+    } catch (caught) {
+      setFormError(rpcErrorMessage(caught));
+      revert();
+    } finally {
+      setBusyTenantId(null);
     }
   }
 
@@ -233,6 +252,28 @@ export function DeveloperTenantsPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3 border-t pt-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Pricing</span>
+                  <Select
+                    className="h-8 w-44"
+                    value={tenant.defaultFeeFormulasId}
+                    disabled={busyTenantId === tenant.tenantsId}
+                    onChange={(e) => {
+                      const select = e.target;
+                      changeDefaultFormula(tenant.tenantsId, select.value, () => {
+                        select.value = tenant.defaultFeeFormulasId;
+                      });
+                    }}
+                    aria-label={`Default pricing formula for ${tenant.name}`}
+                  >
+                    <option value="">Platform default</option>
+                    {(feeFormulas ?? []).map((f) => (
+                      <option key={f.feeFormulasId} value={f.feeFormulasId}>
+                        {f.name}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
                 {tenant.achEnabled ? (
                   <Badge variant="success">💳 ACH: ON</Badge>
                 ) : (
