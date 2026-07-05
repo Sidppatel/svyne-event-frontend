@@ -12,7 +12,7 @@ import type { Booking } from '@/shared/proto/bookings';
 export function AdminBookingsPage() {
   const [eventsId, setEventsId] = useState('');
   
-  // 1. Show Only Paid Bookings
+  
   const loader = useCallback(() => listBookings(eventsId, 'Paid'), [eventsId]);
   const { data, loading, error } = useAsync(loader);
 

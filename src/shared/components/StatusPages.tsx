@@ -28,9 +28,9 @@ export function NotAuthorizedPage() {
   const navigate = useNavigate();
   const clear = useAuthStore((state) => state.clear);
 
-  // The signed-in account's role can't access this portal (e.g. an admin
-  // landing on the developer portal). Offer a clean way to sign in as a
-  // different user instead of dead-ending here.
+  
+  
+  
   function switchAccount() {
     clear();
     navigate('/login', { replace: true });

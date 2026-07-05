@@ -19,7 +19,7 @@ export function EventFooter({ organizerName = 'Organizer', className, light = fa
       className
     )}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        {/* Brand column */}
+        {}
         <div className="md:col-span-4 space-y-4">
           <div className="flex items-center gap-2">
             <span className={cn('text-lg font-black tracking-tight font-display', light ? 'text-white' : 'text-foreground')}>
@@ -34,7 +34,7 @@ export function EventFooter({ organizerName = 'Organizer', className, light = fa
           </p>
         </div>
 
-        {/* Directory Links */}
+        {}
         <div className="md:col-span-4 grid grid-cols-2 gap-4">
           <div className="space-y-3 text-xs">
             <h4 className={cn('font-bold uppercase tracking-wider', light ? 'text-white' : 'text-foreground')}>Legals</h4>
@@ -54,7 +54,7 @@ export function EventFooter({ organizerName = 'Organizer', className, light = fa
           </div>
         </div>
 
-        {/* Organizer metadata */}
+        {}
         <div className="md:col-span-4 space-y-3 text-xs md:text-right">
           <h4 className={cn('font-bold uppercase tracking-wider', light ? 'text-white' : 'text-foreground')}>Presented By</h4>
           <p className="font-bold text-sm text-accent-gold font-display uppercase tracking-wider">{organizerName}</p>

@@ -28,12 +28,12 @@ export interface TableTemplateEdit {
 export interface TableTemplatePriceRuleInput {
   tableTemplatesId: string;
   name: string;
-  ruleType: string; // Presale | LastMinute | TimeWindow | Dynamic
+  ruleType: string; 
   priority: number;
   priceCents: number;
-  activeFrom: string; // unix seconds; '0' = unset
+  activeFrom: string; 
   activeUntil: string;
-  minRemaining: number; // -1 = unset
+  minRemaining: number; 
   maxRemaining: number;
 }
 

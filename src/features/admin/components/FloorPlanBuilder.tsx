@@ -51,11 +51,11 @@ function shapeClass(shape: string): string {
     case 'Square':
       return 'rounded-none';
     default:
-      return 'rounded-md'; // Rectangle
+      return 'rounded-md'; 
   }
 }
 
-// A live pointer-drag (move or resize) on a placed item.
+
 type Drag = {
   kind: 'table' | 'object';
   mode: 'move' | 'resize';
@@ -69,13 +69,7 @@ type Drag = {
   moved: boolean;
 };
 
-/**
- * Free pixel-canvas floor-plan builder. Drag a palette table type or an
- * Entry/Exit/Stage object onto the canvas; drag placed items to move and the
- * corner handle to resize. Positions/sizes are absolute pixels (numeric(10,2));
- * overlaps are allowed. All edits are local until "Save layout" persists via
- * sp_save_event_layout.
- */
+
 export function FloorPlanBuilder({
   eventsId,
   onTypesChanged,
@@ -92,7 +86,7 @@ export function FloorPlanBuilder({
 
   const [tables, setTables] = useState<PlacedTable[]>([]);
   const [objects, setObjects] = useState<PlacedObject[]>([]);
-  // Selected placed item ("t<idx>" / "o<idx>") shows a delete button.
+  
   const [selected, setSelected] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -177,15 +171,15 @@ export function FloorPlanBuilder({
     return `${typeName} - ${n}`;
   }
 
-  // Pointer position relative to the canvas origin.
+  
   function canvasPoint(clientX: number, clientY: number) {
     const rect = canvasRef.current?.getBoundingClientRect();
     if (!rect) return { x: 0, y: 0 };
     return { x: clientX - rect.left, y: clientY - rect.top };
   }
 
-  // True if the rect would overlap any other placed item — table or object —
-  // except the one being dragged (kind+ignoreIdx). AABB. Nothing may overlap.
+  
+  
   function collides(
     x: number, y: number, w: number, h: number,
     kind: 'table' | 'object', ignoreIdx: number,
@@ -236,7 +230,7 @@ export function FloorPlanBuilder({
     setDirty(true);
   }
 
-  // --- Palette drag-and-drop onto the canvas ---
+  
   function onCanvasDrop(e: React.DragEvent) {
     e.preventDefault();
     setNotice(null);
@@ -256,7 +250,7 @@ export function FloorPlanBuilder({
     e.dataTransfer.effectAllowed = 'copy';
   }
 
-  // --- Move / resize of placed items via pointer capture ---
+  
   function onItemPointerDown(
     e: ReactPointerEvent,
     kind: 'table' | 'object',
@@ -302,7 +296,7 @@ export function FloorPlanBuilder({
         nw = clamp(snap(d.origW + dx), MIN_SIZE, CANVAS_W - base.posX);
         nh = clamp(snap(d.origH + dy), MIN_SIZE, CANVAS_H - base.posY);
       }
-      // Reject the step that would overlap another item; item stays put.
+      
       if (collides(nx, ny, nw, nh, 'table', d.idx)) {
         setNotice("Items can't overlap");
         return;
@@ -334,7 +328,7 @@ export function FloorPlanBuilder({
     const d = dragRef.current;
     dragRef.current = null;
     if (!d) return;
-    // A click without movement selects the item (toggles its delete button).
+    
     if (!d.moved) {
       const key = `${kind === 'table' ? 't' : 'o'}${idx}`;
       setSelected((cur) => (cur === key ? null : key));
@@ -354,8 +348,8 @@ export function FloorPlanBuilder({
     setDirty(true);
   }
 
-  // Delete a table TYPE: removes the type and every placed table of it (server
-  // cascades via sp_delete_event_table), then reloads palette + layout.
+  
+  
   async function deleteType(typeId: string, label: string) {
     if (lockedTypeIds.has(typeId)) {
       setNotice(`"${label}" can't be removed — it has sold or held tables`);
@@ -369,7 +363,7 @@ export function FloorPlanBuilder({
       setSelected(null);
       types.reload();
       layout.reload();
-      onTypesChanged?.(); // refresh the Pricing panel (the linked price is gone too)
+      onTypesChanged?.(); 
       onLayoutSaved?.();
     } catch (caught) {
       setNotice(rpcErrorMessage(caught));
@@ -434,7 +428,7 @@ export function FloorPlanBuilder({
         </Button>
       </div>
 
-      {/* Palette */}
+      {}
       <div className="flex flex-wrap gap-2">
         {typeList.map((t: EventTableType) => (
           <span key={t.eventTablesId}
@@ -464,7 +458,7 @@ export function FloorPlanBuilder({
         ))}
       </div>
 
-      {/* Canvas */}
+      {}
       <div className="overflow-auto rounded-md border bg-muted">
         <div
           ref={canvasRef}

@@ -207,12 +207,12 @@ export interface TableDraft {
   color: string;
   priceCents: number;
   feeFormulasId: string;
-  // Table pricing mode. Default all-inclusive: priceCents covers the whole table.
-  // When false, priceCents is the base and perAttendeeCents is added per seat.
+  
+  
   isAllInclusive?: boolean;
   perAttendeeCents?: number;
   tableTemplatesId?: string;
-  // Pixel footprint override; 0 = inherit catalog template default.
+  
   width?: number;
   height?: number;
 }

@@ -72,7 +72,7 @@ export function EventSeatingMap({
   const [error, setError] = useState<string | null>(null);
   const [hoveredTable, setHoveredTable] = useState<HoveredTable | null>(null);
 
-  // Pan & Zoom state
+  
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -116,7 +116,7 @@ export function EventSeatingMap({
     }
   }
 
-  // Pan/Zoom Handlers
+  
   const handleZoomIn = () => setZoom((z) => Math.min(2.5, z + 0.15));
   const handleZoomOut = () => setZoom((z) => Math.max(0.6, z - 0.15));
   const handleReset = () => {
@@ -125,7 +125,7 @@ export function EventSeatingMap({
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Only drag on canvas or drag background clicks
+    
     if ((e.target as HTMLElement).closest('button')) return;
     setIsDragging(true);
     dragStart.current = { x: e.clientX - pan.x, y: e.clientY - pan.y };
@@ -162,7 +162,7 @@ export function EventSeatingMap({
       )}
 
       <div className="relative overflow-hidden rounded-3xl border border-border-soft bg-stage shadow-2xl min-h-[500px]">
-        {/* Floorplan Controls Overlay */}
+        {}
         <div className="absolute top-4 left-4 z-30 flex items-center gap-1.5 bg-stage-elevated/90 backdrop-blur-md p-1.5 rounded-xl border border-white/5 shadow-lg">
           <Button
             type="button"
@@ -196,7 +196,7 @@ export function EventSeatingMap({
           </Button>
         </div>
 
-        {/* Legend Overlay */}
+        {}
         <div className="absolute bottom-4 left-4 z-30 hidden sm:flex items-center gap-4 bg-stage-elevated/90 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-[10px] uppercase font-bold tracking-wider text-on-stage-soft">
           <div className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full bg-white border border-accent-gold" />
@@ -212,7 +212,7 @@ export function EventSeatingMap({
           </div>
         </div>
 
-        {/* Dynamic Detail Card overlay on table hover */}
+        {}
         {hoveredTable && (
           <div className="absolute top-4 right-4 z-30 w-56 bg-stage-elevated/95 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl text-xs space-y-2 animate-in fade-in duration-200">
             <div className="flex items-center justify-between">
@@ -266,7 +266,7 @@ export function EventSeatingMap({
           </div>
         )}
 
-        {/* Map Canvas Frame */}
+        {}
         <div
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
@@ -277,7 +277,7 @@ export function EventSeatingMap({
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           )}
         >
-          {/* Blueprint vector grids */}
+          {}
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
@@ -292,7 +292,7 @@ export function EventSeatingMap({
             }}
           />
 
-          {/* Seating Coordinate Wrapper */}
+          {}
           <div
             className="absolute"
             style={{
@@ -303,7 +303,7 @@ export function EventSeatingMap({
               transition: isDragging ? 'none' : 'transform 0.15s ease-out',
             }}
           >
-            {/* 1. Structural Stage & Entry Objects */}
+            {}
             {layout.objects.map((o) => (
               <div
                 key={o.layoutObjectsId}
@@ -321,7 +321,7 @@ export function EventSeatingMap({
               </div>
             ))}
 
-            {/* 2. Seating Tables */}
+            {}
             {layout.tables.map((table) => {
               const type = typeById.get(table.eventTablesId);
               const isAvailable = table.status === 'Available';
@@ -329,12 +329,12 @@ export function EventSeatingMap({
               const capacity = capacityOf(table);
               const shape = table.shapeOverride || type?.shape || 'Rectangle';
 
-              // Interactive States Colors
+              
               const bgStyle = isSelected
                 ? 'var(--accent-burgundy)'
                 : isAvailable
                   ? 'var(--surface-card)'
-                  : '#2F1D2C'; // reserved/unavailable color
+                  : '#2F1D2C'; 
 
               const borderStyle = isSelected
                 ? '2px solid var(--accent-burgundy)'
@@ -377,7 +377,7 @@ export function EventSeatingMap({
                       : 'cursor-not-allowed'
                   )}
                 >
-                  {/* Glowing selection dot inside the table */}
+                  {}
                   {isSelected ? (
                     <span className="flex size-4.5 items-center justify-center rounded-full bg-white text-accent-burgundy shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-bounce">
                       <Check className="size-3 stroke-[3]" />

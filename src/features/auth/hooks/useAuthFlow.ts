@@ -19,8 +19,8 @@ export function useAuthFlow() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
-  // Prefer a pending return target (e.g. a guest checkout the user was sent
-  // away from); otherwise land on the role's home.
+  
+  
   const goAfterAuth = useCallback(
     (role: number) => navigate(takeReturnTo() ?? homePathForRole(role)),
     [navigate],

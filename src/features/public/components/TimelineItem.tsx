@@ -33,7 +33,7 @@ export function TimelineItem({
         isLeft ? 'md:text-right' : 'md:text-left'
       )}
     >
-      {/* Central Node Indicator */}
+      {}
       <div 
         data-timeline-dot
         className={cn(
@@ -43,7 +43,7 @@ export function TimelineItem({
         )}
       />
 
-      {/* Details Card */}
+      {}
       <div 
         data-timeline-card
         className={cn(
@@ -77,7 +77,7 @@ export function TimelineItem({
         </div>
       </div>
 
-      {/* Spacer Grid Slot for Desktop layout */}
+      {}
       <div className="hidden md:block md:order-2" />
     </div>
   );

@@ -5,25 +5,25 @@ import type { Price, PriceRule, PriceBreakdown } from '@/shared/proto/pricing';
 export interface PriceInput {
   eventsId: string;
   name: string;
-  pricingType: string; // TicketTier | Table
+  pricingType: string; 
   basePriceCents: number;
   perAttendeeCents: number;
   isAllInclusive: boolean;
-  feeFormulasId: string; // honored only for developers
+  feeFormulasId: string; 
   maxQuantity: number;
 }
 
 export interface PriceRuleInput {
   pricesId: string;
   name: string;
-  ruleType: string; // Presale | LastMinute | TimeWindow | Dynamic
+  ruleType: string; 
   priority: number;
   priceCents: number;
-  activeFrom: string; // unix seconds; '0' = unset
+  activeFrom: string; 
   activeUntil: string;
-  minRemaining: number; // -1 = unset
+  minRemaining: number; 
   maxRemaining: number;
-  capacity: number; // people/seats the discount applies to; 0 = no cap
+  capacity: number; 
 }
 
 export async function createPrice(input: PriceInput): Promise<string> {
@@ -58,8 +58,8 @@ export async function deletePrice(pricesId: string): Promise<void> {
 }
 
 export async function createPriceRule(input: PriceRuleInput): Promise<string> {
-  // Proto renamed prices_id → owner_id + scope. This service only creates
-  // per-price rules, so owner_id = pricesId and scope = 'Price'.
+  
+  
   const { pricesId, ...rest } = input;
   const res = await callRpc(() =>
     pricingClient.createPriceRule({ ...rest, ownerId: pricesId, scope: 'Price' }),

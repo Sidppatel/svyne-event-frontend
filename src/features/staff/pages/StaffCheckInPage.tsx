@@ -42,17 +42,17 @@ export function StaffCheckInPage() {
   const [manualType, setManualType] = useState<'Booking' | 'Ticket'>('Ticket');
   const [checkingIn, setCheckingIn] = useState(false);
   
-  // Full-screen bouncer flash overlay state
+  
   const [scanOverlay, setScanOverlay] = useState<ScanOverlayState | null>(null);
 
-  // Load guest list & stats
+  
   const guestListLoader = useCallback(() => getGuestList(eventsId), [eventsId]);
   const guestList = useAsync(guestListLoader);
 
   const statsLoader = useCallback(() => getCheckInStats(eventsId), [eventsId]);
   const stats = useAsync(statsLoader);
 
-  // Auto-reload stats/guest list on successful check-in
+  
   const reloadAll = useCallback(() => {
     guestList.reload();
     stats.reload();
@@ -61,16 +61,16 @@ export function StaffCheckInPage() {
   const triggerOverlay = (success: boolean, message: string) => {
     setScanOverlay({ show: true, success, message });
     
-    // Haptic feedback
+    
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       if (success) {
-        navigator.vibrate(150); // Single success pulse
+        navigator.vibrate(150); 
       } else {
-        navigator.vibrate([100, 50, 100]); // Double failure pulse
+        navigator.vibrate([100, 50, 100]); 
       }
     }
     
-    // Clear overlay after 1.5s
+    
     setTimeout(() => {
       setScanOverlay(null);
     }, 1500);
@@ -137,7 +137,7 @@ export function StaffCheckInPage() {
     }
   }
 
-  // Filter guest bookings/tickets
+  
   const filteredBookings = (guestList.data ?? []).filter((b) => {
     const query = searchQuery.toLowerCase().trim();
     if (!query) return true;
@@ -177,7 +177,7 @@ export function StaffCheckInPage() {
   return (
     <div className="space-y-8 max-w-5xl mx-auto py-2 relative">
       
-      {/* Bouncer Scan Overlay Portal */}
+      {}
       {scanOverlay && (
         <div className={cn(
           "fixed inset-0 z-50 flex flex-col items-center justify-center animate-fade-in p-6 backdrop-blur-md",
@@ -201,7 +201,7 @@ export function StaffCheckInPage() {
         </div>
       )}
 
-      {/* Header */}
+      {}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-border/30 pb-4">
         <div className="space-y-1">
           <Button variant="ghost" size="sm" onClick={() => navigate('/staff')} className="-ml-2 mb-1 gap-1 text-muted-foreground hover:bg-muted/30">
@@ -224,11 +224,11 @@ export function StaffCheckInPage() {
         )}
       </div>
 
-      {/* Main Grid */}
+      {}
       <div className="grid gap-6 md:grid-cols-3">
-        {/* Scanners and Inputs */}
+        {}
         <div className="space-y-6 md:col-span-1">
-          {/* Simulated QR Scan */}
+          {}
           <Card className="border border-border bg-card shadow-lg rounded-2xl overflow-hidden">
             <CardHeader className="pb-3 border-b border-border/20 px-5 py-4">
               <CardTitle className="text-sm font-bold font-display flex items-center gap-2 text-foreground">
@@ -257,7 +257,7 @@ export function StaffCheckInPage() {
             </CardContent>
           </Card>
 
-          {/* Manual Check-In Form */}
+          {}
           <Card className="border border-border bg-card shadow-lg rounded-2xl overflow-hidden">
             <CardHeader className="pb-3 border-b border-border/20 px-5 py-4">
               <CardTitle className="text-sm font-bold font-display flex items-center gap-2 text-foreground">
@@ -299,7 +299,7 @@ export function StaffCheckInPage() {
           </Card>
         </div>
 
-        {/* Guest List Panel */}
+        {}
         <div className="md:col-span-2 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -341,7 +341,7 @@ export function StaffCheckInPage() {
                 <div className="divide-y divide-border/20 max-h-[600px] overflow-y-auto">
                   {filteredBookings.map((b) => (
                     <div key={b.bookingsId} className="p-4 space-y-3 hover:bg-muted/10 transition-colors">
-                      {/* Booking Header */}
+                      {}
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b pb-2 border-dashed border-border/20">
                         <div>
                           <p className="font-bold text-sm text-foreground">
@@ -373,7 +373,7 @@ export function StaffCheckInPage() {
                         </div>
                       </div>
 
-                      {/* Tickets list */}
+                      {}
                       <div className="pl-2 space-y-2">
                         {b.tickets.map((t) => (
                           <div key={t.ticketsId} className="flex items-center justify-between py-1 text-xs">

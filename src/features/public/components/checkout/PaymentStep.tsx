@@ -184,7 +184,7 @@ function StripeCheckoutForm({
   const expired = secondsLeft !== null && secondsLeft <= 0;
   const cancelledRef = useRef(false);
 
-  // Hold Timer countdown
+
   useEffect(() => {
     if (secondsLeft === null || secondsLeft <= 0) return;
     const id = setTimeout(() => setSecondsLeft((s) => (s === null ? null : s - 1)), 1000);
@@ -206,12 +206,12 @@ function StripeCheckoutForm({
           setPolling(false);
           return;
         }
-      } catch {
-        // keep polling on network glitch
+      } catch (e) {
+        console.error(e);
       }
       await new Promise((r) => setTimeout(r, 1500));
     }
-    // Webhook lag fallback
+
     onPaymentSuccess();
   }, [bookingsId, onPaymentSuccess]);
 
@@ -243,8 +243,8 @@ function StripeCheckoutForm({
     cancelledRef.current = true;
     try {
       await cancelBooking(bookingsId);
-    } catch {
-      // best effort
+    } catch (e) {
+      console.error(e);
     }
     onBack();
   }

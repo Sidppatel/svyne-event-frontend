@@ -72,7 +72,7 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
       const progressBar = progressBarRef.current;
       const timelineCards = timeline.querySelectorAll('[data-timeline-card]');
 
-      // Scroll-driven line drawing animation (disabled in reduced-motion)
+      
       if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         gsap.fromTo(
           progressBar,
@@ -89,7 +89,7 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
           }
         );
 
-        // Staggered timeline card entry
+        
         gsap.fromTo(timelineCards, 
           {
             opacity: 0,
@@ -108,11 +108,11 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
           }
         );
         
-        // Refresh ScrollTrigger to recalculate positions
+        
         setTimeout(() => ScrollTrigger.refresh(), 100);
       }
 
-      // Card hover micro-animations
+      
       timelineCards.forEach((card) => {
         const dot = card.closest('[key]')?.querySelector('[data-timeline-dot]');
         
@@ -165,10 +165,10 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
       />
 
       <div className="relative">
-        {/* Central timeline Track */}
+        {}
         <div className="absolute left-[15px] md:left-1/2 top-4 bottom-4 w-[2px] md:-translate-x-1/2 bg-dashed border-l border-border-strong" />
         
-        {/* Drawing progress line */}
+        {}
         <div 
           ref={progressBarRef}
           className="absolute left-[15px] md:left-1/2 top-4 bottom-4 w-[2px] md:-translate-x-1/2 bg-gradient-to-b from-accent-burgundy via-accent-gold to-accent-burgundy origin-top scale-y-0 z-10" 

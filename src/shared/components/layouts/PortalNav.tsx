@@ -15,7 +15,7 @@ export interface NavLink {
   label: string;
 }
 
-// Icon mapper for sidebar aesthetics
+
 function getLinkIcon(label: string) {
   const iconClass = "h-4 w-4 mr-2.5 transition-colors";
   switch (label.toLowerCase()) {
@@ -129,11 +129,11 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
   const isPortal = section === 'admin' || section === 'staff';
   const grouped = groupLinks(links, section);
 
-  // Render Left Sidebar for Admin/Staff Portal (Desktop)
+  
   if (isPortal) {
     return (
       <>
-        {/* Mobile top bar for Portal */}
+        {}
         <header className="sticky top-0 z-40 flex h-14 w-full items-center justify-between border-b border-border bg-card/85 backdrop-blur-md px-4 md:hidden">
           <Brand section={section} />
           <Sheet open={open} onOpenChange={setOpen}>
@@ -187,7 +187,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
           </Sheet>
         </header>
 
-        {/* Desktop Sidebar Dock */}
+        {}
         <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-border bg-card/60 backdrop-blur-xl md:flex">
           <div className="flex h-14 items-center px-6 border-b border-border/40">
             <Brand section={section} />
@@ -235,7 +235,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
     );
   }
 
-  // Render Horizontal Header for Public Pages
+  
   return (
     <header
       className={cn(
@@ -330,7 +330,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
             </Button>
           )}
 
-          {/* Mobile hamburger menu */}
+          {}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">

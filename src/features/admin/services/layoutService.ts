@@ -6,9 +6,9 @@ export async function getEventLayout(eventsId: string): Promise<EventLayout> {
   return callRpc(() => tableBookingClient.getEventLayout({ value: eventsId }));
 }
 
-// Serializes tables/objects back into the PascalCase JSON shape consumed by
-// sp_save_event_layout (pixel coords), preserving existing tables when only
-// objects change.
+
+
+
 function tableJson(t: Table) {
   return {
     Id: t.tablesId,

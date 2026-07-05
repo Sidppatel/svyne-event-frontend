@@ -44,7 +44,7 @@ export async function assignFeeFormula(
   await callRpc(() => feeClient.assignFeeFormula({ kind, targetId, feeFormulasId, reason }));
 }
 
-/** fee = round(price * percentBps / 10000) + flatCents, clamped to [min,max]. */
+
 export function previewFee(priceCents: number, formula: FeeFormula | undefined): number {
   if (!formula) return 0;
   let fee = Math.round((priceCents * formula.percentBps) / 10000) + formula.flatCents;

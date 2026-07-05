@@ -14,7 +14,7 @@ interface TicketCardProps {
   feesIncluded: boolean;
   quantity: number;
   maxQuantity?: number;
-  availableQuantity?: number; // actual stock remaining
+  availableQuantity?: number; 
   isPopular?: boolean;
   onQuantityChange: (qty: number) => void;
   discountedPriceCents?: number;
@@ -54,7 +54,7 @@ export function TicketCard({
             : 'border-hairline hover:border-hairline-strong hover:shadow-[var(--shadow-e1)]',
       )}
     >
-      {/* Ticket Stub Perforation Notches */}
+      {}
       <div 
         className="absolute left-[-8px] top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-background border-r border-border-strong"
         style={{ '--svyne-notch': 'var(--background)' } as React.CSSProperties}

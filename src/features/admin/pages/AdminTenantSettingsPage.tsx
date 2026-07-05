@@ -70,8 +70,8 @@ export function AdminTenantSettingsPage() {
     getStripeStatus(tenantsId).then(setStripe).catch((caught) => setError(rpcErrorMessage(caught)));
     searchParams.delete('stripe');
     setSearchParams(searchParams, { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stripeReturn, tenantsId]);
+    
+  }, [stripeReturn, tenantsId, searchParams, setSearchParams]);
 
   function field(key: keyof TenantContactInput) {
     return (value: string) => setForm((prev) => ({ ...prev, [key]: value }));

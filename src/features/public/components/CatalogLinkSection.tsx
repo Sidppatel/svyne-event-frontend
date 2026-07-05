@@ -31,7 +31,7 @@ export function CatalogLinkSection({
       if (!containerRef.current) return;
       const container = containerRef.current;
 
-      // 1. Horizontal Scroll for Lineup Performers (if multiple items)
+      
       if (showHorizontalScroll && scrollRef.current) {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const scroll = scrollRef.current;
@@ -57,7 +57,7 @@ export function CatalogLinkSection({
         }
       }
 
-      // 2. Grid items stagger animations on scroll
+      
       if (!showHorizontalScroll) {
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const cards = container.querySelectorAll('[data-item-card]');
@@ -81,7 +81,7 @@ export function CatalogLinkSection({
     return null;
   }
 
-  // A. Performer Horizontal Cinematic Lineup
+  
   if (showHorizontalScroll) {
     return (
       <div 
@@ -100,12 +100,12 @@ export function CatalogLinkSection({
           </span>
         </div>
 
-        {/* Ambient background watermark display */}
+        {}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none text-[20vw] font-black uppercase text-white/[0.01] font-display leading-none tracking-tighter">
           LINEUP
         </div>
 
-        {/* Pinned Viewport */}
+        {}
         <div className="relative max-w-7xl mx-auto px-4 md:px-8">
           <div 
             ref={scrollRef} 
@@ -132,7 +132,7 @@ export function CatalogLinkSection({
     );
   }
 
-  // B. Grid Layout (Sponsors plaque / few items performers)
+  
   return (
     <section ref={containerRef} className="space-y-6 py-4" aria-label={title}>
       <div className="flex items-center justify-between">

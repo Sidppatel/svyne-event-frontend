@@ -5,8 +5,8 @@ import type { Booking } from '@/shared/proto/bookings';
 import type { EventLayout } from '@/shared/proto/booking';
 import type { PriceBreakdown } from '@/shared/proto/pricing';
 
-// Server-authoritative price for a sellable from the Pricing Module. Consumed by
-// the public floor plan — the client never computes the price itself.
+
+
 export async function calculatePrice(pricesId: string, seats: number): Promise<PriceBreakdown> {
   return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at: '0', remaining: -1 }));
 }

@@ -61,7 +61,7 @@ export function CheckoutDrawer({
       >
         <SheetTitle className="sr-only">Checkout Process</SheetTitle>
 
-        {/* Step Indicator Headers */}
+        {}
         {step < 5 && (
           <div className="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
             <span className="text-[10px] uppercase font-bold tracking-widest text-accent-gold">
@@ -74,7 +74,7 @@ export function CheckoutDrawer({
           </div>
         )}
 
-        {/* Step Views */}
+        {}
         <div className="flex-1 flex flex-col min-h-0 overflow-y-auto -mx-6 px-6 pb-6">
           {step === 3 && (
             <GuestInfoStep
@@ -134,7 +134,7 @@ function ConfirmationReceipt({
           <p className="text-xs text-white/50">Your secure entries are verified and issued</p>
         </div>
 
-      {/* Visual Perforated Ticket Stub Receipt */}
+      {}
       <div className="overflow-hidden rounded-2xl border border-white/10 bg-stage-elevated text-left shadow-2xl">
         <div className="p-5 space-y-3">
           <div className="flex justify-between items-center text-xs">
@@ -149,11 +149,11 @@ function ConfirmationReceipt({
           </div>
         </div>
 
-        {/* Ticket Perforation Tear Edge */}
+        {}
         <div className="svyne-ticket-edge mx-4" style={{ '--svyne-notch': 'var(--background)' } as React.CSSProperties} />
 
         <div className="p-5 space-y-4">
-          {/* Dynamic Tickets Barcode/QR List */}
+          {}
           {tickets.loading ? (
             <div className="py-4 text-center text-white/50 text-[10px] uppercase font-bold tracking-widest animate-pulse">
               Generating secure barcodes…

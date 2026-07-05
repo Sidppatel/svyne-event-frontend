@@ -22,7 +22,7 @@ function selectRoutes(portal: string) {
 }
 
 export function App() {
-  useLocation(); // Force re-render on navigation so portal is re-evaluated
+  useLocation(); 
   const { portal } = resolvePortalContext();
   return (
     <>

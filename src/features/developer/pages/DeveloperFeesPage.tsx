@@ -167,7 +167,7 @@ export function DeveloperFeesPage() {
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      {/* ── Zone 1 · Intelligence ─────────────────────────────────── */}
+      {}
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Service fee revenue (12 mo)" value={centsToUSD(intel.summary.serviceFeeRevenueCents)} />
         <StatCard
@@ -201,7 +201,7 @@ export function DeveloperFeesPage() {
         </section>
       ) : null}
 
-      {/* ── Fee formula library ───────────────────────────────────── */}
+      {}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm text-muted-foreground">Fee formula library</CardTitle>
@@ -262,7 +262,7 @@ export function DeveloperFeesPage() {
         </CardContent>
       </Card>
 
-      {/* ── Zone 2 · Tenant canvas ────────────────────────────────── */}
+      {}
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
@@ -368,7 +368,7 @@ export function DeveloperFeesPage() {
         </div>
       </section>
 
-      {/* ── Zone 3 · Analytics ────────────────────────────────────── */}
+      {}
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm text-muted-foreground">Service fees by tenant tier</CardTitle>

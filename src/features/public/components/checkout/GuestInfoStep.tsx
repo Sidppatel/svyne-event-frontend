@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -21,17 +21,18 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
   const { isAuthenticated, user } = useAuth();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Pre-fill user profile info if logged in
+  const initRef = useRef(false);
+
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (isAuthenticated && user && !initRef.current) {
+      initRef.current = true;
       onChange({
         name: [user.firstName, user.lastName].filter(Boolean).join(' ') || buyerInfo.name,
         email: user.email || buyerInfo.email,
         phone: user.phone || buyerInfo.phone,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, buyerInfo.name, buyerInfo.email, buyerInfo.phone, onChange]);
 
   const validate = () => {
     const errs: Record<string, string> = {};
@@ -46,7 +47,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
     } else if (buyerInfo.phone.replace(/\D/g, '').length < 10) {
       errs.phone = 'Please enter a valid phone number';
     }
-    
+
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -65,7 +66,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
         <p className="text-xs text-white/50">Enter delivery and billing details for your digital entry passes</p>
       </div>
 
-      {/* Suggest Login/Sign up if guest */}
+      { }
       {!isAuthenticated && (
         <div className="bg-accent-gold/10 border border-accent-gold/20 p-4 rounded-xl space-y-2 text-xs">
           <p className="font-bold text-accent-gold">Secure your Svyne Profile</p>
@@ -87,7 +88,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
       )}
 
       <div className="space-y-4">
-        {/* Name input */}
+        { }
         <div className="space-y-1.5">
           <Label htmlFor="buyer_name" className="text-xs font-bold text-white/80 uppercase tracking-wide">Full Name</Label>
           <Input
@@ -104,7 +105,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
           )}
         </div>
 
-        {/* Email input */}
+        { }
         <div className="space-y-1.5">
           <Label htmlFor="buyer_email" className="text-xs font-bold text-white/80 uppercase tracking-wide">Email Address</Label>
           <Input
@@ -122,7 +123,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
           )}
         </div>
 
-        {/* Phone input */}
+        { }
         <div className="space-y-1.5">
           <Label htmlFor="buyer_phone" className="text-xs font-bold text-white/80 uppercase tracking-wide">Phone Number</Label>
           <Input

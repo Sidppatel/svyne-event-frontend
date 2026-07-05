@@ -86,7 +86,7 @@ export function AdminEventWizardPage() {
       category,
       startDate: zonedInputToEpoch(start, venueTz),
       endDate: zonedInputToEpoch(end, venueTz),
-      // Open seating has no floor plan; Table/Both need the grid layout.
+      
       layoutMode: eventType === 'Open' ? 'Open' : 'Grid',
       eventType,
       venuesId,
@@ -109,7 +109,7 @@ export function AdminEventWizardPage() {
         <p className="text-xs text-muted-foreground">Follow the steps to configure a new event.</p>
       </div>
 
-      {/* Stepper Header */}
+      {}
       <div className="flex items-center justify-between overflow-x-auto pb-2 border-b border-border/20">
         {STEPS.map((step, index) => {
           const isActive = index === 0;

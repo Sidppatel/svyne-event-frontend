@@ -49,9 +49,9 @@ export function resolvePortalContext(): PortalContext {
 
   if (subLabel === 'admin' || subLabel === 'staff' || subLabel === 'developer') {
     const portal = subLabel as Portal;
-    // Admin/staff/developer accounts are single-tenant; the backend derives the
-    // tenant from the authenticated user, not from a slug. Drop any stale tenant
-    // slug left in storage so it can't leak into login or tenant-scoped calls.
+    
+    
+    
     if (typeof window !== 'undefined') {
       window.localStorage.removeItem('svyne-tenant');
     }

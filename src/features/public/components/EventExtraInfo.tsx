@@ -12,7 +12,7 @@ function humanize(key: string): string {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-// Icon helper mapping metadata keys to visual symbols
+
 function getMetaIcon(key: string) {
   const k = key.toLowerCase();
   if (k.includes('age') || k.includes('restriction')) return Lock;
@@ -32,7 +32,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
       if (!containerRef.current || items.length === 0) return;
       const rows = containerRef.current.querySelectorAll('[data-info-row]');
 
-      // Entrance animation
+      
       gsap.from(rows, {
         opacity: 0,
         y: 20,
@@ -42,7 +42,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
         clearProps: 'opacity,transform',
       });
 
-      // Hover micro-interactions
+      
       rows.forEach((row) => {
         const iconContainer = row.querySelector('[data-info-icon-container]');
         
@@ -94,7 +94,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
 
   return (
     <section ref={containerRef} className="space-y-6">
-      {/* Editorial Header */}
+      {}
       <div className="flex items-center gap-3 border-b border-hairline-strong pb-4">
         <span className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
           <Info className="size-5" />
@@ -118,7 +118,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
               data-info-row
               className="flex items-start gap-4 p-5 rounded-2xl border border-border bg-card shadow-sm transition-all duration-300"
             >
-              {/* Floating glass Icon Container */}
+              {}
               <div 
                 data-info-icon-container
                 className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/8 text-primary border border-primary/10 transition-all duration-300"

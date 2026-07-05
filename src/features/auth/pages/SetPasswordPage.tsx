@@ -18,8 +18,8 @@ export function SetPasswordPage() {
   const [tokenState, setTokenState] = useState<TokenState>(token ? 'checking' : 'invalid');
   const [tokenError, setTokenError] = useState(token ? '' : 'Missing token in link.');
 
-  // Validate the reset link before showing the form. The token is single-use and
-  // is only consumed on submit, so an already-used or expired link is rejected here.
+  
+  
   useEffect(() => {
     if (!token) {
       return;
