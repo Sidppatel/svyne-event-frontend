@@ -8,7 +8,6 @@ import {
 } from '@/features/admin/services/eventAdminService';
 import { rpcErrorMessage } from '@/shared/session';
 import { centsToUSD, centsToUsdInput, usdToCents } from '@/shared/lib/format';
-import { addCents } from '@/shared/lib/math';
 import type { EventTicketType } from '@/shared/proto/bookings';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -88,7 +87,7 @@ export function TicketTypesManager({ eventsId }: { eventsId: string }) {
                   label: label.trim(),
                   priceCents: usdToCents(priceUsd),
                   feeFormulasId: '',
-                  maxQuantity: 0,
+                  maxQuantity: capacity,
                   sortOrder: 0,
                   description,
                   capacity,
@@ -193,7 +192,7 @@ function TicketTypeRow({
                 label: label.trim(),
                 priceCents: usdToCents(priceUsd),
                 feeFormulasId: tt.feeFormulasId,
-                maxQuantity: tt.maxQuantity,
+                maxQuantity: capacity,
                 sortOrder: 0,
                 description,
                 capacity,
@@ -228,8 +227,10 @@ function TicketTypeRow({
       </div>
       <div className="flex shrink-0 items-center gap-3">
         <span className="text-muted-foreground tabular-nums">
-          {centsToUSD(tt.priceCents)} + fee {centsToUSD(tt.platformFeeCents)} ={' '}
-          <span className="font-medium text-foreground">{centsToUSD(addCents(tt.priceCents, tt.platformFeeCents))}</span>
+          {centsToUSD(tt.sellingPriceCents)} + fee {centsToUSD(tt.serviceFeeCents)}
+          {tt.taxCents > 0 ? <> + tax {centsToUSD(tt.taxCents)}</> : null} ={' '}
+          <span className="font-medium text-foreground">{centsToUSD(tt.totalCents)}</span>
+          <span className="ml-1 text-xs">end user pays</span>
         </span>
         <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
           <Pencil /> Edit

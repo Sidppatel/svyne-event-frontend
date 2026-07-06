@@ -178,18 +178,33 @@ export function CheckoutPage() {
 
               {booking ? (
                 <div className="space-y-2 border-t border-hairline pt-4 text-sm">
-                  <div className="flex justify-between text-ink-soft">
-                    <span>Subtotal</span>
-                    <span className="font-mono">{centsToUSD(booking.subtotalCents)}</span>
-                  </div>
-                  <div className="flex justify-between text-ink-soft">
-                    <span>Service fee</span>
-                    <span className="font-mono">{centsToUSD(booking.feeCents)}</span>
-                  </div>
+                  {booking.feesIncluded ? null : (
+                    <>
+                      <div className="flex justify-between text-ink-soft">
+                        <span>Subtotal</span>
+                        <span className="font-mono">{centsToUSD(booking.subtotalCents)}</span>
+                      </div>
+                      <div className="flex justify-between text-ink-soft">
+                        <span>Service fee</span>
+                        <span className="font-mono">{centsToUSD(booking.serviceFeeCents)}</span>
+                      </div>
+                    </>
+                  )}
+                  {booking.taxCents > 0 ? (
+                    <div className="flex justify-between text-ink-soft">
+                      <span>Tax</span>
+                      <span className="font-mono">{centsToUSD(booking.taxCents)}</span>
+                    </div>
+                  ) : null}
                   <div className="flex items-center justify-between border-t border-hairline pt-3 font-semibold text-foreground">
                     <span>Total</span>
                     <span className="font-mono text-lg">{centsToUSD(booking.totalCents)}</span>
                   </div>
+                  {booking.taxCents > 0 && booking.venueZip ? (
+                    <p className="pt-1 text-xs text-ink-soft">
+                      📍 Tax calculated based on venue location: {booking.venueCity}, {booking.venueState} {booking.venueZip}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
             </div>

@@ -110,6 +110,26 @@ export interface Booking {
      * @generated from protobuf field: int64 paid_at = 21;
      */
     paidAt: string;
+    /**
+     * @generated from protobuf field: int32 tax_cents = 22;
+     */
+    taxCents: number;
+    /**
+     * @generated from protobuf field: int32 service_fee_cents = 23;
+     */
+    serviceFeeCents: number;
+    /**
+     * @generated from protobuf field: string venue_zip = 24;
+     */
+    venueZip: string;
+    /**
+     * @generated from protobuf field: string venue_city = 25;
+     */
+    venueCity: string;
+    /**
+     * @generated from protobuf field: string venue_state = 26;
+     */
+    venueState: string;
 }
 /**
  * One line of a booking, for display on checkout / booking detail. Carries the
@@ -443,6 +463,18 @@ export interface EventTicketType {
      * @generated from protobuf field: int32 sold_count = 10;
      */
     soldCount: number;
+    /**
+     * @generated from protobuf field: int32 service_fee_cents = 11;
+     */
+    serviceFeeCents: number;
+    /**
+     * @generated from protobuf field: int32 tax_cents = 12;
+     */
+    taxCents: number;
+    /**
+     * @generated from protobuf field: int32 total_cents = 13;
+     */
+    totalCents: number;
 }
 /**
  * @generated from protobuf message svyne.booking.ListEventTicketTypesResponse
@@ -982,7 +1014,12 @@ class Booking$Type extends MessageType<Booking> {
             { no: 18, name: "fees_included", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 19, name: "venue_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 20, name: "venue_address", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 21, name: "paid_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+            { no: 21, name: "paid_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 22, name: "tax_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 23, name: "service_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 24, name: "venue_zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 25, name: "venue_city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 26, name: "venue_state", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Booking>): Booking {
@@ -1008,6 +1045,11 @@ class Booking$Type extends MessageType<Booking> {
         message.venueName = "";
         message.venueAddress = "";
         message.paidAt = "0";
+        message.taxCents = 0;
+        message.serviceFeeCents = 0;
+        message.venueZip = "";
+        message.venueCity = "";
+        message.venueState = "";
         if (value !== undefined)
             reflectionMergePartial<Booking>(this, message, value);
         return message;
@@ -1079,6 +1121,21 @@ class Booking$Type extends MessageType<Booking> {
                     break;
                 case /* int64 paid_at */ 21:
                     message.paidAt = reader.int64().toString();
+                    break;
+                case /* int32 tax_cents */ 22:
+                    message.taxCents = reader.int32();
+                    break;
+                case /* int32 service_fee_cents */ 23:
+                    message.serviceFeeCents = reader.int32();
+                    break;
+                case /* string venue_zip */ 24:
+                    message.venueZip = reader.string();
+                    break;
+                case /* string venue_city */ 25:
+                    message.venueCity = reader.string();
+                    break;
+                case /* string venue_state */ 26:
+                    message.venueState = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1155,6 +1212,21 @@ class Booking$Type extends MessageType<Booking> {
         /* int64 paid_at = 21; */
         if (message.paidAt !== "0")
             writer.tag(21, WireType.Varint).int64(message.paidAt);
+        /* int32 tax_cents = 22; */
+        if (message.taxCents !== 0)
+            writer.tag(22, WireType.Varint).int32(message.taxCents);
+        /* int32 service_fee_cents = 23; */
+        if (message.serviceFeeCents !== 0)
+            writer.tag(23, WireType.Varint).int32(message.serviceFeeCents);
+        /* string venue_zip = 24; */
+        if (message.venueZip !== "")
+            writer.tag(24, WireType.LengthDelimited).string(message.venueZip);
+        /* string venue_city = 25; */
+        if (message.venueCity !== "")
+            writer.tag(25, WireType.LengthDelimited).string(message.venueCity);
+        /* string venue_state = 26; */
+        if (message.venueState !== "")
+            writer.tag(26, WireType.LengthDelimited).string(message.venueState);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1953,7 +2025,10 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
             { no: 7, name: "fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "selling_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 10, name: "sold_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 10, name: "sold_count", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 11, name: "service_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 12, name: "tax_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 13, name: "total_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<EventTicketType>): EventTicketType {
@@ -1968,6 +2043,9 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         message.capacity = 0;
         message.sellingPriceCents = 0;
         message.soldCount = 0;
+        message.serviceFeeCents = 0;
+        message.taxCents = 0;
+        message.totalCents = 0;
         if (value !== undefined)
             reflectionMergePartial<EventTicketType>(this, message, value);
         return message;
@@ -2006,6 +2084,15 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
                     break;
                 case /* int32 sold_count */ 10:
                     message.soldCount = reader.int32();
+                    break;
+                case /* int32 service_fee_cents */ 11:
+                    message.serviceFeeCents = reader.int32();
+                    break;
+                case /* int32 tax_cents */ 12:
+                    message.taxCents = reader.int32();
+                    break;
+                case /* int32 total_cents */ 13:
+                    message.totalCents = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -2049,6 +2136,15 @@ class EventTicketType$Type extends MessageType<EventTicketType> {
         /* int32 sold_count = 10; */
         if (message.soldCount !== 0)
             writer.tag(10, WireType.Varint).int32(message.soldCount);
+        /* int32 service_fee_cents = 11; */
+        if (message.serviceFeeCents !== 0)
+            writer.tag(11, WireType.Varint).int32(message.serviceFeeCents);
+        /* int32 tax_cents = 12; */
+        if (message.taxCents !== 0)
+            writer.tag(12, WireType.Varint).int32(message.taxCents);
+        /* int32 total_cents = 13; */
+        if (message.totalCents !== 0)
+            writer.tag(13, WireType.Varint).int32(message.totalCents);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

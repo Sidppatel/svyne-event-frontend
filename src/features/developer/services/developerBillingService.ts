@@ -8,6 +8,12 @@ import type {
   FeeOverrideRow,
   RevenueReport,
   TenantActivityRow,
+  TaxReport,
+  TaxOverrideRow,
+  TenantDashboard,
+  TenantDashboardEventRow,
+  TenantRevenueMonthRow,
+  TenantTaxByVenueRow,
 } from '@/shared/proto/billing';
 
 export type {
@@ -17,6 +23,12 @@ export type {
   FeeOverrideRow,
   RevenueReport,
   TenantActivityRow,
+  TaxReport,
+  TaxOverrideRow,
+  TenantDashboard,
+  TenantDashboardEventRow,
+  TenantRevenueMonthRow,
+  TenantTaxByVenueRow,
 };
 
 export const SUBSCRIPTION_TIERS = ['starter', 'professional', 'business', 'enterprise'] as const;
@@ -127,6 +139,49 @@ export async function clearEventFeeOverride(eventsId: string, reason: string): P
   return response.message;
 }
 
+export async function listTaxOverrides(): Promise<TaxOverrideRow[]> {
+  const response = await callRpc(() => developerBillingClient.listTaxOverrides({}));
+  return response.overrides;
+}
+
+export async function setEventTaxOverride(
+  eventsId: string,
+  taxExempt: boolean,
+  rateBps: number,
+  reason: string,
+): Promise<string> {
+  const response = await callRpc(() =>
+    developerBillingClient.setEventTaxOverride({ eventsId, taxExempt, rateBps, reason }),
+  );
+  return response.message;
+}
+
+export async function clearEventTaxOverride(eventsId: string, reason: string): Promise<string> {
+  const response = await callRpc(() => developerBillingClient.clearEventTaxOverride({ eventsId, reason }));
+  return response.message;
+}
+
+export function taxOverrideLabel(row: TaxOverrideRow): string {
+  return row.taxExempt ? 'Exempt' : `${(row.rateBps / 100).toFixed(2).replace(/\.?0+$/, '')}%`;
+}
+
+export async function getTaxReport(fromEpochSeconds: string, toEpochSeconds: string): Promise<TaxReport> {
+  return callRpc(() => developerBillingClient.getTaxReport({ fromEpochSeconds, toEpochSeconds }));
+}
+
+export function formatRatePercent(rate: number): string {
+  return `${(rate * 100).toFixed(3).replace(/\.?0+$/, '')}%`;
+}
+
+export function taxTenantSharePercents(report: TaxReport): Record<string, string> {
+  const total = report.byTenant.reduce((sum, row) => sum + Number(row.taxCollectedCents), 0);
+  const shares: Record<string, string> = {};
+  for (const row of report.byTenant) {
+    shares[row.tenantsId] = total > 0 ? `${((Number(row.taxCollectedCents) / total) * 100).toFixed(1)}%` : '0.0%';
+  }
+  return shares;
+}
+
 export async function getRevenueReport(fromEpochSeconds: string, toEpochSeconds: string): Promise<RevenueReport> {
   return callRpc(() => developerBillingClient.getRevenueReport({ fromEpochSeconds, toEpochSeconds }));
 }
@@ -206,6 +261,24 @@ export function trendBarPercents(
     const total = Number(point.serviceFeeCents) + Number(point.billingCents);
     return { total: centsToUSD(total), heightPct: Math.round((total / max) * 100) };
   });
+}
+
+export async function getTenantDashboard(tenantsId: string): Promise<TenantDashboard> {
+  return callRpc(() => developerBillingClient.getTenantDashboard({ tenantsId }));
+}
+
+export function tenantRevenueBarPercents(
+  points: TenantRevenueMonthRow[],
+): { total: string; heightPct: number }[] {
+  const max = Math.max(1, ...points.map((point) => Number(point.revenueCents)));
+  return points.map((point) => ({
+    total: centsToUSD(point.revenueCents),
+    heightPct: Math.round((Number(point.revenueCents) / max) * 100),
+  }));
+}
+
+export function ticketsOfCapacity(row: TenantDashboardEventRow): string {
+  return row.capacity > 0 ? `${row.ticketsSold}/${row.capacity}` : String(row.ticketsSold);
 }
 
 export function downloadCsv(filename: string, header: string[], rows: (string | number)[][]): void {

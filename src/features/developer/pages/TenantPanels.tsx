@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
   listTenantMembers,
@@ -20,20 +19,12 @@ import { Label } from '@/shared/ui/label';
 import { Select } from '@/shared/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-export function DeveloperTenantMembersPage() {
-  const { tenantsId = '' } = useParams();
-  const membersLoader = useCallback(() => listTenantMembers(tenantsId), [tenantsId]);
+export function TenantSettingsPanel({ tenantsId }: { tenantsId: string }) {
   const stripeLoader = useCallback(() => getTenantStripeStatus(tenantsId), [tenantsId]);
-  const members = useAsync(membersLoader);
   const stripe = useAsync(stripeLoader);
 
   return (
     <div className="space-y-4">
-      <Link to="/" className="text-sm text-primary">
-        ← Back to tenants
-      </Link>
-      <h1 className="text-xl font-semibold">Tenant settings</h1>
-
       <TenantBasicForm tenantsId={tenantsId} />
 
       <TenantDefaultFeeForm tenantsId={tenantsId} />
@@ -54,25 +45,35 @@ export function DeveloperTenantMembersPage() {
       ) : null}
 
       <StripeProfileForm tenantsId={tenantsId} />
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Members</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {members.loading ? <p className="text-muted-foreground">Loading…</p> : null}
-          {members.error ? <p className="text-destructive">{members.error}</p> : null}
-          {(members.data ?? []).map((member) => (
-            <div key={member.usersId} className="flex items-center justify-between text-sm">
-              <span>
-                {member.displayName} · {member.email}
-              </span>
-              <span className="text-muted-foreground">{roleLabel(member.role)}</span>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
     </div>
+  );
+}
+
+export function TenantMembersPanel({ tenantsId }: { tenantsId: string }) {
+  const membersLoader = useCallback(() => listTenantMembers(tenantsId), [tenantsId]);
+  const members = useAsync(membersLoader);
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Members</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-2">
+        {members.loading ? <p className="text-muted-foreground">Loading…</p> : null}
+        {members.error ? <p className="text-destructive">{members.error}</p> : null}
+        {(members.data ?? []).map((member) => (
+          <div key={member.usersId} className="flex items-center justify-between text-sm">
+            <span>
+              {member.displayName} · {member.email}
+            </span>
+            <span className="text-muted-foreground">{roleLabel(member.role)}</span>
+          </div>
+        ))}
+        {members.data && members.data.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No staff members added yet.</p>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }
 

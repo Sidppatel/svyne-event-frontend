@@ -17,6 +17,7 @@ export function DeveloperLayout() {
           { to: '/fees', label: 'Fees' },
           { to: '/fee-overrides', label: 'Fee Overrides' },
           { to: '/revenue', label: 'Revenue' },
+          { to: '/tax', label: 'Tax' },
           { to: '/reporting-access', label: 'Reporting Access' },
           { to: '/logs', label: 'System Logs' },
         ]}

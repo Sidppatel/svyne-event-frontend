@@ -5,7 +5,7 @@ import { DeveloperLayout } from '@/shared/components/layouts/DeveloperLayout';
 import { isDeveloper } from '@/shared/roles';
 import { authRoutes } from '@/app/authRoutes';
 import { DeveloperTenantsPage } from '@/features/developer/pages/DeveloperTenantsPage';
-import { DeveloperTenantMembersPage } from '@/features/developer/pages/DeveloperTenantMembersPage';
+import { DeveloperTenantDashboardPage } from '@/features/developer/pages/DeveloperTenantDashboardPage';
 import { DeveloperDashboardPage } from '@/features/developer/pages/DeveloperDashboardPage';
 import { DeveloperLogsPage } from '@/features/developer/pages/DeveloperLogsPage';
 import { DeveloperFeesPage } from '@/features/developer/pages/DeveloperFeesPage';
@@ -14,6 +14,7 @@ import { DeveloperBillingPage } from '@/features/developer/pages/DeveloperBillin
 import { DeveloperPayPerEventPage } from '@/features/developer/pages/DeveloperPayPerEventPage';
 import { DeveloperFeeOverridesPage } from '@/features/developer/pages/DeveloperFeeOverridesPage';
 import { DeveloperRevenuePage } from '@/features/developer/pages/DeveloperRevenuePage';
+import { DeveloperTaxPage } from '@/features/developer/pages/DeveloperTaxPage';
 
 export default function DeveloperRoutes() {
   return (
@@ -28,12 +29,13 @@ export default function DeveloperRoutes() {
       >
         <Route index element={<DeveloperDashboardPage />} />
         <Route path="tenants" element={<DeveloperTenantsPage />} />
-        <Route path="tenants/:tenantsId" element={<DeveloperTenantMembersPage />} />
+        <Route path="tenants/:tenantsId" element={<DeveloperTenantDashboardPage />} />
         <Route path="fees" element={<DeveloperFeesPage />} />
         <Route path="billing" element={<DeveloperBillingPage />} />
         <Route path="pay-per-event" element={<DeveloperPayPerEventPage />} />
         <Route path="fee-overrides" element={<DeveloperFeeOverridesPage />} />
         <Route path="revenue" element={<DeveloperRevenuePage />} />
+        <Route path="tax" element={<DeveloperTaxPage />} />
         <Route path="reporting-access" element={<DeveloperReportingAccessPage />} />
         <Route path="logs" element={<DeveloperLogsPage />} />
       </Route>

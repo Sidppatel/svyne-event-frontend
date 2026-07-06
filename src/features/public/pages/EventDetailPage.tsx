@@ -22,7 +22,7 @@ import { SectionTitle } from '@/features/public/components/SectionTitle';
 
 import { Seo } from '@/shared/components/Seo';
 import { imageUrl } from '@/shared/upload';
-import { createMultiBooking, quoteCart } from '@/features/public/services/paymentService';
+import { createMultiBooking, quoteCart, cartServiceFeeCents, lineAllInExclTaxCents } from '@/features/public/services/paymentService';
 import {
   type CartItem,
   DEFAULT_HOLD_SECONDS,
@@ -123,7 +123,8 @@ function EventDetailPageContent({ event }: { event: Event }) {
   }, [cart, event.eventsId, holdSeconds]);
 
   const subtotal = quote?.subtotalCents ?? 0;
-  const fee = quote?.feeCents ?? 0;
+  const serviceFee = quote ? cartServiceFeeCents(quote) : 0;
+  const tax = quote?.taxCents ?? 0;
   const total = quote?.totalCents ?? 0;
   const discount = quote?.discountCents ?? 0;
   const achAvailable = quote?.achAvailable ?? false;
@@ -338,7 +339,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                       {cart.map((item) => {
                         const line = quote?.lines.find((l) => `${l.kind}:${l.refId}` === item.key);
                         const linePrice = event.feesIncluded
-                          ? line?.breakdown?.finalPriceCents
+                          ? (line ? lineAllInExclTaxCents(line) : undefined)
                           : line?.breakdown?.sellingPriceCents;
                         return (
                           <div key={item.key} className="flex items-center justify-between py-3 text-xs">
@@ -385,10 +386,16 @@ function EventDetailPageContent({ event }: { event: Event }) {
                               <span className="font-mono">{centsToUSD(subtotal)}</span>
                             </div>
                             <div className="flex justify-between text-ink-soft">
-                              <span>Fees</span>
-                              <span className="font-mono">{centsToUSD(fee)}</span>
+                              <span>Service fee</span>
+                              <span className="font-mono">{centsToUSD(serviceFee)}</span>
                             </div>
                           </>
+                        )}
+                        {tax > 0 && (
+                          <div className="flex justify-between text-ink-soft">
+                            <span>Tax</span>
+                            <span className="font-mono">{centsToUSD(tax)}</span>
+                          </div>
                         )}
                         <div className="flex items-center justify-between border-t border-hairline pt-2 text-sm font-semibold text-foreground">
                           <span>{event.feesIncluded ? 'Total (incl. fees)' : 'Total'}</span>

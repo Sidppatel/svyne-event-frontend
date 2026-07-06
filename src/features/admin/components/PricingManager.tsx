@@ -367,6 +367,10 @@ function RulePriceRow({
             <span className="tabular-nums">{centsToUSD(breakdown.platformFeeCents)}</span>
           </div>
           <div>
+            <span className="block font-medium text-foreground">Tax</span>
+            <span className="tabular-nums">{centsToUSD(breakdown.taxCents)}</span>
+          </div>
+          <div>
             <span className="block font-medium text-foreground">Final Price</span>
             <span className="tabular-nums text-success font-semibold">{centsToUSD(breakdown.finalPriceCents)}</span>
           </div>

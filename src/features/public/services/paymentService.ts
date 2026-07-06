@@ -5,6 +5,7 @@ import type {
   PaymentStatusResponse,
   EventTicketType,
   CartQuote,
+  CartQuoteLine,
 } from '@/shared/proto/bookings';
 
 export async function listEventTicketTypes(eventsId: string): Promise<EventTicketType[]> {
@@ -79,6 +80,14 @@ export async function createMultiBooking(eventsId: string, lines: CartLineInput[
     }),
   );
   return { bookingsId: response.bookingsId, bookingNumber: response.bookingNumber };
+}
+
+export function cartServiceFeeCents(quote: CartQuote): number {
+  return quote.platformFeeCents + quote.gatewayFeeCents;
+}
+
+export function lineAllInExclTaxCents(line: CartQuoteLine): number | undefined {
+  return line.breakdown ? line.breakdown.finalPriceCents - line.breakdown.taxCents : undefined;
 }
 
 export async function quoteCart(eventsId: string, lines: CartLineInput[]): Promise<CartQuote> {

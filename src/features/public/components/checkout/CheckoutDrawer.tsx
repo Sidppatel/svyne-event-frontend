@@ -54,7 +54,7 @@ export function CheckoutDrawer({
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(false); }}>
+    <Sheet open={isOpen} onOpenChange={(open) => { if (!open) handleClose(step === 5); }}>
       <SheetContent
         side="right"
         className="w-full sm:max-w-md bg-stage border-l border-white/5 text-white flex flex-col p-6"
