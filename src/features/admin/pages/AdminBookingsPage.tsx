@@ -1,12 +1,15 @@
 import { useCallback, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { listBookings } from '@/features/admin/services/bookingAdminService';
+import { downloadCsv, getReportingAccess } from '@/features/admin/services/reportingService';
+import { Badge } from '@/shared/ui/badge';
 import { centsToUSD } from '@/shared/lib/format';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { Button } from '@/shared/ui/button';
 import { CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { cn } from '@/shared/lib/cn';
-import { ChevronDown, ChevronUp, Ticket, Calendar, CreditCard } from 'lucide-react';
+import { ChevronDown, ChevronUp, Ticket, Calendar, CreditCard, Download } from 'lucide-react';
 import type { Booking } from '@/shared/proto/bookings';
 
 export function AdminBookingsPage() {
@@ -16,10 +19,34 @@ export function AdminBookingsPage() {
   const loader = useCallback(() => listBookings(eventsId, 'Paid'), [eventsId]);
   const { data, loading, error } = useAsync(loader);
 
+  const accessLoader = useCallback(() => getReportingAccess(), []);
+  const { data: access } = useAsync(accessLoader);
+  const advanced = access?.hasAdvancedReporting ?? false;
+
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const toggleExpand = (id: string) => {
     setExpandedId(prev => (prev === id ? null : id));
+  };
+
+  const onExport = () => {
+    downloadCsv(
+      'bookings.csv',
+      ['booking_number', 'event', 'status', 'seats', 'tickets_claimed', 'tickets_total',
+       'subtotal', 'fees', 'total', 'transaction_id'],
+      (data ?? []).map((b) => [
+        b.bookingNumber,
+        b.eventTitle,
+        b.status,
+        b.seatsReserved,
+        b.ticketsClaimed,
+        b.ticketsTotal,
+        centsToUSD(b.subtotalCents),
+        centsToUSD(b.feeCents),
+        centsToUSD(b.totalCents),
+        b.paymentTransactionId,
+      ]),
+    );
   };
 
   return (
@@ -40,14 +67,22 @@ export function AdminBookingsPage() {
             <div className="space-y-1.5 md:col-span-1">
               <Label>Event ID</Label>
               <div className="svyne-spring-input">
-                <Input 
-                  value={eventsId} 
-                  onChange={(e) => setEventsId(e.target.value)} 
+                <Input
+                  value={eventsId}
+                  onChange={(e) => setEventsId(e.target.value)}
                   placeholder="Filter by Event ID..."
                   className="h-10 bg-background border-border text-sm"
                 />
               </div>
             </div>
+            {advanced ? (
+              <div className="md:col-span-2 flex justify-end items-center gap-2">
+                <Badge variant="voltage">Pro</Badge>
+                <Button variant="outline" size="sm" disabled={(data ?? []).length === 0} onClick={onExport}>
+                  <Download /> Export CSV
+                </Button>
+              </div>
+            ) : null}
           </div>
         </CardContent>
       </div>
