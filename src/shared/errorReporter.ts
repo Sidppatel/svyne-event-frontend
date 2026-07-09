@@ -156,6 +156,18 @@ export function initErrorReporter(): void {
     );
   };
 
+  const originalConsoleWarn = console.warn.bind(console);
+  console.warn = (...args: unknown[]) => {
+    originalConsoleWarn(...args);
+    const first = args[0];
+    reportError(
+      'ConsoleWarning',
+      args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ').slice(0, 500),
+      first instanceof Error ? (first.stack ?? '') : '',
+      'Warning',
+    );
+  };
+
   document.addEventListener(
     'click',
     (event) => {
