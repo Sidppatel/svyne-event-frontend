@@ -51,8 +51,9 @@ export function DeveloperTaxPage() {
       const json = await response.json();
       setRefreshMessage(json.message);
       report.reload();
-    } catch (caught: any) {
-      setRefreshMessage(`Error: ${caught.message}`);
+    } catch (caught: unknown) {
+      const err = caught instanceof Error ? caught.message : String(caught);
+      setRefreshMessage(`Error: ${err}`);
     } finally {
       setRefreshing(false);
     }
