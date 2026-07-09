@@ -36,7 +36,6 @@ type Scene = { tables: PlacedTable[]; objects: PlacedObject[] };
 const OBJECT_TYPES = ['Entry', 'Exit', 'Stage'];
 const OBJECT_GLYPH: Record<string, string> = { Entry: '→', Exit: '←', Stage: '▭' };
 const OBJECT_DEFAULT_COLOR: Record<string, string> = { Entry: '#059669', Exit: '#059669', Stage: '#424242' };
-const SHAPES = ['Rectangle', 'Square', 'Round', 'Cocktail'];
 const CANVAS_W = 1000;
 const CANVAS_H = 640;
 const SNAP = 5;
@@ -405,7 +404,7 @@ export function FloorPlanBuilder({
     setDirty(true);
   }
 
-  const keyHandlerRef = useRef<(e: KeyboardEvent) => void>(() => {});
+  const keyHandlerRef = useRef<(e: KeyboardEvent) => void>(() => { });
   const keyHandler = (e: KeyboardEvent) => {
     const tag = (e.target as HTMLElement)?.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
@@ -648,9 +647,8 @@ export function FloorPlanBuilder({
                     position: 'absolute', left: t.posX, top: t.posY, width: t.width, height: t.height,
                     backgroundColor: locked ? '#9ca3af' : fill, touchAction: 'none',
                   }}
-                  className={`flex select-none items-center justify-center border text-xs font-medium text-white transition-shadow ${shapeClass(sh)} ${
-                    locked ? 'cursor-not-allowed opacity-70' : 'cursor-move hover:shadow-md'
-                  } ${selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'}`}
+                  className={`flex select-none items-center justify-center border text-xs font-medium text-white transition-shadow ${shapeClass(sh)} ${locked ? 'cursor-not-allowed opacity-70' : 'cursor-move hover:shadow-md'
+                    } ${selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'}`}
                 >
                   <span className="pointer-events-none truncate px-1">
                     {locked ? <span aria-hidden>🔒 </span> : null}
@@ -678,9 +676,8 @@ export function FloorPlanBuilder({
                   position: 'absolute', left: o.posX, top: o.posY, width: o.width, height: o.height,
                   backgroundColor: o.color, touchAction: 'none',
                 }}
-                className={`flex cursor-move select-none items-center justify-center rounded text-xs text-white transition-shadow hover:shadow-md ${
-                  selected === `o${i}` ? 'border-2 border-black ring-2 ring-black' : 'border border-black/20'
-                }`}
+                className={`flex cursor-move select-none items-center justify-center rounded text-xs text-white transition-shadow hover:shadow-md ${selected === `o${i}` ? 'border-2 border-black ring-2 ring-black' : 'border border-black/20'
+                  }`}
               >
                 <span className="pointer-events-none">{OBJECT_GLYPH[o.objectType] ?? o.objectType[0]} {o.objectType}</span>
                 <span
