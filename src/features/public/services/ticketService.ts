@@ -1,6 +1,13 @@
 import { ticketClient, bookingClient } from '@/shared/apiClient';
 import { callRpc } from '@/shared/session';
 import type { Ticket, Booking } from '@/shared/proto/bookings';
+import type { AckResponse } from '@/shared/proto/common';
+
+function requireAck(ack: AckResponse): void {
+  if (!ack.success) {
+    throw new Error(ack.message || 'Request failed');
+  }
+}
 
 export async function getBooking(bookingsId: string): Promise<Booking> {
   return callRpc(() => bookingClient.getBooking({ value: bookingsId }));
@@ -12,15 +19,15 @@ export async function listTickets(bookingsId: string): Promise<Ticket[]> {
 }
 
 export async function inviteTicket(ticketsId: string, email: string): Promise<void> {
-  await callRpc(() => ticketClient.inviteTicket({ ticketsId, email }));
+  requireAck(await callRpc(() => ticketClient.inviteTicket({ ticketsId, email })));
 }
 
 export async function claimTicket(token: string): Promise<void> {
-  await callRpc(() => ticketClient.claimTicket({ token }));
+  requireAck(await callRpc(() => ticketClient.claimTicket({ token })));
 }
 
 export async function claimTicketSelf(ticketsId: string): Promise<void> {
-  await callRpc(() => ticketClient.claimTicketSelf({ value: ticketsId }));
+  requireAck(await callRpc(() => ticketClient.claimTicketSelf({ value: ticketsId })));
 }
 
 export async function revokeTicket(ticketsId: string): Promise<void> {

@@ -698,6 +698,14 @@ export interface Ticket {
      * @generated from protobuf field: string ticket_type_label = 12;
      */
     ticketTypeLabel: string;
+    /**
+     * @generated from protobuf field: string invited_email = 13;
+     */
+    invitedEmail: string;
+    /**
+     * @generated from protobuf field: int64 invite_sent_at = 14;
+     */
+    inviteSentAt: string;
 }
 /**
  * @generated from protobuf message svyne.booking.ClaimTicketRequest
@@ -2774,7 +2782,9 @@ class Ticket$Type extends MessageType<Ticket> {
             { no: 9, name: "venue_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 10, name: "event_slug", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 11, name: "booking_number", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 12, name: "ticket_type_label", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 12, name: "ticket_type_label", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 13, name: "invited_email", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "invite_sent_at", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
         ]);
     }
     create(value?: PartialMessage<Ticket>): Ticket {
@@ -2791,6 +2801,8 @@ class Ticket$Type extends MessageType<Ticket> {
         message.eventSlug = "";
         message.bookingNumber = "";
         message.ticketTypeLabel = "";
+        message.invitedEmail = "";
+        message.inviteSentAt = "0";
         if (value !== undefined)
             reflectionMergePartial<Ticket>(this, message, value);
         return message;
@@ -2835,6 +2847,12 @@ class Ticket$Type extends MessageType<Ticket> {
                     break;
                 case /* string ticket_type_label */ 12:
                     message.ticketTypeLabel = reader.string();
+                    break;
+                case /* string invited_email */ 13:
+                    message.invitedEmail = reader.string();
+                    break;
+                case /* int64 invite_sent_at */ 14:
+                    message.inviteSentAt = reader.int64().toString();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -2884,6 +2902,12 @@ class Ticket$Type extends MessageType<Ticket> {
         /* string ticket_type_label = 12; */
         if (message.ticketTypeLabel !== "")
             writer.tag(12, WireType.LengthDelimited).string(message.ticketTypeLabel);
+        /* string invited_email = 13; */
+        if (message.invitedEmail !== "")
+            writer.tag(13, WireType.LengthDelimited).string(message.invitedEmail);
+        /* int64 invite_sent_at = 14; */
+        if (message.inviteSentAt !== "0")
+            writer.tag(14, WireType.Varint).int64(message.inviteSentAt);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

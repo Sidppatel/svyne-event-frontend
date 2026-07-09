@@ -68,6 +68,9 @@ export function BookingDetailPage() {
   }
 
   async function handleRevoke(ticketId: string) {
+    if (!window.confirm('Revoke this ticket? The current ticket number becomes invalid and a new one is generated.')) {
+      return;
+    }
     try {
       await revokeTicket(ticketId);
       tickets.reload();
@@ -163,6 +166,7 @@ export function BookingDetailPage() {
               return (tickets.data ?? []).map((ticket) => {
                 const isClaimedByMe = ticket.guestUsersId === user?.usersId && ticket.status === 'Claimed';
                 const isClaimedByOthers = ticket.status === 'Claimed' && ticket.guestUsersId !== user?.usersId;
+                const isInvited = ticket.status === 'Invited';
                 return (
                   <div
                     key={ticket.ticketsId}
@@ -194,9 +198,54 @@ export function BookingDetailPage() {
                         Checked in
                       </span>
                     ) : isClaimedByMe ? (
-                      <Button size="sm" variant="destructive" onClick={() => handleRevoke(ticket.ticketsId)}>
-                        Revoke
-                      </Button>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <div className="text-right">
+                          <span className="flex items-center gap-1 rounded-md bg-success/10 px-2 py-0.5 text-sm font-semibold text-success">
+                            <CheckCircle2 className="size-4" /> Claimed by You
+                          </span>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            This ticket has been claimed for yourself.
+                          </p>
+                        </div>
+                        <Button size="sm" variant="destructive" onClick={() => handleRevoke(ticket.ticketsId)}>
+                          Revoke
+                        </Button>
+                      </div>
+                    ) : isInvited ? (
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-foreground">
+                          Invitation sent to {ticket.invitedEmail || 'guest'}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          Pending
+                          {ticket.inviteSentAt && ticket.inviteSentAt !== '0'
+                            ? ` · sent ${formatEventDate(ticket.inviteSentAt)}`
+                            : ''}
+                          {' · '}Waiting for {ticket.invitedEmail || 'guest'} to accept this ticket.
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="mt-1"
+                          onClick={() => handleRevoke(ticket.ticketsId)}
+                        >
+                          Cancel Invitation
+                        </Button>
+                      </div>
+                    ) : isClaimedByOthers ? (
+                      <div className="text-right">
+                        <p className="text-sm font-medium text-success">
+                          Ticket claimed by {ticket.invitedEmail || 'guest'}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="mt-1"
+                          onClick={() => handleRevoke(ticket.ticketsId)}
+                        >
+                          Revoke Ticket
+                        </Button>
+                      </div>
                     ) : (
                       <div className="flex flex-wrap items-center gap-2">
                         <Input
@@ -204,24 +253,30 @@ export function BookingDetailPage() {
                           placeholder="invite email"
                           value={emails[ticket.ticketsId] ?? ''}
                           onChange={(e) => setEmails((prev) => ({ ...prev, [ticket.ticketsId]: e.target.value }))}
-                          disabled={hasClaimedAny || isClaimedByOthers}
                         />
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => invite(ticket.ticketsId)}
-                          disabled={hasClaimedAny || isClaimedByOthers || !(emails[ticket.ticketsId] ?? '').trim()}
+                          disabled={!(emails[ticket.ticketsId] ?? '').trim()}
                         >
                           Invite
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => handleClaimSelf(ticket.ticketsId)}
-                          disabled={hasClaimedAny || isClaimedByOthers}
-                        >
-                          Claim for myself
-                        </Button>
+                        <div className="text-right">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleClaimSelf(ticket.ticketsId)}
+                            disabled={hasClaimedAny}
+                          >
+                            Claim for myself
+                          </Button>
+                          {hasClaimedAny ? (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              You can only claim one ticket for yourself.
+                            </p>
+                          ) : null}
+                        </div>
                       </div>
                     )}
                   </div>

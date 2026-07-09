@@ -16,6 +16,7 @@ import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
 import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
 import { ClaimTicketPage } from '@/features/public/pages/ClaimTicketPage';
 import { FeedbackPage } from '@/features/public/pages/FeedbackPage';
+import { OrganizerPage } from '@/features/public/pages/OrganizerPage';
 
 export default function PublicRoutes() {
   return (
@@ -27,6 +28,8 @@ export default function PublicRoutes() {
         <Route path="performers/:slug" element={<PerformerProfilePage />} />
         <Route path="sponsors/:slug" element={<SponsorProfilePage />} />
         <Route path="claim" element={<ClaimTicketPage />} />
+        <Route path="organizer/:slug" element={<OrganizerPage />} />
+        <Route path="organizer/:slug/admin" element={<OrganizerPage admin />} />
         <Route
           path="tickets"
           element={
