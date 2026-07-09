@@ -19,11 +19,47 @@ import {
   type TaxOverrideRow,
 } from '@/features/developer/services/developerBillingService';
 
+export interface VenueTaxSummary {
+  venuesId: string;
+  venueName: string;
+  tenantName: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  taxRate: number;
+}
+
+export interface CachedTaxRate {
+  zipCode: string;
+  state: string;
+  county: string;
+  city: string;
+  combinedRate: number;
+  stateRate: number;
+  countyRate: number;
+  cityRate: number;
+  fetchedAt: string;
+}
+
+export interface DeveloperTaxSummary {
+  venues: VenueTaxSummary[];
+  rates: CachedTaxRate[];
+}
+
 export function DeveloperTaxPage() {
   const reportLoader = useCallback(() => getTaxReport('0', '0'), []);
   const report = useAsync(reportLoader);
   const data = report.data;
   const shares = data ? taxTenantSharePercents(data) : {};
+
+  const summaryLoader = useCallback(async () => {
+    const response = await fetch(`${BACKEND_URL}/developer/tax/summary`);
+    if (!response.ok) {
+      throw new Error(`Failed to load summary: ${response.statusText}`);
+    }
+    return (await response.json()) as DeveloperTaxSummary;
+  }, []);
+  const summary = useAsync(summaryLoader);
 
   const overridesLoader = useCallback(() => listTaxOverrides(), []);
   const overrides = useAsync(overridesLoader);
@@ -51,6 +87,7 @@ export function DeveloperTaxPage() {
       const json = await response.json();
       setRefreshMessage(json.message);
       report.reload();
+      summary.reload();
     } catch (caught: unknown) {
       const err = caught instanceof Error ? caught.message : String(caught);
       setRefreshMessage(`Error: ${err}`);
@@ -375,6 +412,96 @@ export function DeveloperTaxPage() {
               </table>
             </CardContent>
           </Card>
+
+          {summary.loading ? (
+            <div className="animate-pulse text-sm text-ink-soft">Loading tax summary…</div>
+          ) : summary.error ? (
+            <div className="text-sm text-danger">Failed to load zip & venue rates: {summary.error.message}</div>
+          ) : summary.data ? (
+            <>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Venues & Assigned Tax Rates</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-ink-soft">
+                        <th className="pb-2">Venue</th>
+                        <th className="pb-2">Tenant</th>
+                        <th className="pb-2">Location</th>
+                        <th className="pb-2">ZIP Code</th>
+                        <th className="pb-2 text-right">Active Tax Rate</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {summary.data.venues.map((v) => (
+                        <tr key={v.venuesId} className="border-t border-hairline">
+                          <td className="py-1.5 font-medium">{v.venueName}</td>
+                          <td className="py-1.5">{v.tenantName}</td>
+                          <td className="py-1.5">{v.city ? `${v.city}, ${v.state}` : '—'}</td>
+                          <td className="py-1.5 font-mono">{v.zipCode || '—'}</td>
+                          <td className="py-1.5 text-right font-mono">
+                            {formatRatePercent(v.taxRate)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {summary.data.venues.length === 0 ? (
+                    <p className="py-2 text-center text-xs text-ink-soft">No venues created yet.</p>
+                  ) : null}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Cached ZIP Code Tax Rates</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="text-left text-ink-soft">
+                        <th className="pb-2">ZIP Code</th>
+                        <th className="pb-2">State</th>
+                        <th className="pb-2">County</th>
+                        <th className="pb-2">City</th>
+                        <th className="pb-2 text-right">Combined</th>
+                        <th className="pb-2 text-right">State</th>
+                        <th className="pb-2 text-right">County/Local</th>
+                        <th className="pb-2 text-right">Fetched At</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {summary.data.rates.map((r) => (
+                        <tr key={r.zipCode} className="border-t border-hairline">
+                          <td className="py-1.5 font-mono font-medium">{r.zipCode}</td>
+                          <td className="py-1.5">{r.state || '—'}</td>
+                          <td className="py-1.5">{r.county || '—'}</td>
+                          <td className="py-1.5">{r.city || '—'}</td>
+                          <td className="py-1.5 text-right font-mono font-bold">
+                            {formatRatePercent(r.combinedRate)}
+                          </td>
+                          <td className="py-1.5 text-right font-mono text-xs text-ink-soft">
+                            {formatRatePercent(r.stateRate)}
+                          </td>
+                          <td className="py-1.5 text-right font-mono text-xs text-ink-soft">
+                            {formatRatePercent(r.countyRate + r.cityRate + r.localRate)}
+                          </td>
+                          <td className="py-1.5 text-right text-xs text-ink-soft">
+                            {new Date(r.fetchedAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {summary.data.rates.length === 0 ? (
+                    <p className="py-2 text-center text-xs text-ink-soft">No tax rates cached yet.</p>
+                  ) : null}
+                </CardContent>
+              </Card>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>
