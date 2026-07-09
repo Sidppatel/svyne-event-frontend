@@ -10,6 +10,8 @@ import type {
   TenantActivityRow,
   TaxReport,
   TaxOverrideRow,
+  TaxRateRow,
+  VenueTaxSummaryRow,
   TenantDashboard,
   TenantDashboardEventRow,
   TenantRevenueMonthRow,
@@ -25,6 +27,8 @@ export type {
   TenantActivityRow,
   TaxReport,
   TaxOverrideRow,
+  TaxRateRow,
+  VenueTaxSummaryRow,
   TenantDashboard,
   TenantDashboardEventRow,
   TenantRevenueMonthRow,
@@ -159,6 +163,71 @@ export async function setEventTaxOverride(
 export async function clearEventTaxOverride(eventsId: string, reason: string): Promise<string> {
   const response = await callRpc(() => developerBillingClient.clearEventTaxOverride({ eventsId, reason }));
   return response.message;
+}
+
+export async function listTaxRates(): Promise<TaxRateRow[]> {
+  const response = await callRpc(() => developerBillingClient.listTaxRates({}));
+  return response.rates;
+}
+
+export async function lookupTaxRate(zip: string): Promise<TaxRateRow> {
+  return callRpc(() => developerBillingClient.lookupTaxRate({ zip }));
+}
+
+export async function lookupTaxRateMessage(zip: string): Promise<string> {
+  const row = await lookupTaxRate(zip);
+  return `Rate for ${row.zipCode} refreshed: ${formatRatePercent(row.combinedRate)} combined`;
+}
+
+export async function listVenueTaxSummaries(): Promise<VenueTaxSummaryRow[]> {
+  const response = await callRpc(() => developerBillingClient.listVenueTaxSummaries({}));
+  return response.venues;
+}
+
+export function cityLocalRatePercent(row: VenueTaxSummaryRow): string {
+  return formatRatePercent(row.cityRate + row.localRate);
+}
+
+export function filterVenueSummaries(rows: VenueTaxSummaryRow[], search: string): VenueTaxSummaryRow[] {
+  const q = search.trim().toLowerCase();
+  if (!q) return rows;
+  return rows.filter(
+    (v) =>
+      v.tenantName.toLowerCase().includes(q) ||
+      v.venueName.toLowerCase().includes(q) ||
+      v.city.toLowerCase().includes(q) ||
+      v.state.toLowerCase().includes(q) ||
+      v.zipCode.includes(q),
+  );
+}
+
+export function groupVenuesByTenant(rows: VenueTaxSummaryRow[]): Record<string, VenueTaxSummaryRow[]> {
+  const grouped: Record<string, VenueTaxSummaryRow[]> = {};
+  for (const row of rows) {
+    (grouped[row.tenantName] ??= []).push(row);
+  }
+  return grouped;
+}
+
+export async function refreshAllTaxRates(): Promise<string> {
+  const response = await callRpc(() => developerBillingClient.refreshAllTaxRates({}));
+  return response.message;
+}
+
+export function filterTaxRates(rates: TaxRateRow[], search: string): TaxRateRow[] {
+  const q = search.trim().toLowerCase();
+  if (!q) return rates;
+  return rates.filter(
+    (r) =>
+      r.zipCode.includes(q) ||
+      r.city.toLowerCase().includes(q) ||
+      r.state.toLowerCase().includes(q) ||
+      r.county.toLowerCase().includes(q),
+  );
+}
+
+export function newestFetchedEpoch(rates: TaxRateRow[]): string {
+  return rates.reduce((max, r) => (Number(r.fetchedAtEpochSeconds) > Number(max) ? r.fetchedAtEpochSeconds : max), '0');
 }
 
 export function taxOverrideLabel(row: TaxOverrideRow): string {

@@ -5,6 +5,10 @@
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { DeveloperBillingService } from "./billing";
+import type { VenueTaxSummaryList } from "./billing";
+import type { TaxRateRow } from "./billing";
+import type { TaxRateLookupRequest } from "./billing";
+import type { TaxRateList } from "./billing";
 import type { SetEventTaxOverrideRequest } from "./billing";
 import type { TaxOverrideList } from "./billing";
 import type { TenantDashboard } from "./billing";
@@ -124,6 +128,22 @@ export interface IDeveloperBillingServiceClient {
      * @generated from protobuf rpc: ClearEventTaxOverride(svyne.billing.ClearEventFeeOverrideRequest) returns (svyne.common.AckResponse);
      */
     clearEventTaxOverride(input: ClearEventFeeOverrideRequest, options?: RpcOptions): UnaryCall<ClearEventFeeOverrideRequest, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ListTaxRates(svyne.common.Empty) returns (svyne.billing.TaxRateList);
+     */
+    listTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, TaxRateList>;
+    /**
+     * @generated from protobuf rpc: LookupTaxRate(svyne.billing.TaxRateLookupRequest) returns (svyne.billing.TaxRateRow);
+     */
+    lookupTaxRate(input: TaxRateLookupRequest, options?: RpcOptions): UnaryCall<TaxRateLookupRequest, TaxRateRow>;
+    /**
+     * @generated from protobuf rpc: RefreshAllTaxRates(svyne.common.Empty) returns (svyne.common.AckResponse);
+     */
+    refreshAllTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, AckResponse>;
+    /**
+     * @generated from protobuf rpc: ListVenueTaxSummaries(svyne.common.Empty) returns (svyne.billing.VenueTaxSummaryList);
+     */
+    listVenueTaxSummaries(input: Empty, options?: RpcOptions): UnaryCall<Empty, VenueTaxSummaryList>;
 }
 /**
  * Developer-only pricing controls: subscriptions & trials, Pay Per Event,
@@ -284,5 +304,33 @@ export class DeveloperBillingServiceClient implements IDeveloperBillingServiceCl
     clearEventTaxOverride(input: ClearEventFeeOverrideRequest, options?: RpcOptions): UnaryCall<ClearEventFeeOverrideRequest, AckResponse> {
         const method = this.methods[20], opt = this._transport.mergeOptions(options);
         return stackIntercept<ClearEventFeeOverrideRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListTaxRates(svyne.common.Empty) returns (svyne.billing.TaxRateList);
+     */
+    listTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, TaxRateList> {
+        const method = this.methods[21], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, TaxRateList>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: LookupTaxRate(svyne.billing.TaxRateLookupRequest) returns (svyne.billing.TaxRateRow);
+     */
+    lookupTaxRate(input: TaxRateLookupRequest, options?: RpcOptions): UnaryCall<TaxRateLookupRequest, TaxRateRow> {
+        const method = this.methods[22], opt = this._transport.mergeOptions(options);
+        return stackIntercept<TaxRateLookupRequest, TaxRateRow>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: RefreshAllTaxRates(svyne.common.Empty) returns (svyne.common.AckResponse);
+     */
+    refreshAllTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, AckResponse> {
+        const method = this.methods[23], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * @generated from protobuf rpc: ListVenueTaxSummaries(svyne.common.Empty) returns (svyne.billing.VenueTaxSummaryList);
+     */
+    listVenueTaxSummaries(input: Empty, options?: RpcOptions): UnaryCall<Empty, VenueTaxSummaryList> {
+        const method = this.methods[24], opt = this._transport.mergeOptions(options);
+        return stackIntercept<Empty, VenueTaxSummaryList>("unary", this._transport, method, opt, input);
     }
 }

@@ -529,6 +529,135 @@ export interface SetEventTaxOverrideRequest {
     reason: string; // required
 }
 /**
+ * @generated from protobuf message svyne.billing.TaxRateRow
+ */
+export interface TaxRateRow {
+    /**
+     * @generated from protobuf field: string zip_code = 1;
+     */
+    zipCode: string;
+    /**
+     * @generated from protobuf field: string city = 2;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string state = 3;
+     */
+    state: string;
+    /**
+     * @generated from protobuf field: string county = 4;
+     */
+    county: string;
+    /**
+     * @generated from protobuf field: double combined_rate = 5;
+     */
+    combinedRate: number;
+    /**
+     * @generated from protobuf field: double state_rate = 6;
+     */
+    stateRate: number;
+    /**
+     * @generated from protobuf field: double county_rate = 7;
+     */
+    countyRate: number;
+    /**
+     * @generated from protobuf field: double city_rate = 8;
+     */
+    cityRate: number;
+    /**
+     * @generated from protobuf field: double local_rate = 9;
+     */
+    localRate: number;
+    /**
+     * @generated from protobuf field: string source_ref = 10;
+     */
+    sourceRef: string; // API last_updated echo
+    /**
+     * @generated from protobuf field: int64 fetched_at_epoch_seconds = 11;
+     */
+    fetchedAtEpochSeconds: string;
+}
+/**
+ * @generated from protobuf message svyne.billing.TaxRateList
+ */
+export interface TaxRateList {
+    /**
+     * @generated from protobuf field: repeated svyne.billing.TaxRateRow rates = 1;
+     */
+    rates: TaxRateRow[];
+}
+/**
+ * @generated from protobuf message svyne.billing.TaxRateLookupRequest
+ */
+export interface TaxRateLookupRequest {
+    /**
+     * @generated from protobuf field: string zip = 1;
+     */
+    zip: string; // 5-digit US zip; forces API refresh
+}
+/**
+ * @generated from protobuf message svyne.billing.VenueTaxSummaryRow
+ */
+export interface VenueTaxSummaryRow {
+    /**
+     * @generated from protobuf field: string venues_id = 1;
+     */
+    venuesId: string;
+    /**
+     * @generated from protobuf field: string venue_name = 2;
+     */
+    venueName: string;
+    /**
+     * @generated from protobuf field: string tenant_name = 3;
+     */
+    tenantName: string;
+    /**
+     * @generated from protobuf field: string city = 4;
+     */
+    city: string;
+    /**
+     * @generated from protobuf field: string state = 5;
+     */
+    state: string;
+    /**
+     * @generated from protobuf field: string zip_code = 6;
+     */
+    zipCode: string;
+    /**
+     * @generated from protobuf field: double combined_rate = 7;
+     */
+    combinedRate: number;
+    /**
+     * @generated from protobuf field: double state_rate = 8;
+     */
+    stateRate: number;
+    /**
+     * @generated from protobuf field: double county_rate = 9;
+     */
+    countyRate: number;
+    /**
+     * @generated from protobuf field: double city_rate = 10;
+     */
+    cityRate: number;
+    /**
+     * @generated from protobuf field: double local_rate = 11;
+     */
+    localRate: number;
+    /**
+     * @generated from protobuf field: int64 fetched_at_epoch_seconds = 12;
+     */
+    fetchedAtEpochSeconds: string; // 0 = never fetched
+}
+/**
+ * @generated from protobuf message svyne.billing.VenueTaxSummaryList
+ */
+export interface VenueTaxSummaryList {
+    /**
+     * @generated from protobuf field: repeated svyne.billing.VenueTaxSummaryRow venues = 1;
+     */
+    venues: VenueTaxSummaryRow[];
+}
+/**
  * @generated from protobuf message svyne.billing.RevenueReportRequest
  */
 export interface RevenueReportRequest {
@@ -2609,6 +2738,409 @@ class SetEventTaxOverrideRequest$Type extends MessageType<SetEventTaxOverrideReq
  */
 export const SetEventTaxOverrideRequest = new SetEventTaxOverrideRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class TaxRateRow$Type extends MessageType<TaxRateRow> {
+    constructor() {
+        super("svyne.billing.TaxRateRow", [
+            { no: 1, name: "zip_code", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "county", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "combined_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 6, name: "state_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 7, name: "county_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "city_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "local_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "source_ref", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "fetched_at_epoch_seconds", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRateRow>): TaxRateRow {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.zipCode = "";
+        message.city = "";
+        message.state = "";
+        message.county = "";
+        message.combinedRate = 0;
+        message.stateRate = 0;
+        message.countyRate = 0;
+        message.cityRate = 0;
+        message.localRate = 0;
+        message.sourceRef = "";
+        message.fetchedAtEpochSeconds = "0";
+        if (value !== undefined)
+            reflectionMergePartial<TaxRateRow>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRateRow): TaxRateRow {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string zip_code */ 1:
+                    message.zipCode = reader.string();
+                    break;
+                case /* string city */ 2:
+                    message.city = reader.string();
+                    break;
+                case /* string state */ 3:
+                    message.state = reader.string();
+                    break;
+                case /* string county */ 4:
+                    message.county = reader.string();
+                    break;
+                case /* double combined_rate */ 5:
+                    message.combinedRate = reader.double();
+                    break;
+                case /* double state_rate */ 6:
+                    message.stateRate = reader.double();
+                    break;
+                case /* double county_rate */ 7:
+                    message.countyRate = reader.double();
+                    break;
+                case /* double city_rate */ 8:
+                    message.cityRate = reader.double();
+                    break;
+                case /* double local_rate */ 9:
+                    message.localRate = reader.double();
+                    break;
+                case /* string source_ref */ 10:
+                    message.sourceRef = reader.string();
+                    break;
+                case /* int64 fetched_at_epoch_seconds */ 11:
+                    message.fetchedAtEpochSeconds = reader.int64().toString();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRateRow, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string zip_code = 1; */
+        if (message.zipCode !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.zipCode);
+        /* string city = 2; */
+        if (message.city !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.city);
+        /* string state = 3; */
+        if (message.state !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.state);
+        /* string county = 4; */
+        if (message.county !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.county);
+        /* double combined_rate = 5; */
+        if (message.combinedRate !== 0)
+            writer.tag(5, WireType.Bit64).double(message.combinedRate);
+        /* double state_rate = 6; */
+        if (message.stateRate !== 0)
+            writer.tag(6, WireType.Bit64).double(message.stateRate);
+        /* double county_rate = 7; */
+        if (message.countyRate !== 0)
+            writer.tag(7, WireType.Bit64).double(message.countyRate);
+        /* double city_rate = 8; */
+        if (message.cityRate !== 0)
+            writer.tag(8, WireType.Bit64).double(message.cityRate);
+        /* double local_rate = 9; */
+        if (message.localRate !== 0)
+            writer.tag(9, WireType.Bit64).double(message.localRate);
+        /* string source_ref = 10; */
+        if (message.sourceRef !== "")
+            writer.tag(10, WireType.LengthDelimited).string(message.sourceRef);
+        /* int64 fetched_at_epoch_seconds = 11; */
+        if (message.fetchedAtEpochSeconds !== "0")
+            writer.tag(11, WireType.Varint).int64(message.fetchedAtEpochSeconds);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRateRow
+ */
+export const TaxRateRow = new TaxRateRow$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class TaxRateList$Type extends MessageType<TaxRateList> {
+    constructor() {
+        super("svyne.billing.TaxRateList", [
+            { no: 1, name: "rates", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TaxRateRow }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRateList>): TaxRateList {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.rates = [];
+        if (value !== undefined)
+            reflectionMergePartial<TaxRateList>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRateList): TaxRateList {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.billing.TaxRateRow rates */ 1:
+                    message.rates.push(TaxRateRow.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRateList, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.billing.TaxRateRow rates = 1; */
+        for (let i = 0; i < message.rates.length; i++)
+            TaxRateRow.internalBinaryWrite(message.rates[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRateList
+ */
+export const TaxRateList = new TaxRateList$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class TaxRateLookupRequest$Type extends MessageType<TaxRateLookupRequest> {
+    constructor() {
+        super("svyne.billing.TaxRateLookupRequest", [
+            { no: 1, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRateLookupRequest>): TaxRateLookupRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.zip = "";
+        if (value !== undefined)
+            reflectionMergePartial<TaxRateLookupRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRateLookupRequest): TaxRateLookupRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string zip */ 1:
+                    message.zip = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRateLookupRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string zip = 1; */
+        if (message.zip !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.zip);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRateLookupRequest
+ */
+export const TaxRateLookupRequest = new TaxRateLookupRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class VenueTaxSummaryRow$Type extends MessageType<VenueTaxSummaryRow> {
+    constructor() {
+        super("svyne.billing.VenueTaxSummaryRow", [
+            { no: 1, name: "venues_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "venue_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "tenant_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 5, name: "state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 6, name: "zip_code", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 7, name: "combined_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 8, name: "state_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 9, name: "county_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 10, name: "city_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 11, name: "local_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 12, name: "fetched_at_epoch_seconds", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+        ]);
+    }
+    create(value?: PartialMessage<VenueTaxSummaryRow>): VenueTaxSummaryRow {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.venuesId = "";
+        message.venueName = "";
+        message.tenantName = "";
+        message.city = "";
+        message.state = "";
+        message.zipCode = "";
+        message.combinedRate = 0;
+        message.stateRate = 0;
+        message.countyRate = 0;
+        message.cityRate = 0;
+        message.localRate = 0;
+        message.fetchedAtEpochSeconds = "0";
+        if (value !== undefined)
+            reflectionMergePartial<VenueTaxSummaryRow>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VenueTaxSummaryRow): VenueTaxSummaryRow {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string venues_id */ 1:
+                    message.venuesId = reader.string();
+                    break;
+                case /* string venue_name */ 2:
+                    message.venueName = reader.string();
+                    break;
+                case /* string tenant_name */ 3:
+                    message.tenantName = reader.string();
+                    break;
+                case /* string city */ 4:
+                    message.city = reader.string();
+                    break;
+                case /* string state */ 5:
+                    message.state = reader.string();
+                    break;
+                case /* string zip_code */ 6:
+                    message.zipCode = reader.string();
+                    break;
+                case /* double combined_rate */ 7:
+                    message.combinedRate = reader.double();
+                    break;
+                case /* double state_rate */ 8:
+                    message.stateRate = reader.double();
+                    break;
+                case /* double county_rate */ 9:
+                    message.countyRate = reader.double();
+                    break;
+                case /* double city_rate */ 10:
+                    message.cityRate = reader.double();
+                    break;
+                case /* double local_rate */ 11:
+                    message.localRate = reader.double();
+                    break;
+                case /* int64 fetched_at_epoch_seconds */ 12:
+                    message.fetchedAtEpochSeconds = reader.int64().toString();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: VenueTaxSummaryRow, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string venues_id = 1; */
+        if (message.venuesId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.venuesId);
+        /* string venue_name = 2; */
+        if (message.venueName !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.venueName);
+        /* string tenant_name = 3; */
+        if (message.tenantName !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.tenantName);
+        /* string city = 4; */
+        if (message.city !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.city);
+        /* string state = 5; */
+        if (message.state !== "")
+            writer.tag(5, WireType.LengthDelimited).string(message.state);
+        /* string zip_code = 6; */
+        if (message.zipCode !== "")
+            writer.tag(6, WireType.LengthDelimited).string(message.zipCode);
+        /* double combined_rate = 7; */
+        if (message.combinedRate !== 0)
+            writer.tag(7, WireType.Bit64).double(message.combinedRate);
+        /* double state_rate = 8; */
+        if (message.stateRate !== 0)
+            writer.tag(8, WireType.Bit64).double(message.stateRate);
+        /* double county_rate = 9; */
+        if (message.countyRate !== 0)
+            writer.tag(9, WireType.Bit64).double(message.countyRate);
+        /* double city_rate = 10; */
+        if (message.cityRate !== 0)
+            writer.tag(10, WireType.Bit64).double(message.cityRate);
+        /* double local_rate = 11; */
+        if (message.localRate !== 0)
+            writer.tag(11, WireType.Bit64).double(message.localRate);
+        /* int64 fetched_at_epoch_seconds = 12; */
+        if (message.fetchedAtEpochSeconds !== "0")
+            writer.tag(12, WireType.Varint).int64(message.fetchedAtEpochSeconds);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.VenueTaxSummaryRow
+ */
+export const VenueTaxSummaryRow = new VenueTaxSummaryRow$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class VenueTaxSummaryList$Type extends MessageType<VenueTaxSummaryList> {
+    constructor() {
+        super("svyne.billing.VenueTaxSummaryList", [
+            { no: 1, name: "venues", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => VenueTaxSummaryRow }
+        ]);
+    }
+    create(value?: PartialMessage<VenueTaxSummaryList>): VenueTaxSummaryList {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.venues = [];
+        if (value !== undefined)
+            reflectionMergePartial<VenueTaxSummaryList>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: VenueTaxSummaryList): VenueTaxSummaryList {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* repeated svyne.billing.VenueTaxSummaryRow venues */ 1:
+                    message.venues.push(VenueTaxSummaryRow.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: VenueTaxSummaryList, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* repeated svyne.billing.VenueTaxSummaryRow venues = 1; */
+        for (let i = 0; i < message.venues.length; i++)
+            VenueTaxSummaryRow.internalBinaryWrite(message.venues[i], writer.tag(1, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.VenueTaxSummaryList
+ */
+export const VenueTaxSummaryList = new VenueTaxSummaryList$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class RevenueReportRequest$Type extends MessageType<RevenueReportRequest> {
     constructor() {
         super("svyne.billing.RevenueReportRequest", [
@@ -4110,5 +4642,9 @@ export const DeveloperBillingService = new ServiceType("svyne.billing.DeveloperB
     { name: "GetTenantDashboard", options: {}, I: TenantRequest, O: TenantDashboard },
     { name: "ListTaxOverrides", options: {}, I: Empty, O: TaxOverrideList },
     { name: "SetEventTaxOverride", options: {}, I: SetEventTaxOverrideRequest, O: AckResponse },
-    { name: "ClearEventTaxOverride", options: {}, I: ClearEventFeeOverrideRequest, O: AckResponse }
+    { name: "ClearEventTaxOverride", options: {}, I: ClearEventFeeOverrideRequest, O: AckResponse },
+    { name: "ListTaxRates", options: {}, I: Empty, O: TaxRateList },
+    { name: "LookupTaxRate", options: {}, I: TaxRateLookupRequest, O: TaxRateRow },
+    { name: "RefreshAllTaxRates", options: {}, I: Empty, O: AckResponse },
+    { name: "ListVenueTaxSummaries", options: {}, I: Empty, O: VenueTaxSummaryList }
 ]);

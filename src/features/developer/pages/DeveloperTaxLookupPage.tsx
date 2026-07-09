@@ -1,52 +1,33 @@
 import { useState } from 'react';
-import { BACKEND_URL } from '@/shared/apiClient';
+import { rpcErrorMessage } from '@/shared/session';
+import { formatEpoch } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-
-interface TaxBreakdown {
-  zipCode: string;
-  state: string;
-  county: string;
-  city: string;
-  combinedRate: number;
-  stateRate: number;
-  countyRate: number;
-  cityRate: number;
-  fetchedAt: string;
-}
+import {
+  lookupTaxRate,
+  formatRatePercent,
+  type TaxRateRow,
+} from '@/features/developer/services/developerBillingService';
 
 export function DeveloperTaxLookupPage() {
   const [zip, setZip] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<TaxBreakdown | null>(null);
+  const [result, setResult] = useState<TaxRateRow | null>(null);
 
   async function handleLookup(e: React.FormEvent) {
     e.preventDefault();
-    if (!zip.trim()) return;
-
     setLoading(true);
     setError(null);
     setResult(null);
-
     try {
-      const response = await fetch(`${BACKEND_URL}/developer/tax/lookup?zip=${encodeURIComponent(zip.trim())}`);
-      if (!response.ok) {
-        const json = await response.json().catch(() => ({}));
-        throw new Error(json.error || `Failed lookup: ${response.statusText}`);
-      }
-      const data = (await response.json()) as TaxBreakdown;
-      setResult(data);
-    } catch (caught: any) {
-      setError(caught.message || 'An unexpected error occurred.');
+      setResult(await lookupTaxRate(zip.trim()));
+    } catch (caught) {
+      setError(rpcErrorMessage(caught));
     } finally {
       setLoading(false);
     }
-  }
-
-  function formatPercent(val: number): string {
-    return `${(val * 100).toFixed(3)}%`;
   }
 
   return (
@@ -68,7 +49,9 @@ export function DeveloperTaxLookupPage() {
               value={zip}
               onChange={(e) => setZip(e.target.value)}
               placeholder="e.g. 36611 or 90210"
-              maxLength={10}
+              inputMode="numeric"
+              pattern="\d{5}"
+              maxLength={5}
               className="w-48"
               required
               disabled={loading}
@@ -78,9 +61,7 @@ export function DeveloperTaxLookupPage() {
             </Button>
           </form>
 
-          {error ? (
-            <p className="mt-3 text-sm text-destructive">{error}</p>
-          ) : null}
+          {error ? <p className="mt-3 text-sm text-destructive">{error}</p> : null}
         </CardContent>
       </Card>
 
@@ -96,7 +77,7 @@ export function DeveloperTaxLookupPage() {
               </div>
               <div className="text-right">
                 <span className="font-mono text-2xl font-bold text-accent-gold">
-                  {formatPercent(result.combinedRate)}
+                  {formatRatePercent(result.combinedRate)}
                 </span>
                 <span className="block text-[10px] text-ink-faint">Combined Sales Tax</span>
               </div>
@@ -104,20 +85,24 @@ export function DeveloperTaxLookupPage() {
           </CardHeader>
           <CardContent className="divide-y divide-hairline pt-0">
             <div className="flex justify-between py-2.5 text-sm">
-              <span className="font-medium">Alabama State Rate</span>
-              <span className="font-mono">{formatPercent(result.stateRate)}</span>
+              <span className="font-medium">State Rate</span>
+              <span className="font-mono">{formatRatePercent(result.stateRate)}</span>
             </div>
             <div className="flex justify-between py-2.5 text-sm">
               <span className="font-medium">County Rate</span>
-              <span className="font-mono">{formatPercent(result.countyRate)}</span>
+              <span className="font-mono">{formatRatePercent(result.countyRate)}</span>
             </div>
             <div className="flex justify-between py-2.5 text-sm">
               <span className="font-medium">City Rate</span>
-              <span className="font-mono">{formatPercent(result.cityRate)}</span>
+              <span className="font-mono">{formatRatePercent(result.cityRate)}</span>
+            </div>
+            <div className="flex justify-between py-2.5 text-sm">
+              <span className="font-medium">Local Rate</span>
+              <span className="font-mono">{formatRatePercent(result.localRate)}</span>
             </div>
             <div className="flex justify-between py-2.5 text-xs text-ink-soft">
               <span>Cache Fetched At</span>
-              <span>{new Date(result.fetchedAt).toLocaleString()}</span>
+              <span>{formatEpoch(result.fetchedAtEpochSeconds)}</span>
             </div>
           </CardContent>
         </Card>

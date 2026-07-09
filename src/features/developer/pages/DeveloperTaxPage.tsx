@@ -1,68 +1,29 @@
 import { useCallback, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { rpcErrorMessage } from '@/shared/session';
-import { centsToUSD, formatEpoch } from '@/shared/lib/format';
+import { formatEpoch } from '@/shared/lib/format';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { BACKEND_URL } from '@/shared/apiClient';
 import {
-  getTaxReport,
   formatRatePercent,
-  taxTenantSharePercents,
-  downloadCsv,
   listTaxOverrides,
   setEventTaxOverride,
   clearEventTaxOverride,
   taxOverrideLabel,
   percentToBps,
+  listVenueTaxSummaries,
+  refreshAllTaxRates,
+  lookupTaxRateMessage,
+  cityLocalRatePercent,
+  filterVenueSummaries,
+  groupVenuesByTenant,
   type TaxOverrideRow,
 } from '@/features/developer/services/developerBillingService';
-
-export interface VenueTaxSummary {
-  venuesId: string;
-  venueName: string;
-  tenantName: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  combinedRate: number;
-  stateRate: number;
-  countyRate: number;
-  cityRate: number;
-  localRate: number;
-  fetchedAt: string | null;
-}
-
-export interface CachedTaxRate {
-  zipCode: string;
-  state: string;
-  county: string;
-  city: string;
-  combinedRate: number;
-  stateRate: number;
-  countyRate: number;
-  cityRate: number;
-  fetchedAt: string;
-}
-
-export interface DeveloperTaxSummary {
-  venues: VenueTaxSummary[];
-  rates: CachedTaxRate[];
-}
+import { TaxRatesPanel } from '@/features/developer/components/TaxRatesPanel';
 
 export function DeveloperTaxPage() {
-  const reportLoader = useCallback(() => getTaxReport('0', '0'), []);
-  const report = useAsync(reportLoader);
-  const data = report.data;
-
-  const summaryLoader = useCallback(async () => {
-    const response = await fetch(`${BACKEND_URL}/developer/tax/summary`);
-    if (!response.ok) {
-      throw new Error(`Failed to load summary: ${response.statusText}`);
-    }
-    return (await response.json()) as DeveloperTaxSummary;
-  }, []);
+  const summaryLoader = useCallback(() => listVenueTaxSummaries(), []);
   const summary = useAsync(summaryLoader);
 
   const overridesLoader = useCallback(() => listTaxOverrides(), []);
@@ -74,46 +35,20 @@ export function DeveloperTaxPage() {
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
-  
+
   const [refreshing, setRefreshing] = useState(false);
   const [refreshMessage, setRefreshMessage] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [collapsedTenants, setCollapsedTenants] = useState<Record<string, boolean>>({});
 
-  async function onRefreshRates() {
+  async function runRefresh(action: () => Promise<string>) {
     setRefreshing(true);
     setRefreshMessage(null);
     try {
-      const response = await fetch(`${BACKEND_URL}/developer/tax/refresh`, {
-        method: 'POST',
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to refresh: ${response.statusText}`);
-      }
-      const json = await response.json();
-      setRefreshMessage(json.message);
-      report.reload();
+      setRefreshMessage(await action());
       summary.reload();
-    } catch (caught: unknown) {
-      const err = caught instanceof Error ? caught.message : String(caught);
-      setRefreshMessage(`Error: ${err}`);
-    } finally {
-      setRefreshing(false);
-    }
-  }
-
-  async function onRefreshVenueRate(zip: string) {
-    if (!zip) return;
-    setRefreshing(true);
-    try {
-      const response = await fetch(`${BACKEND_URL}/developer/tax/lookup?zip=${encodeURIComponent(zip)}`);
-      if (!response.ok) {
-        throw new Error(`Failed lookup: ${response.statusText}`);
-      }
-      summary.reload();
-      setRefreshMessage(`Refreshed rate for ZIP ${zip}`);
-    } catch (caught: any) {
-      setRefreshMessage(`Error: ${caught.message}`);
+    } catch (caught) {
+      setRefreshMessage(`Error: ${rpcErrorMessage(caught)}`);
     } finally {
       setRefreshing(false);
     }
@@ -150,30 +85,7 @@ export function DeveloperTaxPage() {
     setCollapsedTenants((prev) => ({ ...prev, [tenantName]: !prev[tenantName] }));
   };
 
-  // Group and filter venues by tenant and search query
-  const groupedVenues = summary.data ? summary.data.venues.reduce((acc, v) => {
-    if (!acc[v.tenantName]) {
-      acc[v.tenantName] = [];
-    }
-    acc[v.tenantName].push(v);
-    return acc;
-  }, {} as Record<string, VenueTaxSummary[]>) : {};
-
-  const filteredTenants = Object.entries(groupedVenues).reduce((acc, [tenantName, venues]) => {
-    const matchesTenant = tenantName.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchedVenues = venues.filter((v) =>
-      matchesTenant ||
-      v.venueName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      v.zipCode.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    if (matchedVenues.length > 0) {
-      acc[tenantName] = matchedVenues;
-    }
-    return acc;
-  }, {} as Record<string, VenueTaxSummary[]>);
+  const filteredTenants = groupVenuesByTenant(filterVenueSummaries(summary.data ?? [], searchQuery));
 
   return (
     <div className="space-y-6">
@@ -192,11 +104,17 @@ export function DeveloperTaxPage() {
             placeholder="Search tenants, venues, cities, zip codes..."
             className="w-72"
           />
-          <Button variant="default" onClick={onRefreshRates} disabled={refreshing}>
+          <Button
+            variant="default"
+            onClick={() => void runRefresh(() => refreshAllTaxRates())}
+            disabled={refreshing}
+          >
             {refreshing ? 'Refreshing…' : 'Refresh All Tax Rates'}
           </Button>
         </div>
       </div>
+
+      <TaxRatesPanel />
 
       <Card>
         <CardHeader className="pb-2">
@@ -294,7 +212,7 @@ export function DeveloperTaxPage() {
       {summary.loading ? (
         <div className="animate-pulse text-sm text-ink-soft">Loading tenants and venue tax rates…</div>
       ) : summary.error ? (
-        <div className="text-sm text-destructive">Failed to load tax data: {summary.error.message}</div>
+        <div className="text-sm text-destructive">Failed to load tax data: {rpcErrorMessage(summary.error)}</div>
       ) : (
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Tenants & Venues breakdown</h2>
@@ -350,10 +268,10 @@ export function DeveloperTaxPage() {
                                 {formatRatePercent(v.countyRate)}
                               </td>
                               <td className="py-3 px-2 text-right font-mono text-xs text-ink-soft">
-                                {formatRatePercent(v.cityRate + v.localRate)}
+                                {cityLocalRatePercent(v)}
                               </td>
                               <td className="py-3 px-2 text-center text-xs text-ink-soft">
-                                {v.fetchedAt ? new Date(v.fetchedAt).toLocaleDateString() : 'Never'}
+                                {v.fetchedAtEpochSeconds !== '0' ? formatEpoch(v.fetchedAtEpochSeconds) : 'Never'}
                               </td>
                               <td className="py-3 px-4 text-right">
                                 <Button
@@ -361,7 +279,7 @@ export function DeveloperTaxPage() {
                                   variant="outline"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    void onRefreshVenueRate(v.zipCode);
+                                    void runRefresh(() => lookupTaxRateMessage(v.zipCode));
                                   }}
                                   disabled={!v.zipCode || refreshing}
                                 >
