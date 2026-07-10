@@ -3,7 +3,7 @@ import { Info, Sparkles, HelpCircle, Lock, Calendar, Star, Compass } from 'lucid
 import { parseMeta, publicMeta } from './catalogJson';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { resolveCssColor } from '@/shared/theme/colorUtils';
+import { resolveCssColor } from '@/shared/theme/branding';
 
 function humanize(key: string): string {
   return key

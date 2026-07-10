@@ -28,6 +28,7 @@ export interface TenantBrandingInput {
   brandText: string;
   brandButton: string;
   brandHighlight: string;
+  brandTokensJson: string;
 }
 
 export async function updateMyTenantBranding(input: TenantBrandingInput): Promise<void> {

@@ -4,9 +4,11 @@ import {
   brandingFormFromTenant,
   brandingFromForm,
   brandingInputFromForm,
+  suggestBrandingColors,
   type BrandingFormState,
 } from '@/features/admin/services/brandingStudio';
 import {
+  BrandingAdvancedTokenGrid,
   BrandingColorGrid,
   BrandingContrastPanel,
   BrandingLogoSection,
@@ -29,6 +31,7 @@ const EMPTY_FORM: BrandingFormState = {
   text: DEFAULT_BRANDING.text,
   button: DEFAULT_BRANDING.button,
   highlight: DEFAULT_BRANDING.highlight,
+  tokens: {},
 };
 
 export function AdminBrandingPage() {
@@ -38,6 +41,7 @@ export function AdminBrandingPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [logoBusy, setLogoBusy] = useState(false);
+  const [suggesting, setSuggesting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -58,9 +62,39 @@ export function AdminBrandingPage() {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  function setToken(token: string, value: string | null) {
+    setNotice(null);
+    setForm((prev) => {
+      const tokens = { ...prev.tokens };
+      if (value === null) {
+        delete tokens[token];
+      } else {
+        tokens[token] = value;
+      }
+      return { ...prev, tokens };
+    });
+  }
+
   function applyPreset(preset: BrandingPreset) {
     setNotice(null);
     setForm((prev) => ({ ...prev, ...preset.colors }));
+  }
+
+  async function suggestColors() {
+    setSuggesting(true);
+    setError(null);
+    setNotice(null);
+    try {
+      const colors = await suggestBrandingColors(form.primary, form.accent);
+      setForm((prev) => ({ ...prev, ...colors }));
+      setNotice(
+        'Leonardo built an accessible palette from your primary and accent. Tweak anything, then publish.',
+      );
+    } catch (caught) {
+      setError(rpcErrorMessage(caught));
+    } finally {
+      setSuggesting(false);
+    }
   }
 
   async function onLogo(file: File | undefined) {
@@ -141,11 +175,30 @@ export function AdminBrandingPage() {
                 <BrandingPresetRow form={form} onApply={applyPreset} />
               </div>
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Custom palette
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                    Custom palette
+                  </p>
+                  <Button size="sm" variant="outline" onClick={suggestColors} disabled={suggesting}>
+                    {suggesting ? 'Suggesting…' : 'Suggest with Leonardo'}
+                  </Button>
+                </div>
                 <BrandingColorGrid form={form} onChange={setColor} />
+                <p className="text-[11px] text-muted-foreground">
+                  Pick your primary and accent, then let Leonardo derive a WCAG-safe background,
+                  text, secondary, button, and highlight to match.
+                </p>
               </div>
+              <details className="space-y-2">
+                <summary className="cursor-pointer text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Advanced overrides
+                </summary>
+                <p className="text-[11px] text-muted-foreground">
+                  Every remaining theme color. Leave a field on Auto and it is derived from your
+                  palette above; set it to pin an exact value.
+                </p>
+                <BrandingAdvancedTokenGrid tokens={form.tokens} onChange={setToken} />
+              </details>
               <div className="space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Accessibility

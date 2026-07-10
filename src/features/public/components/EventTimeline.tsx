@@ -6,7 +6,7 @@ import { formatEpoch } from '@/shared/lib/format';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { resolveCssColor } from '@/shared/theme/colorUtils';
+import { resolveCssColor } from '@/shared/theme/branding';
 import { TimelineItem } from './TimelineItem';
 import { SectionTitle } from './SectionTitle';
 

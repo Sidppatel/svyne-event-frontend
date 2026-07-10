@@ -1,11 +1,11 @@
-import { Check, ImageIcon } from 'lucide-react';
-import { BRANDING_PRESETS, type BrandingPreset } from '@/shared/theme/branding';
+import { Check, ImageIcon, X } from 'lucide-react';
+import { ADVANCED_BRANDING_TOKENS, BRANDING_PRESETS, type BrandingPreset } from '@/shared/theme/branding';
 import { brandingContrastChecks, type BrandingFormState } from '@/features/admin/services/brandingStudio';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { cn } from '@/shared/lib/cn';
 
-type BrandingColorKey = Exclude<keyof BrandingFormState, 'logoImagesId' | 'logoUrl'>;
+type BrandingColorKey = Exclude<keyof BrandingFormState, 'logoImagesId' | 'logoUrl' | 'tokens'>;
 
 const COLOR_FIELDS: { key: BrandingColorKey; label: string; hint: string }[] = [
   { key: 'primary', label: 'Primary', hint: 'Brand identity, links, active states' },
@@ -132,6 +132,53 @@ export function BrandingColorGrid({
           <p className="text-[11px] text-muted-foreground">{field.hint}</p>
         </div>
       ))}
+    </div>
+  );
+}
+
+export function BrandingAdvancedTokenGrid({
+  tokens,
+  onChange,
+}: {
+  tokens: Record<string, string>;
+  onChange: (token: string, value: string | null) => void;
+}) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {ADVANCED_BRANDING_TOKENS.map((field) => {
+        const value = tokens[field.token] ?? '';
+        return (
+          <div key={field.token} className="space-y-1">
+            <Label htmlFor={`branding-token-${field.token}`}>{field.label}</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id={`branding-token-${field.token}`}
+                type="color"
+                value={value || '#000000'}
+                onChange={(e) => onChange(field.token, e.target.value)}
+                className="h-9 w-12 shrink-0 cursor-pointer p-1"
+              />
+              <Input
+                value={value}
+                placeholder="Auto"
+                onChange={(e) => onChange(field.token, e.target.value)}
+                className="flex-1 font-mono text-xs"
+              />
+              {value ? (
+                <button
+                  type="button"
+                  aria-label={`Reset ${field.label} to auto`}
+                  onClick={() => onChange(field.token, null)}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-hairline text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              ) : null}
+            </div>
+            <p className="text-[11px] text-muted-foreground">{field.hint}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

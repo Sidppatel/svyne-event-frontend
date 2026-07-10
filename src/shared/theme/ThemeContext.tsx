@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { DEFAULT_BRANDING, applyBranding, type TenantBranding } from '@/shared/theme/branding';
+import {
+  DEFAULT_BRANDING,
+  applyBranding,
+  parseBrandTokens,
+  type TenantBranding,
+} from '@/shared/theme/branding';
 import { resolvePortalContext } from '@/shared/subdomain';
 import { tenantClient } from '@/shared/apiClient';
 
@@ -48,6 +53,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             text: fetched.brandText,
             button: fetched.brandButton,
             highlight: fetched.brandHighlight,
+            tokens: parseBrandTokens(fetched.brandTokensJson),
             logoUrl: fetched.logoUrl || null,
             tenantName: fetched.name,
           }),

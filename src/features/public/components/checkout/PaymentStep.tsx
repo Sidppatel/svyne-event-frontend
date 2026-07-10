@@ -17,7 +17,7 @@ import { PriceBadge } from '../PriceBadge';
 import { Button } from '@/shared/ui/button';
 import { Clock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { centsToUSD } from '@/shared/lib/format';
-import { resolveCssColor } from '@/shared/theme/colorUtils';
+import { resolveCssColor } from '@/shared/theme/branding';
 
 interface IntentState {
   clientSecret: string;

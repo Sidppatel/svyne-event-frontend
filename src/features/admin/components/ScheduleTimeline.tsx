@@ -19,7 +19,7 @@ import {
   epochSeconds,
 } from '@/shared/lib/timezone';
 import { cn } from '@/shared/lib/cn';
-import { resolveCssColor } from '@/shared/theme/colorUtils';
+import { resolveCssColor } from '@/shared/theme/branding';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';

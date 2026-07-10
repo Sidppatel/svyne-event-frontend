@@ -192,6 +192,12 @@ export interface Tenant {
      * @generated from protobuf field: bool ach_enabled = 25;
      */
     achEnabled: boolean;
+    /**
+     * JSON object of advanced theme-token overrides, e.g. {"stage":"#101010"}.
+     *
+     * @generated from protobuf field: string brand_tokens_json = 26;
+     */
+    brandTokensJson: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.UpdateMyTenantBrandingRequest
@@ -229,6 +235,10 @@ export interface UpdateMyTenantBrandingRequest {
      * @generated from protobuf field: string brand_highlight = 8;
      */
     brandHighlight: string;
+    /**
+     * @generated from protobuf field: string brand_tokens_json = 9;
+     */
+    brandTokensJson: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.PublicTenantBrandingRequest
@@ -283,6 +293,10 @@ export interface PublicTenantBranding {
      * @generated from protobuf field: string brand_highlight = 10;
      */
     brandHighlight: string;
+    /**
+     * @generated from protobuf field: string brand_tokens_json = 11;
+     */
+    brandTokensJson: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.UpdateMyTenantContactRequest
@@ -715,7 +729,8 @@ class Tenant$Type extends MessageType<Tenant> {
             { no: 22, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 23, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 24, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 25, name: "ach_enabled", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 25, name: "ach_enabled", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 26, name: "brand_tokens_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Tenant>): Tenant {
@@ -745,6 +760,7 @@ class Tenant$Type extends MessageType<Tenant> {
         message.brandButton = "";
         message.brandHighlight = "";
         message.achEnabled = false;
+        message.brandTokensJson = "";
         if (value !== undefined)
             reflectionMergePartial<Tenant>(this, message, value);
         return message;
@@ -828,6 +844,9 @@ class Tenant$Type extends MessageType<Tenant> {
                     break;
                 case /* bool ach_enabled */ 25:
                     message.achEnabled = reader.bool();
+                    break;
+                case /* string brand_tokens_json */ 26:
+                    message.brandTokensJson = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -916,6 +935,9 @@ class Tenant$Type extends MessageType<Tenant> {
         /* bool ach_enabled = 25; */
         if (message.achEnabled !== false)
             writer.tag(25, WireType.Varint).bool(message.achEnabled);
+        /* string brand_tokens_json = 26; */
+        if (message.brandTokensJson !== "")
+            writer.tag(26, WireType.LengthDelimited).string(message.brandTokensJson);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -937,7 +959,8 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
             { no: 5, name: "brand_background", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 6, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 7, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 8, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 8, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 9, name: "brand_tokens_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<UpdateMyTenantBrandingRequest>): UpdateMyTenantBrandingRequest {
@@ -950,6 +973,7 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
         message.brandText = "";
         message.brandButton = "";
         message.brandHighlight = "";
+        message.brandTokensJson = "";
         if (value !== undefined)
             reflectionMergePartial<UpdateMyTenantBrandingRequest>(this, message, value);
         return message;
@@ -982,6 +1006,9 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
                     break;
                 case /* string brand_highlight */ 8:
                     message.brandHighlight = reader.string();
+                    break;
+                case /* string brand_tokens_json */ 9:
+                    message.brandTokensJson = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1019,6 +1046,9 @@ class UpdateMyTenantBrandingRequest$Type extends MessageType<UpdateMyTenantBrand
         /* string brand_highlight = 8; */
         if (message.brandHighlight !== "")
             writer.tag(8, WireType.LengthDelimited).string(message.brandHighlight);
+        /* string brand_tokens_json = 9; */
+        if (message.brandTokensJson !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.brandTokensJson);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1089,7 +1119,8 @@ class PublicTenantBranding$Type extends MessageType<PublicTenantBranding> {
             { no: 7, name: "brand_background", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 8, name: "brand_text", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 9, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 10, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 10, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 11, name: "brand_tokens_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<PublicTenantBranding>): PublicTenantBranding {
@@ -1104,6 +1135,7 @@ class PublicTenantBranding$Type extends MessageType<PublicTenantBranding> {
         message.brandText = "";
         message.brandButton = "";
         message.brandHighlight = "";
+        message.brandTokensJson = "";
         if (value !== undefined)
             reflectionMergePartial<PublicTenantBranding>(this, message, value);
         return message;
@@ -1142,6 +1174,9 @@ class PublicTenantBranding$Type extends MessageType<PublicTenantBranding> {
                     break;
                 case /* string brand_highlight */ 10:
                     message.brandHighlight = reader.string();
+                    break;
+                case /* string brand_tokens_json */ 11:
+                    message.brandTokensJson = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1185,6 +1220,9 @@ class PublicTenantBranding$Type extends MessageType<PublicTenantBranding> {
         /* string brand_highlight = 10; */
         if (message.brandHighlight !== "")
             writer.tag(10, WireType.LengthDelimited).string(message.brandHighlight);
+        /* string brand_tokens_json = 11; */
+        if (message.brandTokensJson !== "")
+            writer.tag(11, WireType.LengthDelimited).string(message.brandTokensJson);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
