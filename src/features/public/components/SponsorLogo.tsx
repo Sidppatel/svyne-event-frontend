@@ -98,7 +98,7 @@ export function SponsorLogo({ name, slug, primaryImagePath, subtitle, hrefBase, 
       to={`${hrefBase}/${slug}`}
       data-item-card
       className={cn(
-        'group relative flex flex-col justify-center items-center rounded-2xl border border-black/10 bg-white p-6 h-28 overflow-hidden shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'group relative flex flex-col justify-center items-center rounded-2xl border border-border bg-card p-6 h-28 overflow-hidden shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         className
       )}
       style={{ transformStyle: 'preserve-3d' }}
