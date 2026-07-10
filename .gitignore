@@ -28,8 +28,7 @@ lerna-debug.log*
 
 # Environment & Secrets
 .env
-.env.local
-.env.*.local
+.env.*
 !.env.example
 # Per-app env files — gitignored wholesale; only .env.example is committed.
 apps/*/.env
@@ -90,3 +89,8 @@ graphify-out/
 .antigravity/
 .claude/
 .cursor/
+
+# Local emails
+**/local_emails/
+**/*local_emails/
+
