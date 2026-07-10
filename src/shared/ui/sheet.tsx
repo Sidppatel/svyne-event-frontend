@@ -15,7 +15,7 @@ export const SheetOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'svyne-overlay fixed inset-0 z-50 bg-stone-950/50 backdrop-blur-sm',
+      'svyne-overlay fixed inset-0 z-50 bg-ink/50 backdrop-blur-sm',
       className,
     )}
     {...props}

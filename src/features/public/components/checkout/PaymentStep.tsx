@@ -17,6 +17,7 @@ import { PriceBadge } from '../PriceBadge';
 import { Button } from '@/shared/ui/button';
 import { Clock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { centsToUSD } from '@/shared/lib/format';
+import { resolveCssColor } from '@/shared/theme/colorUtils';
 
 interface IntentState {
   clientSecret: string;
@@ -94,26 +95,26 @@ export function PaymentStep({ bookingsId, onPaymentSuccess, onBack, preferredMet
         appearance: {
           theme: 'night',
           variables: {
-            colorPrimary: '#cfa052',
-            colorBackground: '#180D17',
-            colorText: '#ffffff',
-            colorTextPlaceholder: 'rgba(255, 255, 255, 0.4)',
-            colorDanger: '#ff4d4d',
+            colorPrimary: resolveCssColor('--voltage-accent'),
+            colorBackground: resolveCssColor('--stage'),
+            colorText: resolveCssColor('--on-stage'),
+            colorTextPlaceholder: resolveCssColor('--on-stage', 0.4),
+            colorDanger: resolveCssColor('--status-danger-on-dark'),
             fontFamily: 'system-ui, sans-serif',
             spacingUnit: '4px',
             borderRadius: '12px',
           },
           rules: {
             '.Input': {
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              border: `1px solid ${resolveCssColor('--on-stage', 0.1)}`,
+              backgroundColor: resolveCssColor('--on-stage', 0.05),
             },
             '.Input:focus': {
-              border: '1px solid #cfa052',
-              boxShadow: '0 0 0 1px #cfa052',
+              border: `1px solid ${resolveCssColor('--voltage-accent')}`,
+              boxShadow: `0 0 0 1px ${resolveCssColor('--voltage-accent')}`,
             },
             '.Label': {
-              color: 'rgba(255, 255, 255, 0.8)',
+              color: resolveCssColor('--on-stage', 0.8),
               fontSize: '12px',
               fontWeight: '700',
               textTransform: 'uppercase',

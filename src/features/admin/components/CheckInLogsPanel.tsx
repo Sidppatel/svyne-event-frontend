@@ -104,7 +104,7 @@ export function CheckInLogsPanel({ eventsId, eventTitle }: { eventsId: string; e
                     <td className="py-2 pr-3">{log.method === 'qr_scan' ? 'QR scan' : 'Manual'}</td>
                     <td className="py-2">
                       {log.status === 'success' ? (
-                        <span className="text-emerald-600">Success</span>
+                        <span className="text-success">Success</span>
                       ) : (
                         <span className="text-destructive">{log.failureReason || 'Failed'}</span>
                       )}

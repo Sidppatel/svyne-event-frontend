@@ -399,7 +399,7 @@ export function Stat({
           <span
             className={cn(
               'flex size-10 items-center justify-center rounded-xl [&_svg]:size-5 shadow-sm border border-black/5',
-              accent ? 'bg-amber/20 text-amber-600' : 'bg-primary/10 text-primary',
+              accent ? 'bg-amber/20 text-amber' : 'bg-primary/10 text-primary',
             )}
           >
             <Icon />

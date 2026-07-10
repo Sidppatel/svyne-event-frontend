@@ -65,3 +65,12 @@ export function contrastGrade(hexA: string, hexB: string): ContrastGrade {
 export function readableTextOn(backgroundHex: string): string {
   return relativeLuminance(backgroundHex) > 0.4 ? '#1c1917' : '#ffffff';
 }
+
+export function resolveCssColor(varName: string, alpha?: number): string {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  if (alpha === undefined) {
+    return value;
+  }
+  const rgb = hexToRgb(value);
+  return rgb ? `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})` : value;
+}

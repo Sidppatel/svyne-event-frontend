@@ -282,8 +282,8 @@ export function EventSeatingMap({
             className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
+                linear-gradient(color-mix(in srgb, var(--on-stage) 8%, transparent) 1px, transparent 1px),
+                linear-gradient(90deg, color-mix(in srgb, var(--on-stage) 8%, transparent) 1px, transparent 1px)
               `,
               backgroundSize: '24px 24px',
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
@@ -334,13 +334,13 @@ export function EventSeatingMap({
                 ? 'var(--accent-burgundy)'
                 : isAvailable
                   ? 'var(--surface-card)'
-                  : '#2F1D2C'; 
+                  : 'color-mix(in srgb, var(--stage-elevated) 75%, var(--brand))';
 
               const borderStyle = isSelected
                 ? '2px solid var(--accent-burgundy)'
                 : isAvailable
                   ? '3px solid var(--accent-gold)'
-                  : '1px solid #3D273A';
+                  : '1px solid color-mix(in srgb, var(--stage-elevated) 60%, var(--brand))';
 
               const textStyle = isSelected
                 ? 'text-white'
@@ -373,13 +373,13 @@ export function EventSeatingMap({
                     shapeRadius(shape),
                     textStyle,
                     isAvailable
-                      ? 'cursor-pointer hover:scale-105 hover:shadow-[0_0_15px_rgba(245,165,36,0.3)] active:scale-95 z-20'
+                      ? 'cursor-pointer hover:scale-105 hover:shadow-[0_0_15px_color-mix(in_srgb,var(--voltage-accent)_30%,transparent)] active:scale-95 z-20'
                       : 'cursor-not-allowed'
                   )}
                 >
                   {}
                   {isSelected ? (
-                    <span className="flex size-4.5 items-center justify-center rounded-full bg-white text-accent-burgundy shadow-[0_0_10px_rgba(255,255,255,0.4)] animate-bounce">
+                    <span className="flex size-4.5 items-center justify-center rounded-full bg-white text-accent-burgundy shadow-[0_0_10px_color-mix(in_srgb,var(--surface)_40%,transparent)] animate-bounce">
                       <Check className="size-3 stroke-[3]" />
                     </span>
                   ) : (

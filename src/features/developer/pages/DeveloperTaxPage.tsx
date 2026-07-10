@@ -94,7 +94,7 @@ export function DeveloperTaxPage() {
           <h1 className="font-display text-2xl font-semibold text-foreground">Tax Management</h1>
           <p className="text-sm text-ink-soft">Review and update tax rate breakdowns by tenant and venue.</p>
           {refreshMessage ? (
-            <p className="mt-1 text-xs font-medium text-emerald-600">{refreshMessage}</p>
+            <p className="mt-1 text-xs font-medium text-success">{refreshMessage}</p>
           ) : null}
         </div>
         <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ export function DeveloperTaxPage() {
               Apply
             </Button>
           </form>
-          {actionMessage ? <p className="text-sm text-emerald-600">{actionMessage}</p> : null}
+          {actionMessage ? <p className="text-sm text-success">{actionMessage}</p> : null}
           {actionError ? <p className="text-sm text-destructive">{actionError}</p> : null}
           {overrides.error ? (
             <p className="text-sm text-destructive">{rpcErrorMessage(overrides.error)}</p>

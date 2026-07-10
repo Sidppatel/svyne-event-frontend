@@ -1,27 +1,28 @@
 :root {
-  --canvas: #faf8f5;
-  --surface: #ffffff;
-  --surface-sunken: #f3f0eb;
-  --ink: #1c1917;
-  --ink-soft: #57534e;
-  --ink-faint: #a8a29e;
-  --hairline: #e7e2db;
-  --hairline-strong: #d6cfc5;
+  --canvas: var(--color-sand-200);
+  --surface: var(--color-sand-100);
+  --surface-sunken: var(--color-sand-300);
+  --ink: var(--color-sand-900);
+  --ink-soft: var(--color-sand-700);
+  --ink-faint: var(--color-sand-600);
+  --hairline: var(--color-sand-400);
+  --hairline-strong: var(--color-sand-500);
 
-  --brand: #8a2d3b;
-  --brand-hover: #792734;
-  --brand-ink: #ffffff;
-  --voltage-accent: #e8940a;
-  --voltage-accent-ink: #201400;
+  --brand: var(--color-burgundy-100);
+  --brand-hover: var(--color-burgundy-200);
+  --brand-ink: var(--color-sand-100);
+  --voltage-accent: var(--color-gold-200);
+  --voltage-accent-ink: var(--color-gold-500);
 
-  --status-success: #3a7d44;
-  --status-warn: #b45309;
-  --status-danger: #b3261e;
+  --status-success: var(--color-green-300);
+  --status-warn: var(--color-gold-400);
+  --status-danger: var(--color-red-200);
+  --status-danger-on-dark: var(--color-red-100);
 
-  --stage: #1c1917;
-  --stage-elevated: #292524;
-  --on-stage: #faf8f5;
-  --on-stage-soft: #d6cfc5;
+  --stage: var(--color-sand-900);
+  --stage-elevated: var(--color-sand-800);
+  --on-stage: var(--color-sand-200);
+  --on-stage-soft: var(--color-sand-500);
 
   --font-body-stack: 'Inter', -apple-system, system-ui, sans-serif;
   --font-display-stack: 'Fraunces', 'Georgia', serif;
@@ -31,8 +32,8 @@
   --radius-card: 10px;
   --radius-sheet: 16px;
 
-  --shadow-e1: 0 1px 2px rgb(28 25 23 / 0.06), 0 4px 12px rgb(28 25 23 / 0.06);
-  --shadow-e2: 0 2px 4px rgb(28 25 23 / 0.08), 0 16px 40px rgb(28 25 23 / 0.14);
+  --shadow-e1: 0 1px 2px color-mix(in srgb, var(--ink) 6%, transparent), 0 4px 12px color-mix(in srgb, var(--ink) 6%, transparent);
+  --shadow-e2: 0 2px 4px color-mix(in srgb, var(--ink) 8%, transparent), 0 16px 40px color-mix(in srgb, var(--ink) 14%, transparent);
 
   --t-instant: 90ms;
   --t-quick: 180ms;
@@ -61,10 +62,10 @@
   --marigold: var(--voltage-accent);
   --marigold-foreground: var(--voltage-accent-ink);
   --success: var(--status-success);
-  --success-foreground: #ffffff;
+  --success-foreground: var(--color-sand-100);
   --warning: var(--status-warn);
   --destructive: var(--status-danger);
-  --destructive-foreground: #ffffff;
+  --destructive-foreground: var(--color-sand-100);
   --border: var(--hairline);
   --input: var(--hairline-strong);
   --ring: var(--brand);
@@ -92,26 +93,26 @@
 }
 
 [data-portal='developer'] {
-  --brand: #4a148c;
-  --brand-hover: #3b1072;
-  --voltage-accent: #d99b00;
-  --voltage-accent-ink: #201400;
-  --status-success: #00695c;
-  --stage: #190b2b;
-  --stage-elevated: #241239;
-  --on-stage: #f6f2fb;
-  --on-stage-soft: #cbbfdd;
+  --brand: var(--color-purple-300);
+  --brand-hover: var(--color-purple-400);
+  --voltage-accent: var(--color-gold-300);
+  --voltage-accent-ink: var(--color-gold-500);
+  --status-success: var(--color-teal-100);
+  --stage: var(--color-purple-600);
+  --stage-elevated: var(--color-purple-500);
+  --on-stage: var(--color-purple-100);
+  --on-stage-soft: var(--color-purple-200);
 }
 
 [data-portal='admin'] {
-  --brand: #2e7d32;
-  --brand-hover: #27682a;
-  --voltage-accent: #f9a825;
-  --voltage-accent-ink: #201400;
-  --stage: #0f2211;
-  --stage-elevated: #1a3220;
-  --on-stage: #f3f8f2;
-  --on-stage-soft: #c4d6c4;
+  --brand: var(--color-green-400);
+  --brand-hover: var(--color-green-500);
+  --voltage-accent: var(--color-gold-100);
+  --voltage-accent-ink: var(--color-gold-500);
+  --stage: var(--color-green-700);
+  --stage-elevated: var(--color-green-600);
+  --on-stage: var(--color-green-100);
+  --on-stage-soft: var(--color-green-200);
 }
 
 @theme inline {

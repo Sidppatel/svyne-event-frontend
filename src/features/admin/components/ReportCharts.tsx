@@ -67,11 +67,11 @@ export function RevenueLineChart({ points, comparisonPoints, bucket, showTrendLi
           {point.label}
         </text>
       ))}
-      {comparisonModel ? <ChartSeries model={comparisonModel} color="var(--muted-foreground, #999)" dashed /> : null}
+      {comparisonModel ? <ChartSeries model={comparisonModel} color="var(--muted-foreground)" dashed /> : null}
       {showTrendLine && model.trendPath ? (
-        <path d={model.trendPath} fill="none" stroke="var(--marigold, #f9a825)" strokeWidth={1.5} strokeDasharray="3 3" />
+        <path d={model.trendPath} fill="none" stroke="var(--marigold)" strokeWidth={1.5} strokeDasharray="3 3" />
       ) : null}
-      <ChartSeries model={model} color="var(--primary, #2e7d32)" />
+      <ChartSeries model={model} color="var(--primary)" />
     </svg>
   );
 }

@@ -219,7 +219,7 @@ function RuleGroupItem({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            {live ? <Sparkles className="size-4 text-amber-500 animate-pulse" /> : null}
+            {live ? <Sparkles className="size-4 text-amber animate-pulse" /> : null}
             <span className="truncate font-bold text-sm text-foreground">{group.name}</span>
             <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-bold text-success border border-success/20">
               −{group.percent}%
@@ -256,7 +256,7 @@ function RuleGroupItem({
       {live ? (
         <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-amber/20 border border-amber/10">
           <div
-            className="h-full rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"
+            className="h-full rounded-full bg-amber shadow-[0_0_8px_color-mix(in_srgb,var(--amber)_60%,transparent)]"
             style={{ width: `${windowProgress(group.activeFrom, group.activeUntil, now)}%` }}
           />
         </div>

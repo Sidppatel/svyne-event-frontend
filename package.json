@@ -9,7 +9,8 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "gen:proto": "node scripts/gen-proto.mjs"
+    "gen:proto": "node scripts/gen-proto.mjs",
+    "gen:theme": "node scripts/generate-theme.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -40,6 +41,7 @@
     "zustand": "5.0.2"
   },
   "devDependencies": {
+    "@adobe/leonardo-contrast-colors": "^1.1.0",
     "@eslint/js": "10.0.1",
     "@protobuf-ts/plugin": "2.9.4",
     "@protobuf-ts/protoc": "2.9.4",

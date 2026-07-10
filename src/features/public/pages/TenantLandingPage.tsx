@@ -11,7 +11,7 @@ export function TenantLandingPage() {
   return (
     <div className="mx-auto mt-10 max-w-3xl space-y-8 px-4 md:mt-16">
       <div className="space-y-3 text-center">
-        <span className="inline-block rounded-full bg-marigold/15 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-marigold-foreground">
+        <span className="inline-block rounded-full bg-marigold/15 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber">
           The box office
         </span>
         <h1 className="font-display text-4xl font-extrabold tracking-tight md:text-5xl">

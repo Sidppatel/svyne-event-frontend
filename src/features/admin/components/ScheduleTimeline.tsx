@@ -19,6 +19,7 @@ import {
   epochSeconds,
 } from '@/shared/lib/timezone';
 import { cn } from '@/shared/lib/cn';
+import { resolveCssColor } from '@/shared/theme/colorUtils';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -85,8 +86,8 @@ export function ScheduleTimeline({
       if (row) {
         gsap.fromTo(
           row,
-          { opacity: 0, y: 16, backgroundColor: 'rgba(127,127,127,0.12)' },
-          { opacity: 1, y: 0, backgroundColor: 'rgba(127,127,127,0)', duration: 0.25, ease: 'power2.out' },
+          { opacity: 0, y: 16, backgroundColor: resolveCssColor('--ink-soft', 0.12) },
+          { opacity: 1, y: 0, backgroundColor: resolveCssColor('--ink-soft', 0), duration: 0.25, ease: 'power2.out' },
         );
       }
     },

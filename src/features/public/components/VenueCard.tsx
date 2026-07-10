@@ -77,12 +77,11 @@ export function VenueCard({ venuesId, className }: VenueCardProps) {
       </div>
 
       <div className="lg:col-span-6 min-h-[200px] rounded-2xl overflow-hidden border border-border-strong relative bg-muted group shadow-inner">
-        {/* Simple Blueprint/Map graphic background */}
-        <div className="absolute inset-0 bg-[#f4ece3] opacity-40 pointer-events-none" 
+        <div className="absolute inset-0 bg-surface-sunken opacity-40 pointer-events-none"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(164, 18, 63, 0.04) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(164, 18, 63, 0.04) 1px, transparent 1px)
+              linear-gradient(color-mix(in srgb, var(--brand) 4%, transparent) 1px, transparent 1px),
+              linear-gradient(90deg, color-mix(in srgb, var(--brand) 4%, transparent) 1px, transparent 1px)
             `,
             backgroundSize: '16px 16px'
           }}

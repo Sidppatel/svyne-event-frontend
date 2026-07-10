@@ -184,7 +184,7 @@ function MediaSection({
                   <Star className="size-3" /> Primary
                 </Badge>
               ) : null}
-              <div className="absolute inset-x-0 bottom-0 flex justify-between gap-1 bg-stone-950/60 p-1 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-x-0 bottom-0 flex justify-between gap-1 bg-ink/60 p-1 opacity-0 transition-opacity group-hover:opacity-100">
                 {!img.isPrimary ? (
                   <button
                     type="button"

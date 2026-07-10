@@ -3,6 +3,7 @@ import { Info, Sparkles, HelpCircle, Lock, Calendar, Star, Compass } from 'lucid
 import { parseMeta, publicMeta } from './catalogJson';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { resolveCssColor } from '@/shared/theme/colorUtils';
 
 function humanize(key: string): string {
   return key
@@ -49,7 +50,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
         row.addEventListener('mouseenter', () => {
           gsap.to(row, {
             borderColor: 'var(--primary)',
-            backgroundColor: 'rgba(164,18,63,0.02)',
+            backgroundColor: resolveCssColor('--brand', 0.02),
             x: 5,
             duration: 0.3,
             ease: 'power2.out',
@@ -59,7 +60,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
               scale: 1.15,
               rotate: 15,
               backgroundColor: 'var(--primary)',
-              color: '#ffffff',
+              color: 'var(--primary-foreground)',
               duration: 0.3,
             });
           }
@@ -77,7 +78,7 @@ export function EventExtraInfo({ extraInfoJson }: { extraInfoJson: string }) {
             gsap.to(iconContainer, {
               scale: 1,
               rotate: 0,
-              backgroundColor: 'rgba(164,18,63,0.08)',
+              backgroundColor: resolveCssColor('--brand', 0.08),
               color: 'var(--primary)',
               duration: 0.4,
             });

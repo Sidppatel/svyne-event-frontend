@@ -625,7 +625,7 @@ export function FloorPlanBuilder({
               height: CANVAS_H,
               transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
               transformOrigin: '0 0',
-              backgroundImage: 'radial-gradient(circle, rgba(0,0,0,0.08) 1px, transparent 1px)',
+              backgroundImage: 'radial-gradient(circle, color-mix(in srgb, var(--ink) 8%, transparent) 1px, transparent 1px)',
               backgroundSize: `${SNAP * 4}px ${SNAP * 4}px`,
             }}
           >
@@ -645,10 +645,10 @@ export function FloorPlanBuilder({
                     : `${t.label} · ${sh}`}
                   style={{
                     position: 'absolute', left: t.posX, top: t.posY, width: t.width, height: t.height,
-                    backgroundColor: locked ? '#9ca3af' : fill, touchAction: 'none',
+                    backgroundColor: locked ? 'var(--ink-faint)' : fill, touchAction: 'none',
                   }}
                   className={`flex select-none items-center justify-center border text-xs font-medium text-white transition-shadow ${shapeClass(sh)} ${locked ? 'cursor-not-allowed opacity-70' : 'cursor-move hover:shadow-md'
-                    } ${selected === `t${i}` ? 'border-black ring-2 ring-black' : 'border-black/10'}`}
+                    } ${selected === `t${i}` ? 'border-ink ring-2 ring-ink' : 'border-ink/10'}`}
                 >
                   <span className="pointer-events-none truncate px-1">
                     {locked ? <span aria-hidden>🔒 </span> : null}

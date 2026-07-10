@@ -12,10 +12,10 @@ function Shell({
 }) {
   return (
     <div className="mx-auto mt-24 max-w-md text-center">
-      <h1 className="text-2xl font-semibold text-gray-900">{title}</h1>
-      <p className="mt-2 text-gray-600">{message}</p>
+      <h1 className="text-2xl font-semibold text-ink">{title}</h1>
+      <p className="mt-2 text-ink-soft">{message}</p>
       <div className="mt-4 flex justify-center gap-4">
-        <Link to="/" className="text-indigo-600">
+        <Link to="/" className="text-primary">
           Go home
         </Link>
         {children}
@@ -41,7 +41,7 @@ export function NotAuthorizedPage() {
       title="Not authorized"
       message="Your account does not have access to this area, or it belongs to a different tenant."
     >
-      <button type="button" onClick={switchAccount} className="text-indigo-600">
+      <button type="button" onClick={switchAccount} className="text-primary">
         Sign in as a different user
       </button>
     </Shell>

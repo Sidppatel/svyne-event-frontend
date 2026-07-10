@@ -142,7 +142,7 @@ export function DeveloperBillingPage() {
         />
       </form>
 
-      {actionMessage ? <p className="text-sm text-emerald-600">{actionMessage}</p> : null}
+      {actionMessage ? <p className="text-sm text-success">{actionMessage}</p> : null}
       {actionError ? <p className="text-sm text-destructive">{actionError}</p> : null}
       {error ? <p className="text-sm text-destructive">{rpcErrorMessage(error)}</p> : null}
       {loading ? <p className="text-sm text-muted-foreground">Loading…</p> : null}

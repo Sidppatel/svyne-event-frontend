@@ -46,7 +46,7 @@ export function ImageCropDialog({ file, aspect, onCropped, onCancel }: ImageCrop
     <Dialog open onOpenChange={(open) => (!open ? onCancel() : undefined)}>
       <DialogContent className="max-w-2xl">
         <DialogTitle>Crop image</DialogTitle>
-        <div className="relative h-80 w-full overflow-hidden rounded-md bg-stone-900">
+        <div className="relative h-80 w-full overflow-hidden rounded-md bg-stage">
           {imageSrc ? (
             <Cropper
               image={imageSrc}

@@ -6,6 +6,7 @@ import { formatEpoch } from '@/shared/lib/format';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { resolveCssColor } from '@/shared/theme/colorUtils';
 import { TimelineItem } from './TimelineItem';
 import { SectionTitle } from './SectionTitle';
 
@@ -14,14 +15,14 @@ gsap.registerPlugin(ScrollTrigger);
 const TYPE_STYLES: Record<string, { ring: string; dotBg: string; text: string; bg: string; icon: ComponentType<{ className?: string }> }> = {
   Performance: {
     ring: 'ring-accent-burgundy/20',
-    dotBg: 'bg-accent-burgundy shadow-[0_0_10px_rgba(164,18,63,0.5)]',
+    dotBg: 'bg-accent-burgundy shadow-[0_0_10px_color-mix(in_srgb,var(--brand)_50%,transparent)]',
     text: 'text-accent-burgundy',
     bg: 'bg-accent-burgundy/5',
     icon: Flame,
   },
   Break: {
     ring: 'ring-accent-gold/20',
-    dotBg: 'bg-accent-gold shadow-[0_0_10px_rgba(245,165,36,0.5)]',
+    dotBg: 'bg-accent-gold shadow-[0_0_10px_color-mix(in_srgb,var(--voltage-accent)_50%,transparent)]',
     text: 'text-accent-gold-foreground',
     bg: 'bg-accent-gold/5',
     icon: Coffee,
@@ -35,16 +36,16 @@ const TYPE_STYLES: Record<string, { ring: string; dotBg: string; text: string; b
   },
   'DJ Set': {
     ring: 'ring-success/20',
-    dotBg: 'bg-success shadow-[0_0_10px_rgba(16,185,129,0.5)]',
+    dotBg: 'bg-success shadow-[0_0_10px_color-mix(in_srgb,var(--success)_50%,transparent)]',
     text: 'text-success',
     bg: 'bg-success/5',
     icon: Radio,
   },
   Networking: {
     ring: 'ring-accent-burgundy/10',
-    dotBg: 'bg-indigo-500 shadow-[0_0_10px_rgba(99,102,241,0.5)]',
-    text: 'text-indigo-600',
-    bg: 'bg-indigo-500/5',
+    dotBg: 'bg-primary shadow-[0_0_10px_color-mix(in_srgb,var(--primary)_50%,transparent)]',
+    text: 'text-primary',
+    bg: 'bg-primary/5',
     icon: Award,
   },
   Other: {
@@ -120,7 +121,7 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
           gsap.to(card, {
             scale: 1.01,
             borderColor: 'var(--accent-burgundy)',
-            backgroundColor: 'rgba(164,18,63,0.02)',
+            backgroundColor: resolveCssColor('--brand', 0.02),
             duration: 0.25,
             ease: 'power2.out',
           });

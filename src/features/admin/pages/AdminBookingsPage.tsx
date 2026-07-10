@@ -147,7 +147,7 @@ function BookingRow({ booking, isExpanded, onToggle }: { booking: Booking; isExp
             <span className="font-bold text-sm text-foreground block">
               {centsToUSD(booking.totalCents)}
             </span>
-            <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-wider bg-emerald-500/10 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-bold text-success uppercase tracking-wider bg-success/10 px-2 py-0.5 rounded-full">
               {booking.status}
             </span>
           </div>

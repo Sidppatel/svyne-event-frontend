@@ -97,7 +97,7 @@ export function TaxRatesPanel() {
           </Button>
         </div>
 
-        {message ? <p className="text-sm text-emerald-600">{message}</p> : null}
+        {message ? <p className="text-sm text-success">{message}</p> : null}
         {actionError ? <p className="text-sm text-destructive">{actionError}</p> : null}
         {error ? <p className="text-sm text-destructive">{rpcErrorMessage(error)}</p> : null}
         {loading ? <p className="text-sm text-ink-soft">Loading…</p> : null}
