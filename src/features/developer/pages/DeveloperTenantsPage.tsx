@@ -103,21 +103,36 @@ export function DeveloperTenantsPage() {
     }
   }
 
-  async function toggleAch(tenantsId: string, enabled: boolean) {
-    const formula = achFormulaByTenant[tenantsId] ?? '';
-    if (enabled && !formula) {
-      setFormError('Pick an ACH fee formula before enabling ACH for this tenant.');
+  async function applyAchChange(tenantsId: string, enabled: boolean, formula: string) {
+    const reason = window.prompt('Why is this tenant’s ACH setup changing?');
+    if (!reason || !reason.trim()) {
       return;
     }
     setBusyTenantId(tenantsId);
     setFormError(null);
     try {
-      await setTenantAch(tenantsId, enabled, formula);
+      await setTenantAch(tenantsId, enabled, formula, reason.trim());
       reload();
     } catch (caught) {
       setFormError(rpcErrorMessage(caught));
     } finally {
       setBusyTenantId(null);
+    }
+  }
+
+  async function toggleAch(tenant: { tenantsId: string; achFeeFormulasId: string }, enabled: boolean) {
+    const formula = achFormulaByTenant[tenant.tenantsId] ?? tenant.achFeeFormulasId ?? '';
+    if (enabled && !formula) {
+      setFormError('Pick an ACH fee formula before enabling ACH for this tenant.');
+      return;
+    }
+    await applyAchChange(tenant.tenantsId, enabled, formula);
+  }
+
+  async function changeAchFormula(tenant: { tenantsId: string; achEnabled: boolean }, formula: string) {
+    setAchFormulaByTenant((prev) => ({ ...prev, [tenant.tenantsId]: formula }));
+    if (tenant.achEnabled && formula) {
+      await applyAchChange(tenant.tenantsId, true, formula);
     }
   }
 
@@ -279,29 +294,25 @@ export function DeveloperTenantsPage() {
                 ) : (
                   <Badge variant="neutral">💳 ACH: OFF</Badge>
                 )}
-                {!tenant.achEnabled ? (
-                  <Select
-                    className="h-8 w-44"
-                    value={achFormulaByTenant[tenant.tenantsId] ?? ''}
-                    disabled={busyTenantId === tenant.tenantsId}
-                    onChange={(e) =>
-                      setAchFormulaByTenant((prev) => ({ ...prev, [tenant.tenantsId]: e.target.value }))
-                    }
-                    aria-label={`ACH fee formula for ${tenant.name}`}
-                  >
-                    <option value="">— ACH fee formula —</option>
-                    {(feeFormulas ?? []).map((f) => (
-                      <option key={f.feeFormulasId} value={f.feeFormulasId}>
-                        {f.name}
-                      </option>
-                    ))}
-                  </Select>
-                ) : null}
+                <Select
+                  className="h-8 w-44"
+                  value={achFormulaByTenant[tenant.tenantsId] ?? tenant.achFeeFormulasId ?? ''}
+                  disabled={busyTenantId === tenant.tenantsId}
+                  onChange={(e) => changeAchFormula(tenant, e.target.value)}
+                  aria-label={`ACH fee formula for ${tenant.name}`}
+                >
+                  <option value="">— ACH fee formula —</option>
+                  {(feeFormulas ?? []).map((f) => (
+                    <option key={f.feeFormulasId} value={f.feeFormulasId}>
+                      {f.name}
+                    </option>
+                  ))}
+                </Select>
                 <Switch
                   checked={tenant.achEnabled}
                   disabled={busyTenantId === tenant.tenantsId}
                   label={`ACH payments for ${tenant.name}`}
-                  onCheckedChange={(enabled) => toggleAch(tenant.tenantsId, enabled)}
+                  onCheckedChange={(enabled) => toggleAch(tenant, enabled)}
                 />
                 <div className="ml-auto flex items-center gap-3">
                   <Link to={`/tenants/${tenant.tenantsId}`} className="text-sm text-primary">

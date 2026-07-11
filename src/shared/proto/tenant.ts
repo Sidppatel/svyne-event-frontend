@@ -198,6 +198,12 @@ export interface Tenant {
      * @generated from protobuf field: string brand_tokens_json = 26;
      */
     brandTokensJson: string;
+    /**
+     * ACH fee formula assigned to this tenant; empty = none (developer-managed).
+     *
+     * @generated from protobuf field: string ach_fee_formulas_id = 27;
+     */
+    achFeeFormulasId: string;
 }
 /**
  * @generated from protobuf message svyne.tenant.UpdateMyTenantBrandingRequest
@@ -730,7 +736,8 @@ class Tenant$Type extends MessageType<Tenant> {
             { no: 23, name: "brand_button", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 24, name: "brand_highlight", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 25, name: "ach_enabled", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 26, name: "brand_tokens_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 26, name: "brand_tokens_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 27, name: "ach_fee_formulas_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Tenant>): Tenant {
@@ -761,6 +768,7 @@ class Tenant$Type extends MessageType<Tenant> {
         message.brandHighlight = "";
         message.achEnabled = false;
         message.brandTokensJson = "";
+        message.achFeeFormulasId = "";
         if (value !== undefined)
             reflectionMergePartial<Tenant>(this, message, value);
         return message;
@@ -847,6 +855,9 @@ class Tenant$Type extends MessageType<Tenant> {
                     break;
                 case /* string brand_tokens_json */ 26:
                     message.brandTokensJson = reader.string();
+                    break;
+                case /* string ach_fee_formulas_id */ 27:
+                    message.achFeeFormulasId = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -938,6 +949,9 @@ class Tenant$Type extends MessageType<Tenant> {
         /* string brand_tokens_json = 26; */
         if (message.brandTokensJson !== "")
             writer.tag(26, WireType.LengthDelimited).string(message.brandTokensJson);
+        /* string ach_fee_formulas_id = 27; */
+        if (message.achFeeFormulasId !== "")
+            writer.tag(27, WireType.LengthDelimited).string(message.achFeeFormulasId);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

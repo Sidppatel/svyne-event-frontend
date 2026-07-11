@@ -61,13 +61,28 @@ export function DeveloperReportingAccessPage() {
     return achFormulaByTenant[tenant.tenantsId] ?? tenant.achFeeFormulasId ?? '';
   }
 
+  function changeAchFormula(tenant: { tenantsId: string; achEnabled: boolean }, formula: string) {
+    setAchFormulaByTenant((prev) => ({ ...prev, [tenant.tenantsId]: formula }));
+    if (tenant.achEnabled && formula) {
+      const reason = window.prompt('Why is this tenant’s ACH setup changing?');
+      if (!reason || !reason.trim()) {
+        return;
+      }
+      void runAction(tenant.tenantsId, () => setTenantAch(tenant.tenantsId, true, formula, reason.trim()));
+    }
+  }
+
   function toggleAch(tenant: { tenantsId: string; achFeeFormulasId: string }, enabled: boolean) {
     const formula = achFormulaFor(tenant);
     if (enabled && !formula) {
       setActionError('Pick an ACH fee formula before enabling ACH.');
       return;
     }
-    void runAction(tenant.tenantsId, () => setTenantAch(tenant.tenantsId, enabled, formula));
+    const reason = window.prompt('Why is this tenant’s ACH setup changing?');
+    if (!reason || !reason.trim()) {
+      return;
+    }
+    void runAction(tenant.tenantsId, () => setTenantAch(tenant.tenantsId, enabled, formula, reason.trim()));
   }
 
   return (
@@ -159,9 +174,7 @@ export function DeveloperReportingAccessPage() {
                       className="h-8 w-44"
                       value={achFormulaFor(tenant)}
                       disabled={busyTenantId === tenant.tenantsId}
-                      onChange={(e) =>
-                        setAchFormulaByTenant((prev) => ({ ...prev, [tenant.tenantsId]: e.target.value }))
-                      }
+                      onChange={(e) => changeAchFormula(tenant, e.target.value)}
                     >
                       <option value="">— none —</option>
                       {(feeFormulas ?? []).map((f) => (

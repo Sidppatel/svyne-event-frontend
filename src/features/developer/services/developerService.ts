@@ -36,8 +36,8 @@ export async function setTenantAdvancedReporting(tenantsId: string, enabled: boo
   return response.message;
 }
 
-export async function setTenantAch(tenantsId: string, enabled: boolean, feeFormulasId: string): Promise<string> {
-  const response = await callRpc(() => tenantTierClient.setTenantAch({ tenantsId, enabled, feeFormulasId }));
+export async function setTenantAch(tenantsId: string, enabled: boolean, feeFormulasId: string, reason: string): Promise<string> {
+  const response = await callRpc(() => tenantTierClient.setTenantAch({ tenantsId, enabled, feeFormulasId, reason }));
   return response.message;
 }
 
