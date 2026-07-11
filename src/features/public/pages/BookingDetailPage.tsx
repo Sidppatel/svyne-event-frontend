@@ -327,6 +327,14 @@ export function BookingDetailPage() {
                     <span className="font-mono text-xs">{b.paymentTransactionId}</span>
                   </div>
                 ) : null}
+                {b.paymentMethodType ? (
+                  <div className="flex justify-between border-t pt-3 text-muted-foreground">
+                    <span className="capitalize">{b.paymentMethodType.replace('_', ' ')}</span>
+                    <span className="font-mono text-xs">
+                      {b.paymentMethodLast4 ? `•••• ${b.paymentMethodLast4}` : ''}
+                    </span>
+                  </div>
+                ) : null}
               </div>
             </details>
           </CardContent>

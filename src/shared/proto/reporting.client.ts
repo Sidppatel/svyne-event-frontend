@@ -3,6 +3,7 @@
 // @generated from protobuf file "reporting.proto" (package "svyne.reporting", syntax proto3)
 // tslint:disable
 import { TenantTierService } from "./reporting";
+import type { SetTenantTaxModeRequest } from "./reporting";
 import type { SetTenantAchRequest } from "./reporting";
 import type { SetTenantAdvancedReportingRequest } from "./reporting";
 import type { AckResponse } from "./common";
@@ -12,6 +13,7 @@ import type { PageRequest } from "./common";
 import type { RpcTransport } from "@protobuf-ts/runtime-rpc";
 import type { ServiceInfo } from "@protobuf-ts/runtime-rpc";
 import { ReportingService } from "./reporting";
+import type { TaxReport } from "./reporting";
 import type { SalesByChannelList } from "./reporting";
 import type { TicketTypeBreakdownList } from "./reporting";
 import type { EventPerformanceList } from "./reporting";
@@ -52,6 +54,13 @@ export interface IReportingServiceClient {
      * @generated from protobuf rpc: GetSalesByChannel(svyne.reporting.ReportRangeRequest) returns (svyne.reporting.SalesByChannelList);
      */
     getSalesByChannel(input: ReportRangeRequest, options?: RpcOptions): UnaryCall<ReportRangeRequest, SalesByChannelList>;
+    /**
+     * Only available when the tenant's tax_collection_mode is 'self' (tenant
+     * remits their own sales tax); monthly totals with per-event drill-down.
+     *
+     * @generated from protobuf rpc: GetTaxReport(svyne.reporting.ReportRangeRequest) returns (svyne.reporting.TaxReport);
+     */
+    getTaxReport(input: ReportRangeRequest, options?: RpcOptions): UnaryCall<ReportRangeRequest, TaxReport>;
 }
 /**
  * @generated from protobuf service svyne.reporting.ReportingService
@@ -104,6 +113,16 @@ export class ReportingServiceClient implements IReportingServiceClient, ServiceI
         const method = this.methods[5], opt = this._transport.mergeOptions(options);
         return stackIntercept<ReportRangeRequest, SalesByChannelList>("unary", this._transport, method, opt, input);
     }
+    /**
+     * Only available when the tenant's tax_collection_mode is 'self' (tenant
+     * remits their own sales tax); monthly totals with per-event drill-down.
+     *
+     * @generated from protobuf rpc: GetTaxReport(svyne.reporting.ReportRangeRequest) returns (svyne.reporting.TaxReport);
+     */
+    getTaxReport(input: ReportRangeRequest, options?: RpcOptions): UnaryCall<ReportRangeRequest, TaxReport> {
+        const method = this.methods[6], opt = this._transport.mergeOptions(options);
+        return stackIntercept<ReportRangeRequest, TaxReport>("unary", this._transport, method, opt, input);
+    }
 }
 /**
  * @generated from protobuf service svyne.reporting.TenantTierService
@@ -128,6 +147,14 @@ export interface ITenantTierServiceClient {
      * @generated from protobuf rpc: SetTenantAch(svyne.reporting.SetTenantAchRequest) returns (svyne.common.AckResponse);
      */
     setTenantAch(input: SetTenantAchRequest, options?: RpcOptions): UnaryCall<SetTenantAchRequest, AckResponse>;
+    /**
+     * Developer gate for tax routing: 'platform' = Svyne collects and remits sales
+     * tax on the tenant's behalf (default); 'self' = tax flows to the tenant payout
+     * and the tenant remits it themselves.
+     *
+     * @generated from protobuf rpc: SetTenantTaxMode(svyne.reporting.SetTenantTaxModeRequest) returns (svyne.common.AckResponse);
+     */
+    setTenantTaxMode(input: SetTenantTaxModeRequest, options?: RpcOptions): UnaryCall<SetTenantTaxModeRequest, AckResponse>;
 }
 /**
  * @generated from protobuf service svyne.reporting.TenantTierService
@@ -168,5 +195,16 @@ export class TenantTierServiceClient implements ITenantTierServiceClient, Servic
     setTenantAch(input: SetTenantAchRequest, options?: RpcOptions): UnaryCall<SetTenantAchRequest, AckResponse> {
         const method = this.methods[3], opt = this._transport.mergeOptions(options);
         return stackIntercept<SetTenantAchRequest, AckResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
+     * Developer gate for tax routing: 'platform' = Svyne collects and remits sales
+     * tax on the tenant's behalf (default); 'self' = tax flows to the tenant payout
+     * and the tenant remits it themselves.
+     *
+     * @generated from protobuf rpc: SetTenantTaxMode(svyne.reporting.SetTenantTaxModeRequest) returns (svyne.common.AckResponse);
+     */
+    setTenantTaxMode(input: SetTenantTaxModeRequest, options?: RpcOptions): UnaryCall<SetTenantTaxModeRequest, AckResponse> {
+        const method = this.methods[4], opt = this._transport.mergeOptions(options);
+        return stackIntercept<SetTenantTaxModeRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
 }

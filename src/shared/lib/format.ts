@@ -37,6 +37,14 @@ export function formatEventDate(value: number | string): string {
   });
 }
 
+export function formatMonth(value: number | string): string {
+  const seconds = typeof value === 'string' ? Number(value) : value;
+  if (!Number.isFinite(seconds) || seconds === 0) {
+    return '—';
+  }
+  return new Date(seconds * 1000).toLocaleString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+}
+
 export function accessWindow(
   startEpoch: number | string,
   endEpoch: number | string,

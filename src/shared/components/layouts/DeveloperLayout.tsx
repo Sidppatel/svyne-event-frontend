@@ -19,6 +19,7 @@ export function DeveloperLayout() {
           { to: '/revenue', label: 'Revenue' },
           { to: '/tax', label: 'Tax' },
           { to: '/tax-lookup', label: 'Tax Lookup' },
+          { to: '/tax-remittance', label: 'Tax Remittance' },
           { to: '/reporting-access', label: 'Reporting Access' },
           { to: '/logs', label: 'System Logs' },
         ]}

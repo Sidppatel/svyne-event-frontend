@@ -326,6 +326,26 @@ export interface Event {
      * @generated from protobuf field: bool ach_enabled = 21;
      */
     achEnabled: boolean; // admin opted this event in to ACH (tenant-gated)
+    /**
+     * @generated from protobuf field: double venue_state_tax_rate = 22;
+     */
+    venueStateTaxRate: number;
+    /**
+     * @generated from protobuf field: double venue_county_tax_rate = 23;
+     */
+    venueCountyTaxRate: number;
+    /**
+     * @generated from protobuf field: double venue_city_tax_rate = 24;
+     */
+    venueCityTaxRate: number;
+    /**
+     * @generated from protobuf field: double venue_local_tax_rate = 25;
+     */
+    venueLocalTaxRate: number;
+    /**
+     * @generated from protobuf field: double venue_combined_tax_rate = 26;
+     */
+    venueCombinedTaxRate: number;
 }
 /**
  * @generated from protobuf message svyne.event.GetEventBySlugRequest
@@ -1371,7 +1391,12 @@ class Event$Type extends MessageType<Event> {
             { no: 18, name: "event_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 19, name: "primary_image_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 20, name: "extra_info_json", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 21, name: "ach_enabled", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
+            { no: 21, name: "ach_enabled", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 22, name: "venue_state_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 23, name: "venue_county_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 24, name: "venue_city_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 25, name: "venue_local_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 26, name: "venue_combined_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<Event>): Event {
@@ -1397,6 +1422,11 @@ class Event$Type extends MessageType<Event> {
         message.primaryImageId = "";
         message.extraInfoJson = "";
         message.achEnabled = false;
+        message.venueStateTaxRate = 0;
+        message.venueCountyTaxRate = 0;
+        message.venueCityTaxRate = 0;
+        message.venueLocalTaxRate = 0;
+        message.venueCombinedTaxRate = 0;
         if (value !== undefined)
             reflectionMergePartial<Event>(this, message, value);
         return message;
@@ -1468,6 +1498,21 @@ class Event$Type extends MessageType<Event> {
                     break;
                 case /* bool ach_enabled */ 21:
                     message.achEnabled = reader.bool();
+                    break;
+                case /* double venue_state_tax_rate */ 22:
+                    message.venueStateTaxRate = reader.double();
+                    break;
+                case /* double venue_county_tax_rate */ 23:
+                    message.venueCountyTaxRate = reader.double();
+                    break;
+                case /* double venue_city_tax_rate */ 24:
+                    message.venueCityTaxRate = reader.double();
+                    break;
+                case /* double venue_local_tax_rate */ 25:
+                    message.venueLocalTaxRate = reader.double();
+                    break;
+                case /* double venue_combined_tax_rate */ 26:
+                    message.venueCombinedTaxRate = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1544,6 +1589,21 @@ class Event$Type extends MessageType<Event> {
         /* bool ach_enabled = 21; */
         if (message.achEnabled !== false)
             writer.tag(21, WireType.Varint).bool(message.achEnabled);
+        /* double venue_state_tax_rate = 22; */
+        if (message.venueStateTaxRate !== 0)
+            writer.tag(22, WireType.Bit64).double(message.venueStateTaxRate);
+        /* double venue_county_tax_rate = 23; */
+        if (message.venueCountyTaxRate !== 0)
+            writer.tag(23, WireType.Bit64).double(message.venueCountyTaxRate);
+        /* double venue_city_tax_rate = 24; */
+        if (message.venueCityTaxRate !== 0)
+            writer.tag(24, WireType.Bit64).double(message.venueCityTaxRate);
+        /* double venue_local_tax_rate = 25; */
+        if (message.venueLocalTaxRate !== 0)
+            writer.tag(25, WireType.Bit64).double(message.venueLocalTaxRate);
+        /* double venue_combined_tax_rate = 26; */
+        if (message.venueCombinedTaxRate !== 0)
+            writer.tag(26, WireType.Bit64).double(message.venueCombinedTaxRate);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

@@ -21,6 +21,7 @@ import {
   type TaxOverrideRow,
 } from '@/features/developer/services/developerBillingService';
 import { TaxRatesPanel } from '@/features/developer/components/TaxRatesPanel';
+import { TenantTaxModePanel } from '@/features/developer/components/TenantTaxModePanel';
 
 export function DeveloperTaxPage() {
   const summaryLoader = useCallback(() => listVenueTaxSummaries(), []);
@@ -115,6 +116,8 @@ export function DeveloperTaxPage() {
       </div>
 
       <TaxRatesPanel />
+
+      <TenantTaxModePanel />
 
       <Card>
         <CardHeader className="pb-2">

@@ -41,6 +41,11 @@ export async function setTenantAch(tenantsId: string, enabled: boolean, feeFormu
   return response.message;
 }
 
+export async function setTenantTaxMode(tenantsId: string, mode: 'platform' | 'self', reason: string): Promise<string> {
+  const response = await callRpc(() => tenantTierClient.setTenantTaxMode({ tenantsId, mode, reason }));
+  return response.message;
+}
+
 export async function getDeveloperDashboard(): Promise<DeveloperDashboard> {
   return callRpc(() => dashboardClient.getDeveloperDashboard({}));
 }

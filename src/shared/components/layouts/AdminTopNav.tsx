@@ -114,6 +114,7 @@ export function AdminTopNav() {
                   { to: '/branding', label: 'Branding' },
                   { to: '/invitations', label: 'Invitations' },
                   { to: '/financial', label: 'Financial' },
+                  { to: '/tax-report', label: 'Tax Report' },
                   { to: '/settings', label: 'Settings' },
                 ]
               : []),

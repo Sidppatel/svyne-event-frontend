@@ -62,6 +62,10 @@ export function isValidState(code: string): boolean {
   return US_STATE_CODES.has(code);
 }
 
+export function isValidZip(zip: string): boolean {
+  return /^\d{5}$/.test(zip);
+}
+
 function digitsOnly(value: string): string {
   return value.replace(/\D/g, '');
 }

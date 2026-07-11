@@ -9,6 +9,8 @@ import type {
   RevenueReport,
   TenantActivityRow,
   TaxReport,
+  TaxRemittanceReport,
+  TaxRemitMonthRow,
   TaxOverrideRow,
   TaxRateRow,
   VenueTaxSummaryRow,
@@ -26,6 +28,8 @@ export type {
   RevenueReport,
   TenantActivityRow,
   TaxReport,
+  TaxRemittanceReport,
+  TaxRemitMonthRow,
   TaxOverrideRow,
   TaxRateRow,
   VenueTaxSummaryRow,
@@ -236,6 +240,31 @@ export function taxOverrideLabel(row: TaxOverrideRow): string {
 
 export async function getTaxReport(fromEpochSeconds: string, toEpochSeconds: string): Promise<TaxReport> {
   return callRpc(() => developerBillingClient.getTaxReport({ fromEpochSeconds, toEpochSeconds }));
+}
+
+export async function getTaxRemittanceReport(
+  fromEpochSeconds: string,
+  toEpochSeconds: string,
+): Promise<TaxRemittanceReport> {
+  return callRpc(() =>
+    developerBillingClient.getTaxRemittanceReport({ fromEpochSeconds, toEpochSeconds }),
+  );
+}
+
+export function remittanceMonthsToCsvRows(months: TaxRemitMonthRow[]): (string | number)[][] {
+  return months.flatMap((month) =>
+    month.tenants.map((tenant) => [
+      new Date(Number(month.monthStartEpochSeconds) * 1000).toLocaleString('en-US', {
+        month: 'long',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }),
+      tenant.tenantName,
+      centsToUSD(tenant.taxableCents),
+      centsToUSD(tenant.taxCents),
+      tenant.orders,
+    ]),
+  );
 }
 
 export function formatRatePercent(rate: number): string {

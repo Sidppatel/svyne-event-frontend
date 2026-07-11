@@ -5,6 +5,7 @@ import {
   setTenantTier,
   setTenantAdvancedReporting,
   setTenantAch,
+  setTenantTaxMode,
   TENANT_TIERS,
   type TenantTier,
 } from '@/features/developer/services/developerService';
@@ -85,6 +86,16 @@ export function DeveloperReportingAccessPage() {
     void runAction(tenant.tenantsId, () => setTenantAch(tenant.tenantsId, enabled, formula, reason.trim()));
   }
 
+  function changeTaxMode(tenant: { tenantsId: string; name: string }, mode: 'platform' | 'self') {
+    const reason = window.prompt(
+      `Why is "${tenant.name}" switching to ${mode === 'self' ? 'self-collected' : 'platform-collected'} tax?`,
+    );
+    if (!reason || !reason.trim()) {
+      return;
+    }
+    void runAction(tenant.tenantsId, () => setTenantTaxMode(tenant.tenantsId, mode, reason.trim()));
+  }
+
   return (
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Reporting access</h1>
@@ -123,6 +134,7 @@ export function DeveloperReportingAccessPage() {
                 <th className="py-2 pr-3">Developer override</th>
                 <th className="py-2 pr-3">ACH fee</th>
                 <th className="py-2 pr-3">ACH enabled</th>
+                <th className="py-2 pr-3">Tax collection</th>
                 <th className="py-2">Status</th>
               </tr>
             </thead>
@@ -191,6 +203,17 @@ export function DeveloperReportingAccessPage() {
                       label={`ACH for ${tenant.name}`}
                       onCheckedChange={(enabled) => toggleAch(tenant, enabled)}
                     />
+                  </td>
+                  <td className="py-2 pr-3">
+                    <Select
+                      className="h-8 w-36"
+                      value={tenant.taxCollectionMode || 'platform'}
+                      disabled={busyTenantId === tenant.tenantsId}
+                      onChange={(e) => changeTaxMode(tenant, e.target.value as 'platform' | 'self')}
+                    >
+                      <option value="platform">Platform (Svyne)</option>
+                      <option value="self">Tenant self-collects</option>
+                    </Select>
                   </td>
                   <td className="py-2">
                     {tenant.archived ? <Badge variant="warn">Archived</Badge> : <Badge variant="neutral">Active</Badge>}

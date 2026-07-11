@@ -16,6 +16,7 @@ import { DeveloperFeeOverridesPage } from '@/features/developer/pages/DeveloperF
 import { DeveloperRevenuePage } from '@/features/developer/pages/DeveloperRevenuePage';
 import { DeveloperTaxPage } from '@/features/developer/pages/DeveloperTaxPage';
 import { DeveloperTaxLookupPage } from '@/features/developer/pages/DeveloperTaxLookupPage';
+import { DeveloperTaxRemittancePage } from '@/features/developer/pages/DeveloperTaxRemittancePage';
 
 export default function DeveloperRoutes() {
   return (
@@ -38,6 +39,7 @@ export default function DeveloperRoutes() {
         <Route path="revenue" element={<DeveloperRevenuePage />} />
         <Route path="tax" element={<DeveloperTaxPage />} />
         <Route path="tax-lookup" element={<DeveloperTaxLookupPage />} />
+        <Route path="tax-remittance" element={<DeveloperTaxRemittancePage />} />
         <Route path="reporting-access" element={<DeveloperReportingAccessPage />} />
         <Route path="logs" element={<DeveloperLogsPage />} />
       </Route>

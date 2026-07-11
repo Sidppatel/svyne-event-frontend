@@ -9,6 +9,7 @@ import {
 } from 'date-fns';
 import type {
   ReportingAccess,
+  TaxReport,
   ReportSummary,
   RevenueTimeseries,
   EventPerformanceList,
@@ -124,6 +125,24 @@ export async function getSalesByChannel(
 ): Promise<SalesByChannelList> {
   return callRpc(() =>
     reportingClient.getSalesByChannel({
+      fromEpochSeconds: String(fromEpochSeconds),
+      toEpochSeconds: String(toEpochSeconds),
+    }),
+  );
+}
+
+export function taxReportRange(): { fromEpochSeconds: bigint; toEpochSeconds: bigint } {
+  const now = new Date();
+  const from = new Date(Date.UTC(now.getUTCFullYear() - 1, now.getUTCMonth(), 1));
+  return { fromEpochSeconds: toEpochSeconds(from), toEpochSeconds: toEpochSeconds(now) };
+}
+
+export async function getTaxReport(
+  fromEpochSeconds: bigint,
+  toEpochSeconds: bigint,
+): Promise<TaxReport> {
+  return callRpc(() =>
+    reportingClient.getTaxReport({
       fromEpochSeconds: String(fromEpochSeconds),
       toEpochSeconds: String(toEpochSeconds),
     }),

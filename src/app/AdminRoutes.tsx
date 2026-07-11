@@ -16,6 +16,7 @@ import { AdminPerformersPage } from '@/features/admin/pages/AdminPerformersPage'
 import { AdminSponsorsPage } from '@/features/admin/pages/AdminSponsorsPage';
 import { AdminInvitationsPage } from '@/features/admin/pages/AdminInvitationsPage';
 import { AdminFinancialPage } from '@/features/admin/pages/AdminFinancialPage';
+import { AdminTaxReportPage } from '@/features/admin/pages/AdminTaxReportPage';
 import { AdminProfilePage } from '@/features/admin/pages/AdminProfilePage';
 import { AdminTenantSettingsPage } from '@/features/admin/pages/AdminTenantSettingsPage';
 import { AdminBrandingPage } from '@/features/admin/pages/AdminBrandingPage';
@@ -50,6 +51,14 @@ export default function AdminRoutes() {
         <Route path="sponsors" element={<AdminSponsorsPage />} />
         <Route path="invitations" element={<AdminInvitationsPage />} />
         <Route path="financial" element={<AdminFinancialPage />} />
+        <Route
+          path="tax-report"
+          element={
+            <ProtectedRoute allow={canManageTenantSettings}>
+              <AdminTaxReportPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="profile" element={<AdminProfilePage />} />
         <Route
           path="settings"

@@ -168,6 +168,26 @@ export interface Venue {
      * @generated from protobuf field: string zip = 13;
      */
     zip: string;
+    /**
+     * @generated from protobuf field: double state_tax_rate = 14;
+     */
+    stateTaxRate: number;
+    /**
+     * @generated from protobuf field: double county_tax_rate = 15;
+     */
+    countyTaxRate: number;
+    /**
+     * @generated from protobuf field: double city_tax_rate = 16;
+     */
+    cityTaxRate: number;
+    /**
+     * @generated from protobuf field: double local_tax_rate = 17;
+     */
+    localTaxRate: number;
+    /**
+     * @generated from protobuf field: double combined_tax_rate = 18;
+     */
+    combinedTaxRate: number;
 }
 /**
  * @generated from protobuf message svyne.catalog.CreateVenueRequest
@@ -874,7 +894,12 @@ class Venue$Type extends MessageType<Venue> {
             { no: 10, name: "line1", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 11, name: "line2", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 12, name: "city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 13, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 13, name: "zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 14, name: "state_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 15, name: "county_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 16, name: "city_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 17, name: "local_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ },
+            { no: 18, name: "combined_tax_rate", kind: "scalar", T: 1 /*ScalarType.DOUBLE*/ }
         ]);
     }
     create(value?: PartialMessage<Venue>): Venue {
@@ -892,6 +917,11 @@ class Venue$Type extends MessageType<Venue> {
         message.line2 = "";
         message.city = "";
         message.zip = "";
+        message.stateTaxRate = 0;
+        message.countyTaxRate = 0;
+        message.cityTaxRate = 0;
+        message.localTaxRate = 0;
+        message.combinedTaxRate = 0;
         if (value !== undefined)
             reflectionMergePartial<Venue>(this, message, value);
         return message;
@@ -939,6 +969,21 @@ class Venue$Type extends MessageType<Venue> {
                     break;
                 case /* string zip */ 13:
                     message.zip = reader.string();
+                    break;
+                case /* double state_tax_rate */ 14:
+                    message.stateTaxRate = reader.double();
+                    break;
+                case /* double county_tax_rate */ 15:
+                    message.countyTaxRate = reader.double();
+                    break;
+                case /* double city_tax_rate */ 16:
+                    message.cityTaxRate = reader.double();
+                    break;
+                case /* double local_tax_rate */ 17:
+                    message.localTaxRate = reader.double();
+                    break;
+                case /* double combined_tax_rate */ 18:
+                    message.combinedTaxRate = reader.double();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -991,6 +1036,21 @@ class Venue$Type extends MessageType<Venue> {
         /* string zip = 13; */
         if (message.zip !== "")
             writer.tag(13, WireType.LengthDelimited).string(message.zip);
+        /* double state_tax_rate = 14; */
+        if (message.stateTaxRate !== 0)
+            writer.tag(14, WireType.Bit64).double(message.stateTaxRate);
+        /* double county_tax_rate = 15; */
+        if (message.countyTaxRate !== 0)
+            writer.tag(15, WireType.Bit64).double(message.countyTaxRate);
+        /* double city_tax_rate = 16; */
+        if (message.cityTaxRate !== 0)
+            writer.tag(16, WireType.Bit64).double(message.cityTaxRate);
+        /* double local_tax_rate = 17; */
+        if (message.localTaxRate !== 0)
+            writer.tag(17, WireType.Bit64).double(message.localTaxRate);
+        /* double combined_tax_rate = 18; */
+        if (message.combinedTaxRate !== 0)
+            writer.tag(18, WireType.Bit64).double(message.combinedTaxRate);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

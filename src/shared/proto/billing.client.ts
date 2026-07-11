@@ -12,6 +12,7 @@ import type { TaxRateList } from "./billing";
 import type { SetEventTaxOverrideRequest } from "./billing";
 import type { TaxOverrideList } from "./billing";
 import type { TenantDashboard } from "./billing";
+import type { TaxRemittanceReport } from "./billing";
 import type { TaxReport } from "./billing";
 import type { TenantActivityList } from "./billing";
 import type { TenantActivityRequest } from "./billing";
@@ -112,6 +113,14 @@ export interface IDeveloperBillingServiceClient {
      * @generated from protobuf rpc: GetTaxReport(svyne.billing.RevenueReportRequest) returns (svyne.billing.TaxReport);
      */
     getTaxReport(input: RevenueReportRequest, options?: RpcOptions): UnaryCall<RevenueReportRequest, TaxReport>;
+    /**
+     * Monthly remittance view split by who collected the tax: 'platform' months
+     * are what Svyne owes the tax authorities; 'self' months are informational
+     * (tenants remit those themselves). Tenant breakdown inside each month.
+     *
+     * @generated from protobuf rpc: GetTaxRemittanceReport(svyne.billing.RevenueReportRequest) returns (svyne.billing.TaxRemittanceReport);
+     */
+    getTaxRemittanceReport(input: RevenueReportRequest, options?: RpcOptions): UnaryCall<RevenueReportRequest, TaxRemittanceReport>;
     /**
      * @generated from protobuf rpc: GetTenantDashboard(svyne.billing.TenantRequest) returns (svyne.billing.TenantDashboard);
      */
@@ -278,59 +287,70 @@ export class DeveloperBillingServiceClient implements IDeveloperBillingServiceCl
         return stackIntercept<RevenueReportRequest, TaxReport>("unary", this._transport, method, opt, input);
     }
     /**
+     * Monthly remittance view split by who collected the tax: 'platform' months
+     * are what Svyne owes the tax authorities; 'self' months are informational
+     * (tenants remit those themselves). Tenant breakdown inside each month.
+     *
+     * @generated from protobuf rpc: GetTaxRemittanceReport(svyne.billing.RevenueReportRequest) returns (svyne.billing.TaxRemittanceReport);
+     */
+    getTaxRemittanceReport(input: RevenueReportRequest, options?: RpcOptions): UnaryCall<RevenueReportRequest, TaxRemittanceReport> {
+        const method = this.methods[17], opt = this._transport.mergeOptions(options);
+        return stackIntercept<RevenueReportRequest, TaxRemittanceReport>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: GetTenantDashboard(svyne.billing.TenantRequest) returns (svyne.billing.TenantDashboard);
      */
     getTenantDashboard(input: TenantRequest, options?: RpcOptions): UnaryCall<TenantRequest, TenantDashboard> {
-        const method = this.methods[17], opt = this._transport.mergeOptions(options);
+        const method = this.methods[18], opt = this._transport.mergeOptions(options);
         return stackIntercept<TenantRequest, TenantDashboard>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ListTaxOverrides(svyne.common.Empty) returns (svyne.billing.TaxOverrideList);
      */
     listTaxOverrides(input: Empty, options?: RpcOptions): UnaryCall<Empty, TaxOverrideList> {
-        const method = this.methods[18], opt = this._transport.mergeOptions(options);
+        const method = this.methods[19], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, TaxOverrideList>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: SetEventTaxOverride(svyne.billing.SetEventTaxOverrideRequest) returns (svyne.common.AckResponse);
      */
     setEventTaxOverride(input: SetEventTaxOverrideRequest, options?: RpcOptions): UnaryCall<SetEventTaxOverrideRequest, AckResponse> {
-        const method = this.methods[19], opt = this._transport.mergeOptions(options);
+        const method = this.methods[20], opt = this._transport.mergeOptions(options);
         return stackIntercept<SetEventTaxOverrideRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ClearEventTaxOverride(svyne.billing.ClearEventFeeOverrideRequest) returns (svyne.common.AckResponse);
      */
     clearEventTaxOverride(input: ClearEventFeeOverrideRequest, options?: RpcOptions): UnaryCall<ClearEventFeeOverrideRequest, AckResponse> {
-        const method = this.methods[20], opt = this._transport.mergeOptions(options);
+        const method = this.methods[21], opt = this._transport.mergeOptions(options);
         return stackIntercept<ClearEventFeeOverrideRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ListTaxRates(svyne.common.Empty) returns (svyne.billing.TaxRateList);
      */
     listTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, TaxRateList> {
-        const method = this.methods[21], opt = this._transport.mergeOptions(options);
+        const method = this.methods[22], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, TaxRateList>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: LookupTaxRate(svyne.billing.TaxRateLookupRequest) returns (svyne.billing.TaxRateRow);
      */
     lookupTaxRate(input: TaxRateLookupRequest, options?: RpcOptions): UnaryCall<TaxRateLookupRequest, TaxRateRow> {
-        const method = this.methods[22], opt = this._transport.mergeOptions(options);
+        const method = this.methods[23], opt = this._transport.mergeOptions(options);
         return stackIntercept<TaxRateLookupRequest, TaxRateRow>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: RefreshAllTaxRates(svyne.common.Empty) returns (svyne.common.AckResponse);
      */
     refreshAllTaxRates(input: Empty, options?: RpcOptions): UnaryCall<Empty, AckResponse> {
-        const method = this.methods[23], opt = this._transport.mergeOptions(options);
+        const method = this.methods[24], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ListVenueTaxSummaries(svyne.common.Empty) returns (svyne.billing.VenueTaxSummaryList);
      */
     listVenueTaxSummaries(input: Empty, options?: RpcOptions): UnaryCall<Empty, VenueTaxSummaryList> {
-        const method = this.methods[24], opt = this._transport.mergeOptions(options);
+        const method = this.methods[25], opt = this._transport.mergeOptions(options);
         return stackIntercept<Empty, VenueTaxSummaryList>("unary", this._transport, method, opt, input);
     }
 }

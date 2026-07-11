@@ -166,3 +166,7 @@ export async function setEventSponsors(eventsId: string, sponsorIds: string[]): 
   const linksJson = JSON.stringify(sponsorIds.map((sponsorId, sortOrder) => ({ sponsorId, sortOrder })));
   await callRpc(() => sponsorClient.setEventSponsors({ eventsId, linksJson }));
 }
+
+export function formatTaxRate(value: number): string {
+  return (value * 100).toFixed(3);
+}

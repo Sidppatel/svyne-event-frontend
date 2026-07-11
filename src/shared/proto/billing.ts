@@ -917,6 +917,81 @@ export interface TaxReport {
     generatedAtEpochSeconds: string;
 }
 /**
+ * @generated from protobuf message svyne.billing.TaxRemitTenantRow
+ */
+export interface TaxRemitTenantRow {
+    /**
+     * @generated from protobuf field: string tenants_id = 1;
+     */
+    tenantsId: string;
+    /**
+     * @generated from protobuf field: string tenant_name = 2;
+     */
+    tenantName: string;
+    /**
+     * @generated from protobuf field: int64 tax_cents = 3;
+     */
+    taxCents: string;
+    /**
+     * @generated from protobuf field: int64 taxable_cents = 4;
+     */
+    taxableCents: string;
+    /**
+     * @generated from protobuf field: int32 orders = 5;
+     */
+    orders: number;
+}
+/**
+ * @generated from protobuf message svyne.billing.TaxRemitMonthRow
+ */
+export interface TaxRemitMonthRow {
+    /**
+     * @generated from protobuf field: int64 month_start_epoch_seconds = 1;
+     */
+    monthStartEpochSeconds: string;
+    /**
+     * @generated from protobuf field: int64 tax_cents = 2;
+     */
+    taxCents: string;
+    /**
+     * @generated from protobuf field: int64 taxable_cents = 3;
+     */
+    taxableCents: string;
+    /**
+     * @generated from protobuf field: int32 orders = 4;
+     */
+    orders: number;
+    /**
+     * @generated from protobuf field: repeated svyne.billing.TaxRemitTenantRow tenants = 5;
+     */
+    tenants: TaxRemitTenantRow[];
+}
+/**
+ * @generated from protobuf message svyne.billing.TaxRemittanceReport
+ */
+export interface TaxRemittanceReport {
+    /**
+     * @generated from protobuf field: int64 platform_total_cents = 1;
+     */
+    platformTotalCents: string;
+    /**
+     * @generated from protobuf field: int64 self_total_cents = 2;
+     */
+    selfTotalCents: string;
+    /**
+     * @generated from protobuf field: repeated svyne.billing.TaxRemitMonthRow platform_months = 3;
+     */
+    platformMonths: TaxRemitMonthRow[];
+    /**
+     * @generated from protobuf field: repeated svyne.billing.TaxRemitMonthRow self_months = 4;
+     */
+    selfMonths: TaxRemitMonthRow[];
+    /**
+     * @generated from protobuf field: int64 generated_at_epoch_seconds = 5;
+     */
+    generatedAtEpochSeconds: string;
+}
+/**
  * @generated from protobuf message svyne.billing.TenantDashboardEventRow
  */
 export interface TenantDashboardEventRow {
@@ -3978,6 +4053,243 @@ class TaxReport$Type extends MessageType<TaxReport> {
  */
 export const TaxReport = new TaxReport$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class TaxRemitTenantRow$Type extends MessageType<TaxRemitTenantRow> {
+    constructor() {
+        super("svyne.billing.TaxRemitTenantRow", [
+            { no: 1, name: "tenants_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "tenant_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "tax_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 4, name: "taxable_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 5, name: "orders", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRemitTenantRow>): TaxRemitTenantRow {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.tenantsId = "";
+        message.tenantName = "";
+        message.taxCents = "0";
+        message.taxableCents = "0";
+        message.orders = 0;
+        if (value !== undefined)
+            reflectionMergePartial<TaxRemitTenantRow>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRemitTenantRow): TaxRemitTenantRow {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string tenants_id */ 1:
+                    message.tenantsId = reader.string();
+                    break;
+                case /* string tenant_name */ 2:
+                    message.tenantName = reader.string();
+                    break;
+                case /* int64 tax_cents */ 3:
+                    message.taxCents = reader.int64().toString();
+                    break;
+                case /* int64 taxable_cents */ 4:
+                    message.taxableCents = reader.int64().toString();
+                    break;
+                case /* int32 orders */ 5:
+                    message.orders = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRemitTenantRow, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string tenants_id = 1; */
+        if (message.tenantsId !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.tenantsId);
+        /* string tenant_name = 2; */
+        if (message.tenantName !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.tenantName);
+        /* int64 tax_cents = 3; */
+        if (message.taxCents !== "0")
+            writer.tag(3, WireType.Varint).int64(message.taxCents);
+        /* int64 taxable_cents = 4; */
+        if (message.taxableCents !== "0")
+            writer.tag(4, WireType.Varint).int64(message.taxableCents);
+        /* int32 orders = 5; */
+        if (message.orders !== 0)
+            writer.tag(5, WireType.Varint).int32(message.orders);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRemitTenantRow
+ */
+export const TaxRemitTenantRow = new TaxRemitTenantRow$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class TaxRemitMonthRow$Type extends MessageType<TaxRemitMonthRow> {
+    constructor() {
+        super("svyne.billing.TaxRemitMonthRow", [
+            { no: 1, name: "month_start_epoch_seconds", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 2, name: "tax_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 3, name: "taxable_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 4, name: "orders", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "tenants", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TaxRemitTenantRow }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRemitMonthRow>): TaxRemitMonthRow {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.monthStartEpochSeconds = "0";
+        message.taxCents = "0";
+        message.taxableCents = "0";
+        message.orders = 0;
+        message.tenants = [];
+        if (value !== undefined)
+            reflectionMergePartial<TaxRemitMonthRow>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRemitMonthRow): TaxRemitMonthRow {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int64 month_start_epoch_seconds */ 1:
+                    message.monthStartEpochSeconds = reader.int64().toString();
+                    break;
+                case /* int64 tax_cents */ 2:
+                    message.taxCents = reader.int64().toString();
+                    break;
+                case /* int64 taxable_cents */ 3:
+                    message.taxableCents = reader.int64().toString();
+                    break;
+                case /* int32 orders */ 4:
+                    message.orders = reader.int32();
+                    break;
+                case /* repeated svyne.billing.TaxRemitTenantRow tenants */ 5:
+                    message.tenants.push(TaxRemitTenantRow.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRemitMonthRow, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int64 month_start_epoch_seconds = 1; */
+        if (message.monthStartEpochSeconds !== "0")
+            writer.tag(1, WireType.Varint).int64(message.monthStartEpochSeconds);
+        /* int64 tax_cents = 2; */
+        if (message.taxCents !== "0")
+            writer.tag(2, WireType.Varint).int64(message.taxCents);
+        /* int64 taxable_cents = 3; */
+        if (message.taxableCents !== "0")
+            writer.tag(3, WireType.Varint).int64(message.taxableCents);
+        /* int32 orders = 4; */
+        if (message.orders !== 0)
+            writer.tag(4, WireType.Varint).int32(message.orders);
+        /* repeated svyne.billing.TaxRemitTenantRow tenants = 5; */
+        for (let i = 0; i < message.tenants.length; i++)
+            TaxRemitTenantRow.internalBinaryWrite(message.tenants[i], writer.tag(5, WireType.LengthDelimited).fork(), options).join();
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRemitMonthRow
+ */
+export const TaxRemitMonthRow = new TaxRemitMonthRow$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class TaxRemittanceReport$Type extends MessageType<TaxRemittanceReport> {
+    constructor() {
+        super("svyne.billing.TaxRemittanceReport", [
+            { no: 1, name: "platform_total_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 2, name: "self_total_cents", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
+            { no: 3, name: "platform_months", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TaxRemitMonthRow },
+            { no: 4, name: "self_months", kind: "message", repeat: 2 /*RepeatType.UNPACKED*/, T: () => TaxRemitMonthRow },
+            { no: 5, name: "generated_at_epoch_seconds", kind: "scalar", T: 3 /*ScalarType.INT64*/ }
+        ]);
+    }
+    create(value?: PartialMessage<TaxRemittanceReport>): TaxRemittanceReport {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.platformTotalCents = "0";
+        message.selfTotalCents = "0";
+        message.platformMonths = [];
+        message.selfMonths = [];
+        message.generatedAtEpochSeconds = "0";
+        if (value !== undefined)
+            reflectionMergePartial<TaxRemittanceReport>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: TaxRemittanceReport): TaxRemittanceReport {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* int64 platform_total_cents */ 1:
+                    message.platformTotalCents = reader.int64().toString();
+                    break;
+                case /* int64 self_total_cents */ 2:
+                    message.selfTotalCents = reader.int64().toString();
+                    break;
+                case /* repeated svyne.billing.TaxRemitMonthRow platform_months */ 3:
+                    message.platformMonths.push(TaxRemitMonthRow.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* repeated svyne.billing.TaxRemitMonthRow self_months */ 4:
+                    message.selfMonths.push(TaxRemitMonthRow.internalBinaryRead(reader, reader.uint32(), options));
+                    break;
+                case /* int64 generated_at_epoch_seconds */ 5:
+                    message.generatedAtEpochSeconds = reader.int64().toString();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: TaxRemittanceReport, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* int64 platform_total_cents = 1; */
+        if (message.platformTotalCents !== "0")
+            writer.tag(1, WireType.Varint).int64(message.platformTotalCents);
+        /* int64 self_total_cents = 2; */
+        if (message.selfTotalCents !== "0")
+            writer.tag(2, WireType.Varint).int64(message.selfTotalCents);
+        /* repeated svyne.billing.TaxRemitMonthRow platform_months = 3; */
+        for (let i = 0; i < message.platformMonths.length; i++)
+            TaxRemitMonthRow.internalBinaryWrite(message.platformMonths[i], writer.tag(3, WireType.LengthDelimited).fork(), options).join();
+        /* repeated svyne.billing.TaxRemitMonthRow self_months = 4; */
+        for (let i = 0; i < message.selfMonths.length; i++)
+            TaxRemitMonthRow.internalBinaryWrite(message.selfMonths[i], writer.tag(4, WireType.LengthDelimited).fork(), options).join();
+        /* int64 generated_at_epoch_seconds = 5; */
+        if (message.generatedAtEpochSeconds !== "0")
+            writer.tag(5, WireType.Varint).int64(message.generatedAtEpochSeconds);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message svyne.billing.TaxRemittanceReport
+ */
+export const TaxRemittanceReport = new TaxRemittanceReport$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class TenantDashboardEventRow$Type extends MessageType<TenantDashboardEventRow> {
     constructor() {
         super("svyne.billing.TenantDashboardEventRow", [
@@ -4639,6 +4951,7 @@ export const DeveloperBillingService = new ServiceType("svyne.billing.DeveloperB
     { name: "GetRevenueReport", options: {}, I: RevenueReportRequest, O: RevenueReport },
     { name: "GetTenantActivity", options: {}, I: TenantActivityRequest, O: TenantActivityList },
     { name: "GetTaxReport", options: {}, I: RevenueReportRequest, O: TaxReport },
+    { name: "GetTaxRemittanceReport", options: {}, I: RevenueReportRequest, O: TaxRemittanceReport },
     { name: "GetTenantDashboard", options: {}, I: TenantRequest, O: TenantDashboard },
     { name: "ListTaxOverrides", options: {}, I: Empty, O: TaxOverrideList },
     { name: "SetEventTaxOverride", options: {}, I: SetEventTaxOverrideRequest, O: AckResponse },

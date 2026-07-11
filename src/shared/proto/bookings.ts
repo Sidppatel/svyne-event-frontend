@@ -130,6 +130,14 @@ export interface Booking {
      * @generated from protobuf field: string venue_state = 26;
      */
     venueState: string;
+    /**
+     * @generated from protobuf field: string payment_method_type = 27;
+     */
+    paymentMethodType: string;
+    /**
+     * @generated from protobuf field: string payment_method_last4 = 28;
+     */
+    paymentMethodLast4: string;
 }
 /**
  * One line of a booking, for display on checkout / booking detail. Carries the
@@ -1027,7 +1035,9 @@ class Booking$Type extends MessageType<Booking> {
             { no: 23, name: "service_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 24, name: "venue_zip", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 25, name: "venue_city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 26, name: "venue_state", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 26, name: "venue_state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 27, name: "payment_method_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 28, name: "payment_method_last4", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Booking>): Booking {
@@ -1058,6 +1068,8 @@ class Booking$Type extends MessageType<Booking> {
         message.venueZip = "";
         message.venueCity = "";
         message.venueState = "";
+        message.paymentMethodType = "";
+        message.paymentMethodLast4 = "";
         if (value !== undefined)
             reflectionMergePartial<Booking>(this, message, value);
         return message;
@@ -1144,6 +1156,12 @@ class Booking$Type extends MessageType<Booking> {
                     break;
                 case /* string venue_state */ 26:
                     message.venueState = reader.string();
+                    break;
+                case /* string payment_method_type */ 27:
+                    message.paymentMethodType = reader.string();
+                    break;
+                case /* string payment_method_last4 */ 28:
+                    message.paymentMethodLast4 = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1235,6 +1253,12 @@ class Booking$Type extends MessageType<Booking> {
         /* string venue_state = 26; */
         if (message.venueState !== "")
             writer.tag(26, WireType.LengthDelimited).string(message.venueState);
+        /* string payment_method_type = 27; */
+        if (message.paymentMethodType !== "")
+            writer.tag(27, WireType.LengthDelimited).string(message.paymentMethodType);
+        /* string payment_method_last4 = 28; */
+        if (message.paymentMethodLast4 !== "")
+            writer.tag(28, WireType.LengthDelimited).string(message.paymentMethodLast4);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

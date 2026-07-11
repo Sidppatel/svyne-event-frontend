@@ -9,7 +9,7 @@ import { Label } from '@/shared/ui/label';
 import { Button } from '@/shared/ui/button';
 import { CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { cn } from '@/shared/lib/cn';
-import { ChevronDown, ChevronUp, Ticket, Calendar, CreditCard, Download } from 'lucide-react';
+import { ChevronDown, ChevronUp, Ticket, Calendar, CreditCard, Download, Receipt } from 'lucide-react';
 import type { Booking } from '@/shared/proto/bookings';
 
 export function AdminBookingsPage() {
@@ -33,7 +33,7 @@ export function AdminBookingsPage() {
     downloadCsv(
       'bookings.csv',
       ['booking_number', 'event', 'status', 'seats', 'tickets_claimed', 'tickets_total',
-       'subtotal', 'fees', 'total', 'transaction_id'],
+       'subtotal', 'fees', 'tax', 'total', 'transaction_id'],
       (data ?? []).map((b) => [
         b.bookingNumber,
         b.eventTitle,
@@ -42,7 +42,8 @@ export function AdminBookingsPage() {
         b.ticketsClaimed,
         b.ticketsTotal,
         centsToUSD(b.subtotalCents),
-        centsToUSD(b.feeCents),
+        centsToUSD(b.serviceFeeCents),
+        centsToUSD(b.taxCents),
         centsToUSD(b.totalCents),
         b.paymentTransactionId,
       ]),
@@ -174,15 +175,17 @@ function BookingRow({ booking, isExpanded, onToggle }: { booking: Booking; isExp
               </div>
               
               <div className="flex items-start gap-3">
-                <CreditCard className="h-4 w-4 text-muted-foreground mt-0.5" />
+                <Receipt className="h-4 w-4 text-muted-foreground mt-0.5" />
                 <div>
                   <p className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground">Payment Details</p>
-                  <p className="text-sm font-medium text-foreground">
-                    Tx: {booking.paymentTransactionId || 'N/A'}
-                  </p>
-                  {Number(booking.paidAt) > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      Purchased: {formatEventDate(booking.paidAt)}
+                  <p className="text-sm font-medium text-foreground font-mono">{booking.paymentTransactionId || 'No Transaction ID'}</p>
+                  {booking.paidAt && booking.paidAt !== '0' && (
+                    <p className="text-xs text-muted-foreground">Purchased: {formatEventDate(booking.paidAt)}</p>
+                  )}
+                  {booking.paymentMethodType && (
+                    <p className="text-xs text-muted-foreground capitalize">
+                      {booking.paymentMethodType.replace('_', ' ')}
+                      {booking.paymentMethodLast4 ? ` •••• ${booking.paymentMethodLast4}` : ''}
                     </p>
                   )}
                 </div>
@@ -198,7 +201,13 @@ function BookingRow({ booking, isExpanded, onToggle }: { booking: Booking; isExp
                     <span className="text-muted-foreground">Subtotal</span>
                     <span className="font-medium text-right">{centsToUSD(booking.subtotalCents)}</span>
                     <span className="text-muted-foreground">Fees</span>
-                    <span className="font-medium text-right">{centsToUSD(booking.feeCents)}</span>
+                    <span className="font-medium text-right">{centsToUSD(booking.serviceFeeCents)}</span>
+                    {booking.taxCents > 0 && (
+                      <>
+                        <span className="text-muted-foreground">Tax</span>
+                        <span className="font-medium text-right">{centsToUSD(booking.taxCents)}</span>
+                      </>
+                    )}
                     <span className="text-muted-foreground font-semibold pt-1 border-t border-border/40 mt-1">Total Paid</span>
                     <span className="font-bold text-foreground text-right pt-1 border-t border-border/40 mt-1">{centsToUSD(booking.totalCents)}</span>
                   </div>

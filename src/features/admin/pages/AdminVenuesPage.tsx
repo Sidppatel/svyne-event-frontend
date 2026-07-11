@@ -8,6 +8,7 @@ import {
   addVenueImage,
   removeVenueImage,
   setPrimaryVenueImage,
+  formatTaxRate,
   type VenueDraft,
 } from '@/features/admin/services/catalogService';
 import { rpcErrorMessage } from '@/shared/session';
@@ -25,6 +26,7 @@ import {
   isValidEmail,
   isValidState,
   isValidUsPhone,
+  isValidZip,
   toPhoneE164,
   formatUsPhone,
 } from '@/shared/lib/validation';
@@ -42,6 +44,9 @@ export function venueError(draft: VenueDraft): string | null {
   }
   if (draft.state && !isValidState(draft.state)) {
     return 'Select a valid US state';
+  }
+  if (draft.zip && !isValidZip(draft.zip)) {
+    return 'Zip must be 5 digits';
   }
   return null;
 }
@@ -259,6 +264,25 @@ function VenueRow({ venue, onChanged }: { venue: Venue; onChanged: () => void })
                 {[venue.city, venue.state].filter(Boolean).join(', ')}
               </span>
             ) : null}
+            {venue.combinedTaxRate > 0 ? (
+              <div className="mt-1 flex items-center gap-2">
+                <span className="inline-flex items-center rounded bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
+                  Tax Rate: {formatTaxRate(venue.combinedTaxRate)}%
+                </span>
+                <span className="text-[10px] text-muted-foreground/80">
+                  (State: {formatTaxRate(venue.stateTaxRate)}% |
+                  County: {formatTaxRate(venue.countyTaxRate)}% |
+                  City: {formatTaxRate(venue.cityTaxRate)}% |
+                  Local: {formatTaxRate(venue.localTaxRate)}%)
+                </span>
+              </div>
+            ) : (
+              <div className="mt-1">
+                <span className="inline-flex items-center rounded bg-warning/10 px-2 py-0.5 text-[10px] font-semibold text-warning">
+                  {venue.zip ? 'Tax Rate: 0.000%' : 'No tax rate — add a zip code'}
+                </span>
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={venue.isActive} onCheckedChange={(v) => persist(v)} label="Enabled" />
