@@ -72,7 +72,7 @@ export function FloorPlanMock() {
     <div className="rounded-xl bg-stage-elevated p-5 shadow-[var(--shadow-e2)]">
       <div className="mb-4 flex items-center justify-between">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-stage-soft">Skyline Terrace · floor plan</p>
-        <span className="rounded-full bg-voltage/20 px-2.5 py-1 font-mono text-[11px] text-voltage">
+        <span className="rounded-full bg-voltage px-2.5 py-1 font-mono text-[11px] text-voltage-ink">
           T-4 held · 9:42 left
         </span>
       </div>
@@ -89,7 +89,7 @@ export function FloorPlanMock() {
               table.row,
               table.shape === 'round' ? 'rounded-full' : 'rounded-md',
               table.state === 'open' && 'border border-on-stage-soft/40 text-on-stage',
-              table.state === 'sold' && 'bg-on-stage-soft/15 text-on-stage-soft/50 line-through',
+              table.state === 'sold' && 'bg-on-stage-soft/15 text-on-stage-soft line-through',
               table.state === 'held' && 'bg-voltage text-voltage-ink shadow-[var(--shadow-e1)]',
             )}
           >

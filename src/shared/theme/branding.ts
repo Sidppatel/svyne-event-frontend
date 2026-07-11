@@ -76,7 +76,9 @@ export function contrastGrade(hexA: string, hexB: string): ContrastGrade {
 }
 
 export function readableTextOn(backgroundHex: string): string {
-  return relativeLuminance(backgroundHex) > 0.4 ? '#1c1917' : '#ffffff';
+  return contrastRatio(backgroundHex, '#1c1917') >= contrastRatio(backgroundHex, '#ffffff')
+    ? '#1c1917'
+    : '#ffffff';
 }
 
 export function resolveCssColor(varName: string, alpha?: number): string {
@@ -260,7 +262,7 @@ export function brandingCssVars(branding: TenantBranding): Record<string, string
   if (isHexColor(branding.text)) {
     set('--ink', branding.text);
     set('--ink-soft', `color-mix(in srgb, ${branding.text} 72%, ${branding.background || '#ffffff'})`);
-    set('--ink-faint', `color-mix(in srgb, ${branding.text} 45%, ${branding.background || '#ffffff'})`);
+    set('--ink-faint', `color-mix(in srgb, ${branding.text} 62%, ${branding.background || '#ffffff'})`);
   }
   if (isHexColor(branding.text) && isHexColor(branding.background)) {
     set('--hairline', `color-mix(in srgb, ${branding.text} 10%, ${branding.background})`);

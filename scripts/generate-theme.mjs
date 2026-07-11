@@ -14,7 +14,7 @@ const FAMILIES = {
       'surface-sunken': '#f3f0eb',
       hairline: '#e7e2db',
       'hairline-strong': '#d6cfc5',
-      'ink-faint': '#a8a29e',
+      'ink-faint': '#76716b',
       'ink-soft': '#57534e',
       'stage-elevated': '#292524',
       ink: '#1c1917',
