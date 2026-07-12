@@ -1,28 +1,66 @@
+import { lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { NotFoundPage } from '@/shared/components/StatusPages';
 import { PublicLayout } from '@/shared/components/layouts/PublicLayout';
 import { authRoutes, authenticated } from '@/app/authRoutes';
-import { EventListPage } from '@/features/public/pages/EventListPage';
 import { TenantLandingPage } from '@/features/public/pages/TenantLandingPage';
 import { currentTenantSlug } from '@/shared/subdomain';
-import { EventDetailPage } from '@/features/public/pages/EventDetailPage';
-import { PerformerProfilePage } from '@/features/public/pages/PerformerProfilePage';
-import { SponsorProfilePage } from '@/features/public/pages/SponsorProfilePage';
-import { TicketsPage } from '@/features/public/pages/TicketsPage';
-import { BookingsPage } from '@/features/public/pages/BookingsPage';
-import { ProfilePage } from '@/features/public/pages/ProfilePage';
-import { BookingDetailPage } from '@/features/public/pages/BookingDetailPage';
-import { CheckoutPage } from '@/features/public/pages/CheckoutPage';
-import { ClaimTicketPage } from '@/features/public/pages/ClaimTicketPage';
-import { FeedbackPage } from '@/features/public/pages/FeedbackPage';
-import { OrganizerPage } from '@/features/public/pages/OrganizerPage';
-import { TermsPage } from '@/features/public/pages/TermsPage';
-import { PrivacyPage } from '@/features/public/pages/PrivacyPage';
-import { RefundPolicyPage } from '@/features/public/pages/RefundPolicyPage';
-import { HelpCenterPage } from '@/features/public/pages/HelpCenterPage';
-import { ContactSupportPage } from '@/features/public/pages/ContactSupportPage';
-import { GetStartedPage } from '@/features/public/pages/GetStartedPage';
+
+const EventListPage = lazy(() =>
+  import('@/features/public/pages/EventListPage').then((m) => ({ default: m.EventListPage })),
+);
+const EventDetailPage = lazy(() =>
+  import('@/features/public/pages/EventDetailPage').then((m) => ({ default: m.EventDetailPage })),
+);
+const PerformerProfilePage = lazy(() =>
+  import('@/features/public/pages/PerformerProfilePage').then((m) => ({ default: m.PerformerProfilePage })),
+);
+const SponsorProfilePage = lazy(() =>
+  import('@/features/public/pages/SponsorProfilePage').then((m) => ({ default: m.SponsorProfilePage })),
+);
+const TicketsPage = lazy(() =>
+  import('@/features/public/pages/TicketsPage').then((m) => ({ default: m.TicketsPage })),
+);
+const BookingsPage = lazy(() =>
+  import('@/features/public/pages/BookingsPage').then((m) => ({ default: m.BookingsPage })),
+);
+const ProfilePage = lazy(() =>
+  import('@/features/public/pages/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
+const BookingDetailPage = lazy(() =>
+  import('@/features/public/pages/BookingDetailPage').then((m) => ({ default: m.BookingDetailPage })),
+);
+const CheckoutPage = lazy(() =>
+  import('@/features/public/pages/CheckoutPage').then((m) => ({ default: m.CheckoutPage })),
+);
+const ClaimTicketPage = lazy(() =>
+  import('@/features/public/pages/ClaimTicketPage').then((m) => ({ default: m.ClaimTicketPage })),
+);
+const FeedbackPage = lazy(() =>
+  import('@/features/public/pages/FeedbackPage').then((m) => ({ default: m.FeedbackPage })),
+);
+const OrganizerPage = lazy(() =>
+  import('@/features/public/pages/OrganizerPage').then((m) => ({ default: m.OrganizerPage })),
+);
+const TermsPage = lazy(() =>
+  import('@/features/public/pages/TermsPage').then((m) => ({ default: m.TermsPage })),
+);
+const PrivacyPage = lazy(() =>
+  import('@/features/public/pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
+);
+const RefundPolicyPage = lazy(() =>
+  import('@/features/public/pages/RefundPolicyPage').then((m) => ({ default: m.RefundPolicyPage })),
+);
+const HelpCenterPage = lazy(() =>
+  import('@/features/public/pages/HelpCenterPage').then((m) => ({ default: m.HelpCenterPage })),
+);
+const ContactSupportPage = lazy(() =>
+  import('@/features/public/pages/ContactSupportPage').then((m) => ({ default: m.ContactSupportPage })),
+);
+const GetStartedPage = lazy(() =>
+  import('@/features/public/pages/GetStartedPage').then((m) => ({ default: m.GetStartedPage })),
+);
 
 export default function PublicRoutes() {
   return (

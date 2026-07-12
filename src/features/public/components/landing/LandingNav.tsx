@@ -31,7 +31,7 @@ export function LandingNav() {
           <span className="flex items-center gap-1.5 font-display text-xl">
             <span className="h-1.5 w-1.5 rounded-full bg-voltage" /> Svyne
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-on-stage-soft">The box office</span>
+          <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-on-stage-soft sm:inline">The box office</span>
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           {sections.map((s) => (

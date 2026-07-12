@@ -9,6 +9,21 @@
     content="Tickets and tables for premium events, sold under your own brand. Attendees pick their exact table; organizers keep every dollar." />
   <meta name="theme-color" content="#8a2d3b" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <script>
+    (function () {
+      var h = window.location.hostname;
+      var isRoot = h === 'localhost' || h === 'www.svyne.com' || h.split('.').length <= 2;
+      var storedPortal = window.localStorage.getItem('svyne-portal');
+      if (isRoot && (!storedPortal || storedPortal === 'public')) {
+        var l = document.createElement('link');
+        l.rel = 'preload';
+        l.as = 'image';
+        l.href = '/hero.webp';
+        l.fetchPriority = 'high';
+        document.head.appendChild(l);
+      }
+    })();
+  </script>
   <meta property="og:site_name" content="Svyne Events" />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Svyne Events" />

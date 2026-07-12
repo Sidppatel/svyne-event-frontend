@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { createPlatformLead } from '@/features/public/services/platformLeadService';
-import { rpcErrorMessage } from '@/shared/session';
 import { formatUsPhone } from '@/shared/lib/validation';
 import {
   Accessibility,
@@ -167,10 +165,10 @@ export function EventNightShowcase() {
         </div>
         <div data-reveal className="relative">
           <ScannerMock />
-          <span className="absolute -left-2 top-6 rounded-full bg-surface px-3 py-1.5 font-mono text-[11px] text-ink shadow-[var(--shadow-e1)]">
+          <span className="absolute -left-2 top-6 rounded-full bg-surface px-3 py-1.5 font-mono text-xs text-ink shadow-[var(--shadow-e1)]">
             no app store · just a link
           </span>
-          <span className="absolute -right-1 bottom-10 rounded-full bg-brand px-3 py-1.5 font-mono text-[11px] text-brand-ink shadow-[var(--shadow-e1)]">
+          <span className="absolute -right-1 bottom-10 rounded-full bg-brand px-3 py-1.5 font-mono text-xs text-brand-ink shadow-[var(--shadow-e1)]">
             magic-link in 15 min
           </span>
         </div>
@@ -196,18 +194,18 @@ export function FeatureLedger() {
       <h2 data-split className="font-display text-3xl text-ink md:text-4xl">
         Small details, <em className="italic text-brand">big nights.</em>
       </h2>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid border-t border-hairline sm:grid-cols-2">
         {ledger.map(([Icon, term, detail]) => (
           <div
             data-reveal
             key={term}
-            className="rounded-2xl border border-hairline bg-surface p-6 shadow-[var(--shadow-e1)]"
+            className="flex gap-4 border-b border-hairline py-6 sm:odd:pr-10 sm:even:border-l sm:even:pl-10"
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-stage text-voltage">
-              <Icon className="h-5 w-5" strokeWidth={1.75} />
-            </span>
-            <h3 className="mt-5 font-display text-lg text-ink">{term}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink-soft">{detail}</p>
+            <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden />
+            <div>
+              <h3 className="font-display text-lg text-ink">{term}</h3>
+              <p className="mt-1 max-w-[46ch] text-sm leading-relaxed text-ink-soft">{detail}</p>
+            </div>
           </div>
         ))}
       </div>
@@ -223,7 +221,7 @@ export function FounderNote() {
         <h2 data-split className="font-display text-3xl text-ink md:text-4xl">
           The person who sweeps the floor at 3 AM <em className="italic text-brand">should keep the money.</em>
         </h2>
-        <div data-reveal className="space-y-4 leading-relaxed text-ink-soft">
+        <div data-reveal className="max-w-[65ch] space-y-4 leading-relaxed text-ink-soft [text-wrap:pretty]">
           <p>
             I spent five years in business intelligence watching how enterprise software companies
             price their products. They charge what the market will bear, not what the product costs
@@ -407,6 +405,7 @@ export function ClosingCta() {
     setSubmitting(true);
     setError(null);
     try {
+      const { createPlatformLead } = await import('@/features/public/services/platformLeadService');
       await createPlatformLead({
         name,
         companyName: venue || name,
@@ -416,6 +415,7 @@ export function ClosingCta() {
       });
       setSent(true);
     } catch (caught) {
+      const { rpcErrorMessage } = await import('@/shared/session');
       setError(rpcErrorMessage(caught));
     } finally {
       setSubmitting(false);
@@ -479,7 +479,7 @@ export function ClosingCta() {
         <Link to="/refund-policy" className="hover:text-ink">Refund policy</Link>
         <Link to="/help" className="hover:text-ink">Help center</Link>
         <Link to="/contact" className="hover:text-ink">Contact</Link>
-        <span className="ml-auto font-mono">All sales final.</span>
+        <span className="w-full font-mono sm:ml-auto sm:w-auto">All sales final.</span>
       </div>
     </section>
   );

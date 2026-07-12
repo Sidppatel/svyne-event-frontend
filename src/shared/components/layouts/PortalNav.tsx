@@ -7,7 +7,6 @@ import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/shared/
 import { useAuth } from '@/shared/auth/useAuth';
 import { useTenantBranding } from '@/shared/theme/ThemeContext';
 import { roleLabel } from '@/shared/roles';
-import { logout } from '@/features/auth/services/authService';
 import { cn } from '@/shared/lib/cn';
 
 export interface NavLink {
@@ -112,6 +111,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
   const [scrolled, setScrolled] = useState(false);
 
   async function handleLogout() {
+    const { logout } = await import('@/features/auth/services/authService');
     await logout();
     navigate('/login');
   }

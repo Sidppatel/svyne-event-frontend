@@ -80,3 +80,12 @@ export function resolvePortalContext(): PortalContext {
 export function currentTenantSlug(): string {
   return resolvePortalContext().tenantSlug;
 }
+
+export function tenantUrl(slug: string): string {
+  const { protocol, hostname, port } = window.location;
+  const baseHost = hostname.endsWith('.localhost')
+    ? hostname.slice(hostname.indexOf('.') + 1)
+    : hostname.split('.').slice(-2).join('.');
+  const portSuffix = port ? `:${port}` : '';
+  return `${protocol}//${slug}.${baseHost}${portSuffix}/`;
+}

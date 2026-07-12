@@ -69,8 +69,8 @@
   --on-stage-soft: var(--color-sand-500);
 
   --font-body-stack: 'Inter', -apple-system, system-ui, sans-serif;
-  --font-display-stack: 'Fraunces', 'Georgia', serif;
-  --font-accent-stack: 'Fraunces', 'Georgia', serif;
+  --font-display-stack: 'Fraunces Variable', 'Fraunces', 'Georgia', serif;
+  --font-accent-stack: 'Fraunces Variable', 'Fraunces', 'Georgia', serif;
   --font-mono-stack: 'JetBrains Mono', ui-monospace, monospace;
 
   --radius-input: 4px;

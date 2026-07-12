@@ -6,7 +6,6 @@ import {
   type TenantBranding,
 } from '@/shared/theme/branding';
 import { resolvePortalContext } from '@/shared/subdomain';
-import { tenantClient } from '@/shared/apiClient';
 
 interface ThemeContextValue {
   branding: TenantBranding;
@@ -38,9 +37,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       return;
     }
     let cancelled = false;
-    tenantClient
-      .getPublicTenantBranding({ slug: tenantSlug })
-      .response.then((fetched) => {
+    import('@/shared/apiClient')
+      .then(({ tenantClient }) => tenantClient.getPublicTenantBranding({ slug: tenantSlug }).response)
+      .then((fetched) => {
         if (cancelled) {
           return;
         }

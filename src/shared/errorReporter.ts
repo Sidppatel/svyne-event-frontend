@@ -1,4 +1,3 @@
-import { logClient } from '@/shared/apiClient';
 import type { ClientErrorReport } from '@/shared/proto/admin';
 
 const FLUSH_INTERVAL_MS = 5000;
@@ -112,6 +111,7 @@ async function flush(): Promise<void> {
   queue = [];
   localStorage.removeItem(OFFLINE_STORAGE_KEY);
   try {
+    const { logClient } = await import('@/shared/apiClient');
     await logClient.reportClientErrors({ reports: pending.slice(0, 20) }).response;
   } catch {
     saveOfflineReports(pending);

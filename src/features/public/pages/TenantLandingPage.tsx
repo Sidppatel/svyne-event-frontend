@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { useLandingReveal } from '@/features/public/hooks/useLandingReveal';
-import { listPublicTenants, tenantUrl } from '@/features/public/services/tenantDirectoryService';
+import { tenantUrl } from '@/shared/subdomain';
 import { Card, CardContent, CardTitle } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { LandingHero } from '@/features/public/components/landing/LandingHero';
@@ -19,7 +19,13 @@ import {
 } from '@/features/public/components/landing/LandingSections';
 
 function OrganizerDirectory() {
-  const loader = useCallback(() => listPublicTenants(), []);
+  const loader = useCallback(
+    () =>
+      import('@/features/public/services/tenantDirectoryService').then((m) =>
+        m.listPublicTenants(),
+      ),
+    [],
+  );
   const { data, loading, error } = useAsync(loader);
 
   return (
@@ -43,7 +49,7 @@ function OrganizerDirectory() {
               >
                 <Card
                   interactive
-                  className="h-full transition-[transform,box-shadow] duration-[280ms] ease-[var(--ease-spring)] hover:-translate-y-1 hover:shadow-[var(--shadow-e2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  className="h-full transition-[transform,box-shadow] duration-[280ms] ease-[var(--ease-out)] hover:-translate-y-1 hover:shadow-[var(--shadow-e2)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <CardContent className="space-y-1">
                     <CardTitle>{tenant.name}</CardTitle>

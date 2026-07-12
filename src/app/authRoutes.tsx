@@ -1,11 +1,25 @@
+import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 import { NotAuthorizedPage } from '@/shared/components/StatusPages';
-import { LoginPage } from '@/features/auth/pages/LoginPage';
-import { RegisterPage } from '@/features/auth/pages/RegisterPage';
-import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage';
-import { SetPasswordPage } from '@/features/auth/pages/SetPasswordPage';
-import { MagicLinkVerifyPage } from '@/features/auth/pages/MagicLinkVerifyPage';
-import { AcceptInvitationPage } from '@/features/auth/pages/AcceptInvitationPage';
+
+const LoginPage = lazy(() =>
+  import('@/features/auth/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
+);
+const RegisterPage = lazy(() =>
+  import('@/features/auth/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })),
+);
+const ForgotPasswordPage = lazy(() =>
+  import('@/features/auth/pages/ForgotPasswordPage').then((m) => ({ default: m.ForgotPasswordPage })),
+);
+const SetPasswordPage = lazy(() =>
+  import('@/features/auth/pages/SetPasswordPage').then((m) => ({ default: m.SetPasswordPage })),
+);
+const MagicLinkVerifyPage = lazy(() =>
+  import('@/features/auth/pages/MagicLinkVerifyPage').then((m) => ({ default: m.MagicLinkVerifyPage })),
+);
+const AcceptInvitationPage = lazy(() =>
+  import('@/features/auth/pages/AcceptInvitationPage').then((m) => ({ default: m.AcceptInvitationPage })),
+);
 
 export function authRoutes(options?: { allowRegister?: boolean }) {
   return (

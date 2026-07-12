@@ -138,7 +138,7 @@ function TicketCard({ cardRef }: { cardRef: React.Ref<HTMLDivElement> }) {
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">Admit six</p>
           <p className="font-mono text-[11px] text-ink-faint">FRI · AUG 21 · 10 PM</p>
         </div>
-        <h3 className="font-display text-3xl text-ink">Solstice Rooftop</h3>
+        <p className="font-display text-3xl text-ink">Solstice Rooftop</p>
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="text-xs text-ink-soft">VIP Table T-4 · 6 seats</p>
@@ -230,7 +230,7 @@ export function FloorPlanMock() {
   );
 
   return (
-    <div className="rounded-xl bg-stage-elevated p-5 shadow-[var(--shadow-e2)]">
+    <div className="rounded-xl bg-stage-elevated p-5 shadow-[var(--shadow-e1)]">
       <div className="mb-4 flex items-center justify-between">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-stage-soft">Skyline Terrace · floor plan</p>
         <span className="rounded-full bg-voltage px-2.5 py-1 font-mono text-[11px] text-voltage-ink">
@@ -240,7 +240,7 @@ export function FloorPlanMock() {
       <div className="mb-3 rounded-md border border-on-stage-soft/30 py-1.5 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-on-stage-soft">
         Stage
       </div>
-      <div ref={boardRef} className="relative mx-auto h-[248px] w-full max-w-[440px] touch-none">
+      <div ref={boardRef} className="relative mx-auto aspect-[440/248] w-full max-w-[440px] touch-none">
         {TABLE_LAYOUT.map((table, i) => {
           const isSold = sold.has(i);
           const isHeld = i === HELD_INDEX;
@@ -251,9 +251,9 @@ export function FloorPlanMock() {
               ref={(el) => {
                 tileRefs.current[i] = el;
               }}
-              style={{ left: table.x, top: table.y }}
+              style={{ left: `${(table.x / 440) * 100}%`, top: `${(table.y / 248) * 100}%` }}
               className={cn(
-                'absolute flex h-[52px] w-[52px] select-none items-center justify-center font-mono text-[11px]',
+                'absolute flex aspect-square w-[11.8%] select-none items-center justify-center font-mono text-[11px]',
                 table.shape === 'round' ? 'rounded-full' : 'rounded-md',
                 isOpen && 'cursor-grab border border-on-stage-soft/40 text-on-stage transition-shadow hover:shadow-[0_0_14px_color-mix(in_srgb,var(--voltage-accent)_35%,transparent)] active:cursor-grabbing',
                 isSold && 'bg-on-stage-soft/15 text-on-stage-soft line-through',
@@ -284,7 +284,7 @@ const revenueBars = ['h-7', 'h-10', 'h-8', 'h-14', 'h-12', 'h-20', 'h-24'];
 
 export function DashboardMock() {
   return (
-    <div className="overflow-hidden rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e2)]">
+    <div className="overflow-hidden rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e1)]">
       <div className="flex items-center justify-between border-b border-hairline px-5 py-3">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">Solstice Rooftop · live</p>
         <span className="flex items-center gap-1.5 font-mono text-[11px] text-success">
@@ -292,16 +292,16 @@ export function DashboardMock() {
         </span>
       </div>
       <div className="grid grid-cols-3 divide-x divide-hairline border-b border-hairline">
-        <div className="px-5 py-4">
-          <p className="text-[11px] text-ink-faint">Tickets sold</p>
+        <div className="px-3 py-4 sm:px-5">
+          <p className="whitespace-nowrap text-[11px] text-ink-faint">Tickets sold</p>
           <p className="font-mono text-xl text-ink"><LiveNumber initial={184} min={180} max={220} step={3} /><span className="text-ink-faint">/220</span></p>
         </div>
-        <div className="px-5 py-4">
-          <p className="text-[11px] text-ink-faint">Your revenue</p>
+        <div className="px-3 py-4 sm:px-5">
+          <p className="whitespace-nowrap text-[11px] text-ink-faint">Your revenue</p>
           <p className="font-mono text-xl text-voltage-ink"><LiveNumber initial={11040} min={10800} max={13200} step={120} prefix="$" /></p>
         </div>
-        <div className="px-5 py-4">
-          <p className="text-[11px] text-ink-faint">At the door</p>
+        <div className="px-3 py-4 sm:px-5">
+          <p className="whitespace-nowrap text-[11px] text-ink-faint">At the door</p>
           <p className="font-mono text-xl text-ink"><LiveNumber initial={96} min={90} max={130} step={2} /><span className="text-ink-faint"> in</span></p>
         </div>
       </div>
@@ -321,11 +321,11 @@ export function DashboardMock() {
 
 export function ScannerMock() {
   return (
-    <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-[24px] border-4 border-stage-elevated bg-stage shadow-[var(--shadow-e2)]">
+    <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-[24px] border-4 border-stage-elevated bg-stage shadow-[var(--shadow-e1)]">
       <div className="px-4 pb-3 pt-4">
         <p className="text-center font-mono text-[10px] uppercase tracking-[0.3em] text-on-stage-soft">Door scan</p>
       </div>
-      <div className="svyne-scanline mx-4 rounded-lg bg-success px-4 py-6 text-center text-[var(--color-sand-100)]">
+      <div className="svyne-scanline bg-success px-4 py-8 text-center text-[var(--color-sand-100)]">
         <p className="font-display text-4xl">VIP-3</p>
         <p className="mt-1 text-sm">Amara O. · party of 6</p>
         <p className="mt-2 font-mono text-[11px] uppercase tracking-widest opacity-80">Checked in</p>
