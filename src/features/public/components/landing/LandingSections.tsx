@@ -1,5 +1,7 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { createPlatformLead } from '@/features/public/services/platformLeadService';
+import { rpcErrorMessage } from '@/shared/session';
 import {
   Accessibility,
   KeyRound,
@@ -374,12 +376,47 @@ const formFields = [
   { name: 'email', label: 'Email', placeholder: 'amara@skylineterrace.com', type: 'email', half: false },
   { name: 'venue', label: 'Venue name', placeholder: 'Skyline Terrace', type: 'text', half: true },
   { name: 'city', label: 'City', placeholder: 'Mobile, AL', type: 'text', half: true },
-];
+] as const;
+
+type LeadForm = { name: string; email: string; venue: string; city: string };
+const emptyForm: LeadForm = { name: '', email: '', venue: '', city: '' };
 
 export function ClosingCta() {
-  const navigate = useNavigate();
+  const [values, setValues] = useState<LeadForm>(emptyForm);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
+
+  async function submit(event: React.FormEvent) {
+    event.preventDefault();
+    const name = values.name.trim();
+    const email = values.email.trim();
+    const venue = values.venue.trim();
+    const city = values.city.trim();
+    if (!name || !email) {
+      setError('Add your name and email so I can reach you.');
+      return;
+    }
+    setSubmitting(true);
+    setError(null);
+    try {
+      await createPlatformLead({
+        name,
+        companyName: venue || name,
+        phone: email,
+        website: '',
+        description: `Landing form. Email: ${email}${city ? ` · City: ${city}` : ''}${venue ? ` · Venue: ${venue}` : ''}`,
+      });
+      setSent(true);
+    } catch (caught) {
+      setError(rpcErrorMessage(caught));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
-    <section className="bg-background px-4 py-16 md:px-6 md:py-24">
+    <section id="start" className="scroll-mt-24 bg-background px-4 py-16 md:px-6 md:py-24">
       <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-stage px-6 py-14 text-on-stage md:px-14 md:py-20">
         <p data-reveal className="font-mono text-xs uppercase tracking-[0.3em] text-voltage">Open a Svyne box office</p>
         <h2 data-split className="mt-4 max-w-2xl font-display text-3xl md:text-4xl lg:text-5xl">
@@ -394,31 +431,34 @@ export function ClosingCta() {
             <li key={pill}>· {pill}</li>
           ))}
         </ul>
-        <form
-          data-reveal
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate('/get-started');
-          }}
-          className="mt-10 space-y-6"
-        >
-          <div className="grid gap-6 sm:grid-cols-2">
-            {formFields.map((field) => (
-              <label key={field.name} className={field.half ? '' : 'sm:col-span-2'}>
-                <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-stage-soft">{field.label}</span>
-                <input
-                  type={field.type}
-                  name={field.name}
-                  placeholder={field.placeholder}
-                  className="mt-2 w-full border-b border-on-stage-soft/30 bg-transparent pb-2 text-on-stage placeholder:text-on-stage-soft/50 focus:border-voltage focus:outline-none"
-                />
-              </label>
-            ))}
+        {sent ? (
+          <div data-reveal className="mt-10 rounded-2xl border border-voltage/40 bg-stage-elevated p-8">
+            <p className="font-display text-2xl text-on-stage">Thank you for your message.</p>
+            <p className="mt-2 text-on-stage-soft">We&rsquo;ll get back with you soon.</p>
           </div>
-          <button type="submit" className={`${landingCta} w-full`}>
-            Open my box office &rarr;
-          </button>
-        </form>
+        ) : (
+          <form data-reveal onSubmit={submit} className="mt-10 space-y-6">
+            <div className="grid gap-6 sm:grid-cols-2">
+              {formFields.map((field) => (
+                <label key={field.name} className={field.half ? '' : 'sm:col-span-2'}>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-on-stage-soft">{field.label}</span>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={values[field.name]}
+                    onChange={(e) => setValues((prev) => ({ ...prev, [field.name]: e.target.value }))}
+                    placeholder={field.placeholder}
+                    className="mt-2 w-full border-b border-on-stage-soft/30 bg-transparent pb-2 text-on-stage placeholder:text-on-stage-soft/50 focus:border-voltage focus:outline-none"
+                  />
+                </label>
+              ))}
+            </div>
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+            <button type="submit" disabled={submitting} className={`${landingCta} w-full disabled:opacity-60`}>
+              {submitting ? 'Sending…' : 'Open my box office →'}
+            </button>
+          </form>
+        )}
         <p data-reveal className="mt-6 font-display text-xl italic text-on-stage-soft">&mdash; Siddh Patel, Chickasaw, AL</p>
       </div>
       <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-faint">

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { HeroTicket } from '@/features/public/components/landing/LandingMockups';
 
 export const landingCta =
@@ -32,9 +31,9 @@ export function LandingHero() {
             &mdash; you keep every penny of your ticket price.
           </p>
           <div data-reveal className="flex flex-wrap items-center gap-4 pt-2">
-            <Link to="/get-started" data-magnet className={landingCta}>
+            <a href="#start" data-magnet className={landingCta}>
               Start free &mdash; no credit card
-            </Link>
+            </a>
           </div>
           <ul data-reveal className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em] text-on-stage-soft">
             {trustPoints.map((point) => (
