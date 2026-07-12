@@ -12,6 +12,7 @@ import { uploadImage } from '@/shared/upload';
 import { useAuth } from '@/shared/auth/useAuth';
 import { roleLabel } from '@/shared/roles';
 import { rpcErrorMessage } from '@/shared/session';
+import { displayUsPhone, formatUsPhone } from '@/shared/lib/validation';
 
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -205,7 +206,7 @@ export function AdminProfilePage() {
       {!editing ? (
         <div className="divide-y divide-hairline rounded-xl border border-hairline bg-surface shadow-[var(--shadow-e1)]">
           <DetailRow icon={Mail} label="Email" value={user?.email || '—'} />
-          <DetailRow icon={Phone} label="Phone" value={profile.phone || '—'} />
+          <DetailRow icon={Phone} label="Phone" value={profile.phone ? displayUsPhone(profile.phone) : '—'} />
           <DetailRow icon={MapPin} label="Address" value={addressParts || '—'} />
         </div>
       ) : (
@@ -214,7 +215,7 @@ export function AdminProfilePage() {
             <Labeled label="First name" value={form.firstName} onChange={field('firstName')} />
             <Labeled label="Last name" value={form.lastName} onChange={field('lastName')} />
           </div>
-          <Labeled label="Phone (optional)" value={form.phone} onChange={field('phone')} />
+          <Labeled label="Phone (optional)" value={form.phone} onChange={(v) => field('phone')(formatUsPhone(v))} />
           <Labeled label="Address (optional)" value={form.addressLine} onChange={field('addressLine')} />
           <div className="grid grid-cols-3 gap-3">
             <Labeled label="City" value={form.city} onChange={field('city')} />

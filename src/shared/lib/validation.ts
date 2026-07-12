@@ -82,6 +82,10 @@ export function isValidUsPhone(value: string): boolean {
   return toPhoneE164(value).length === 12;
 }
 
+export function displayUsPhone(value: string): string {
+  return isValidUsPhone(value) ? formatUsPhone(value) : value;
+}
+
 export function formatUsPhone(value: string): string {
   let digits = digitsOnly(value);
   if (digits.startsWith('1')) {
@@ -98,11 +102,8 @@ export function formatUsPhone(value: string): string {
   if (area) {
     out += ` (${area}`;
   }
-  if (area.length === 3) {
-    out += ')';
-  }
   if (prefix) {
-    out += ` ${prefix}`;
+    out += `) ${prefix}`;
   }
   if (line) {
     out += `-${line}`;

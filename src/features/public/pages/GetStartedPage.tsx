@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPlatformLead } from '@/features/public/services/platformLeadService';
 import { rpcErrorMessage } from '@/shared/session';
+import { formatUsPhone } from '@/shared/lib/validation';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -94,7 +95,7 @@ export function GetStartedPage() {
                     id="lead-phone"
                     type="tel"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => setPhone(formatUsPhone(e.target.value))}
                     autoComplete="tel"
                   />
                 </div>

@@ -3,6 +3,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { useAuth } from '@/shared/auth/useAuth';
+import { formatUsPhone } from '@/shared/lib/validation';
 
 export interface BuyerInfo {
   name: string;
@@ -131,7 +132,7 @@ export function GuestInfoStep({ buyerInfo, onChange, onNext, onBack }: GuestInfo
             type="tel"
             placeholder="(555) 555-5555"
             value={buyerInfo.phone}
-            onChange={(e) => onChange({ ...buyerInfo, phone: e.target.value })}
+            onChange={(e) => onChange({ ...buyerInfo, phone: formatUsPhone(e.target.value) })}
             className="bg-white/5 border-white/10 text-white rounded-xl py-5 focus:border-accent-burgundy"
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? 'phone_err' : undefined}

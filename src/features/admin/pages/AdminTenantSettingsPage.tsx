@@ -9,6 +9,7 @@ import {
 import { getStripeStatus, startStripeOnboarding } from '@/features/admin/services/financialService';
 import { useAuth } from '@/shared/auth/useAuth';
 import { rpcErrorMessage } from '@/shared/session';
+import { formatUsPhone } from '@/shared/lib/validation';
 import type { Tenant, TenantStripeProfile } from '@/shared/proto/tenant';
 import type { StripeStatus } from '@/shared/proto/admin';
 import { Button } from '@/shared/ui/button';
@@ -125,7 +126,7 @@ export function AdminTenantSettingsPage() {
             <ReadOnly label="Legal name" value={tenant?.legalName ?? ''} />
           </div>
 
-          <Labeled label="Company phone" value={form.phone} onChange={field('phone')} />
+          <Labeled label="Company phone" value={form.phone} onChange={(v) => field('phone')(formatUsPhone(v))} />
           <Labeled label="Address line 1" value={form.addressLine1} onChange={field('addressLine1')} />
           <Labeled label="Address line 2" value={form.addressLine2} onChange={field('addressLine2')} />
           <div className="grid grid-cols-3 gap-3">

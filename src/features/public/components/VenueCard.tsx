@@ -3,6 +3,7 @@ import { MapPin, Phone, Mail, Compass, ExternalLink } from 'lucide-react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { getVenue } from '@/features/admin/services/catalogService';
 import { cn } from '@/shared/lib/cn';
+import { displayUsPhone } from '@/shared/lib/validation';
 
 interface VenueCardProps {
   venuesId: string;
@@ -63,7 +64,7 @@ export function VenueCard({ venuesId, className }: VenueCardProps) {
           {venue.phone && (
             <div className="flex items-center gap-3 text-sm text-foreground">
               <Phone className="size-4.5 text-accent-burgundy shrink-0" />
-              <a href={`tel:${venue.phone}`} className="hover:underline">{venue.phone}</a>
+              <a href={`tel:${venue.phone.replace(/\D/g, '')}`} className="hover:underline">{displayUsPhone(venue.phone)}</a>
             </div>
           )}
 

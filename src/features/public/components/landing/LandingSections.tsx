@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createPlatformLead } from '@/features/public/services/platformLeadService';
 import { rpcErrorMessage } from '@/shared/session';
+import { formatUsPhone } from '@/shared/lib/validation';
 import {
   Accessibility,
   KeyRound,
@@ -373,13 +374,14 @@ export function PricingTeaser() {
 const closingPills = ['No credit card', 'Cancel anytime', 'Real human replies'];
 const formFields = [
   { name: 'name', label: 'Your name', placeholder: 'Amara Okonkwo', type: 'text', half: false },
-  { name: 'email', label: 'Email', placeholder: 'amara@skylineterrace.com', type: 'email', half: false },
+  { name: 'email', label: 'Email', placeholder: 'amara@skylineterrace.com', type: 'email', half: true },
+  { name: 'phone', label: 'Phone', placeholder: '+1 (251) 555-0142', type: 'tel', half: true },
   { name: 'venue', label: 'Venue name', placeholder: 'Skyline Terrace', type: 'text', half: true },
   { name: 'city', label: 'City', placeholder: 'Mobile, AL', type: 'text', half: true },
 ] as const;
 
-type LeadForm = { name: string; email: string; venue: string; city: string };
-const emptyForm: LeadForm = { name: '', email: '', venue: '', city: '' };
+type LeadForm = { name: string; email: string; phone: string; venue: string; city: string };
+const emptyForm: LeadForm = { name: '', email: '', phone: '', venue: '', city: '' };
 
 export function ClosingCta() {
   const [values, setValues] = useState<LeadForm>(emptyForm);
@@ -391,10 +393,15 @@ export function ClosingCta() {
     event.preventDefault();
     const name = values.name.trim();
     const email = values.email.trim();
+    const phone = values.phone.trim();
     const venue = values.venue.trim();
     const city = values.city.trim();
-    if (!name || !email) {
-      setError('Add your name and email so I can reach you.');
+    if (!name) {
+      setError('Add your name so I know who I’m talking to.');
+      return;
+    }
+    if (!email && !phone) {
+      setError('Add an email or a phone number so I can reach you.');
       return;
     }
     setSubmitting(true);
@@ -403,9 +410,9 @@ export function ClosingCta() {
       await createPlatformLead({
         name,
         companyName: venue || name,
-        phone: email,
+        phone: phone || email,
         website: '',
-        description: `Landing form. Email: ${email}${city ? ` · City: ${city}` : ''}${venue ? ` · Venue: ${venue}` : ''}`,
+        description: `Landing form.${email ? ` Email: ${email}` : ''}${phone ? ` · Phone: ${phone}` : ''}${city ? ` · City: ${city}` : ''}${venue ? ` · Venue: ${venue}` : ''}`,
       });
       setSent(true);
     } catch (caught) {
@@ -446,7 +453,12 @@ export function ClosingCta() {
                     type={field.type}
                     name={field.name}
                     value={values[field.name]}
-                    onChange={(e) => setValues((prev) => ({ ...prev, [field.name]: e.target.value }))}
+                    onChange={(e) =>
+                      setValues((prev) => ({
+                        ...prev,
+                        [field.name]: field.name === 'phone' ? formatUsPhone(e.target.value) : e.target.value,
+                      }))
+                    }
                     placeholder={field.placeholder}
                     className="mt-2 w-full border-b border-on-stage-soft/30 bg-transparent pb-2 text-on-stage placeholder:text-on-stage-soft/50 focus:border-voltage focus:outline-none"
                   />

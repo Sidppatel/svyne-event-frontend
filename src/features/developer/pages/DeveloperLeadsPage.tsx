@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { listPlatformLeads } from '@/features/public/services/platformLeadService';
 import { formatEpoch } from '@/shared/lib/format';
+import { displayUsPhone } from '@/shared/lib/validation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Skeleton } from '@/shared/ui/skeleton';
 
@@ -37,8 +38,8 @@ export function DeveloperLeadsPage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-sm">
-                  <a href={`tel:${lead.phone}`} className="text-text-link">
-                    {lead.phone}
+                  <a href={`tel:${lead.phone.replace(/\D/g, '')}`} className="text-text-link">
+                    {displayUsPhone(lead.phone)}
                   </a>
                   {lead.website ? (
                     <a
