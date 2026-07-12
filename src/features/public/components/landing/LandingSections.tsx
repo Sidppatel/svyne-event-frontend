@@ -282,12 +282,12 @@ const tiers = [
   },
   {
     name: 'Subscription',
-    price: 'from $49',
-    unit: '/mo',
-    fee: 'down to 4.5% + $1.25',
-    feeNote: 'lowest fee, every event',
+    price: 'Custom',
+    unit: '',
+    fee: 'Lowest fees, tailored',
+    feeNote: 'priced to your volume',
     featured: false,
-    cta: 'See plans',
+    cta: 'Talk to me',
     points: [
       'Advanced analytics every month',
       'Custom domains and SMS credits',
@@ -340,8 +340,8 @@ export function PricingTeaser() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to="/get-started"
+              <a
+                href="#start"
                 className={
                   tier.featured
                     ? 'mt-7 flex h-11 items-center justify-center rounded-full bg-stage px-6 text-sm font-medium text-on-stage transition-transform hover:scale-[1.02] active:scale-[0.98]'
@@ -349,7 +349,7 @@ export function PricingTeaser() {
                 }
               >
                 {tier.cta}
-              </Link>
+              </a>
             </div>
           ))}
         </div>
