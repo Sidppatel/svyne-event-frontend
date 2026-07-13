@@ -139,7 +139,7 @@ export function CheckoutPage() {
                 <div className="flex items-start gap-2 text-xs text-ink-soft">
                   <Info className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
                   <span>
-                    We couldn't load the event details, but your reservation is intact — the total below
+                    We couldn't load the event details, but your reservation is intact; the total below
                     is what you'll be charged.
                   </span>
                 </div>
@@ -347,7 +347,7 @@ function CheckoutForm({ bookingsId, intent }: { bookingsId: string; intent: Inte
         {expired ? (
           <div className="space-y-4 py-6 text-center">
             <p className="text-sm font-medium text-destructive">
-              Your hold expired — head back to the event to pick your tickets again.
+              Your hold expired. Head back to the event to pick your tickets again.
             </p>
             <Button variant="outline" onClick={() => navigate(-1)} className="h-11 w-full">
               Back to event

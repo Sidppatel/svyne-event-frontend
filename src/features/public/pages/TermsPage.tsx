@@ -17,7 +17,7 @@ export function TermsPage() {
       <StaticSection heading="2. The Platform">
         <p>
           Svyne provides ticketing and box office technology on behalf of independent event organizers. The organizer
-          named on each event page — not Svyne — is the seller of record, host of the event, and responsible for the
+          named on each event page (not Svyne) is the seller of record, host of the event, and responsible for the
           event taking place as described.
         </p>
       </StaticSection>

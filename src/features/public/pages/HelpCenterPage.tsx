@@ -30,7 +30,7 @@ const faqGroups: FaqGroup[] = [
         a: 'A table booking reserves an entire table for your group at the venue. The table listing shows seat capacity and any minimum spend. Table QR codes work the same way as tickets at check-in.',
       },
       {
-        q: 'My payment failed but I was charged — what now?',
+        q: 'My payment failed but I was charged. What should I do?',
         a: 'Failed payments are usually reversed automatically by your bank within a few days. If a charge persists without a confirmed booking, report it via Contact Support with the date and amount.',
       },
     ],
@@ -47,7 +47,7 @@ const faqGroups: FaqGroup[] = [
         a: 'No. Each ticket admits one person and is voided when scanned. Share tickets with your group before arriving so everyone has their own code.',
       },
       {
-        q: 'My QR code will not scan — help!',
+        q: 'My QR code will not scan. What should I do?',
         a: 'Raise your screen brightness and remove any screen protector glare. Door staff can also look up your booking by name or email if scanning fails.',
       },
     ],
@@ -65,7 +65,7 @@ const faqGroups: FaqGroup[] = [
       },
       {
         q: 'Can I get a refund?',
-        a: 'No. All sales are final on this platform — tickets and table bookings cannot be refunded or exchanged. See the All Sales Final policy in the footer for details.',
+        a: 'No. All sales are final on this platform; tickets and table bookings cannot be refunded or exchanged. See the All Sales Final policy in the footer for details.',
       },
     ],
   },
@@ -81,7 +81,7 @@ const faqGroups: FaqGroup[] = [
         a: 'Use the "Forgot password" link on the sign-in page to receive a reset email.',
       },
       {
-        q: 'Someone sent me a ticket claim link — what do I do?',
+        q: 'Someone sent me a ticket claim link. What do I do?',
         a: 'Open the link and sign in (or create an account). The ticket moves into your account with your name on it, ready for check-in.',
       },
     ],

@@ -138,7 +138,7 @@ function ShareEventButton({ eventLabel }: { eventLabel?: string }) {
       className="bg-accent-gold/10 hover:bg-accent-gold/20 text-accent-gold border border-accent-gold/20 py-4 w-full"
     >
       <Share2 className="size-4 mr-2" />
-      {copied ? 'Link copied!' : "Share — I'm going"}
+      {copied ? 'Link copied!' : "Share: I'm going"}
     </Button>
   );
 }

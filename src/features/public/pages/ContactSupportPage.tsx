@@ -11,7 +11,7 @@ const channels = [
   {
     icon: Ticket,
     title: 'Ticket & Booking Issues',
-    body: 'Missing tickets, claim links, or QR problems? Check My Tickets first — most issues resolve there.',
+    body: 'Missing tickets, claim links, or QR problems? Check My Tickets first; most issues resolve there.',
     action: { label: 'Go to My Tickets', href: '/tickets' },
   },
   {
@@ -23,7 +23,7 @@ const channels = [
   {
     icon: MessageSquareText,
     title: 'Feedback',
-    body: 'Ideas, praise, or something we could do better — feedback goes straight to the team.',
+    body: 'Ideas, praise, or something we could do better; feedback goes straight to the team.',
     action: { label: 'Give Feedback', href: '/feedback' },
   },
 ];
@@ -33,7 +33,7 @@ export function ContactSupportPage() {
     <StaticPageShell
       eyebrow="Support"
       title="Contact Support"
-      intro="Pick the channel that fits your issue — including your booking reference and event name gets you the fastest answer."
+      intro="Pick the channel that fits your issue. Including your booking reference and event name gets you the fastest answer."
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {channels.map((channel) => (
@@ -52,10 +52,10 @@ export function ContactSupportPage() {
         <ul className="list-disc pl-5 space-y-1.5">
           <li>Include the email address used for the booking.</li>
           <li>Add the event name and date, plus a booking reference if you have one.</li>
-          <li>For payment issues, include the charge date and amount — never send full card numbers.</li>
+          <li>For payment issues, include the charge date and amount (never send full card numbers).</li>
         </ul>
         <p className="pt-1">
-          Remember: all sales are final — see the{' '}
+          Remember: all sales are final. See the{' '}
           <a href="/refund-policy" className="text-accent-burgundy underline">No Refunds policy</a>. Support can help with
           billing errors, ticket sharing, and account problems.
         </p>

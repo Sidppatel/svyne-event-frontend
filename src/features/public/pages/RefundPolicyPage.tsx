@@ -4,14 +4,14 @@ export function RefundPolicyPage() {
   return (
     <StaticPageShell
       eyebrow="Legals"
-      title="All Sales Final — No Refunds"
+      title="All Sales Final: No Refunds"
       intro="Every ticket and table booking on this platform is sold on a strict no-refund basis. Please review your order carefully before paying."
       updated="July 2026"
     >
       <StaticSection heading="The Policy">
         <p>
           <strong>All sales are final.</strong> Once payment is completed, tickets and VIP table bookings cannot be
-          refunded, exchanged, or credited — this includes:
+          refunded, exchanged, or credited. This includes:
         </p>
         <ul>
           <li>Change of mind or inability to attend.</li>
@@ -37,13 +37,13 @@ export function RefundPolicyPage() {
       </StaticSection>
       <StaticSection heading="Cancelled Events">
         <p>
-          If an organizer cancels an event outright, the organizer — as seller of record — is responsible for
+          If an organizer cancels an event outright, the organizer (as the seller of record) is responsible for
           communicating remedies to ticket holders. Watch your email and the event page for instructions.
         </p>
       </StaticSection>
       <StaticSection heading="Billing Errors">
         <p>
-          Duplicate charges or amounts that don't match your checkout total are billing errors, not refund requests —
+          Duplicate charges or amounts that don't match your checkout total are billing errors, not refund requests;
           report them via <a href="/contact" className="text-accent-burgundy underline">Contact Support</a> and we will
           investigate promptly.
         </p>

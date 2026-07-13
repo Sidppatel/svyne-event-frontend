@@ -32,7 +32,7 @@ export function TicketsPage() {
     <div className="space-y-10">
       <div className="space-y-1">
         <h1 className="font-display text-3xl font-semibold text-ink">Your tickets</h1>
-        <p className="text-sm text-ink-soft">Show the QR code at the door — that's your entry.</p>
+        <p className="text-sm text-ink-soft">Show the QR code at the door for entry.</p>
       </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}

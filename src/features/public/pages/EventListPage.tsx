@@ -81,7 +81,7 @@ export function EventListPage() {
             <p className="mx-auto max-w-xs text-sm text-ink-soft">
               {debouncedSearch || category !== 'All'
                 ? 'No events match your filters. Try widening the search.'
-                : 'New events are announced here first — check back soon.'}
+                : 'New events are announced here first; check back soon.'}
             </p>
           </div>
           {debouncedSearch || category !== 'All' ? (

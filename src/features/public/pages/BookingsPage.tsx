@@ -28,7 +28,7 @@ export function BookingsPage() {
       <div className="space-y-1">
         <h1 className="font-display text-3xl font-semibold text-ink">Your bookings</h1>
         <p className="text-sm text-ink-soft">
-          Paid orders with their entry passes — share unclaimed tickets with your guests.
+          Paid orders with their entry passes; share unclaimed tickets with your guests.
         </p>
       </div>
 

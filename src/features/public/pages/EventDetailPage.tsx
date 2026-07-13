@@ -59,7 +59,7 @@ export function EventDetailPage() {
       <div className="flex min-h-screen items-center justify-center bg-surface-canvas p-4 text-center">
         <div className="max-w-md space-y-4">
           <h2 className="font-display text-2xl font-semibold text-ink">We can't find that event</h2>
-          <p className="text-sm text-ink-soft">{error || 'The link may be outdated — check the address or head back to browse events.'}</p>
+          <p className="text-sm text-ink-soft">{error || 'The link may be outdated. Check the address or head back to browse events.'}</p>
         </div>
       </div>
     );
@@ -435,7 +435,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                     variant="outline"
                     className="w-full border-success/30 text-success hover:bg-success/10 hover:text-success"
                   >
-                    {busy ? 'Reserving…' : `Pay by bank — save ${centsToUSD(achSavings)}`}
+                    {busy ? 'Reserving…' : `Pay by bank and save ${centsToUSD(achSavings)}`}
                   </Button>
                 )}
               </CardContent>
@@ -479,7 +479,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
               variant="outline"
               className="w-full border-success/40 text-success hover:bg-success/10 hover:text-success"
             >
-              {busy ? 'Reserving…' : `Pay by bank — save ${centsToUSD(achSavings)}`}
+              {busy ? 'Reserving…' : `Pay by bank and save ${centsToUSD(achSavings)}`}
             </Button>
           )}
         </div>

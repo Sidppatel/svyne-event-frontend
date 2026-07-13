@@ -10,11 +10,11 @@ export function PrivacyPage() {
     >
       <StaticSection heading="1. Information We Collect">
         <ul>
-          <li><strong>Account details</strong> — name, email address, and login credentials.</li>
-          <li><strong>Booking details</strong> — events, tickets, tables, and amounts paid.</li>
-          <li><strong>Payment data</strong> — handled entirely by Stripe; we never see or store full card numbers.</li>
-          <li><strong>Check-in records</strong> — when and how your ticket was scanned at an event.</li>
-          <li><strong>Technical data</strong> — browser type and basic usage logs used for security and diagnostics.</li>
+          <li><strong>Account details</strong>: name, email address, and login credentials.</li>
+          <li><strong>Booking details</strong>: events, tickets, tables, and amounts paid.</li>
+          <li><strong>Payment data</strong>: handled entirely by Stripe (we never see or store full card numbers).</li>
+          <li><strong>Check-in records</strong>: when and how your ticket was scanned at an event.</li>
+          <li><strong>Technical data</strong>: browser type and basic usage logs used for security and diagnostics.</li>
         </ul>
       </StaticSection>
       <StaticSection heading="2. How We Use It">
@@ -48,7 +48,7 @@ export function PrivacyPage() {
       </StaticSection>
       <StaticSection heading="6. Security">
         <p>
-          All traffic is encrypted in transit. Access to attendee data is role-restricted — organizers see only their
+          All traffic is encrypted in transit. Access to attendee data is role-restricted; organizers see only their
           own events, and staff see only what check-in requires. Security-relevant actions are audit-logged.
         </p>
       </StaticSection>

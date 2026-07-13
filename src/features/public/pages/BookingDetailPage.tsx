@@ -97,7 +97,7 @@ export function BookingDetailPage() {
             <div>
               <p className="font-display text-lg font-semibold text-ink">You're going.</p>
               <p className="text-sm text-ink-soft">
-                Payment confirmed — your tickets are below and in your wallet.
+                Payment confirmed: your tickets are below and in your wallet.
               </p>
             </div>
           </div>
