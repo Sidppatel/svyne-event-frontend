@@ -1,4 +1,8 @@
-import { HeroTicket } from '@/features/public/components/landing/LandingMockups';
+import { lazy, Suspense } from 'react';
+
+const HeroTicket = lazy(() =>
+  import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.HeroTicket })),
+);
 
 export const landingCta =
   'inline-flex h-12 items-center justify-center rounded-full bg-marigold px-8 py-3 text-base font-medium text-marigold-foreground shadow-[var(--shadow-e1)] transition-[transform,background-color,box-shadow] duration-[180ms] ease-[var(--ease-out)] hover:bg-coral hover:shadow-[0_0_24px_color-mix(in_srgb,var(--voltage-accent)_55%,transparent)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-voltage focus-visible:ring-offset-2 focus-visible:ring-offset-stage';
@@ -42,7 +46,9 @@ export function LandingHero() {
           </ul>
         </div>
         <div data-reveal className="flex justify-center md:justify-end">
-          <HeroTicket />
+          <Suspense fallback={<div className="w-full max-w-sm min-h-[280px]" />}>
+            <HeroTicket />
+          </Suspense>
         </div>
       </div>
     </section>

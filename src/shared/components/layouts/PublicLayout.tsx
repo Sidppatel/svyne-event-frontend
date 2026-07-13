@@ -1,7 +1,12 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { PortalNav } from '@/shared/components/layouts/PortalNav';
-import { MobileTabBar } from '@/shared/components/layouts/MobileTabBar';
+
+const PortalNav = lazy(() =>
+  import('@/shared/components/layouts/PortalNav').then((m) => ({ default: m.PortalNav })),
+);
+const MobileTabBar = lazy(() =>
+  import('@/shared/components/layouts/MobileTabBar').then((m) => ({ default: m.MobileTabBar })),
+);
 import { usePageEntrance } from '@/shared/hooks/usePageEntrance';
 import { useAuth } from '@/shared/auth/useAuth';
 import { cn } from '@/shared/lib/cn';
@@ -31,7 +36,11 @@ export function PublicLayout() {
 
   return (
     <div className="min-h-screen bg-background">
-      {!isPlatformLanding && <PortalNav links={links} transparent={isFullBleedPage} />}
+      {!isPlatformLanding && (
+        <Suspense fallback={<div className="h-16" />}>
+          <PortalNav links={links} transparent={isFullBleedPage} />
+        </Suspense>
+      )}
       <main
         ref={page}
         key={pathname}
@@ -42,7 +51,11 @@ export function PublicLayout() {
       >
         <Outlet />
       </main>
-      {!isFullBleedPage && <MobileTabBar />}
+      {!isFullBleedPage && (
+        <Suspense fallback={null}>
+          <MobileTabBar />
+        </Suspense>
+      )}
     </div>
   );
 }

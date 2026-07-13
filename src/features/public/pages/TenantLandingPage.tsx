@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { useLandingReveal } from '@/features/public/hooks/useLandingReveal';
 import { tenantUrl } from '@/shared/subdomain';
@@ -19,17 +19,46 @@ import {
 } from '@/features/public/components/landing/LandingSections';
 
 function OrganizerDirectory() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '600px' },
+    );
+    io.observe(el);
+    const fallback = window.setTimeout(() => setVisible(true), 4000);
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
+  }, []);
+
   const loader = useCallback(
     () =>
-      import('@/features/public/services/tenantDirectoryService').then((m) =>
-        m.listPublicTenants(),
-      ),
-    [],
+      visible
+        ? import('@/features/public/services/tenantDirectoryService').then((m) =>
+            m.listPublicTenants(),
+          )
+        : new Promise<never>(() => {}),
+    [visible],
   );
   const { data, loading, error } = useAsync(loader);
 
   return (
-    <section id="organizers" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-16 md:px-6 md:py-24">
+    <section
+      ref={sectionRef}
+      id="organizers"
+      className="mx-auto max-w-7xl scroll-mt-20 px-4 py-16 md:px-6 md:py-24"
+    >
       <div className="max-w-md space-y-3">
         <p className="font-mono text-xs uppercase tracking-[0.3em] text-voltage-ink">Tonight</p>
         <h2 className="font-display text-3xl text-ink md:text-4xl">Find your organizer</h2>

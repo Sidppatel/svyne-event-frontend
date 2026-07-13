@@ -1,12 +1,8 @@
-import type { RefObject } from 'react';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
+import { useEffect, type RefObject } from 'react';
 
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
+type Gsap = typeof import('gsap')['gsap'];
 
-function attachMagnet(el: HTMLElement) {
+function attachMagnet(gsap: Gsap, el: HTMLElement) {
   const xTo = gsap.quickTo(el, 'x', { duration: 0.4, ease: 'power3.out' });
   const yTo = gsap.quickTo(el, 'y', { duration: 0.4, ease: 'power3.out' });
   const onMove = (e: MouseEvent) => {
@@ -27,40 +23,55 @@ function attachMagnet(el: HTMLElement) {
 }
 
 export function useLandingReveal(scope: RefObject<HTMLDivElement | null>) {
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        gsap.utils.toArray<HTMLElement>('[data-split]').forEach((heading) => {
-          SplitText.create(heading, {
-            type: 'lines',
-            autoSplit: true,
-            onSplit: (self) =>
-              gsap.from(self.lines, {
-                yPercent: 110,
-                duration: 0.55,
-                ease: 'power3.out',
-                stagger: 0.06,
-                scrollTrigger: { trigger: heading, start: 'top 85%', once: true },
-              }),
+  useEffect(() => {
+    let disposed = false;
+    let ctx: { revert(): void } | undefined;
+
+    void Promise.all([
+      import('gsap'),
+      import('gsap/ScrollTrigger'),
+      import('gsap/SplitText'),
+    ]).then(([{ gsap }, { ScrollTrigger }, { SplitText }]) => {
+      if (disposed || !scope.current) return;
+      gsap.registerPlugin(ScrollTrigger, SplitText);
+      ctx = gsap.context(() => {
+        const mm = gsap.matchMedia();
+        mm.add('(prefers-reduced-motion: no-preference)', () => {
+          gsap.utils.toArray<HTMLElement>('[data-split]').forEach((heading) => {
+            SplitText.create(heading, {
+              type: 'lines',
+              autoSplit: true,
+              onSplit: (self) =>
+                gsap.from(self.lines, {
+                  yPercent: 110,
+                  duration: 0.55,
+                  ease: 'power3.out',
+                  stagger: 0.06,
+                  scrollTrigger: { trigger: heading, start: 'top 85%', once: true },
+                }),
+            });
           });
-        });
-        gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
-          gsap.from(el, {
-            opacity: 0,
-            y: 18,
-            duration: 0.45,
-            ease: 'power2.out',
-            scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+          gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+            gsap.from(el, {
+              opacity: 0,
+              y: 18,
+              duration: 0.45,
+              ease: 'power2.out',
+              scrollTrigger: { trigger: el, start: 'top 92%', once: true },
+            });
           });
+          const cleanups = gsap.utils
+            .toArray<HTMLElement>('[data-magnet]')
+            .map((el) => attachMagnet(gsap, el));
+          return () => cleanups.forEach((fn) => fn());
         });
-        const cleanups = gsap.utils
-          .toArray<HTMLElement>('[data-magnet]')
-          .map((el) => attachMagnet(el));
-        return () => cleanups.forEach((fn) => fn());
-      });
-      return () => mm.revert();
-    },
-    { scope },
-  );
+        return () => mm.revert();
+      }, scope);
+    });
+
+    return () => {
+      disposed = true;
+      ctx?.revert();
+    };
+  }, [scope]);
 }

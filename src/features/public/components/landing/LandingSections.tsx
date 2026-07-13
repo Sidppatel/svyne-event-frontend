@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatUsPhone } from '@/shared/lib/validation';
 import {
@@ -12,7 +12,19 @@ import {
   Users,
 } from 'lucide-react';
 import { landingCta } from '@/features/public/components/landing/LandingHero';
-import { DashboardMock, FloorPlanMock, ScannerMock } from '@/features/public/components/landing/LandingMockups';
+const DashboardMock = lazy(() =>
+  import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.DashboardMock })),
+);
+const FloorPlanMock = lazy(() =>
+  import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.FloorPlanMock })),
+);
+const ScannerMock = lazy(() =>
+  import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.ScannerMock })),
+);
+
+function MockFallback() {
+  return <div className="min-h-[320px] rounded-xl bg-stage/10" />;
+}
 
 const marqueeWords = ['clubs', 'theaters', 'supper clubs', 'rooftops', 'pop-ups', 'galleries', 'lounges'];
 
@@ -107,7 +119,9 @@ export function FloorPlanShowcase() {
           </ul>
         </div>
         <div data-reveal>
-          <FloorPlanMock />
+          <Suspense fallback={<MockFallback />}>
+            <FloorPlanMock />
+          </Suspense>
         </div>
       </div>
     </section>
@@ -137,7 +151,9 @@ export function AdminShowcase() {
         </div>
       </div>
       <div data-reveal className="md:order-1">
-        <DashboardMock />
+        <Suspense fallback={<MockFallback />}>
+          <DashboardMock />
+        </Suspense>
       </div>
     </section>
   );
@@ -164,7 +180,9 @@ export function EventNightShowcase() {
           </ul>
         </div>
         <div data-reveal className="relative">
-          <ScannerMock />
+          <Suspense fallback={<MockFallback />}>
+            <ScannerMock />
+          </Suspense>
           <span className="absolute -left-2 top-6 rounded-full bg-surface px-3 py-1.5 font-mono text-xs text-ink shadow-[var(--shadow-e1)]">
             no app store · just a link
           </span>
