@@ -180,9 +180,9 @@ function EventDetailPageContent({ event }: { event: Event }) {
       />
 
       {/* Chapter 1: Immersive Dark Hero */}
-      <Hero 
-        event={event} 
-        onGetTickets={scrollToBooking} 
+      <Hero
+        event={event}
+        onGetTickets={scrollToBooking}
         minPriceCents={minPriceCents}
       />
 
@@ -190,10 +190,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
       <div id="booking-panel" className="max-w-7xl mx-auto px-4 md:px-8 mt-12 md:mt-16">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
-          
-          {/* Left Column: Tickets & VIP Seating Map */}
           <div className="space-y-12">
-            
             {showTickets && (
               <div className="space-y-4">
                 <SectionTitle
@@ -212,7 +209,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                     admissionTiers.map((tt, index) => {
                       const qty = cart.find((i) => i.key === `Ticket:${tt.eventTicketTypesId}`)?.seats || 0;
                       const availableQuantity = tt.capacity > 0 ? Math.max(0, tt.capacity - tt.soldCount) : undefined;
-                      
+
                       return (
                         <TicketCard
                           key={tt.eventTicketTypesId}
@@ -253,18 +250,16 @@ function EventDetailPageContent({ event }: { event: Event }) {
               </div>
             )}
 
-            {/* Sponsors logo cloud */}
             {event.sponsorsJson && (
               <EventSponsors sponsorsJson={event.sponsorsJson} />
             )}
 
-            {/* Interactive VIP Seating Map */}
             {showTables && (
               <div className="space-y-4">
-                <SectionTitle 
-                  title="VIP Lounge Booking" 
-                  subtitle="Select a VIP table layout to reserve the block" 
-                  icon={Users} 
+                <SectionTitle
+                  title="Lounge Booking"
+                  subtitle="Select a table layout to reserve the block"
+                  icon={Users}
                 />
                 <EventSeatingMap
                   eventsId={event.eventsId}

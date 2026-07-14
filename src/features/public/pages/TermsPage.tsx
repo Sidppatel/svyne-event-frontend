@@ -5,7 +5,7 @@ export function TermsPage() {
     <StaticPageShell
       eyebrow="Legals"
       title="Terms of Service"
-      intro="These terms govern your use of the Svyne box office platform, including ticket purchases, VIP table bookings, and event check-in services."
+      intro="These terms govern your use of the Svyne box office platform, including ticket purchases, table bookings, and event check-in services."
       updated="July 2026"
     >
       <StaticSection heading="1. Acceptance of Terms">

@@ -149,7 +149,7 @@ function PreviewTicketing({ eventName }: { eventName: string }) {
       <p className="text-sm font-semibold text-ink">{eventName} — Tickets</p>
       {[
         { name: 'General Admission', price: '$45.00', note: 'Standing · open bar access' },
-        { name: 'VIP Table', price: '$220.00', note: 'Seats 4 · bottle service' },
+        { name: 'Table', price: '$220.00', note: 'Seats 4 · bottle service' },
       ].map((tier) => (
         <div
           key={tier.name}

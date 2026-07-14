@@ -26,7 +26,7 @@ const faqGroups: FaqGroup[] = [
         a: 'Yes. Buy multiple tickets in one order, then share individual tickets from My Tickets using the claim link. Each friend claims their ticket into their own account.',
       },
       {
-        q: 'What is a VIP table booking?',
+        q: 'What is a table booking?',
         a: 'A table booking reserves an entire table for your group at the venue. The table listing shows seat capacity and any minimum spend. Table QR codes work the same way as tickets at check-in.',
       },
       {
@@ -111,11 +111,11 @@ export function HelpCenterPage() {
   const normalized = query.trim().toLowerCase();
   const groups = normalized
     ? faqGroups
-        .map((g) => ({
-          ...g,
-          items: g.items.filter((i) => `${i.q} ${i.a}`.toLowerCase().includes(normalized)),
-        }))
-        .filter((g) => g.items.length > 0)
+      .map((g) => ({
+        ...g,
+        items: g.items.filter((i) => `${i.q} ${i.a}`.toLowerCase().includes(normalized)),
+      }))
+      .filter((g) => g.items.length > 0)
     : faqGroups;
 
   return (

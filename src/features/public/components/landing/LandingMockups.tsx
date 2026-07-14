@@ -182,7 +182,7 @@ function TicketCard({ cardRef }: { cardRef: React.Ref<HTMLDivElement> }) {
         <p className="font-display text-3xl text-ink">Solstice Rooftop</p>
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-xs text-ink-soft">VIP Table T-4 · 6 seats</p>
+            <p className="text-xs text-ink-soft">Table T-4 · 6 seats</p>
             <p className="text-xs text-ink-soft">Skyline Terrace, 44th Fl</p>
           </div>
           <p className="font-display text-2xl text-voltage-ink">

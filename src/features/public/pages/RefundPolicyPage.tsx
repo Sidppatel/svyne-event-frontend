@@ -10,7 +10,7 @@ export function RefundPolicyPage() {
     >
       <StaticSection heading="The Policy">
         <p>
-          <strong>All sales are final.</strong> Once payment is completed, tickets and VIP table bookings cannot be
+          <strong>All sales are final.</strong> Once payment is completed, tickets and table bookings cannot be
           refunded, exchanged, or credited. This includes:
         </p>
         <ul>

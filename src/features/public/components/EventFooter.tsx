@@ -16,13 +16,13 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
   return (
     <footer className={cn(
       'w-full py-12 border-t mt-16 md:mt-24 transition-colors',
-      light 
+      light
         ? 'bg-stage border-white/5 text-white/50'
         : 'bg-surface-canvas border-border-strong text-muted-foreground',
       className
     )}>
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        {}
+        { }
         <div className="md:col-span-4 space-y-4">
           <div className="flex items-center gap-2">
             <span className={cn('text-lg font-black tracking-tight font-display', light ? 'text-white' : 'text-foreground')}>
@@ -33,11 +33,11 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
             </span>
           </div>
           <p className="text-xs leading-relaxed max-w-sm">
-            Experience ticket bookings and VIP table seating simplified. Built for premium nightlife, concerts, and exclusive social events.
+            Experience ticket bookings and table seating simplified. Built for premium nightlife, concerts, and exclusive social events.
           </p>
         </div>
 
-        {}
+        { }
         <div className="md:col-span-4 grid grid-cols-2 gap-4">
           <div className="space-y-3 text-xs">
             <h4 className={cn('font-bold uppercase tracking-wider', light ? 'text-white' : 'text-foreground')}>Legals</h4>
@@ -57,7 +57,7 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
           </div>
         </div>
 
-        {}
+        { }
         <div className="md:col-span-4 space-y-3 text-xs md:text-right">
           <h4 className={cn('font-bold uppercase tracking-wider', light ? 'text-white' : 'text-foreground')}>Presented By</h4>
           <p className={cn('font-bold text-sm font-display uppercase tracking-wider', light ? 'text-accent-gold' : 'text-voltage-ink')}>{presentedBy}</p>

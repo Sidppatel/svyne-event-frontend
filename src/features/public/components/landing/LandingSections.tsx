@@ -4,10 +4,8 @@ import { formatUsPhone } from '@/shared/lib/validation';
 import {
   Accessibility,
   KeyRound,
-  Landmark,
   Palette,
   Search,
-  ShieldCheck,
   Star,
   Users,
 } from 'lucide-react';
@@ -102,7 +100,7 @@ export function FloorPlanShowcase() {
     <section id="floor-plan" className="scroll-mt-20 bg-stage text-on-stage">
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:gap-16 md:px-6 md:py-24">
         <div className="space-y-5">
-          <p data-reveal className="font-mono text-xs uppercase tracking-[0.3em] text-voltage">VIP tables</p>
+          <p data-reveal className="font-mono text-xs uppercase tracking-[0.3em] text-voltage">tables</p>
           <h2 data-split className="font-display text-3xl md:text-4xl">
             Your regulars know <em className="italic text-voltage">the good spots.</em>
           </h2>
@@ -195,37 +193,217 @@ export function EventNightShowcase() {
   );
 }
 
+function MagicLinkPreview() {
+  return (
+    <div className="mt-4 flex flex-col gap-2 rounded-xl border border-hairline/60 bg-surface-sunken/45 p-3.5 font-mono text-[10px] text-ink-soft select-none">
+      <div className="flex items-center justify-between border-b border-hairline/40 pb-2">
+        <span>From: noreply@svyne.com</span>
+        <span className="text-[9px] bg-brand/10 text-brand px-2 py-0.5 rounded font-semibold">Active</span>
+      </div>
+      <div className="flex items-center justify-between pt-1">
+        <span className="font-semibold text-ink">Sign in to Svyne</span>
+        <span className="text-brand font-bold tabular-nums animate-pulse">14:59</span>
+      </div>
+      <div className="mt-2 flex justify-center">
+        <div className="rounded bg-brand hover:bg-brand-hover px-4 py-1.5 font-sans text-xs font-semibold text-white transition-colors duration-200">
+          Confirm Sign In
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GroupBookingPreview() {
+  return (
+    <div className="mt-4 space-y-2.5 rounded-xl border border-hairline/60 bg-surface-sunken/45 p-3.5 text-[10px] text-ink-soft select-none">
+      <div className="flex items-center justify-between font-mono text-[9px] border-b border-hairline/40 pb-1.5">
+        <span>Table 12 (VIP)</span>
+        <span className="font-semibold text-ink">3 / 4 Claimed</span>
+      </div>
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="font-medium text-ink">Alex Carter (Host)</span>
+          <span className="text-[9px] font-mono text-success font-semibold">Confirmed</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="font-medium text-ink">Sarah Jenkins</span>
+          <span className="text-[9px] font-mono text-success font-semibold">Confirmed</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="font-medium text-ink">Jordan Reed</span>
+          <span className="text-[9px] font-mono text-success font-semibold">Confirmed</span>
+        </div>
+        <div className="flex items-center justify-between opacity-60">
+          <span className="italic text-ink-faint">Invite pending...</span>
+          <span className="text-[9px] font-mono text-amber font-semibold">Sent</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function BrandingPreview() {
+  return (
+    <div className="mt-4 flex justify-between items-center rounded-xl border border-hairline/60 bg-surface-sunken/45 p-3.5 text-[10px] select-none">
+      <span className="font-mono text-[9px] text-ink-soft">Contrast Check</span>
+      <div className="flex gap-2">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-hairline bg-surface cursor-pointer shadow-xs transition-transform hover:scale-110">
+          <div className="h-4 w-4 rounded-full bg-accent-gold" />
+        </div>
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-hairline bg-surface cursor-pointer shadow-xs transition-transform hover:scale-110">
+          <div className="h-4 w-4 rounded-full bg-brand" />
+        </div>
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-hairline bg-surface cursor-pointer shadow-xs transition-transform hover:scale-110">
+          <div className="h-4 w-4 rounded-full bg-success" />
+        </div>
+        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-hairline bg-surface cursor-pointer shadow-xs transition-transform hover:scale-110">
+          <div className="h-4 w-4 rounded-full bg-destructive" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LineupPreview() {
+  return (
+    <div className="mt-4 grid grid-cols-2 gap-3 text-[10px] select-none">
+      <div className="flex items-center gap-2.5 rounded-lg border border-hairline/60 bg-surface-sunken/45 p-2.5 shadow-xs transition-transform hover:scale-102">
+        <div className="h-7 w-7 rounded-full bg-brand/10 flex items-center justify-center text-[9px] font-bold text-brand">DJ</div>
+        <div>
+          <p className="font-semibold text-ink">DJ Solar</p>
+          <p className="text-[8px] text-success font-mono font-semibold uppercase">Headliner</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2.5 rounded-lg border border-hairline/60 bg-surface-sunken/45 p-2.5 shadow-xs transition-transform hover:scale-102">
+        <div className="h-7 w-7 rounded-full bg-amber/10 flex items-center justify-center text-[9px] font-bold text-voltage-ink">MC</div>
+        <div>
+          <p className="font-semibold text-ink">MC Nova</p>
+          <p className="text-[8px] text-ink-faint font-mono font-semibold uppercase">Guest</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SeoPreview() {
+  return (
+    <div className="mt-4 rounded-xl border border-hairline/60 bg-surface-sunken/45 p-3.5 text-[10px] text-ink-soft space-y-1.5 select-none">
+      <div className="flex items-center gap-1 text-[8px] font-mono text-ink-faint">
+        <span>svyne.com</span>
+        <span>›</span>
+        <span>e</span>
+        <span>›</span>
+        <span className="text-brand">summer-solstice</span>
+      </div>
+      <p className="text-xs font-semibold text-brand hover:underline cursor-pointer">
+        Summer Solstice 2026
+      </p>
+      <p className="text-[9px] text-ink-soft leading-tight">
+        Rooftop terrace, live performers, and table bookings. Live check-in starts at 9 PM.
+      </p>
+    </div>
+  );
+}
+
+function AccessibilityPreview() {
+  return (
+    <div className="mt-4 flex justify-between items-center rounded-xl border border-hairline/60 bg-surface-sunken/45 p-3.5 text-[10px] select-none">
+      <div className="flex items-center gap-2">
+        <span className="text-[9px] font-mono text-ink-soft">Reduced Motion</span>
+        <div className="h-4.5 w-8 rounded-full bg-success/20 p-0.5 transition-colors cursor-pointer flex justify-end">
+          <div className="h-3.5 w-3.5 rounded-full bg-success" />
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <span className="text-[9px] font-mono text-ink-soft">Font Scale</span>
+        <div className="flex gap-1 bg-surface rounded border border-hairline/60 p-0.5">
+          <span className="px-1.5 py-0.5 text-[8px] rounded hover:bg-surface-sunken font-bold">A</span>
+          <span className="px-1.5 py-0.5 text-[9px] rounded bg-surface-sunken font-bold border border-hairline/30">A</span>
+          <span className="px-1.5 py-0.5 text-[10px] rounded hover:bg-surface-sunken font-bold">A</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const ledger = [
-  [KeyRound, 'No passwords to forget at 11 PM', 'Magic links that expire in 15 minutes. Because nobody wants to reset a password in a line that wraps around the block.'],
-  [Users, 'Group bookings', 'Buy the table, invite guests by email, each claims their own ticket.'],
-  [Palette, 'Your brand everywhere', 'Branding studio with presets, live preview, and contrast checks.'],
-  [Landmark, 'ACH at checkout', 'Bank payment swaps the card fee for 2%. Buyers see the saving.'],
-  [Search, 'SEO event pages', 'Clean slugs and structured data, indexed the day you publish.'],
-  [Star, 'Performers and sponsors', 'Profile pages that make your lineup look booked-out.'],
-  [Accessibility, 'Accessible by default', 'WCAG AA on the purchase path, reduced motion respected.'],
-  [ShieldCheck, 'No refund admin', 'All sales final, disclosed at checkout, in the footer, in the email.'],
+  {
+    icon: KeyRound,
+    term: 'No passwords to forget at 11 PM',
+    detail: 'Magic links that expire in 15 minutes. Because nobody wants to reset a password in a line that wraps around the block.',
+    span: 'md:col-span-2',
+    preview: <MagicLinkPreview />,
+  },
+  {
+    icon: Users,
+    term: 'Group bookings',
+    detail: 'Buy the table, invite guests by email, each claims their own ticket.',
+    span: 'md:col-span-1',
+    preview: <GroupBookingPreview />,
+  },
+  {
+    icon: Palette,
+    term: 'Your brand everywhere',
+    detail: 'Branding studio with presets, live preview, and contrast checks.',
+    span: 'md:col-span-1',
+    preview: <BrandingPreview />,
+  },
+  {
+    icon: Star,
+    term: 'Performers and sponsors',
+    detail: 'Profile pages that make your lineup look booked-out.',
+    span: 'md:col-span-2',
+    preview: <LineupPreview />,
+  },
+  {
+    icon: Search,
+    term: 'SEO event pages',
+    detail: 'Clean slugs and structured data, indexed the day you publish.',
+    span: 'md:col-span-1',
+    preview: <SeoPreview />,
+  },
+  {
+    icon: Accessibility,
+    term: 'Accessible by default',
+    detail: 'Designed for everyone, with a smooth experience on any device.',
+    span: 'md:col-span-2',
+    preview: <AccessibilityPreview />,
+  },
 ] as const;
 
 export function FeatureLedger() {
   return (
     <section id="features" className="mx-auto max-w-7xl scroll-mt-20 px-4 py-16 md:px-6 md:py-24">
-      <h2 data-split className="font-display text-3xl text-ink md:text-4xl">
-        Small details, <em className="italic text-brand">big nights.</em>
-      </h2>
-      <div className="mt-10 grid border-t border-hairline sm:grid-cols-2">
-        {ledger.map(([Icon, term, detail]) => (
-          <div
-            data-reveal
-            key={term}
-            className="flex gap-4 border-b border-hairline py-6 sm:odd:pr-10 sm:even:border-l sm:even:pl-10"
-          >
-            <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden />
-            <div>
-              <h3 className="font-display text-lg text-ink">{term}</h3>
-              <p className="mt-1 max-w-[46ch] text-sm leading-relaxed text-ink-soft">{detail}</p>
+      <div className="space-y-3">
+        <p data-reveal className="font-mono text-xs uppercase tracking-[0.3em] text-voltage-ink">Features</p>
+        <h2 data-split className="font-display text-3xl text-ink md:text-5xl">
+          Small details, <em className="italic text-brand">big nights.</em>
+        </h2>
+      </div>
+      <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+        {ledger.map((item) => {
+          const Icon = item.icon;
+          return (
+            <div
+              data-reveal
+              key={item.term}
+              className={`p-1.5 rounded-[2rem] bg-surface-sunken/45 border border-hairline/80 shadow-xs hover:shadow-md transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.01] group ${item.span}`}
+            >
+              <div className="flex flex-col justify-between h-full rounded-[calc(2rem-0.375rem)] bg-surface border border-hairline/40 p-6 shadow-[inset_0_1px_1.5px_rgba(255,255,255,0.7)]">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/5 border border-brand/10 text-brand group-hover:scale-110 transition-transform duration-300">
+                      <Icon className="h-4.5 w-4.5" strokeWidth={2} aria-hidden />
+                    </div>
+                    <h3 className="font-display text-lg font-semibold text-ink">{item.term}</h3>
+                  </div>
+                  <p className="text-sm leading-relaxed text-ink-soft">{item.detail}</p>
+                </div>
+                {item.preview}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

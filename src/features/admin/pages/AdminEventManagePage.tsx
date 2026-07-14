@@ -156,7 +156,7 @@ export function AdminEventManagePage() {
         defaultIsAllInclusive: newTemplateAllInclusive,
       });
       await templates.reload();
-      
+
       // Auto select the new template
       setTableTemplateId(templateId);
       setTableLabel(newTemplateName);
@@ -532,14 +532,14 @@ export function AdminEventManagePage() {
       {activeSection === 'timeline' && event.data && (
         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <EventMediaManager eventsId={eventsId} />
-          
+
           <EventCatalogLinks
             eventsId={eventsId}
             performersJson={event.data.performersJson}
             sponsorsJson={event.data.sponsorsJson}
             onChanged={event.reload}
           />
-          
+
           <ScheduleTimeline
             eventsId={eventsId}
             eventStart={event.data.startDate}
@@ -608,7 +608,7 @@ export function AdminEventManagePage() {
                   <Input
                     value={newTemplateName}
                     onChange={(e) => setNewTemplateName(e.target.value)}
-                    placeholder="e.g. VIP Center Lounge"
+                    placeholder="e.g. Center Lounge"
                     className="h-10 bg-background border-border text-sm"
                   />
                 </div>

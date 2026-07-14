@@ -81,7 +81,7 @@ export function EventSeatingMap({
   const [error, setError] = useState<string | null>(null);
   const [hoveredTable, setHoveredTable] = useState<HoveredTable | null>(null);
 
-  
+
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -147,7 +147,7 @@ export function EventSeatingMap({
     }
   }
 
-  
+
   const fitView = useCallback(() => {
     const el = containerRef.current;
     if (!el || !canvas.w || !canvas.h) return;
@@ -252,7 +252,7 @@ export function EventSeatingMap({
       </div>
 
       <div className="relative overflow-hidden rounded-3xl border border-border-soft bg-stage shadow-2xl min-h-[500px]">
-        {}
+        { }
         <div className="absolute bottom-4 left-4 z-30 flex items-center gap-3 sm:gap-4 bg-stage-elevated/90 backdrop-blur-md px-3 py-2 rounded-xl border border-white/5 text-[10px] uppercase font-bold tracking-wider text-on-stage-soft">
           <div className="flex items-center gap-1.5">
             <span className="size-2.5 rounded-full bg-white border border-accent-gold" />
@@ -268,13 +268,13 @@ export function EventSeatingMap({
           </div>
         </div>
 
-        {}
+        { }
         {hoveredTable && (
           <div className="absolute top-4 right-4 z-30 w-56 bg-stage-elevated/95 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl text-xs space-y-2 animate-in fade-in duration-200">
             <div className="flex items-center justify-between">
               <span className="font-black text-sm text-white font-display uppercase">{hoveredTable.label}</span>
               <span className="inline-flex items-center gap-1 rounded bg-accent-gold/10 text-accent-gold text-[8px] font-black uppercase tracking-wider px-2 py-0.5 border border-accent-gold/20">
-                VIP Seating
+                Seating
               </span>
             </div>
             <div className="space-y-1.5 pt-1 text-white/70 font-medium">
@@ -327,7 +327,7 @@ export function EventSeatingMap({
           </div>
         )}
 
-        {}
+        { }
         <div
           ref={containerRef}
           onMouseDown={handleMouseDown}
@@ -339,7 +339,7 @@ export function EventSeatingMap({
             isDragging ? 'cursor-grabbing' : 'cursor-grab'
           )}
         >
-          {}
+          { }
           <div
             className="absolute inset-0 opacity-10 pointer-events-none"
             style={{
@@ -354,7 +354,7 @@ export function EventSeatingMap({
             }}
           />
 
-          {}
+          { }
           <div
             className="absolute"
             style={{
@@ -365,7 +365,7 @@ export function EventSeatingMap({
               transition: isDragging ? 'none' : 'transform 0.15s ease-out',
             }}
           >
-            {}
+            { }
             {layout.objects.map((o) => (
               <div
                 key={o.layoutObjectsId}
@@ -383,7 +383,7 @@ export function EventSeatingMap({
               </div>
             ))}
 
-            {}
+            { }
             {layout.tables.map((table) => {
               const type = typeById.get(table.eventTablesId);
               const isAvailable = table.status === 'Available';
@@ -391,7 +391,7 @@ export function EventSeatingMap({
               const capacity = capacityOf(table);
               const shape = table.shapeOverride || type?.shape || 'Rectangle';
 
-              
+
               const bgStyle = isSelected
                 ? 'var(--accent-burgundy)'
                 : isAvailable
@@ -448,7 +448,7 @@ export function EventSeatingMap({
                       : 'cursor-not-allowed'
                   )}
                 >
-                  {}
+                  { }
                   {isSelected ? (
                     <span className="flex size-4.5 items-center justify-center rounded-full bg-white text-accent-burgundy shadow-[0_0_10px_color-mix(in_srgb,var(--surface)_40%,transparent)] animate-bounce">
                       <Check className="size-3 stroke-[3]" />

@@ -30,7 +30,7 @@ export function LandingHero() {
             The box office <em className="italic text-voltage">you&rsquo;d want</em> &mdash; for the person who sweeps the floor at 3 AM.
           </h1>
           <p data-reveal className="max-w-md text-base leading-relaxed text-on-stage-soft md:text-lg">
-            Sell tickets and VIP tables under your own name. No monthly bill, no credit card to
+            Sell tickets and tables under your own name. No monthly bill, no credit card to
             start. The buyer pays <strong className="text-on-stage">one honest fee</strong> at checkout
             &mdash; you keep every penny of your ticket price.
           </p>
