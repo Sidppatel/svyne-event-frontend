@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import type { gsap as GsapCore } from 'gsap';
 import type { Draggable as DraggableType } from 'gsap/Draggable';
 import { cn } from '@/shared/lib/cn';
+import { Check } from 'lucide-react';
 
 interface MockGsapBundle {
   gsap: typeof GsapCore;
@@ -363,16 +364,19 @@ export function DashboardMock() {
 
 export function ScannerMock() {
   return (
-    <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-[24px] border-4 border-stage-elevated bg-stage shadow-[var(--shadow-e1)]">
-      <div className="px-4 pb-3 pt-4">
+    <div className="mx-auto w-full max-w-[240px] overflow-hidden rounded-[24px] border-4 border-stage-elevated bg-stage shadow-[var(--shadow-e1)] select-none">
+      <div className="px-4 pb-3 pt-4 border-b border-on-stage-soft/10">
         <p className="text-center font-mono text-[10px] uppercase tracking-[0.3em] text-on-stage-soft">Door scan</p>
       </div>
-      <div className="svyne-scanline bg-success px-4 py-8 text-center text-[var(--color-sand-100)]">
-        <p className="font-display text-4xl">VIP-3</p>
-        <p className="mt-1 text-sm">Amara O. · party of 6</p>
-        <p className="mt-2 font-mono text-[11px] uppercase tracking-widest opacity-80">Checked in</p>
+      <div className="svyne-scanline px-4 py-8 text-center text-success">
+        <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full border border-success/30 bg-success/10">
+          <Check className="h-5 w-5 text-success" />
+        </div>
+        <p className="font-display text-4xl text-on-stage">Table 3</p>
+        <p className="mt-1 text-sm text-on-stage-soft">Amara O. · party of 6</p>
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-success font-bold">Checked in</p>
       </div>
-      <div className="flex items-center justify-between px-5 py-4 font-mono text-[11px] text-on-stage-soft">
+      <div className="flex items-center justify-between border-t border-on-stage-soft/10 px-5 py-4 font-mono text-[11px] text-on-stage-soft">
         <span>96 / 220 in</span>
         <span className="text-on-stage">Next scan</span>
       </div>
