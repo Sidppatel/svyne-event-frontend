@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import {
-  DEFAULT_BRANDING,
+  defaultBranding,
   applyBranding,
   parseBrandTokens,
   type TenantBranding,
@@ -14,7 +14,7 @@ interface ThemeContextValue {
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
-  branding: DEFAULT_BRANDING,
+  branding: defaultBranding(),
   tenantSlug: '',
 });
 
@@ -31,7 +31,7 @@ function mergeBranding(base: TenantBranding, fetched: Partial<TenantBranding>): 
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const { portal, tenantSlug } = resolvePortalContext();
-  const [branding, setBranding] = useState<TenantBranding>(DEFAULT_BRANDING);
+  const [branding, setBranding] = useState<TenantBranding>(defaultBranding);
 
   useEffect(() => {
     if (portal !== 'public' || !tenantSlug) {
@@ -44,7 +44,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
           return;
         }
         setBranding(
-          mergeBranding(DEFAULT_BRANDING, {
+          mergeBranding(defaultBranding(), {
             primary: fetched.brandPrimary,
             secondary: fetched.brandSecondary,
             accent: fetched.brandAccent,

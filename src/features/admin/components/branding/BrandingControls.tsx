@@ -1,5 +1,5 @@
 import { Check, ImageIcon, X } from 'lucide-react';
-import { ADVANCED_BRANDING_TOKENS, BRANDING_PRESETS, type BrandingPreset } from '@/shared/theme/branding';
+import { ADVANCED_BRANDING_TOKENS, brandingPresets, type BrandingPreset } from '@/shared/theme/branding';
 import { brandingContrastChecks, type BrandingFormState } from '@/features/admin/services/brandingStudio';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -65,7 +65,7 @@ export function BrandingPresetRow({
 }) {
   return (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
-      {BRANDING_PRESETS.map((preset) => {
+      {brandingPresets().map((preset) => {
         const active =
           preset.colors.primary === form.primary &&
           preset.colors.accent === form.accent &&

@@ -75,12 +75,6 @@ export function contrastGrade(hexA: string, hexB: string): ContrastGrade {
   return 'Fail';
 }
 
-export function readableTextOn(backgroundHex: string): string {
-  return contrastRatio(backgroundHex, '#1c1917') >= contrastRatio(backgroundHex, '#ffffff')
-    ? '#1c1917'
-    : '#ffffff';
-}
-
 export function resolveCssColor(varName: string, alpha?: number): string {
   const value = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   if (alpha === undefined) {
@@ -88,6 +82,14 @@ export function resolveCssColor(varName: string, alpha?: number): string {
   }
   const rgb = hexToRgb(value);
   return rgb ? `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})` : value;
+}
+
+export function readableTextOn(backgroundHex: string): string {
+  const darkCandidate = resolveCssColor('--branding-contrast-dark-candidate');
+  const lightCandidate = resolveCssColor('--branding-contrast-light-candidate');
+  return contrastRatio(backgroundHex, darkCandidate) >= contrastRatio(backgroundHex, lightCandidate)
+    ? darkCandidate
+    : lightCandidate;
 }
 
 export interface TenantBranding {
@@ -149,98 +151,84 @@ export function serializeBrandTokens(tokens: Record<string, string>): string {
   return entries.length === 0 ? '' : JSON.stringify(Object.fromEntries(entries));
 }
 
-export const DEFAULT_BRANDING: TenantBranding = {
-  primary: '#8a2d3b',
-  secondary: '#f3f0eb',
-  accent: '#d4a574',
-  background: '#faf8f5',
-  text: '#1c1917',
-  button: '#8a2d3b',
-  highlight: '#d4a574',
-  tokens: {},
-  logoUrl: null,
-  tenantName: '',
-};
+export type BrandingColorRole =
+  | 'primary'
+  | 'secondary'
+  | 'accent'
+  | 'background'
+  | 'text'
+  | 'button'
+  | 'highlight';
+
+const BRANDING_COLOR_ROLES: BrandingColorRole[] = [
+  'primary',
+  'secondary',
+  'accent',
+  'background',
+  'text',
+  'button',
+  'highlight',
+];
+
+export type BrandingColors = Pick<TenantBranding, BrandingColorRole>;
+
+function readBrandingColors(cssVarPrefix: string): BrandingColors {
+  const colors = {} as BrandingColors;
+  for (const role of BRANDING_COLOR_ROLES) {
+    colors[role] = resolveCssColor(`${cssVarPrefix}-${role}`);
+  }
+  return colors;
+}
+
+let cachedDefaultBranding: TenantBranding | null = null;
+
+export function defaultBranding(): TenantBranding {
+  if (!cachedDefaultBranding || !isHexColor(cachedDefaultBranding.primary)) {
+    cachedDefaultBranding = {
+      ...readBrandingColors('--branding-default'),
+      tokens: {},
+      logoUrl: null,
+      tenantName: '',
+    };
+  }
+  return cachedDefaultBranding;
+}
 
 export interface BrandingPreset {
   name: string;
-  colors: Pick<
-    TenantBranding,
-    'primary' | 'secondary' | 'accent' | 'background' | 'text' | 'button' | 'highlight'
-  >;
+  colors: BrandingColors;
 }
 
-export const BRANDING_PRESETS: BrandingPreset[] = [
-  {
-    name: 'EntryVine Classic',
-    colors: {
-      primary: '#8a2d3b',
-      secondary: '#f3f0eb',
-      accent: '#d4a574',
-      background: '#faf8f5',
-      text: '#1c1917',
-      button: '#8a2d3b',
-      highlight: '#e8940a',
-    },
-  },
-  {
-    name: 'Midnight Stage',
-    colors: {
-      primary: '#4f46e5',
-      secondary: '#e0e7ff',
-      accent: '#f59e0b',
-      background: '#f8fafc',
-      text: '#0f172a',
-      button: '#4f46e5',
-      highlight: '#f59e0b',
-    },
-  },
-  {
-    name: 'Forest Gala',
-    colors: {
-      primary: '#166534',
-      secondary: '#ecfdf5',
-      accent: '#ca8a04',
-      background: '#fafdf7',
-      text: '#14201a',
-      button: '#166534',
-      highlight: '#ca8a04',
-    },
-  },
-  {
-    name: 'Coastal Club',
-    colors: {
-      primary: '#0e7490',
-      secondary: '#e0f2fe',
-      accent: '#f97316',
-      background: '#f8fbfc',
-      text: '#0c1a20',
-      button: '#0e7490',
-      highlight: '#f97316',
-    },
-  },
-  {
-    name: 'Noir Premiere',
-    colors: {
-      primary: '#18181b',
-      secondary: '#f4f4f5',
-      accent: '#d4a017',
-      background: '#fafafa',
-      text: '#18181b',
-      button: '#18181b',
-      highlight: '#d4a017',
-    },
-  },
+const BRANDING_PRESET_SLUGS: { name: string; slug: string }[] = [
+  { name: 'EntryVine Classic', slug: 'entryvine-classic' },
+  { name: 'Midnight Stage', slug: 'midnight-stage' },
+  { name: 'Forest Gala', slug: 'forest-gala' },
+  { name: 'Coastal Club', slug: 'coastal-club' },
+  { name: 'Noir Premiere', slug: 'noir-premiere' },
 ];
+
+let cachedBrandingPresets: BrandingPreset[] | null = null;
+
+export function brandingPresets(): BrandingPreset[] {
+  if (!cachedBrandingPresets || !isHexColor(cachedBrandingPresets[0].colors.primary)) {
+    cachedBrandingPresets = BRANDING_PRESET_SLUGS.map(({ name, slug }) => ({
+      name,
+      colors: readBrandingColors(`--branding-preset-${slug}`),
+    }));
+  }
+  return cachedBrandingPresets;
+}
 
 export function brandingCssVars(branding: TenantBranding): Record<string, string> {
   const vars: Record<string, string> = {};
+  const fallback = defaultBranding();
+  const shadeMixTarget = resolveCssColor('--branding-shade-mix-target');
   const set = (name: string, value: string) => {
     vars[name] = value;
   };
   if (isHexColor(branding.primary)) {
     set('--brand', branding.primary);
-    set('--brand-hover', `color-mix(in srgb, ${branding.primary} 85%, #000000)`);
+    set('--brand-hover', `color-mix(in srgb, ${branding.primary} 85%, ${shadeMixTarget})`);
     set('--brand-ink', readableTextOn(branding.primary));
     set('--ring', branding.primary);
     set('--brand-primary', branding.primary);
@@ -257,12 +245,12 @@ export function brandingCssVars(branding: TenantBranding): Record<string, string
   }
   if (isHexColor(branding.background)) {
     set('--canvas', branding.background);
-    set('--surface-sunken', `color-mix(in srgb, ${branding.background} 92%, ${branding.text || '#1c1917'})`);
+    set('--surface-sunken', `color-mix(in srgb, ${branding.background} 92%, ${branding.text || fallback.text})`);
   }
   if (isHexColor(branding.text)) {
     set('--ink', branding.text);
-    set('--ink-soft', `color-mix(in srgb, ${branding.text} 72%, ${branding.background || '#ffffff'})`);
-    set('--ink-faint', `color-mix(in srgb, ${branding.text} 62%, ${branding.background || '#ffffff'})`);
+    set('--ink-soft', `color-mix(in srgb, ${branding.text} 72%, ${branding.background || fallback.background})`);
+    set('--ink-faint', `color-mix(in srgb, ${branding.text} 62%, ${branding.background || fallback.background})`);
   }
   if (isHexColor(branding.text) && isHexColor(branding.background)) {
     set('--hairline', `color-mix(in srgb, ${branding.text} 10%, ${branding.background})`);
@@ -283,8 +271,8 @@ export function brandingCssVars(branding: TenantBranding): Record<string, string
   const customTokens = branding.tokens ?? {};
   const tokenHex = (token: string) =>
     isHexColor(customTokens[token] ?? '') ? customTokens[token] : null;
-  const backgroundHex = isHexColor(branding.background) ? branding.background : '#f7f8f8';
-  const textHex = isHexColor(branding.text) ? branding.text : '#1c1917';
+  const backgroundHex = isHexColor(branding.background) ? branding.background : fallback.background;
+  const textHex = isHexColor(branding.text) ? branding.text : fallback.text;
   const onStageSoftHex = tokenHex('on-stage-soft') ?? mixHex(backgroundHex, textHex, 0.7);
   const inkSoftHex = tokenHex('ink-soft') ?? mixHex(textHex, backgroundHex, 0.72);
   const MIN_SURFACE_CONTRAST = 3;

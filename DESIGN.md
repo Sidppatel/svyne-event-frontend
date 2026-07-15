@@ -25,30 +25,30 @@ All color flows through CSS variables in `src/index.css`. **Never hardcode hex i
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `--background` | `#FBF6F0` | warm porcelain page canvas (60%) |
-| `--foreground` | `#241522` | plum ink — headlines + primary text |
-| `--card` / `--popover` | `#FFFFFF` | clean surfaces for depth on the warm canvas (30%) |
-| `--muted` / `--accent` | `#F4ECE3` | soft warm panels, hover highlights |
-| `--muted-foreground` | `#6B5A66` | plum-gray body, labels, metadata |
-| `--primary` | `#A4123F` | **cranberry — the only CTA fill** (Buy tickets, Register, Pay) |
-| `--primary-foreground` | `#FFF7F2` | text on cranberry |
-| `--secondary` | `#F0E6DB` | warm-sand secondary buttons / badges |
-| `--marigold` | `#F5A524` | **signature voltage** — prices, urgency, ticket perforation, active nav |
-| `--marigold-foreground` | `#5A3B00` | readable dark-gold text on a marigold tint |
-| `--success` | `#2F7D5B` | confirmed / purchased |
-| `--warning` | `#C9871F` | limited availability |
-| `--destructive` | `#B3261E` | errors, payment failures |
-| `--border` / `--input` | `#E7D9CB` | warm hairlines |
-| `--ring` | `#A4123F` | focus ring = brand cranberry |
-
-`--amber` is kept as a back-compat alias of the marigold family (existing components use `text-amber-foreground`, `bg-amber/15`). New code should prefer `marigold`.
+| `--background` | `#F5F5F5` | Soft Mist page canvas (60%) |
+| `--foreground` | `#212121` | Charcoal Ink — headlines + primary text |
+| `--card` / `--popover` | `#FFFFFF` | Clear White surfaces for depth on canvas (30%) |
+| `--muted` / `--accent` | `#EAEAEA` | soft panels, hover highlights |
+| `--muted-foreground` | `#757575` | Muted Gray — body text, labels, metadata |
+| `--primary` | `#1B5E20` | **Verdant Trust — primary CTA fill** (Buy tickets, Register, Pay) |
+| `--primary-foreground` | `#FFFFFF` | text on Verdant Trust |
+| `--secondary` | `#F57C00` | Warm Action — secondary buttons / badges / highlights |
+| `--secondary-foreground` | `#212121` | text on Warm Action |
+| `--marigold` / `--voltage-accent` | `#F9A825` | **Digital Gold** — prices, urgency, premium tags, active nav |
+| `--marigold-foreground` | `#212121` | text on Digital Gold |
+| `--success` | `#2E7D32` | confirmed / purchased |
+| `--warning` | `#F57C00` | limited availability |
+| `--destructive` | `#D32F2F` | errors, payment failures |
+| `--border` / `--input` | `#E0E0E0` | warm gray hairlines |
+| `--ring` | `#1B5E20` | focus ring = brand Verdant Trust |
 
 ### Don'ts
 
-- **No pure black** (`#000`) for ink — plum `#241522` is warmer and premium.
-- **No blue links.** Inline links are cranberry (`text-text-link`). Blue breaks the warm ecosystem.
-- **Marigold is rationed.** It appears only at the ticket perforation, prices, urgency badges, and the active nav indicator. Cranberry is the only *action* color. Spend boldness in one place.
-- No second accent. If a screen needs "another color," it needs better hierarchy instead.
+- **No pure black** (`#000`) or pure white as text on light background — use `#212121` Charcoal Ink.
+- **Never use `#F57C00` or `#F9A825` for body text** — icons, tags, highlights, and UI elements only.
+- **`#757575` as text** should only be used for labels/meta, never body text.
+- Inline links use `--primary` (`#1B5E20`) default, and `--secondary` (`#F57C00`) hover.
+
 
 ---
 

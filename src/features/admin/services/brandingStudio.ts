@@ -1,8 +1,8 @@
 import type { Tenant } from '@/shared/proto/tenant';
 import type { TenantBrandingInput } from '@/features/admin/services/tenantService';
 import {
-  DEFAULT_BRANDING,
   contrastGrade,
+  defaultBranding,
   parseBrandTokens,
   serializeBrandTokens,
   type ContrastGrade,
@@ -24,17 +24,34 @@ export interface BrandingFormState {
 }
 
 export function brandingFormFromTenant(tenant: Tenant): BrandingFormState {
+  const fallback = defaultBranding();
   return {
     logoImagesId: tenant.logoUrl ? (tenant.logoUrl.split('/').pop() ?? '') : '',
     logoUrl: tenant.logoUrl,
-    primary: tenant.brandPrimary || DEFAULT_BRANDING.primary,
-    secondary: tenant.brandSecondary || DEFAULT_BRANDING.secondary,
-    accent: tenant.brandAccent || DEFAULT_BRANDING.accent,
-    background: tenant.brandBackground || DEFAULT_BRANDING.background,
-    text: tenant.brandText || DEFAULT_BRANDING.text,
-    button: tenant.brandButton || DEFAULT_BRANDING.button,
-    highlight: tenant.brandHighlight || DEFAULT_BRANDING.highlight,
+    primary: tenant.brandPrimary || fallback.primary,
+    secondary: tenant.brandSecondary || fallback.secondary,
+    accent: tenant.brandAccent || fallback.accent,
+    background: tenant.brandBackground || fallback.background,
+    text: tenant.brandText || fallback.text,
+    button: tenant.brandButton || fallback.button,
+    highlight: tenant.brandHighlight || fallback.highlight,
     tokens: parseBrandTokens(tenant.brandTokensJson),
+  };
+}
+
+export function emptyBrandingForm(): BrandingFormState {
+  const fallback = defaultBranding();
+  return {
+    logoImagesId: '',
+    logoUrl: '',
+    primary: fallback.primary,
+    secondary: fallback.secondary,
+    accent: fallback.accent,
+    background: fallback.background,
+    text: fallback.text,
+    button: fallback.button,
+    highlight: fallback.highlight,
+    tokens: {},
   };
 }
 

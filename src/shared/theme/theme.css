@@ -1,72 +1,119 @@
 :root {
-  --color-sand-100: #fffffd;
-  --color-sand-200: #faf8f5;
-  --color-sand-300: #f3f0ed;
-  --color-sand-400: #e5e2de;
-  --color-sand-500: #d3cfcb;
-  --color-sand-600: #76716c;
-  --color-sand-700: #57534e;
-  --color-sand-800: #292523;
-  --color-sand-900: #1c1917;
-  --color-burgundy-100: #8a2d3b;
-  --color-burgundy-200: #7b2432;
-  --color-gold-100: #eeac4d;
-  --color-gold-200: #d4a574;
-  --color-gold-300: #e89309;
-  --color-gold-400: #b45308;
-  --color-gold-500: #20130b;
-  --color-coral-100: #e07a5f;
-  --color-coral-200: #c96248;
-  --color-cream-100: #f2e8d5;
-  --color-sage-100: #84a98c;
-  --color-rust-100: #bc4749;
-  --color-green-100: #f4f7f5;
-  --color-green-200: #c6d4c7;
-  --color-green-300: #357a40;
-  --color-green-400: #357a40;
-  --color-green-500: #2d672d;
-  --color-green-600: #1e311c;
-  --color-green-700: #152013;
-  --color-teal-100: #00695c;
-  --color-red-100: #dd6d5d;
-  --color-red-200: #b3261e;
-  --color-purple-100: #f3f2f5;
-  --color-purple-200: #c6c1d5;
-  --color-purple-300: #4a148c;
-  --color-purple-400: #3e007c;
-  --color-purple-500: #280054;
-  --color-purple-600: #1b033b;
+  --color-verdant-trust: #1B5E20;
+  --color-warm-action: #F57C00;
+  --color-digital-gold: #F9A825;
+  --color-soft-mist: #F5F5F5;
+  --color-clear-white: #FFFFFF;
+  --color-charcoal-ink: #212121;
+  --color-muted-gray: #757575;
+  --color-pure-black: #000000;
+
+  --color-success-green: #2E7D32;
+  --color-warning-orange: #F57C00;
+  --color-error-red: #D32F2F;
+  --color-info-blue: #1976D2;
+
+  --color-forest-brand: #2E7D32;
+  --color-forest-brand-hover: #27682A;
+  --color-forest-stage: #0F2211;
+  --color-forest-stage-elevated: #1A3220;
+  --color-forest-mist: #F3F8F2;
+  --color-forest-haze: #C4D6C4;
+
+  --color-royal-purple: #4A148C;
+  --color-royal-purple-hover: #3B1072;
+  --color-royal-purple-stage: #190B2B;
+  --color-royal-purple-stage-elevated: #241239;
+  --color-royal-purple-mist: #F6F2FB;
+  --color-royal-purple-haze: #CBBFDD;
+
+  --color-developer-gold: #D99B00;
+  --color-deep-gold-ink: #201400;
+  --color-deep-teal: #00695C;
 }
 
 :root {
-  --canvas: var(--color-sand-200);
-  --surface: var(--color-sand-100);
-  --surface-sunken: var(--color-sand-300);
-  --ink: var(--color-sand-900);
-  --ink-soft: var(--color-sand-700);
-  --ink-faint: var(--color-sand-600);
-  --hairline: var(--color-sand-400);
-  --hairline-strong: var(--color-sand-500);
+  --branding-default-primary: var(--color-verdant-trust);
+  --branding-default-secondary: var(--color-warm-action);
+  --branding-default-accent: var(--color-digital-gold);
+  --branding-default-background: var(--color-soft-mist);
+  --branding-default-text: var(--color-charcoal-ink);
+  --branding-default-button: var(--color-verdant-trust);
+  --branding-default-highlight: var(--color-digital-gold);
+  --branding-contrast-dark-candidate: var(--color-charcoal-ink);
+  --branding-contrast-light-candidate: var(--color-clear-white);
+  --branding-shade-mix-target: var(--color-pure-black);
 
-  --brand: var(--color-burgundy-100);
-  --brand-hover: var(--color-burgundy-200);
-  --brand-ink: var(--color-sand-100);
-  --voltage-accent: var(--color-gold-200);
-  --voltage-accent-ink: var(--color-gold-500);
+  --branding-preset-entryvine-classic-primary: var(--color-verdant-trust);
+  --branding-preset-entryvine-classic-secondary: var(--color-warm-action);
+  --branding-preset-entryvine-classic-accent: var(--color-digital-gold);
+  --branding-preset-entryvine-classic-background: var(--color-soft-mist);
+  --branding-preset-entryvine-classic-text: var(--color-charcoal-ink);
+  --branding-preset-entryvine-classic-button: var(--color-verdant-trust);
+  --branding-preset-entryvine-classic-highlight: var(--color-digital-gold);
 
-  --highlight: var(--color-cream-100);
-  --accent-coral: var(--color-coral-100);
-  --accent-coral-hover: var(--color-coral-200);
+  --branding-preset-midnight-stage-primary: #4F46E5;
+  --branding-preset-midnight-stage-secondary: #E0E7FF;
+  --branding-preset-midnight-stage-accent: #F59E0B;
+  --branding-preset-midnight-stage-background: #F8FAFC;
+  --branding-preset-midnight-stage-text: #0F172A;
+  --branding-preset-midnight-stage-button: #4F46E5;
+  --branding-preset-midnight-stage-highlight: #F59E0B;
 
-  --status-success: var(--color-green-300);
-  --status-warn: var(--color-gold-400);
-  --status-danger: var(--color-rust-100);
-  --status-danger-on-dark: var(--color-red-100);
+  --branding-preset-forest-gala-primary: #166534;
+  --branding-preset-forest-gala-secondary: #ECFDF5;
+  --branding-preset-forest-gala-accent: #CA8A04;
+  --branding-preset-forest-gala-background: #FAFDF7;
+  --branding-preset-forest-gala-text: #14201A;
+  --branding-preset-forest-gala-button: #166534;
+  --branding-preset-forest-gala-highlight: #CA8A04;
 
-  --stage: var(--color-sand-900);
-  --stage-elevated: var(--color-sand-800);
-  --on-stage: var(--color-sand-200);
-  --on-stage-soft: var(--color-sand-500);
+  --branding-preset-coastal-club-primary: #0E7490;
+  --branding-preset-coastal-club-secondary: #E0F2FE;
+  --branding-preset-coastal-club-accent: #F97316;
+  --branding-preset-coastal-club-background: #F8FBFC;
+  --branding-preset-coastal-club-text: #0C1A20;
+  --branding-preset-coastal-club-button: #0E7490;
+  --branding-preset-coastal-club-highlight: #F97316;
+
+  --branding-preset-noir-premiere-primary: #18181B;
+  --branding-preset-noir-premiere-secondary: #F4F4F5;
+  --branding-preset-noir-premiere-accent: #D4A017;
+  --branding-preset-noir-premiere-background: #FAFAFA;
+  --branding-preset-noir-premiere-text: #18181B;
+  --branding-preset-noir-premiere-button: #18181B;
+  --branding-preset-noir-premiere-highlight: #D4A017;
+}
+
+:root {
+  --canvas: var(--color-soft-mist);
+  --surface: var(--color-clear-white);
+  --surface-sunken: #EAEAEA;
+  --ink: var(--color-charcoal-ink);
+  --ink-soft: var(--color-muted-gray);
+  --ink-faint: #9E9E9E;
+  --hairline: #E0E0E0;
+  --hairline-strong: #BDBDBD;
+
+  --brand: var(--color-verdant-trust);
+  --brand-hover: var(--color-success-green);
+  --brand-ink: var(--color-clear-white);
+  --voltage-accent: var(--color-digital-gold);
+  --voltage-accent-ink: var(--color-charcoal-ink);
+
+  --highlight: #FFF8E1;
+  --accent-coral: var(--color-warm-action);
+  --accent-coral-hover: var(--color-digital-gold);
+
+  --status-success: var(--color-success-green);
+  --status-warn: var(--color-warning-orange);
+  --status-danger: var(--color-error-red);
+  --status-danger-on-dark: #FF8A80;
+
+  --stage: var(--color-charcoal-ink);
+  --stage-elevated: #303030;
+  --on-stage: var(--color-clear-white);
+  --on-stage-soft: #BDBDBD;
 
   --font-body-stack: 'Inter', 'Inter Fallback', -apple-system, system-ui, sans-serif;
   --font-display-stack: 'Fraunces Variable', 'Fraunces', 'Fraunces Fallback', 'Georgia', serif;
@@ -98,8 +145,8 @@
   --popover-foreground: var(--ink);
   --primary: var(--brand);
   --primary-foreground: var(--brand-ink);
-  --secondary: var(--surface-sunken);
-  --secondary-foreground: var(--ink);
+  --secondary: var(--color-warm-action);
+  --secondary-foreground: var(--color-charcoal-ink);
   --muted: var(--surface-sunken);
   --muted-foreground: var(--ink-soft);
   --accent: var(--surface-sunken);
@@ -107,10 +154,10 @@
   --marigold: var(--voltage-accent);
   --marigold-foreground: var(--voltage-accent-ink);
   --success: var(--status-success);
-  --success-foreground: var(--color-sand-100);
+  --success-foreground: var(--color-clear-white);
   --warning: var(--status-warn);
   --destructive: var(--status-danger);
-  --destructive-foreground: var(--color-sand-100);
+  --destructive-foreground: var(--color-clear-white);
   --border: var(--hairline);
   --input: var(--hairline-strong);
   --ring: var(--brand);
@@ -120,7 +167,7 @@
   --brand-font-display: var(--font-display-stack);
   --brand-font-mono: var(--font-mono-stack);
   --brand-primary: var(--brand);
-  --brand-secondary: var(--surface-sunken);
+  --brand-secondary: var(--secondary);
   --brand-accent: var(--voltage-accent);
 
   --surface-900: var(--canvas);
@@ -138,26 +185,26 @@
 }
 
 [data-portal='developer'] {
-  --brand: var(--color-purple-300);
-  --brand-hover: var(--color-purple-400);
-  --voltage-accent: var(--color-gold-300);
-  --voltage-accent-ink: var(--color-gold-500);
-  --status-success: var(--color-teal-100);
-  --stage: var(--color-purple-600);
-  --stage-elevated: var(--color-purple-500);
-  --on-stage: var(--color-purple-100);
-  --on-stage-soft: var(--color-purple-200);
+  --brand: var(--color-royal-purple);
+  --brand-hover: var(--color-royal-purple-hover);
+  --voltage-accent: var(--color-developer-gold);
+  --voltage-accent-ink: var(--color-deep-gold-ink);
+  --status-success: var(--color-deep-teal);
+  --stage: var(--color-royal-purple-stage);
+  --stage-elevated: var(--color-royal-purple-stage-elevated);
+  --on-stage: var(--color-royal-purple-mist);
+  --on-stage-soft: var(--color-royal-purple-haze);
 }
 
 [data-portal='admin'] {
-  --brand: var(--color-green-400);
-  --brand-hover: var(--color-green-500);
-  --voltage-accent: var(--color-gold-100);
-  --voltage-accent-ink: var(--color-gold-500);
-  --stage: var(--color-green-700);
-  --stage-elevated: var(--color-green-600);
-  --on-stage: var(--color-green-100);
-  --on-stage-soft: var(--color-green-200);
+  --brand: var(--color-forest-brand);
+  --brand-hover: var(--color-forest-brand-hover);
+  --voltage-accent: var(--color-digital-gold);
+  --voltage-accent-ink: var(--color-deep-gold-ink);
+  --stage: var(--color-forest-stage);
+  --stage-elevated: var(--color-forest-stage-elevated);
+  --on-stage: var(--color-forest-mist);
+  --on-stage-soft: var(--color-forest-haze);
 }
 
 @theme inline {

@@ -7,7 +7,7 @@
 @import '@fontsource/jetbrains-mono/400.css';
 @import '@fontsource/jetbrains-mono/500.css';
 @import 'tailwindcss';
-@import './shared/theme/theme.css';
+@import './shared/theme/theme.css'; /* Trigger brand v1.0 styles */
 
 @keyframes entryvine-fade-up {
   from {

@@ -4,6 +4,7 @@ import {
   brandingFormFromTenant,
   brandingFromForm,
   brandingInputFromForm,
+  emptyBrandingForm,
   suggestBrandingColors,
   type BrandingFormState,
 } from '@/features/admin/services/brandingStudio';
@@ -15,28 +16,15 @@ import {
   BrandingPresetRow,
 } from '@/features/admin/components/branding/BrandingControls';
 import { BrandingPreview } from '@/features/admin/components/branding/BrandingPreview';
-import { DEFAULT_BRANDING, type BrandingPreset } from '@/shared/theme/branding';
+import { type BrandingPreset } from '@/shared/theme/branding';
 import { uploadImage } from '@/shared/upload';
 import { useAuth } from '@/shared/auth/useAuth';
 import { rpcErrorMessage } from '@/shared/session';
 import { Button } from '@/shared/ui/button';
 
-const EMPTY_FORM: BrandingFormState = {
-  logoImagesId: '',
-  logoUrl: '',
-  primary: DEFAULT_BRANDING.primary,
-  secondary: DEFAULT_BRANDING.secondary,
-  accent: DEFAULT_BRANDING.accent,
-  background: DEFAULT_BRANDING.background,
-  text: DEFAULT_BRANDING.text,
-  button: DEFAULT_BRANDING.button,
-  highlight: DEFAULT_BRANDING.highlight,
-  tokens: {},
-};
-
 export function AdminBrandingPage() {
   const { tenantsId } = useAuth();
-  const [form, setForm] = useState<BrandingFormState>(EMPTY_FORM);
+  const [form, setForm] = useState<BrandingFormState>(emptyBrandingForm);
   const [tenantName, setTenantName] = useState('');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
