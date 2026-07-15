@@ -10,7 +10,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import type { Event } from '@/shared/proto/event';
 
-const NOTCH = { ['--entryvine-notch' as string]: 'var(--surface)' } as CSSProperties;
+const NOTCH = { ['--ticketspan-notch' as string]: 'var(--surface)' } as CSSProperties;
 
 const STATUS_VARIANT = {
   live: 'success',
@@ -62,7 +62,7 @@ export function ManagedEventCard({
         </div>
       </div>
 
-      <div className="entryvine-ticket-edge mx-5" style={NOTCH} />
+      <div className="ticketspan-ticket-edge mx-5" style={NOTCH} />
 
       <div className="flex flex-1 flex-col gap-3 p-5">
         <div className="space-y-1">

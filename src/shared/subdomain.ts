@@ -9,10 +9,10 @@ function readDevOverride(): Portal | null {
   if (typeof window !== 'undefined') {
     const param = new URLSearchParams(window.location.search).get('portal');
     if (param === 'public' || param === 'admin' || param === 'staff' || param === 'developer') {
-      window.localStorage.setItem('entryvine-portal', param);
+      window.localStorage.setItem('ticketspan-portal', param);
       return param;
     }
-    const stored = window.localStorage.getItem('entryvine-portal');
+    const stored = window.localStorage.getItem('ticketspan-portal');
     if (stored === 'public' || stored === 'admin' || stored === 'staff' || stored === 'developer') {
       return stored;
     }
@@ -28,10 +28,10 @@ function readDevTenant(): string {
   if (typeof window !== 'undefined') {
     const param = new URLSearchParams(window.location.search).get('tenant');
     if (param) {
-      window.localStorage.setItem('entryvine-tenant', param);
+      window.localStorage.setItem('ticketspan-tenant', param);
       return param;
     }
-    const stored = window.localStorage.getItem('entryvine-tenant');
+    const stored = window.localStorage.getItem('ticketspan-tenant');
     if (stored) {
       return stored;
     }
@@ -57,7 +57,7 @@ export function resolvePortalContext(): PortalContext {
     
     
     if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('entryvine-tenant');
+      window.localStorage.removeItem('ticketspan-tenant');
     }
     return { portal, tenantSlug: '' };
   }

@@ -1,8 +1,8 @@
-# EntryVine Events
+# TicketSpan Events
 
-> EntryVine is a multi-tenant box office for premium events. Organizers sell
+> TicketSpan is a multi-tenant box office for premium events. Organizers sell
 > tickets and tables under their own brand on their own subdomain
-> (yourname.entryvine.com). Attendees browse events, pick the exact table they
+> (yourname.ticketspan.com). Attendees browse events, pick the exact table they
 > want on a live floor plan, and pay by card or ACH. Organizers keep their
 > full ticket price; buyers cover the service fee. All sales are final.
 
@@ -26,14 +26,14 @@
 
 ## Pages
 
-- [Home](https://entryvine.com/): platform landing page for organizers
-- [Get Started](https://entryvine.com/get-started): request organizer access
-- [Help Center](https://entryvine.com/help): frequently asked questions
-- [Contact Support](https://entryvine.com/contact): contact form
-- [Terms of Service](https://entryvine.com/terms)
-- [Privacy Policy](https://entryvine.com/privacy)
-- [Refund Policy](https://entryvine.com/refund-policy): all sales are final
+- [Home](https://ticketspan.com/): platform landing page for organizers
+- [Get Started](https://ticketspan.com/get-started): request organizer access
+- [Help Center](https://ticketspan.com/help): frequently asked questions
+- [Contact Support](https://ticketspan.com/contact): contact form
+- [Terms of Service](https://ticketspan.com/terms)
+- [Privacy Policy](https://ticketspan.com/privacy)
+- [Refund Policy](https://ticketspan.com/refund-policy): all sales are final
 
 ## Contact
 
-- [EntryVine](https://entryvine.com): platform home
+- [TicketSpan](https://ticketspan.com): platform home

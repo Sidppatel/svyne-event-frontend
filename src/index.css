@@ -9,7 +9,7 @@
 @import 'tailwindcss';
 @import './shared/theme/theme.css'; /* Trigger brand v1.0 styles */
 
-@keyframes entryvine-fade-up {
+@keyframes ticketspan-fade-up {
   from {
     opacity: 0;
     transform: translateY(12px);
@@ -20,7 +20,7 @@
   }
 }
 
-@keyframes entryvine-fade {
+@keyframes ticketspan-fade {
   from {
     opacity: 0;
   }
@@ -29,7 +29,7 @@
   }
 }
 
-@keyframes entryvine-slide-left {
+@keyframes ticketspan-slide-left {
   from {
     transform: translateX(-100%);
   }
@@ -38,7 +38,7 @@
   }
 }
 
-@keyframes entryvine-slide-right {
+@keyframes ticketspan-slide-right {
   from {
     transform: translateX(100%);
   }
@@ -47,13 +47,13 @@
   }
 }
 
-@keyframes entryvine-shimmer {
+@keyframes ticketspan-shimmer {
   100% {
     transform: translateX(100%);
   }
 }
 
-@keyframes entryvine-pulse {
+@keyframes ticketspan-pulse {
   0%,
   100% {
     opacity: 1;
@@ -89,89 +89,89 @@ h3 {
   line-height: 1.05;
 }
 
-.entryvine-page {
-  animation: entryvine-fade-up var(--t-scene) var(--ease-out) both;
+.ticketspan-page {
+  animation: ticketspan-fade-up var(--t-scene) var(--ease-out) both;
 }
 
-.entryvine-ticket-edge {
-  --entryvine-notch: var(--background);
+.ticketspan-ticket-edge {
+  --ticketspan-notch: var(--background);
   position: relative;
   height: 0;
   border-top: 2px dashed var(--voltage-accent);
 }
-.entryvine-ticket-edge::before,
-.entryvine-ticket-edge::after {
+.ticketspan-ticket-edge::before,
+.ticketspan-ticket-edge::after {
   content: '';
   position: absolute;
   top: 0;
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background: var(--entryvine-notch);
+  background: var(--ticketspan-notch);
   transform: translateY(-50%);
 }
-.entryvine-ticket-edge::before {
+.ticketspan-ticket-edge::before {
   left: -8px;
 }
-.entryvine-ticket-edge::after {
+.ticketspan-ticket-edge::after {
   right: -8px;
 }
 
-.entryvine-urgent {
-  animation: entryvine-pulse 1.8s ease-in-out infinite;
+.ticketspan-urgent {
+  animation: ticketspan-pulse 1.8s ease-in-out infinite;
 }
 
-.entryvine-float-card {
+.ticketspan-float-card {
   transition:
     transform var(--t-move) var(--ease-out),
     box-shadow var(--t-move) var(--ease-out);
 }
 
-.entryvine-spring-btn {
+.ticketspan-spring-btn {
   transition:
     transform var(--t-quick) var(--ease-spring),
     box-shadow var(--t-quick) var(--ease-out),
     background-color var(--t-quick) ease;
 }
-.entryvine-spring-btn:active {
+.ticketspan-spring-btn:active {
   transform: scale(0.97);
   transition: transform var(--t-instant) ease;
 }
 
-.entryvine-spring-input {
+.ticketspan-spring-input {
   transition:
     border-color var(--t-quick) ease,
     box-shadow var(--t-quick) var(--ease-out);
 }
 
-.entryvine-overlay[data-state='open'] {
-  animation: entryvine-fade var(--t-quick) ease-out;
+.ticketspan-overlay[data-state='open'] {
+  animation: ticketspan-fade var(--t-quick) ease-out;
 }
 
-.entryvine-sheet-left[data-state='open'] {
-  animation: entryvine-slide-left var(--t-move) var(--ease-in-out);
+.ticketspan-sheet-left[data-state='open'] {
+  animation: ticketspan-slide-left var(--t-move) var(--ease-in-out);
 }
 
-.entryvine-sheet-right[data-state='open'] {
-  animation: entryvine-slide-right var(--t-move) var(--ease-in-out);
+.ticketspan-sheet-right[data-state='open'] {
+  animation: ticketspan-slide-right var(--t-move) var(--ease-in-out);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entryvine-page,
-  .entryvine-overlay[data-state='open'],
-  .entryvine-sheet-left[data-state='open'],
-  .entryvine-sheet-right[data-state='open'],
-  .entryvine-urgent {
+  .ticketspan-page,
+  .ticketspan-overlay[data-state='open'],
+  .ticketspan-sheet-left[data-state='open'],
+  .ticketspan-sheet-right[data-state='open'],
+  .ticketspan-urgent {
     animation: none;
   }
-  .entryvine-float-card,
-  .entryvine-spring-btn,
-  .entryvine-spring-input {
+  .ticketspan-float-card,
+  .ticketspan-spring-btn,
+  .ticketspan-spring-input {
     transition: none;
   }
 }
 
-@keyframes entryvine-ambient {
+@keyframes ticketspan-ambient {
   from {
     transform: translate(-6%, -4%);
   }
@@ -180,7 +180,7 @@ h3 {
   }
 }
 
-@keyframes entryvine-edge-glow {
+@keyframes ticketspan-edge-glow {
   0%,
   70%,
   100% {
@@ -191,7 +191,7 @@ h3 {
   }
 }
 
-@keyframes entryvine-hold-ring {
+@keyframes ticketspan-hold-ring {
   from {
     box-shadow: 0 0 0 0 color-mix(in srgb, var(--voltage-accent) 55%, transparent);
   }
@@ -200,7 +200,7 @@ h3 {
   }
 }
 
-@keyframes entryvine-scan {
+@keyframes ticketspan-scan {
   0% {
     top: -25%;
   }
@@ -210,45 +210,45 @@ h3 {
   }
 }
 
-.entryvine-hero-ambient {
+.ticketspan-hero-ambient {
   position: relative;
   overflow: hidden;
 }
-.entryvine-hero-ambient::before {
+.ticketspan-hero-ambient::before {
   content: '';
   position: absolute;
   inset: -40%;
   background: radial-gradient(circle at 30% 40%, color-mix(in srgb, var(--brand) 30%, transparent), transparent 45%);
-  animation: entryvine-ambient 20s ease-in-out infinite alternate;
+  animation: ticketspan-ambient 20s ease-in-out infinite alternate;
   pointer-events: none;
 }
-.entryvine-hero-ambient > * {
+.ticketspan-hero-ambient > * {
   position: relative;
 }
-.entryvine-hero-ambient > .entryvine-orbit-stage {
+.ticketspan-hero-ambient > .ticketspan-orbit-stage {
   position: absolute;
 }
 
-.entryvine-ticket-edge {
-  animation: entryvine-edge-glow 5s ease-in-out infinite;
+.ticketspan-ticket-edge {
+  animation: ticketspan-edge-glow 5s ease-in-out infinite;
 }
 
-.entryvine-hold-pulse {
+.ticketspan-hold-pulse {
   position: relative;
 }
-.entryvine-hold-pulse::after {
+.ticketspan-hold-pulse::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  animation: entryvine-hold-ring 2.4s ease-out infinite;
+  animation: ticketspan-hold-ring 2.4s ease-out infinite;
 }
 
-.entryvine-scanline {
+.ticketspan-scanline {
   position: relative;
   overflow: hidden;
 }
-.entryvine-scanline::after {
+.ticketspan-scanline::after {
   content: '';
   position: absolute;
   left: 0;
@@ -256,28 +256,28 @@ h3 {
   top: -25%;
   height: 22%;
   background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.45), transparent);
-  animation: entryvine-scan 3.6s var(--ease-in-out) infinite;
+  animation: ticketspan-scan 3.6s var(--ease-in-out) infinite;
 }
 
-.entryvine-tilt {
+.ticketspan-tilt {
   transform-style: preserve-3d;
   will-change: transform;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .entryvine-hero-ambient::before,
-  .entryvine-ticket-edge,
-  .entryvine-hold-pulse::after,
-  .entryvine-scanline::after {
+  .ticketspan-hero-ambient::before,
+  .ticketspan-ticket-edge,
+  .ticketspan-hold-pulse::after,
+  .ticketspan-scanline::after {
     animation: none;
   }
-  .entryvine-hold-pulse::after,
-  .entryvine-scanline::after {
+  .ticketspan-hold-pulse::after,
+  .ticketspan-scanline::after {
     content: none;
   }
 }
 
-@keyframes entryvine-marquee {
+@keyframes ticketspan-marquee {
   from {
     transform: translateX(0);
   }
@@ -285,33 +285,33 @@ h3 {
     transform: translateX(-50%);
   }
 }
-.entryvine-marquee {
-  animation: entryvine-marquee 32s linear infinite;
+.ticketspan-marquee {
+  animation: ticketspan-marquee 32s linear infinite;
 }
 @media (prefers-reduced-motion: reduce) {
-  .entryvine-marquee {
+  .ticketspan-marquee {
     animation: none;
   }
 }
 
-.entryvine-orbit-stage {
+.ticketspan-orbit-stage {
   perspective: 1100px;
   pointer-events: none;
 }
-.entryvine-orbit {
+.ticketspan-orbit {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
 }
-.entryvine-orbit-ring {
+.ticketspan-orbit-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   border: 1px solid color-mix(in srgb, var(--voltage-accent) 55%, transparent);
   box-shadow: 0 0 24px color-mix(in srgb, var(--voltage-accent) 14%, transparent) inset;
 }
-.entryvine-orbit-core {
+.ticketspan-orbit-core {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -322,7 +322,7 @@ h3 {
   background: radial-gradient(circle, var(--voltage-accent), color-mix(in srgb, var(--voltage-accent) 20%, transparent) 60%, transparent 72%);
   filter: blur(1px);
 }
-.entryvine-orbit-dot {
+.ticketspan-orbit-dot {
   position: absolute;
   width: 8px;
   height: 8px;

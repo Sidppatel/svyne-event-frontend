@@ -91,7 +91,7 @@ export function AdminTaxReportPage() {
       ) : data.report === null ? (
         <Card>
           <CardContent className="py-10 text-center text-sm text-muted-foreground">
-            EntryVine collects and remits sales tax on your behalf, so there is nothing for you to report. This page becomes
+            TicketSpan collects and remits sales tax on your behalf, so there is nothing for you to report. This page becomes
             available if your organization is switched to collecting its own sales tax.
           </CardContent>
         </Card>

@@ -106,7 +106,7 @@ export function EventTeamPanel({ eventsId, startDate, endDate, staff, loading, o
               </Select>
             </div>
             <Button
-              className="entryvine-spring-btn h-10 px-6 rounded-lg font-bold text-xs"
+              className="ticketspan-spring-btn h-10 px-6 rounded-lg font-bold text-xs"
               disabled={sending || !email.trim()}
               onClick={() => void invite()}
             >

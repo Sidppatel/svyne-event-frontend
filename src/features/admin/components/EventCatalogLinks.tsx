@@ -235,7 +235,7 @@ function LinkManager({
 
             <div className="space-y-1.5">
               <Label>Name</Label>
-              <div className="entryvine-spring-input">
+              <div className="ticketspan-spring-input">
                 <Input
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -263,7 +263,7 @@ function LinkManager({
                 type="button"
                 onClick={handleCreate}
                 disabled={createSubmitting || !newName.trim()}
-                className="entryvine-spring-btn h-9 px-4 rounded-lg font-bold text-xs shadow-sm shadow-primary/10"
+                className="ticketspan-spring-btn h-9 px-4 rounded-lg font-bold text-xs shadow-sm shadow-primary/10"
               >
                 {createSubmitting ? 'Creating...' : 'Create & Link'}
               </Button>

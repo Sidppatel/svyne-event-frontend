@@ -44,13 +44,13 @@
   --branding-contrast-light-candidate: var(--color-clear-white);
   --branding-shade-mix-target: var(--color-pure-black);
 
-  --branding-preset-entryvine-classic-primary: var(--color-verdant-trust);
-  --branding-preset-entryvine-classic-secondary: var(--color-warm-action);
-  --branding-preset-entryvine-classic-accent: var(--color-digital-gold);
-  --branding-preset-entryvine-classic-background: var(--color-soft-mist);
-  --branding-preset-entryvine-classic-text: var(--color-charcoal-ink);
-  --branding-preset-entryvine-classic-button: var(--color-verdant-trust);
-  --branding-preset-entryvine-classic-highlight: var(--color-digital-gold);
+  --branding-preset-ticketspan-classic-primary: var(--color-verdant-trust);
+  --branding-preset-ticketspan-classic-secondary: var(--color-warm-action);
+  --branding-preset-ticketspan-classic-accent: var(--color-digital-gold);
+  --branding-preset-ticketspan-classic-background: var(--color-soft-mist);
+  --branding-preset-ticketspan-classic-text: var(--color-charcoal-ink);
+  --branding-preset-ticketspan-classic-button: var(--color-verdant-trust);
+  --branding-preset-ticketspan-classic-highlight: var(--color-digital-gold);
 
   --branding-preset-midnight-stage-primary: #4F46E5;
   --branding-preset-midnight-stage-secondary: #E0E7FF;

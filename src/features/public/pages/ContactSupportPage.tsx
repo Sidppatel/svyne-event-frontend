@@ -6,7 +6,7 @@ const channels = [
     icon: Mail,
     title: 'Email Support',
     body: 'Best for billing errors, account issues, and anything with a booking reference. We reply within one business day.',
-    action: { label: 'support@entryvine.com', href: 'mailto:support@entryvine.com' },
+    action: { label: 'support@ticketspan.com', href: 'mailto:support@ticketspan.com' },
   },
   {
     icon: Ticket,

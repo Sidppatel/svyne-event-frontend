@@ -200,7 +200,7 @@ export interface BrandingPreset {
 }
 
 const BRANDING_PRESET_SLUGS: { name: string; slug: string }[] = [
-  { name: 'EntryVine Classic', slug: 'entryvine-classic' },
+  { name: 'TicketSpan Classic', slug: 'ticketspan-classic' },
   { name: 'Midnight Stage', slug: 'midnight-stage' },
   { name: 'Forest Gala', slug: 'forest-gala' },
   { name: 'Coastal Club', slug: 'coastal-club' },

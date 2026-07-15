@@ -15,7 +15,7 @@ export const SheetOverlay = React.forwardRef<
   <DialogPrimitive.Overlay
     ref={ref}
     className={cn(
-      'entryvine-overlay fixed inset-0 z-50 bg-ink/50 backdrop-blur-sm',
+      'ticketspan-overlay fixed inset-0 z-50 bg-ink/50 backdrop-blur-sm',
       className,
     )}
     {...props}
@@ -33,7 +33,7 @@ export const SheetContent = React.forwardRef<
       ref={ref}
       className={cn(
         'fixed inset-y-0 z-50 flex h-full w-3/4 max-w-xs flex-col gap-4 border-border bg-card p-6 shadow-2xl',
-        side === 'left' ? 'entryvine-sheet-left left-0 border-r' : 'entryvine-sheet-right right-0 border-l',
+        side === 'left' ? 'ticketspan-sheet-left left-0 border-r' : 'ticketspan-sheet-right right-0 border-l',
         className,
       )}
       {...props}

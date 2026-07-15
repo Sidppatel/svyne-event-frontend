@@ -1,6 +1,6 @@
-# EntryVine Event Frontend
+# TicketSpan Event Frontend
 
-Single-page React app for the EntryVine multi-tenant event platform. Talks to `entryvine-event-backend` over **gRPC-Web** (the only transport for structured data). One app serves four portals (public / admin / staff / developer) selected by subdomain.
+Single-page React app for the TicketSpan multi-tenant event platform. Talks to `ticketspan-event-backend` over **gRPC-Web** (the only transport for structured data). One app serves four portals (public / admin / staff / developer) selected by subdomain.
 
 ## Tech Stack
 
@@ -38,7 +38,7 @@ src/
 
 ```bash
 pnpm install
-pnpm gen:proto     # regenerate src/shared/proto from ../entryvine-event-backend/protos
+pnpm gen:proto     # regenerate src/shared/proto from ../ticketspan-event-backend/protos
 pnpm dev           # one server; switch portals locally via ?portal=admin|developer|staff or the dev nav switcher
 pnpm build         # tsc -b && vite build (must be 0 warnings)
 pnpm lint          # eslint flat config (custom no-business-calc rule fires here)
