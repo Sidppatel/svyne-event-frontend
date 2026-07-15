@@ -329,7 +329,11 @@ export function BookingDetailPage() {
                 ) : null}
                 {b.paymentMethodType ? (
                   <div className="flex justify-between border-t pt-3 text-muted-foreground">
-                    <span className="capitalize">{b.paymentMethodType.replace('_', ' ')}</span>
+                    <span className="capitalize">
+                      {b.paymentMethodType === 'card' 
+                        ? (b.paymentMethodBrand || 'Card')
+                        : b.paymentMethodType.replace('_', ' ')}
+                    </span>
                     <span className="font-mono text-xs">
                       {b.paymentMethodLast4 ? `•••• ${b.paymentMethodLast4}` : ''}
                     </span>

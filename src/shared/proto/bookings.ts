@@ -138,6 +138,10 @@ export interface Booking {
      * @generated from protobuf field: string payment_method_last4 = 28;
      */
     paymentMethodLast4: string;
+    /**
+     * @generated from protobuf field: string payment_method_brand = 29;
+     */
+    paymentMethodBrand: string;
 }
 /**
  * One line of a booking, for display on checkout / booking detail. Carries the
@@ -1037,7 +1041,8 @@ class Booking$Type extends MessageType<Booking> {
             { no: 25, name: "venue_city", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 26, name: "venue_state", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 27, name: "payment_method_type", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 28, name: "payment_method_last4", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 28, name: "payment_method_last4", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 29, name: "payment_method_brand", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
         ]);
     }
     create(value?: PartialMessage<Booking>): Booking {
@@ -1070,6 +1075,7 @@ class Booking$Type extends MessageType<Booking> {
         message.venueState = "";
         message.paymentMethodType = "";
         message.paymentMethodLast4 = "";
+        message.paymentMethodBrand = "";
         if (value !== undefined)
             reflectionMergePartial<Booking>(this, message, value);
         return message;
@@ -1162,6 +1168,9 @@ class Booking$Type extends MessageType<Booking> {
                     break;
                 case /* string payment_method_last4 */ 28:
                     message.paymentMethodLast4 = reader.string();
+                    break;
+                case /* string payment_method_brand */ 29:
+                    message.paymentMethodBrand = reader.string();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1259,6 +1268,9 @@ class Booking$Type extends MessageType<Booking> {
         /* string payment_method_last4 = 28; */
         if (message.paymentMethodLast4 !== "")
             writer.tag(28, WireType.LengthDelimited).string(message.paymentMethodLast4);
+        /* string payment_method_brand = 29; */
+        if (message.paymentMethodBrand !== "")
+            writer.tag(29, WireType.LengthDelimited).string(message.paymentMethodBrand);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
