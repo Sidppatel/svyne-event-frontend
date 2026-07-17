@@ -35,8 +35,9 @@ export function useLandingReveal(scope: RefObject<HTMLDivElement | null>) {
       gsap.registerPlugin(ScrollTrigger, SplitText);
       ctx = gsap.context(() => {
         const mm = gsap.matchMedia();
-        mm.add('(prefers-reduced-motion: no-preference)', () => {
-          gsap.utils.toArray<HTMLElement>('[data-split]').forEach((heading) => {
+        mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+          const belowFold = (el: HTMLElement) => el.getBoundingClientRect().top > window.innerHeight;
+          gsap.utils.toArray<HTMLElement>('[data-split]').filter(belowFold).forEach((heading) => {
             SplitText.create(heading, {
               type: 'lines',
               autoSplit: true,
@@ -50,7 +51,7 @@ export function useLandingReveal(scope: RefObject<HTMLDivElement | null>) {
                 }),
             });
           });
-          gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+          gsap.utils.toArray<HTMLElement>('[data-reveal]').filter(belowFold).forEach((el) => {
             gsap.from(el, {
               opacity: 0,
               y: 18,
@@ -68,15 +69,20 @@ export function useLandingReveal(scope: RefObject<HTMLDivElement | null>) {
       }, scope);
     });
 
-    const idle = typeof window.requestIdleCallback === 'function';
-    const idleId = idle
-      ? window.requestIdleCallback(start, { timeout: 2500 })
-      : window.setTimeout(start, 1200);
+    const events = ['scroll', 'pointerdown', 'pointermove', 'touchstart', 'keydown'] as const;
+    let started = false;
+    const startOnce = () => {
+      if (started) return;
+      if (!window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)').matches) return;
+      started = true;
+      events.forEach((e) => window.removeEventListener(e, startOnce));
+      start();
+    };
+    events.forEach((e) => window.addEventListener(e, startOnce, { passive: true, once: false }));
 
     return () => {
       disposed = true;
-      if (idle) window.cancelIdleCallback(idleId);
-      else window.clearTimeout(idleId);
+      events.forEach((e) => window.removeEventListener(e, startOnce));
       ctx?.revert();
     };
   }, [scope]);

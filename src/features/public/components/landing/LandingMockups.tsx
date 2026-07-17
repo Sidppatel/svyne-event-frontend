@@ -195,7 +195,7 @@ function TicketCard({ cardRef }: { cardRef: React.Ref<HTMLDivElement> }) {
       <div className="flex items-center justify-between gap-4 p-5">
         <div>
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">Booking</p>
-          <p className="font-mono text-sm text-ink">SVY-8F2K-T4</p>
+          <p className="font-mono text-sm text-ink">TSP-8F2K-T4</p>
         </div>
         <QrGlyph className="h-11 w-11 text-ink" />
       </div>

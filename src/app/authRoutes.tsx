@@ -2,7 +2,9 @@ import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 import { NotAuthorizedPage } from '@/shared/components/StatusPages';
 
-import { LoginPage } from '@/features/auth/pages/LoginPage';
+const LoginPage = lazy(() =>
+  import('@/features/auth/pages/LoginPage').then((m) => ({ default: m.LoginPage })),
+);
 const RegisterPage = lazy(() =>
   import('@/features/auth/pages/RegisterPage').then((m) => ({ default: m.RegisterPage })),
 );

@@ -16,6 +16,7 @@ import {
   FounderNote,
   HowItWorks,
   PricingTeaser,
+  TrustStrip,
 } from '@/features/public/components/landing/LandingSections';
 
 function OrganizerDirectory() {
@@ -112,6 +113,7 @@ export function TenantLandingPage() {
         <FeatureLedger />
         <FounderNote />
         <PricingTeaser />
+        <TrustStrip />
         <OrganizerDirectory />
         <ClosingCta />
       </div>

@@ -200,7 +200,7 @@ function MagicLinkPreview() {
       </div>
       <div className="flex items-center justify-between">
         <span className="font-semibold text-ink">Sign in link</span>
-        <span className="text-brand font-bold tabular-nums animate-pulse">Expires in 15m</span>
+        <span className="text-brand font-bold tabular-nums">Expires in 15m</span>
       </div>
       <div className="flex justify-center">
         <div className="rounded bg-brand hover:bg-brand-hover px-4 py-1.5 font-sans text-xs font-semibold text-white transition-colors duration-200">
@@ -221,19 +221,19 @@ function GroupBookingPreview() {
       <div className="space-y-1.5">
         <div className="flex items-center justify-between">
           <span className="font-medium text-ink">Alex Carter (Host)</span>
-          <span className="font-mono text-success font-semibold">Confirmed</span>
+          <span className="font-mono text-ink font-semibold">Confirmed</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="font-medium text-ink">Sarah Jenkins</span>
-          <span className="font-mono text-success font-semibold">Confirmed</span>
+          <span className="font-mono text-ink font-semibold">Confirmed</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="font-medium text-ink">Jordan Reed</span>
-          <span className="font-mono text-success font-semibold">Confirmed</span>
+          <span className="font-mono text-ink font-semibold">Confirmed</span>
         </div>
-        <div className="flex items-center justify-between opacity-60">
-          <span className="italic text-ink-faint">Invite pending...</span>
-          <span className="font-mono text-amber font-semibold">Sent</span>
+        <div className="flex items-center justify-between">
+          <span className="italic text-ink-soft">Invite pending...</span>
+          <span className="font-mono text-voltage-ink font-semibold">Sent</span>
         </div>
       </div>
     </div>
@@ -269,7 +269,7 @@ function LineupPreview() {
         <div className="h-7 w-7 rounded-full bg-brand/10 flex items-center justify-center font-bold text-brand text-xs">DJ</div>
         <div>
           <p className="font-semibold text-ink">DJ Solar</p>
-          <p className="font-mono font-semibold uppercase text-success text-xs">Headliner</p>
+          <p className="font-mono font-semibold uppercase text-ink text-xs">Headliner</p>
         </div>
       </div>
       <div className="flex items-center gap-2.5 transition-transform hover:scale-102">
@@ -524,11 +524,11 @@ export function PricingTeaser() {
               <h3 className="font-display text-xl">{tier.name}</h3>
               <p className="mt-4 font-display text-4xl">
                 {tier.price}
-                <span className="font-mono text-sm opacity-70">{tier.unit}</span>
+                <span className="font-mono text-sm">{tier.unit}</span>
               </p>
               <div className={`mt-3 border-t pt-3 ${tier.featured ? 'border-marigold-foreground/25' : 'border-on-stage-soft/20'}`}>
                 <p className="font-mono text-sm">{tier.fee}</p>
-                <p className={`font-mono text-[11px] ${tier.featured ? 'opacity-70' : 'text-on-stage-soft'}`}>{tier.feeNote}</p>
+                <p className={`font-mono text-[11px] ${tier.featured ? '' : 'text-on-stage-soft'}`}>{tier.feeNote}</p>
               </div>
               <ul className="mt-6 flex-1 space-y-3 text-sm">
                 {tier.points.map((point) => (
@@ -563,6 +563,41 @@ export function PricingTeaser() {
             <span aria-hidden className="text-on-stage-soft">&rarr;</span>
             <span className="text-voltage">you get $50.00</span>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const trustFacts = [
+  {
+    term: 'Payments by Stripe',
+    detail: 'Card and ACH payments are processed by Stripe. Your card details never touch our servers.',
+  },
+  {
+    term: 'Tax handled at checkout',
+    detail: 'Sales tax is calculated at checkout and reported per event, remitted by the platform or by you.',
+  },
+  {
+    term: 'Every scan audited',
+    detail: 'Check-ins, failures, and undo actions are logged per event, so the door count always reconciles.',
+  },
+];
+
+export function TrustStrip() {
+  return (
+    <section className="border-y border-hairline bg-surface-sunken">
+      <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
+        <h2 data-split className="max-w-xl font-display text-3xl text-ink md:text-4xl">
+          Built like it handles money, <em className="italic text-brand">because it does.</em>
+        </h2>
+        <div className="mt-10 grid gap-8 md:grid-cols-3">
+          {trustFacts.map((fact) => (
+            <div data-reveal key={fact.term} className="space-y-2">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-voltage-ink">{fact.term}</p>
+              <p className="text-sm leading-relaxed text-ink-soft">{fact.detail}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -673,7 +708,7 @@ export function ClosingCta() {
         )}
         <p data-reveal className="mt-6 font-display text-xl italic text-on-stage-soft">&mdash; Siddh Patel, Chickasaw, AL</p>
       </div>
-      <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-faint">
+      <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-soft">
         <Link to="/terms" className="hover:text-ink">Terms</Link>
         <Link to="/privacy" className="hover:text-ink">Privacy</Link>
         <Link to="/refund-policy" className="hover:text-ink">Refund policy</Link>
