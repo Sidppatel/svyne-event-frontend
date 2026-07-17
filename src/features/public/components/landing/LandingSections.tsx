@@ -474,7 +474,7 @@ const tiers = [
     points: [
       'Advanced analytics for one event',
       'No subscription, buy when you need it',
-      'Scales to $199: white-label + SMS',
+      'Scales to $199: full white-label',
       'Perfect for a gala or seasonal run',
     ],
   },
@@ -488,7 +488,7 @@ const tiers = [
     cta: 'Talk to me',
     points: [
       'Advanced analytics every month',
-      'Custom domains and SMS credits',
+      'Custom domains included',
       'Extra managers, priority support',
       'Cancel any month, no contract',
     ],
@@ -559,7 +559,7 @@ export function PricingTeaser() {
           <div className="flex shrink-0 items-center gap-6 font-mono text-sm">
             <span className="text-on-stage-soft">$50 ticket</span>
             <span aria-hidden className="text-on-stage-soft">&rarr;</span>
-            <span className="text-on-stage-soft">buyer pays $55.32</span>
+            <span className="text-on-stage-soft">buyer pays $55.00</span>
             <span aria-hidden className="text-on-stage-soft">&rarr;</span>
             <span className="text-voltage">you get $50.00</span>
           </div>
@@ -708,14 +708,43 @@ export function ClosingCta() {
         )}
         <p data-reveal className="mt-6 font-display text-xl italic text-on-stage-soft">&mdash; Siddh Patel, Chickasaw, AL</p>
       </div>
-      <div className="mx-auto mt-12 flex max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ink-soft">
-        <Link to="/terms" className="hover:text-ink">Terms</Link>
-        <Link to="/privacy" className="hover:text-ink">Privacy</Link>
-        <Link to="/refund-policy" className="hover:text-ink">Refund policy</Link>
-        <Link to="/help" className="hover:text-ink">Help center</Link>
-        <Link to="/contact" className="hover:text-ink">Contact</Link>
-        <span className="w-full font-mono sm:ml-auto sm:w-auto">All sales final.</span>
-      </div>
+      <footer className="mx-auto mt-16 max-w-7xl border-t border-hairline pt-10">
+        <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
+          <div className="space-y-3">
+            <p className="flex items-center gap-1.5 font-display text-xl text-ink">
+              <span className="h-1.5 w-1.5 rounded-full bg-voltage" /> TicketSpan
+            </p>
+            <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
+              The box office for independent venues. Sell tickets and tables under your own name
+              &mdash; you keep every penny of your ticket price.
+            </p>
+            <p className="font-mono text-xs text-ink-soft">Built in Chickasaw, Alabama</p>
+          </div>
+          <nav className="space-y-3" aria-label="Product">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">Product</p>
+            <ul className="space-y-2 text-sm">
+              <li><a href="#features" className="text-ink-soft hover:text-ink">Features</a></li>
+              <li><a href="#floor-plan" className="text-ink-soft hover:text-ink">Floor plan studio</a></li>
+              <li><a href="#pricing" className="text-ink-soft hover:text-ink">Pricing</a></li>
+              <li><a href="#founder" className="text-ink-soft hover:text-ink">Founder</a></li>
+            </ul>
+          </nav>
+          <nav className="space-y-3" aria-label="Support">
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-ink-soft">Support</p>
+            <ul className="space-y-2 text-sm">
+              <li><Link to="/help" className="text-ink-soft hover:text-ink">Help center</Link></li>
+              <li><Link to="/contact" className="text-ink-soft hover:text-ink">Contact</Link></li>
+              <li><a href="mailto:support@ticketspan.com" className="text-ink-soft hover:text-ink">support@ticketspan.com</a></li>
+              <li><Link to="/terms" className="text-ink-soft hover:text-ink">Terms</Link></li>
+              <li><Link to="/privacy" className="text-ink-soft hover:text-ink">Privacy</Link></li>
+            </ul>
+          </nav>
+        </div>
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-hairline/60 py-6 text-xs text-ink-soft">
+          <p>&copy; {new Date().getFullYear()} TicketSpan. All rights reserved.</p>
+          <p className="font-mono">Payments processed by Stripe</p>
+        </div>
+      </footer>
     </section>
   );
 }

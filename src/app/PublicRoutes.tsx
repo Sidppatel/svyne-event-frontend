@@ -45,7 +45,6 @@ const OrganizerPage = lazy(() =>
 );
 import { TermsPage } from '@/features/public/pages/TermsPage';
 import { PrivacyPage } from '@/features/public/pages/PrivacyPage';
-import { RefundPolicyPage } from '@/features/public/pages/RefundPolicyPage';
 import { HelpCenterPage } from '@/features/public/pages/HelpCenterPage';
 import { ContactSupportPage } from '@/features/public/pages/ContactSupportPage';
 const GetStartedPage = lazy(() =>
@@ -67,7 +66,6 @@ export default function PublicRoutes() {
         <Route path="organizer/:slug/admin" element={<OrganizerPage admin />} />
         <Route path="terms" element={<TermsPage />} />
         <Route path="privacy" element={<PrivacyPage />} />
-        <Route path="refund-policy" element={<RefundPolicyPage />} />
         <Route path="help" element={<HelpCenterPage />} />
         <Route path="contact" element={<ContactSupportPage />} />
         <Route

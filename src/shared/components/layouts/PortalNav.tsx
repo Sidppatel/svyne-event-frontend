@@ -91,8 +91,9 @@ function Brand({ section, className, onStage }: { section?: string; className?: 
   }
   return (
     <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-1.5', className)}>
+      <span className="h-1.5 w-1.5 rounded-full bg-voltage" />
       <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>
-        ticketspan
+        TicketSpan
       </span>
       {section ? (
         <>
@@ -104,7 +105,7 @@ function Brand({ section, className, onStage }: { section?: string; className?: 
   );
 }
 
-export function PortalNav({ section, links, transparent }: { section?: string; links: NavLink[]; transparent?: boolean }) {
+export function PortalNav({ section, links, transparent, hideAuth }: { section?: string; links: NavLink[]; transparent?: boolean; hideAuth?: boolean }) {
   const { isAuthenticated, user, role } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -320,7 +321,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
         </div>
 
         <div className="flex items-center gap-2">
-          {isAuthenticated ? (
+          {hideAuth ? null : isAuthenticated ? (
             <Button variant="outline" size="sm" className="hidden md:inline-flex text-xs h-8" onClick={handleLogout}>
               Sign Out
             </Button>
@@ -358,7 +359,7 @@ export function PortalNav({ section, links, transparent }: { section?: string; l
                 ))}
               </nav>
               <div className="mt-auto border-t border-border pt-4">
-                {isAuthenticated ? (
+                {hideAuth ? null : isAuthenticated ? (
                   <div className="space-y-3">
                     <p className="truncate text-xs font-semibold text-foreground">
                       {user?.email}

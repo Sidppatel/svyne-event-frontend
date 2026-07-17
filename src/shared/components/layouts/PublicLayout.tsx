@@ -20,25 +20,29 @@ export function PublicLayout() {
 
   useEffect(() => acquireLenis(), []);
 
-  const links = [
-    { to: '/', label: 'Events' },
-    { to: '/tickets', label: 'Tickets' },
-    { to: '/bookings', label: 'Bookings' },
-    { to: '/profile', label: 'Profile' },
-  ];
+  const onRootDomain = !currentTenantSlug();
 
-  if (isAuthenticated && (role === 2 || role === 1 || role === 3)) {
+  const links = onRootDomain
+    ? [{ to: '/', label: 'Home' }]
+    : [
+        { to: '/', label: 'Events' },
+        { to: '/tickets', label: 'Tickets' },
+        { to: '/bookings', label: 'Bookings' },
+        { to: '/profile', label: 'Profile' },
+      ];
+
+  if (!onRootDomain && isAuthenticated && (role === 2 || role === 1 || role === 3)) {
     links.push({ to: '/staff', label: 'Check-In' });
   }
 
-  const isPlatformLanding = pathname === '/' && !currentTenantSlug();
+  const isPlatformLanding = pathname === '/' && onRootDomain;
   const isFullBleedPage = pathname.startsWith('/events/') || isPlatformLanding;
 
   return (
     <div className="min-h-screen bg-background">
       {!isPlatformLanding && (
         <Suspense fallback={<div className="h-16" />}>
-          <PortalNav links={links} transparent={isFullBleedPage} />
+          <PortalNav links={links} transparent={isFullBleedPage} hideAuth={onRootDomain} />
         </Suspense>
       )}
       <main
@@ -51,7 +55,7 @@ export function PublicLayout() {
       >
         <Outlet />
       </main>
-      {!isFullBleedPage && (
+      {!isFullBleedPage && !onRootDomain && (
         <Suspense fallback={null}>
           <MobileTabBar />
         </Suspense>

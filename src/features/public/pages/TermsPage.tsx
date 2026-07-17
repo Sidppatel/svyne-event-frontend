@@ -39,8 +39,8 @@ export function TermsPage() {
       <StaticSection heading="5. All Sales Final">
         <p>
           <strong>All sales are final.</strong> Tickets and table bookings are non-refundable and non-exchangeable,
-          including for non-attendance. See our <a href="/refund-policy" className="text-accent-burgundy underline">No Refunds policy</a> for
-          full details.
+          including for non-attendance. The only exception is a verified duplicate charge or billing error,
+          which we correct at the payment processor level.
         </p>
       </StaticSection>
       <StaticSection heading="6. Entry & Conduct">

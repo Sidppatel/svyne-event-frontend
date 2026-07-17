@@ -55,8 +55,7 @@ export function ContactSupportPage() {
           <li>For payment issues, include the charge date and amount (never send full card numbers).</li>
         </ul>
         <p className="pt-1">
-          Remember: all sales are final. See the{' '}
-          <a href="/refund-policy" className="text-accent-burgundy underline">No Refunds policy</a>. Support can help with
+          Remember: all sales are final. Support can help with
           billing errors, ticket sharing, and account problems.
         </p>
       </div>
