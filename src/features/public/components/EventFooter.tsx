@@ -28,9 +28,6 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
             <span className={cn('text-lg font-black tracking-tight font-display', light ? 'text-white' : 'text-foreground')}>
               TicketSpan
             </span>
-            <span className={cn('text-[9px] font-bold uppercase tracking-wider bg-accent-gold/15 px-2 py-0.5 rounded border border-accent-gold/20', light ? 'text-accent-gold' : 'text-voltage-ink')}>
-              Box Office
-            </span>
           </div>
           <p className="text-xs leading-relaxed max-w-sm">
             Experience ticket bookings and table seating simplified. Built for premium nightlife, concerts, and exclusive social events.
