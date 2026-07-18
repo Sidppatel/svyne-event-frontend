@@ -56,6 +56,14 @@ export function normalizeVenue(draft: VenueDraft): VenueDraft {
 }
 
 
+export function venueLabel(venue: Venue): string {
+  const address = [venue.line1, venue.city, [venue.state, venue.zip].filter(Boolean).join(' ')]
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(', ');
+  return address ? `${venue.name} (${address})` : venue.name;
+}
+
 export function emptyDraft(): VenueDraft {
   return {
     name: '',

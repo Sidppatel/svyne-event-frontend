@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
 import { updateEvent, setEventFeesIncluded, setEventAch } from '@/features/admin/services/eventAdminService';
 import { listVenues } from '@/features/admin/services/catalogService';
+import { venueLabel } from '@/features/admin/pages/AdminVenuesPage';
 import { getMyTenant } from '@/features/admin/services/tenantService';
 import { epochToZonedInput, zonedInputToEpoch } from '@/shared/lib/timezone';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
@@ -108,7 +109,7 @@ export function VoiceZone({
                 size="sm"
                 className="ticketspan-spring-btn h-9 rounded-lg px-4 text-xs font-bold"
                 disabled={!completion.canPublish}
-                title={completion.canPublish ? 'Publish this event' : 'Add a ticket type or a table first'}
+                title={completion.canPublish ? 'Publish this event' : `Before publishing: ${completion.missing.join(', ')}`}
                 onClick={onPublish}
               >
                 <Rocket className="mr-1 h-4 w-4" /> Publish
@@ -334,7 +335,7 @@ export function EditSection({
               .filter((v) => v.isActive || v.venuesId === venuesId)
               .map((v) => (
                 <option key={v.venuesId} value={v.venuesId}>
-                  {v.name}
+                  {venueLabel(v)}
                 </option>
               ))}
           </Select>

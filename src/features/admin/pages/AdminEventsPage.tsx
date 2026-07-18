@@ -9,6 +9,7 @@ import { listAdminEvents } from '@/features/admin/services/adminService';
 import { deleteEvent, changeEventStatus } from '@/features/admin/services/eventAdminService';
 import { filterEvents, countEvents, type EventFilter } from '@/features/admin/lib/dashboardInsights';
 import { ManagedEventCard } from '@/features/admin/components/ManagedEventCard';
+import { publishBlockers } from '@/features/admin/lib/eventInsights';
 import { rpcErrorMessage } from '@/shared/session';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
@@ -51,6 +52,15 @@ export function AdminEventsPage() {
     } catch (caught) {
       toast.error(rpcErrorMessage(caught));
     }
+  }
+
+  function publish(event: Event) {
+    const missing = publishBlockers(event);
+    if (missing.length > 0) {
+      toast.error(`Please fill in all required fields before publishing: ${missing.join(', ')}`);
+      return;
+    }
+    void act(() => changeEventStatus(event.eventsId, 'Published'));
   }
 
   function share(event: Event) {
@@ -137,7 +147,7 @@ export function AdminEventsPage() {
                 key={event.eventsId}
                 event={event}
                 now={now}
-                onPublish={() => act(() => changeEventStatus(event.eventsId, 'Published'))}
+                onPublish={() => publish(event)}
                 onCancel={() => act(() => changeEventStatus(event.eventsId, 'Cancelled'))}
                 onDelete={() => remove(event)}
                 onShare={() => share(event)}

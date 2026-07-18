@@ -17,7 +17,7 @@ import { DateTimePicker } from '@/shared/ui/date-time-picker';
 import { cn } from '@/shared/lib/cn';
 import { CalendarCheck2, LayoutGrid, MapPin, Rocket, Ticket, Users, Plus } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
-import { VenueFields, venueError, normalizeVenue, emptyDraft } from '@/features/admin/pages/AdminVenuesPage';
+import { VenueFields, venueError, normalizeVenue, emptyDraft, venueLabel } from '@/features/admin/pages/AdminVenuesPage';
 
 
 const CATEGORIES = ['Music', 'Business', 'Social', 'Dining', 'Tech', 'Arts', 'Family', 'Sports'];
@@ -95,10 +95,6 @@ export function AdminEventWizardPage() {
   }, []);
 
   async function submit() {
-    if (!venuesId) {
-      setError('Select a venue first');
-      return;
-    }
     setSubmitting(true);
     setError(null);
     const draft: EventDraft = {
@@ -243,7 +239,7 @@ export function AdminEventWizardPage() {
                   ) : null}
                   {venues.map((venue) => (
                     <option key={venue.venuesId} value={venue.venuesId}>
-                      {venue.name}
+                      {venueLabel(venue)}
                     </option>
                   ))}
                 </Select>

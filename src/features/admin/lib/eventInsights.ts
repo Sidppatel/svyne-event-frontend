@@ -16,6 +16,7 @@ export interface EventCompletion {
   items: ChecklistItem[];
   percent: number;
   canPublish: boolean;
+  missing: string[];
 }
 
 export interface EventVoice {
@@ -52,8 +53,16 @@ function sellsTables(event: Event): boolean {
   return event.eventType === 'Table';
 }
 
+export function publishBlockers(event: Event): string[] {
+  return [
+    event.title.trim().length > 0 ? null : 'Title is required',
+    event.category.trim().length > 0 ? null : 'Category is required',
+    event.venuesId.trim().length > 0 ? null : 'Venue is required',
+  ].filter((message): message is string => message !== null);
+}
+
 export function buildCompletion(event: Event, input: InsightInput): EventCompletion {
-  const canPublish = input.hasTicketTypes || input.hasFloorTables;
+  const hasSellables = input.hasTicketTypes || input.hasFloorTables;
   const items: ChecklistItem[] = [
     { id: 'name', label: 'Event name', done: event.title.trim().length > 0, weight: 'critical', section: 'basics' },
     {
@@ -67,7 +76,7 @@ export function buildCompletion(event: Event, input: InsightInput): EventComplet
     {
       id: 'sell',
       label: sellsTables(event) ? 'Add tables to the floor plan' : 'Add ticket types',
-      done: canPublish,
+      done: hasSellables,
       weight: 'critical',
       section: sellsTables(event) ? 'layout' : 'pricing',
     },
@@ -79,11 +88,15 @@ export function buildCompletion(event: Event, input: InsightInput): EventComplet
       section: 'basics',
     },
     { id: 'image', label: 'Cover image', done: event.imagePath.trim().length > 0, weight: 'recommended', section: 'timeline' },
-    { id: 'category', label: 'Category', done: event.category.trim().length > 0, weight: 'optional', section: 'basics' },
+    { id: 'category', label: 'Category', done: event.category.trim().length > 0, weight: 'critical', section: 'basics' },
   ];
   const done = items.filter((item) => item.done).length;
   const percent = Math.round((done / items.length) * 100);
-  return { items, percent, canPublish };
+  const missing = publishBlockers(event);
+  if (!hasSellables) {
+    missing.push(sellsTables(event) ? 'Add a table to the floor plan' : 'Add a ticket type');
+  }
+  return { items, percent, canPublish: missing.length === 0, missing };
 }
 
 export function buildVoice(event: Event, stats: EventStats | null, completion: EventCompletion): EventVoice {
