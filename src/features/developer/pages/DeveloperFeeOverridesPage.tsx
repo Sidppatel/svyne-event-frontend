@@ -85,7 +85,7 @@ export function DeveloperFeeOverridesPage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Fee overrides</h1>
       <p className="text-sm text-muted-foreground">
-        Silent per-ticket fee overrides for non-profits, fundraisers and promotions. Event-level
+        Silent per-order fee overrides for non-profits, fundraisers and promotions. Event-level
         beats tenant-level; tenants never see these. Tenant-level overrides are managed on the Fees
         page (custom default formula).
       </p>

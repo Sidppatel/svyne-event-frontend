@@ -63,7 +63,7 @@ export function DeveloperPayPerEventPage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Pay Per Event</h1>
       <p className="text-sm text-muted-foreground">
-        One-time upgrades that give a single event lower per-ticket fees, analytics, and (per tier)
+        One-time upgrades that give a single event lower per-order fees, analytics, and (per tier)
         custom domains and SMS credits — independent of the tenant&apos;s subscription.
       </p>
 

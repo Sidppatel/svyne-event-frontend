@@ -453,7 +453,7 @@ const tiers = [
     price: '$0',
     unit: '/mo',
     fee: '6.5% + $1.75',
-    feeNote: 'buyer pays at checkout',
+    feeNote: 'once per order, buyer pays at checkout',
     featured: false,
     cta: 'Start free',
     points: [
@@ -505,7 +505,7 @@ export function PricingTeaser() {
             Start free. <em className="italic text-voltage">Pay only when you sell.</em>
           </h2>
           <p data-reveal className="font-display text-base md:text-lg leading-relaxed text-on-stage-soft">
-            One service fee, added at checkout and paid by the buyer &mdash; you always receive your
+            One service fee per order, added at checkout and paid by the buyer &mdash; you always receive your
             full ticket price. Want lower fees and analytics? Unlock them per event or by subscription.
             No fees buried under &ldquo;processing&rdquo; and &ldquo;convenience.&rdquo;
           </p>

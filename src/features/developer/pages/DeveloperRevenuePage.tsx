@@ -55,7 +55,7 @@ export function DeveloperRevenuePage() {
     <div className="space-y-4">
       <h1 className="text-xl font-semibold">Platform revenue</h1>
       <p className="text-sm text-muted-foreground">
-        Last 12 months across all revenue sources: per-ticket service fees, subscriptions,
+        Last 12 months across all revenue sources: per-order service fees, subscriptions,
         Pay Per Event, add-ons and setup fees (refunds negative).
       </p>
 

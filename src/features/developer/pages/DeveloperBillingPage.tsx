@@ -125,7 +125,7 @@ export function DeveloperBillingPage() {
       <h1 className="text-xl font-semibold">Subscriptions &amp; billing</h1>
       <p className="text-sm text-muted-foreground">
         Manage trials, subscriptions and add-ons per tenant. Tier changes apply the tier&apos;s
-        per-ticket fee automatically; every action is audit-logged.
+        per-order fee automatically; every action is audit-logged.
       </p>
 
       <form
@@ -166,7 +166,7 @@ export function DeveloperBillingPage() {
               <CardContent className="space-y-2 text-sm">
                 <div className="flex flex-wrap gap-x-6 gap-y-1 text-muted-foreground">
                   <span>Subscription: {subscriptionSummary(row)}</span>
-                  <span>Per-ticket fee: {formatBpsFee(row.feePercentBps, row.feeFlatCents)}</span>
+                  <span>Per-order fee: {formatBpsFee(row.feePercentBps, row.feeFlatCents)}</span>
                   {row.subscriptionStatus === 'trial' ? (
                     <span>Trial ends {formatEpoch(row.trialEndsAtEpochSeconds)}</span>
                   ) : null}

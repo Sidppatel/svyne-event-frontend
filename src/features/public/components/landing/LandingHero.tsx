@@ -7,7 +7,7 @@ const HeroTicket = lazy(() =>
 export const landingCta =
   'inline-flex h-12 items-center justify-center rounded-full bg-marigold px-8 py-3 text-base font-medium text-marigold-foreground shadow-[var(--shadow-e1)] transition-[transform,background-color,box-shadow] duration-[180ms] ease-[var(--ease-out)] hover:bg-coral hover:shadow-[0_0_24px_color-mix(in_srgb,var(--voltage-accent)_55%,transparent)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-voltage focus-visible:ring-offset-2 focus-visible:ring-offset-stage';
 
-const trustPoints = ['6.5% + $1.75 · buyer pays', 'Unlimited events', 'No monthly bill'];
+const trustPoints = ['6.5% + $1.75 per order · buyer pays', 'Unlimited events', 'No monthly bill'];
 
 export function LandingHero() {
   return (

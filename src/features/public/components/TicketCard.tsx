@@ -93,12 +93,6 @@ export function TicketCard({
           ) : (
             <PriceBadge priceCents={displayPrice} className="text-sm font-medium text-ink" />
           )}
-          <span className="font-sans text-xs text-ink-soft"> each</span>
-          {!feesIncluded && platformFeeCents > 0 && (
-            <span className="block font-sans text-xs text-ink-soft sm:inline">
-              {' '}(+ <PriceBadge priceCents={platformFeeCents} /> service fee)
-            </span>
-          )}
           {achAvailable && (
             <span className="block font-sans text-xs font-semibold text-success">
               Lower fee when you pay by bank (ACH)
