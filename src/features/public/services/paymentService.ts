@@ -125,6 +125,10 @@ export async function getPaymentStatus(bookingsId: string): Promise<PaymentStatu
   return callRpc(() => bookingClient.getPaymentStatus({ value: bookingsId }));
 }
 
+export async function confirmFreeBooking(bookingsId: string): Promise<PaymentStatusResponse> {
+  return callRpc(() => bookingClient.confirmFreeBooking({ value: bookingsId }));
+}
+
 export async function cancelBooking(bookingsId: string): Promise<void> {
   await callRpc(() => bookingClient.cancelBooking({ value: bookingsId }));
 }

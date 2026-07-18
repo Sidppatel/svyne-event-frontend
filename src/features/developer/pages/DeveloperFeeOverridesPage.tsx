@@ -21,7 +21,6 @@ export function DeveloperFeeOverridesPage() {
   const [eventsId, setEventsId] = useState('');
   const [percent, setPercent] = useState('4.0');
   const [flat, setFlat] = useState('1.00');
-  const [minFee, setMinFee] = useState('');
   const [expires, setExpires] = useState('');
   const [reason, setReason] = useState('');
   const [actionError, setActionError] = useState<string | null>(null);
@@ -52,7 +51,6 @@ export function DeveloperFeeOverridesPage() {
         eventsId: eventsId.trim(),
         percentBps: percentToBps(percent),
         flatCents: usdToCents(flat),
-        minFeeCents: minFee ? usdToCents(minFee) : 0,
         maxFeeCents: 0,
         expiresAtEpochSeconds: dateToEpochSeconds(expires),
         reason,
@@ -124,15 +122,6 @@ export function DeveloperFeeOverridesPage() {
                 onChange={(event) => setFlat(event.target.value)}
                 inputMode="decimal"
                 required
-              />
-            </label>
-            <label className="text-sm">
-              Min net $ (optional)
-              <Input
-                className="mt-1 w-28"
-                value={minFee}
-                onChange={(event) => setMinFee(event.target.value)}
-                inputMode="decimal"
               />
             </label>
             <label className="text-sm">

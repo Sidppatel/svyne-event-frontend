@@ -13,7 +13,6 @@ export interface FeeFormulaInput {
   name: string;
   percentBps: number;
   flatCents: number;
-  minFeeCents: number;
   maxFeeCents: number;
 }
 
@@ -56,7 +55,6 @@ export async function setTenantDefaultFeeFormula(
 export function previewFee(priceCents: number, formula: FeeFormula | undefined): number {
   if (!formula) return 0;
   let fee = Math.round((priceCents * formula.percentBps) / 10000) + formula.flatCents;
-  if (formula.minFeeCents > 0 && fee < formula.minFeeCents) fee = formula.minFeeCents;
   if (formula.maxFeeCents > 0 && fee > formula.maxFeeCents) fee = formula.maxFeeCents;
   return Math.max(0, fee);
 }

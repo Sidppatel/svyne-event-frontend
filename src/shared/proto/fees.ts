@@ -36,10 +36,6 @@ export interface FeeFormula {
      */
     flatCents: number; // 150 = $1.50
     /**
-     * @generated from protobuf field: int32 min_fee_cents = 5;
-     */
-    minFeeCents: number; // 0 = unset
-    /**
      * @generated from protobuf field: int32 max_fee_cents = 6;
      */
     maxFeeCents: number; // 0 = unset
@@ -64,10 +60,6 @@ export interface FeeFormulaInput {
      * @generated from protobuf field: int32 flat_cents = 3;
      */
     flatCents: number;
-    /**
-     * @generated from protobuf field: int32 min_fee_cents = 4;
-     */
-    minFeeCents: number;
     /**
      * @generated from protobuf field: int32 max_fee_cents = 5;
      */
@@ -180,7 +172,6 @@ class FeeFormula$Type extends MessageType<FeeFormula> {
             { no: 2, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 3, name: "percent_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 4, name: "flat_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 5, name: "min_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "max_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 7, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ }
         ]);
@@ -191,7 +182,6 @@ class FeeFormula$Type extends MessageType<FeeFormula> {
         message.name = "";
         message.percentBps = 0;
         message.flatCents = 0;
-        message.minFeeCents = 0;
         message.maxFeeCents = 0;
         message.isActive = false;
         if (value !== undefined)
@@ -214,9 +204,6 @@ class FeeFormula$Type extends MessageType<FeeFormula> {
                     break;
                 case /* int32 flat_cents */ 4:
                     message.flatCents = reader.int32();
-                    break;
-                case /* int32 min_fee_cents */ 5:
-                    message.minFeeCents = reader.int32();
                     break;
                 case /* int32 max_fee_cents */ 6:
                     message.maxFeeCents = reader.int32();
@@ -248,9 +235,6 @@ class FeeFormula$Type extends MessageType<FeeFormula> {
         /* int32 flat_cents = 4; */
         if (message.flatCents !== 0)
             writer.tag(4, WireType.Varint).int32(message.flatCents);
-        /* int32 min_fee_cents = 5; */
-        if (message.minFeeCents !== 0)
-            writer.tag(5, WireType.Varint).int32(message.minFeeCents);
         /* int32 max_fee_cents = 6; */
         if (message.maxFeeCents !== 0)
             writer.tag(6, WireType.Varint).int32(message.maxFeeCents);
@@ -274,7 +258,6 @@ class FeeFormulaInput$Type extends MessageType<FeeFormulaInput> {
             { no: 1, name: "name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "percent_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "flat_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 4, name: "min_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "max_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
@@ -283,7 +266,6 @@ class FeeFormulaInput$Type extends MessageType<FeeFormulaInput> {
         message.name = "";
         message.percentBps = 0;
         message.flatCents = 0;
-        message.minFeeCents = 0;
         message.maxFeeCents = 0;
         if (value !== undefined)
             reflectionMergePartial<FeeFormulaInput>(this, message, value);
@@ -302,9 +284,6 @@ class FeeFormulaInput$Type extends MessageType<FeeFormulaInput> {
                     break;
                 case /* int32 flat_cents */ 3:
                     message.flatCents = reader.int32();
-                    break;
-                case /* int32 min_fee_cents */ 4:
-                    message.minFeeCents = reader.int32();
                     break;
                 case /* int32 max_fee_cents */ 5:
                     message.maxFeeCents = reader.int32();
@@ -330,9 +309,6 @@ class FeeFormulaInput$Type extends MessageType<FeeFormulaInput> {
         /* int32 flat_cents = 3; */
         if (message.flatCents !== 0)
             writer.tag(3, WireType.Varint).int32(message.flatCents);
-        /* int32 min_fee_cents = 4; */
-        if (message.minFeeCents !== 0)
-            writer.tag(4, WireType.Varint).int32(message.minFeeCents);
         /* int32 max_fee_cents = 5; */
         if (message.maxFeeCents !== 0)
             writer.tag(5, WireType.Varint).int32(message.maxFeeCents);

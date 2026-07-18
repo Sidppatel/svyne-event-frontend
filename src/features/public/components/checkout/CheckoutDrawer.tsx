@@ -88,6 +88,7 @@ export function CheckoutDrawer({
           {step === 4 && (
             <PaymentStep
               bookingsId={bookingsId}
+              totalCents={grandTotalCents}
               preferredMethod={preferredMethod}
               buyerInfo={buyerInfo}
               onBack={handleBack}
@@ -214,7 +215,11 @@ function ConfirmationReceipt({
 
           <div className="border-t border-white/5 pt-4 flex justify-between items-center text-xs">
             <span className="text-white/40 font-bold uppercase tracking-wider">Total Charge</span>
-            <PriceBadge priceCents={grandTotalCents} className="text-base font-extrabold text-accent-gold" />
+            {grandTotalCents === 0 ? (
+              <span className="text-base font-extrabold text-accent-gold">Free</span>
+            ) : (
+              <PriceBadge priceCents={grandTotalCents} className="text-base font-extrabold text-accent-gold" />
+            )}
           </div>
         </div>
       </div>

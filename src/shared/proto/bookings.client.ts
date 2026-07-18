@@ -89,6 +89,13 @@ export interface IBookingServiceClient {
      */
     getPaymentStatus(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, PaymentStatusResponse>;
     /**
+     * Free events (order total = 0): issue the ticket directly with no Stripe payment.
+     * Server re-checks the booking total is 0 before confirming.
+     *
+     * @generated from protobuf rpc: ConfirmFreeBooking(ticketspan.common.UuidValue) returns (ticketspan.booking.PaymentStatusResponse);
+     */
+    confirmFreeBooking(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, PaymentStatusResponse>;
+    /**
      * @generated from protobuf rpc: ConfirmBooking(ticketspan.booking.ConfirmBookingRequest) returns (ticketspan.common.AckResponse);
      */
     confirmBooking(input: ConfirmBookingRequest, options?: RpcOptions): UnaryCall<ConfirmBookingRequest, AckResponse>;
@@ -188,45 +195,55 @@ export class BookingServiceClient implements IBookingServiceClient, ServiceInfo 
         return stackIntercept<UuidValue, PaymentStatusResponse>("unary", this._transport, method, opt, input);
     }
     /**
+     * Free events (order total = 0): issue the ticket directly with no Stripe payment.
+     * Server re-checks the booking total is 0 before confirming.
+     *
+     * @generated from protobuf rpc: ConfirmFreeBooking(ticketspan.common.UuidValue) returns (ticketspan.booking.PaymentStatusResponse);
+     */
+    confirmFreeBooking(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, PaymentStatusResponse> {
+        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        return stackIntercept<UuidValue, PaymentStatusResponse>("unary", this._transport, method, opt, input);
+    }
+    /**
      * @generated from protobuf rpc: ConfirmBooking(ticketspan.booking.ConfirmBookingRequest) returns (ticketspan.common.AckResponse);
      */
     confirmBooking(input: ConfirmBookingRequest, options?: RpcOptions): UnaryCall<ConfirmBookingRequest, AckResponse> {
-        const method = this.methods[8], opt = this._transport.mergeOptions(options);
+        const method = this.methods[9], opt = this._transport.mergeOptions(options);
         return stackIntercept<ConfirmBookingRequest, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: CancelBooking(ticketspan.common.UuidValue) returns (ticketspan.common.AckResponse);
      */
     cancelBooking(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[9], opt = this._transport.mergeOptions(options);
+        const method = this.methods[10], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: RefundBooking(ticketspan.common.UuidValue) returns (ticketspan.common.AckResponse);
      */
     refundBooking(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, AckResponse> {
-        const method = this.methods[10], opt = this._transport.mergeOptions(options);
+        const method = this.methods[11], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, AckResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: GetBooking(ticketspan.common.UuidValue) returns (ticketspan.booking.Booking);
      */
     getBooking(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, Booking> {
-        const method = this.methods[11], opt = this._transport.mergeOptions(options);
+        const method = this.methods[12], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, Booking>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: ListBookings(ticketspan.booking.ListBookingsRequest) returns (ticketspan.booking.ListBookingsResponse);
      */
     listBookings(input: ListBookingsRequest, options?: RpcOptions): UnaryCall<ListBookingsRequest, ListBookingsResponse> {
-        const method = this.methods[12], opt = this._transport.mergeOptions(options);
+        const method = this.methods[13], opt = this._transport.mergeOptions(options);
         return stackIntercept<ListBookingsRequest, ListBookingsResponse>("unary", this._transport, method, opt, input);
     }
     /**
      * @generated from protobuf rpc: GetBookingStats(ticketspan.common.UuidValue) returns (ticketspan.booking.BookingStats);
      */
     getBookingStats(input: UuidValue, options?: RpcOptions): UnaryCall<UuidValue, BookingStats> {
-        const method = this.methods[13], opt = this._transport.mergeOptions(options);
+        const method = this.methods[14], opt = this._transport.mergeOptions(options);
         return stackIntercept<UuidValue, BookingStats>("unary", this._transport, method, opt, input);
     }
 }

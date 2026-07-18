@@ -64,6 +64,10 @@ const faqGroups: FaqGroup[] = [
         a: 'The service fee covers payment processing and platform costs; sales tax is applied where required by law. The full total is always shown before you confirm payment.',
       },
       {
+        q: 'Do free events cost anything?',
+        a: 'No. Free events cost nothing. When a ticket is free ($0), there is no service fee and no tax — the total is $0, so there is no card or payment step. Your entry pass is issued instantly. Organizers pay nothing to run a free event and do not even need payment setup.',
+      },
+      {
         q: 'Can I get a refund?',
         a: 'No. All sales are final on this platform; tickets and table bookings cannot be refunded or exchanged. See the All Sales Final policy in the footer for details.',
       },

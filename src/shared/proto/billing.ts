@@ -390,10 +390,6 @@ export interface FeeOverrideRow {
      */
     flatCents: number;
     /**
-     * @generated from protobuf field: int32 min_fee_cents = 9;
-     */
-    minFeeCents: number;
-    /**
      * @generated from protobuf field: int32 max_fee_cents = 10;
      */
     maxFeeCents: number;
@@ -439,10 +435,6 @@ export interface SetEventFeeOverrideRequest {
      * @generated from protobuf field: int32 flat_cents = 3;
      */
     flatCents: number;
-    /**
-     * @generated from protobuf field: int32 min_fee_cents = 4;
-     */
-    minFeeCents: number; // 0 = none
     /**
      * @generated from protobuf field: int32 max_fee_cents = 5;
      */
@@ -2271,7 +2263,6 @@ class FeeOverrideRow$Type extends MessageType<FeeOverrideRow> {
             { no: 6, name: "event_title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 7, name: "percent_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 8, name: "flat_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 9, name: "min_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "max_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 11, name: "standard_percent_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 12, name: "standard_flat_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
@@ -2289,7 +2280,6 @@ class FeeOverrideRow$Type extends MessageType<FeeOverrideRow> {
         message.eventTitle = "";
         message.percentBps = 0;
         message.flatCents = 0;
-        message.minFeeCents = 0;
         message.maxFeeCents = 0;
         message.standardPercentBps = 0;
         message.standardFlatCents = 0;
@@ -2327,9 +2317,6 @@ class FeeOverrideRow$Type extends MessageType<FeeOverrideRow> {
                     break;
                 case /* int32 flat_cents */ 8:
                     message.flatCents = reader.int32();
-                    break;
-                case /* int32 min_fee_cents */ 9:
-                    message.minFeeCents = reader.int32();
                     break;
                 case /* int32 max_fee_cents */ 10:
                     message.maxFeeCents = reader.int32();
@@ -2382,9 +2369,6 @@ class FeeOverrideRow$Type extends MessageType<FeeOverrideRow> {
         /* int32 flat_cents = 8; */
         if (message.flatCents !== 0)
             writer.tag(8, WireType.Varint).int32(message.flatCents);
-        /* int32 min_fee_cents = 9; */
-        if (message.minFeeCents !== 0)
-            writer.tag(9, WireType.Varint).int32(message.minFeeCents);
         /* int32 max_fee_cents = 10; */
         if (message.maxFeeCents !== 0)
             writer.tag(10, WireType.Varint).int32(message.maxFeeCents);
@@ -2464,7 +2448,6 @@ class SetEventFeeOverrideRequest$Type extends MessageType<SetEventFeeOverrideReq
             { no: 1, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "percent_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "flat_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 4, name: "min_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 5, name: "max_fee_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 6, name: "expires_at_epoch_seconds", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
             { no: 7, name: "reason", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
@@ -2475,7 +2458,6 @@ class SetEventFeeOverrideRequest$Type extends MessageType<SetEventFeeOverrideReq
         message.eventsId = "";
         message.percentBps = 0;
         message.flatCents = 0;
-        message.minFeeCents = 0;
         message.maxFeeCents = 0;
         message.expiresAtEpochSeconds = "0";
         message.reason = "";
@@ -2496,9 +2478,6 @@ class SetEventFeeOverrideRequest$Type extends MessageType<SetEventFeeOverrideReq
                     break;
                 case /* int32 flat_cents */ 3:
                     message.flatCents = reader.int32();
-                    break;
-                case /* int32 min_fee_cents */ 4:
-                    message.minFeeCents = reader.int32();
                     break;
                 case /* int32 max_fee_cents */ 5:
                     message.maxFeeCents = reader.int32();
@@ -2530,9 +2509,6 @@ class SetEventFeeOverrideRequest$Type extends MessageType<SetEventFeeOverrideReq
         /* int32 flat_cents = 3; */
         if (message.flatCents !== 0)
             writer.tag(3, WireType.Varint).int32(message.flatCents);
-        /* int32 min_fee_cents = 4; */
-        if (message.minFeeCents !== 0)
-            writer.tag(4, WireType.Varint).int32(message.minFeeCents);
         /* int32 max_fee_cents = 5; */
         if (message.maxFeeCents !== 0)
             writer.tag(5, WireType.Varint).int32(message.maxFeeCents);

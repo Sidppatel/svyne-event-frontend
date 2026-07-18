@@ -34,7 +34,7 @@ import { Select } from '@/shared/ui/select';
 import { Badge } from '@/shared/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
-const EMPTY_FORM = { name: '', percent: '', flat: '', min: '', max: '' };
+const EMPTY_FORM = { name: '', percent: '', flat: '', max: '' };
 const PREVIEW_PRICE = 5000;
 
 const SORTS: { value: CardSort; label: string }[] = [
@@ -104,7 +104,6 @@ export function DeveloperFeesPage() {
         name: form.name,
         percentBps: Math.round(parseFloat(form.percent || '0') * 100),
         flatCents: Math.round(parseFloat(form.flat || '0') * 100),
-        minFeeCents: Math.round(parseFloat(form.min || '0') * 100),
         maxFeeCents: Math.round(parseFloat(form.max || '0') * 100),
       });
       setForm(EMPTY_FORM);
@@ -221,10 +220,6 @@ export function DeveloperFeesPage() {
               <Input id="flat" className="h-9" value={form.flat} onChange={(e) => setForm((p) => ({ ...p, flat: e.target.value }))} />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="min" className="text-xs">Min $</Label>
-              <Input id="min" className="h-9" value={form.min} onChange={(e) => setForm((p) => ({ ...p, min: e.target.value }))} />
-            </div>
-            <div className="space-y-1">
               <Label htmlFor="max" className="text-xs">Max $</Label>
               <Input id="max" className="h-9" value={form.max} onChange={(e) => setForm((p) => ({ ...p, max: e.target.value }))} />
             </div>
@@ -240,7 +235,6 @@ export function DeveloperFeesPage() {
                   <span className="font-medium">{f.name}</span>{' '}
                   <span className="text-xs text-muted-foreground">
                     {(f.percentBps / 100).toFixed(2)}% + {centsToUSD(f.flatCents)}
-                    {f.minFeeCents ? ` · min ${centsToUSD(f.minFeeCents)}` : ''}
                     {f.maxFeeCents ? ` · max ${centsToUSD(f.maxFeeCents)}` : ''}
                   </span>
                   {!f.isActive ? <Badge variant="warn" className="ml-2">inactive</Badge> : null}

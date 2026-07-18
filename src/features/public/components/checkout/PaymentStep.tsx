@@ -12,11 +12,12 @@ import {
   getPaymentStatus,
   cancelBooking,
   updatePaymentIntentForMethod,
+  confirmFreeBooking,
 } from '@/features/public/services/paymentService';
 import { rpcErrorMessage } from '@/shared/session';
 import { PriceBadge } from '../PriceBadge';
 import { Button } from '@/shared/ui/button';
-import { Clock, ShieldCheck, AlertCircle } from 'lucide-react';
+import { Clock, ShieldCheck, AlertCircle, Ticket } from 'lucide-react';
 import { centsToUSD } from '@/shared/lib/format';
 import { resolveCssColor } from '@/shared/theme/branding';
 
@@ -35,18 +36,21 @@ interface BuyerPrefill {
 
 interface PaymentStepProps {
   bookingsId: string;
+  totalCents: number;
   onPaymentSuccess: () => void;
   onBack: () => void;
   preferredMethod?: 'card' | 'ach';
   buyerInfo?: BuyerPrefill;
 }
 
-export function PaymentStep({ bookingsId, onPaymentSuccess, onBack, preferredMethod = 'card', buyerInfo }: PaymentStepProps) {
+export function PaymentStep({ bookingsId, totalCents, onPaymentSuccess, onBack, preferredMethod = 'card', buyerInfo }: PaymentStepProps) {
+  const isFree = totalCents === 0;
   const [intent, setIntent] = useState<IntentState | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [stripePromise, setStripePromise] = useState<Promise<Stripe | null> | null>(null);
 
   useEffect(() => {
+    if (isFree) return;
     let active = true;
     createPaymentIntent(bookingsId, preferredMethod)
       .then((res) => {
@@ -64,7 +68,11 @@ export function PaymentStep({ bookingsId, onPaymentSuccess, onBack, preferredMet
     return () => {
       active = false;
     };
-  }, [bookingsId, preferredMethod]);
+  }, [bookingsId, preferredMethod, isFree]);
+
+  if (isFree) {
+    return <FreeConfirm bookingsId={bookingsId} onConfirmed={onPaymentSuccess} onBack={onBack} />;
+  }
 
   if (error) {
     return (
@@ -134,6 +142,87 @@ export function PaymentStep({ bookingsId, onPaymentSuccess, onBack, preferredMet
         onBack={onBack}
       />
     </Elements>
+  );
+}
+
+function FreeConfirm({
+  bookingsId,
+  onConfirmed,
+  onBack,
+}: {
+  bookingsId: string;
+  onConfirmed: () => void;
+  onBack: () => void;
+}) {
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function claim() {
+    setSubmitting(true);
+    setError(null);
+    try {
+      await confirmFreeBooking(bookingsId);
+      onConfirmed();
+    } catch (caught) {
+      setError(rpcErrorMessage(caught));
+      setSubmitting(false);
+    }
+  }
+
+  async function cancel() {
+    try {
+      await cancelBooking(bookingsId);
+    } catch (e) {
+      console.error(e);
+    }
+    onBack();
+  }
+
+  return (
+    <div className="space-y-5 pt-2">
+      <div className="flex items-center justify-between gap-4 border-b border-white/5 pb-3">
+        <div>
+          <h3 className="text-lg font-black text-white font-display uppercase tracking-tight">Free Entry</h3>
+          <div className="flex items-center gap-1 text-[10px] text-success font-bold uppercase tracking-widest mt-0.5">
+            <Ticket className="size-3.5" /> No payment required
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-[10px] text-white/50 uppercase tracking-wider font-bold">Total</p>
+          <span className="text-xl font-extrabold text-accent-gold font-display">Free</span>
+        </div>
+      </div>
+
+      <p className="text-xs text-white/60 leading-relaxed">
+        This event is free — no service fee and no card needed. Confirm to have your entry pass issued instantly.
+      </p>
+
+      {error && (
+        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-[11px] leading-relaxed">
+          <AlertCircle className="size-4 shrink-0 mt-0.5" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      <div className="flex gap-2 pt-2">
+        <Button
+          type="button"
+          disabled={submitting}
+          onClick={cancel}
+          className="flex-1 bg-white/5 hover:bg-white/10 text-white border border-white/10 py-5 hover:text-white"
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          disabled={submitting}
+          onClick={claim}
+          className="flex-1 bg-accent-burgundy hover:bg-accent-burgundy/95 text-white py-5 shadow-lg"
+        >
+          {submitting ? 'Issuing…' : 'Get free ticket'}
+        </Button>
+      </div>
+    </div>
   );
 }
 

@@ -4142,6 +4142,7 @@ export const BookingService = new ServiceType("ticketspan.booking.BookingService
     { name: "CreatePaymentIntent", options: {}, I: PaymentIntentRequest, O: PaymentIntentResponse },
     { name: "UpdatePaymentIntentForMethod", options: {}, I: UpdatePaymentMethodRequest, O: UpdatePaymentMethodResponse },
     { name: "GetPaymentStatus", options: {}, I: UuidValue, O: PaymentStatusResponse },
+    { name: "ConfirmFreeBooking", options: {}, I: UuidValue, O: PaymentStatusResponse },
     { name: "ConfirmBooking", options: {}, I: ConfirmBookingRequest, O: AckResponse },
     { name: "CancelBooking", options: {}, I: UuidValue, O: AckResponse },
     { name: "RefundBooking", options: {}, I: UuidValue, O: AckResponse },

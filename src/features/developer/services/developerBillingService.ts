@@ -131,7 +131,6 @@ export interface EventFeeOverrideInput {
   eventsId: string;
   percentBps: number;
   flatCents: number;
-  minFeeCents: number;
   maxFeeCents: number;
   expiresAtEpochSeconds: string;
   reason: string;

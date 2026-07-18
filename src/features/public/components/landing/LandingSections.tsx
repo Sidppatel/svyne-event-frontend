@@ -453,11 +453,12 @@ const tiers = [
     price: '$0',
     unit: '/mo',
     fee: '6.5% + $1.75',
-    feeNote: 'once per order, buyer pays at checkout',
+    feeNote: 'once per order — free events pay $0',
     featured: false,
     cta: 'Start free',
     points: [
       'Unlimited events, ticket types, staff',
+      'Free events cost nothing — no fee, no Stripe needed',
       'Your own subdomain with SSL',
       'Ticket count and revenue, live',
       'No credit card, cancel anytime',
@@ -562,6 +563,17 @@ export function PricingTeaser() {
             <span className="text-on-stage-soft">buyer pays $55.00</span>
             <span aria-hidden className="text-on-stage-soft">&rarr;</span>
             <span className="text-voltage">you get $50.00</span>
+          </div>
+        </div>
+        <div data-reveal className="mt-4 flex flex-col gap-4 rounded-2xl border border-voltage/25 bg-voltage/5 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-voltage">Free events cost nothing</p>
+            <p className="mt-1 text-on-stage-soft">Running a free event? Tickets are $0 — no service fee, no tax, no card, not even Stripe setup. Guests get their QR pass instantly.</p>
+          </div>
+          <div className="flex shrink-0 items-center gap-6 font-mono text-sm">
+            <span className="text-on-stage-soft">free ticket</span>
+            <span aria-hidden className="text-on-stage-soft">&rarr;</span>
+            <span className="text-voltage">buyer pays $0.00</span>
           </div>
         </div>
       </div>
