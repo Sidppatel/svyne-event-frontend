@@ -111,7 +111,8 @@ export function BookingDetailPage() {
 
       {b ? (
         <Card>
-          <CardContent className="space-y-5 p-6">
+          <CardContent className="flex gap-6 p-6">
+            <div className="min-w-0 flex-1 space-y-5">
             <div className="space-y-1">
               <h1 className="font-display text-2xl font-semibold text-foreground">{title}</h1>
               <span className="font-mono text-xs text-muted-foreground">Booking #{b.bookingNumber}</span>
@@ -149,6 +150,15 @@ export function BookingDetailPage() {
                 </span>
               </div>
             </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveQr({ qrToken: b.bookingNumber, label: b.bookingNumber, bookingNumber: b.bookingNumber })}
+              className="hidden shrink-0 rounded-xl border bg-white p-2 transition hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:block"
+              aria-label="Enlarge booking QR code"
+            >
+              <QrImage value={b.bookingNumber} size={160} className="size-[120px] object-contain" />
+            </button>
           </CardContent>
         </Card>
       ) : null}
