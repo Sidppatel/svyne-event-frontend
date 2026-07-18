@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useAsync } from '@/shared/hooks/useAsync';
-import { updateEvent, setEventFeesIncluded, setEventAch } from '@/features/admin/services/eventAdminService';
+import { updateEvent, setEventFeesIncluded, setEventAch, generateEventInfo } from '@/features/admin/services/eventAdminService';
 import { listVenues } from '@/features/admin/services/catalogService';
 import { getMyTenant } from '@/features/admin/services/tenantService';
 import { epochToZonedInput, zonedInputToEpoch } from '@/shared/lib/timezone';
@@ -14,6 +14,7 @@ import { Textarea } from '@/shared/ui/textarea';
 import { Select } from '@/shared/ui/select';
 import { Label } from '@/shared/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 import {
   FileEdit,
   Rocket,
@@ -25,6 +26,7 @@ import {
   CheckCircle2,
   Circle,
   AlertCircle,
+  Wand2,
   type LucideIcon,
 } from 'lucide-react';
 import type { Tone, SectionId, ChecklistItem, EventCompletion, EventVoice } from '@/features/admin/lib/eventInsights';
@@ -248,6 +250,29 @@ export function EditSection({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiErrorMsg, setAiErrorMsg] = useState<string | null>(null);
+
+  async function handleGenerate() {
+    if (!aiPrompt.trim()) return;
+    setAiErrorMsg(null);
+    setIsGenerating(true);
+    try {
+      const result = await generateEventInfo(aiPrompt);
+      if (result.title) setTitle(result.title);
+      if (result.description) setDescription(result.description);
+      if (result.category) setCategory(result.category);
+      setIsAiModalOpen(false);
+      setAiPrompt('');
+    } catch (caught) {
+      setAiErrorMsg(rpcErrorMessage(caught));
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
   async function toggleFeesIncluded(next: boolean) {
     setFeesIncluded(next);
     try {
@@ -296,9 +321,20 @@ export function EditSection({
   return (
     <Card className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
       <CardHeader className="border-b border-border/20 px-6 py-4 flex flex-row items-center justify-between gap-2">
-        <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
-          <FileEdit className="h-4.5 w-4.5 text-primary" /> Edit Details
-        </CardTitle>
+        <div className="flex items-center gap-4">
+          <CardTitle className="text-base font-bold font-display text-foreground flex items-center gap-2">
+            <FileEdit className="h-4.5 w-4.5 text-primary" /> Edit Details
+          </CardTitle>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setIsAiModalOpen(true)}
+            className="h-8 gap-2 text-primary border-primary/20 hover:bg-primary/10"
+          >
+            <Wand2 className="h-4 w-4" /> Magic Autofill
+          </Button>
+        </div>
         <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
           Capacity {event.totalCapacity}
         </span>
@@ -400,6 +436,54 @@ export function EditSection({
           </Button>
         </div>
       </CardContent>
+
+      <Dialog open={isAiModalOpen} onOpenChange={setIsAiModalOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogTitle className="text-lg font-bold font-display text-foreground flex items-center gap-2">
+            <Wand2 className="h-5 w-5 text-primary" /> Describe Your Event
+          </DialogTitle>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Describe your event in plain English, and our AI will automatically fill in the title, description, and category.
+            </p>
+            {aiErrorMsg ? (
+              <div className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-xs font-bold text-destructive animate-shake">
+                {aiErrorMsg}
+              </div>
+            ) : null}
+            <Textarea
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="e.g. I'm hosting a tech meetup for React developers next Friday at the library. We will have free pizza."
+              rows={5}
+              className="bg-background border-border text-sm"
+              disabled={isGenerating}
+            />
+            <div className="flex justify-end gap-3 pt-4 border-t border-border/20">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setIsAiModalOpen(false);
+                  setAiErrorMsg(null);
+                }}
+                disabled={isGenerating}
+                className="h-10 px-6 rounded-xl font-bold uppercase tracking-wider text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleGenerate}
+                disabled={isGenerating || !aiPrompt.trim()}
+                className="ticketspan-spring-btn h-10 px-6 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20"
+              >
+                {isGenerating ? 'Generating...' : 'Generate Details'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

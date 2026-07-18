@@ -19,6 +19,23 @@ export interface EventDraft {
   extraInfoJson?: string;
 }
 
+export interface GenerateEventInfoResponse {
+  title: string;
+  description: string;
+  category: string;
+  dateSuggestion: string;
+}
+
+export async function generateEventInfo(prompt: string): Promise<GenerateEventInfoResponse> {
+  const response = await callRpc(() => eventClient.generateEventInfo({ prompt }));
+  return {
+    title: response.title,
+    description: response.description,
+    category: response.category,
+    dateSuggestion: response.dateSuggestion,
+  };
+}
+
 export async function createEvent(draft: EventDraft): Promise<string> {
   const response = await callRpc(() =>
     eventClient.createEvent({

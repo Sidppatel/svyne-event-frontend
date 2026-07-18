@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createEvent, type EventDraft } from '@/features/admin/services/eventAdminService';
+import { createEvent, generateEventInfo, type EventDraft } from '@/features/admin/services/eventAdminService';
 import { listVenues, createVenue, type VenueDraft } from '@/features/admin/services/catalogService';
 import type { Venue } from '@/shared/proto/catalog';
 import { listEnums, type EnumOption } from '@/shared/enums';
@@ -15,7 +15,7 @@ import { Field, FieldLabel, FieldGroup } from '@/shared/ui/field';
 import { CardContent } from '@/shared/ui/card';
 import { DateTimePicker } from '@/shared/ui/date-time-picker';
 import { cn } from '@/shared/lib/cn';
-import { CalendarCheck2, LayoutGrid, MapPin, Rocket, Ticket, Users, Plus } from 'lucide-react';
+import { CalendarCheck2, LayoutGrid, MapPin, Rocket, Ticket, Users, Plus, Wand2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 import { VenueFields, venueError, normalizeVenue, emptyDraft } from '@/features/admin/pages/AdminVenuesPage';
 
@@ -39,6 +39,29 @@ export function AdminEventWizardPage() {
   const [venueDraft, setVenueDraft] = useState<VenueDraft>(emptyDraft());
   const [venueErrorMsg, setVenueErrorMsg] = useState<string | null>(null);
   const [venueSubmitting, setVenueSubmitting] = useState(false);
+
+  const [isAiModalOpen, setIsAiModalOpen] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiErrorMsg, setAiErrorMsg] = useState<string | null>(null);
+
+  async function handleGenerate() {
+    if (!aiPrompt.trim()) return;
+    setAiErrorMsg(null);
+    setIsGenerating(true);
+    try {
+      const result = await generateEventInfo(aiPrompt);
+      if (result.title) setTitle(result.title);
+      if (result.description) setDescription(result.description);
+      if (result.category) setCategory(result.category);
+      setIsAiModalOpen(false);
+      setAiPrompt('');
+    } catch (caught) {
+      setAiErrorMsg(rpcErrorMessage(caught));
+    } finally {
+      setIsGenerating(false);
+    }
+  }
 
   async function handleCreateVenue() {
     const err = venueError(venueDraft);
@@ -157,7 +180,18 @@ export function AdminEventWizardPage() {
       <div className="border border-border bg-card shadow-sm rounded-2xl overflow-hidden">
         <CardContent className="p-8">
           <FieldGroup>
-            <SectionLabel>Details</SectionLabel>
+            <div className="flex items-center justify-between">
+              <SectionLabel>Details</SectionLabel>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsAiModalOpen(true)}
+                className="h-8 gap-2 text-primary border-primary/20 hover:bg-primary/10"
+              >
+                <Wand2 className="h-4 w-4" /> Magic Autofill
+              </Button>
+            </div>
             <div className="grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-2">
               <Field>
                 <FieldLabel htmlFor="title" className="text-[10px]">Title</FieldLabel>
@@ -325,6 +359,54 @@ export function AdminEventWizardPage() {
                 className="ticketspan-spring-btn h-10 px-6 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20"
               >
                 {venueSubmitting ? 'Creating...' : 'Create Venue'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAiModalOpen} onOpenChange={setIsAiModalOpen}>
+        <DialogContent className="max-w-xl">
+          <DialogTitle className="text-lg font-bold font-display text-foreground flex items-center gap-2">
+            <Wand2 className="h-5 w-5 text-primary" /> Describe Your Event
+          </DialogTitle>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Describe your event in plain English, and our AI will automatically fill in the title, description, and category.
+            </p>
+            {aiErrorMsg ? (
+              <div className="rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-xs font-bold text-destructive animate-shake">
+                {aiErrorMsg}
+              </div>
+            ) : null}
+            <Textarea
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="e.g. I'm hosting a tech meetup for React developers next Friday at the library. We will have free pizza."
+              rows={5}
+              className="bg-background border-border text-sm"
+              disabled={isGenerating}
+            />
+            <div className="flex justify-end gap-3 pt-4 border-t border-border/20">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => {
+                  setIsAiModalOpen(false);
+                  setAiErrorMsg(null);
+                }}
+                disabled={isGenerating}
+                className="h-10 px-6 rounded-xl font-bold uppercase tracking-wider text-xs"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                onClick={handleGenerate}
+                disabled={isGenerating || !aiPrompt.trim()}
+                className="ticketspan-spring-btn h-10 px-6 rounded-xl font-bold uppercase tracking-wider text-xs shadow-md shadow-primary/20"
+              >
+                {isGenerating ? 'Generating...' : 'Generate Details'}
               </Button>
             </div>
           </div>
