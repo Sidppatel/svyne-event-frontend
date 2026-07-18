@@ -548,6 +548,36 @@ export interface EventStats {
      */
     checkedIn: number;
 }
+/**
+ * @generated from protobuf message ticketspan.event.GenerateEventInfoRequest
+ */
+export interface GenerateEventInfoRequest {
+    /**
+     * @generated from protobuf field: string prompt = 1;
+     */
+    prompt: string;
+}
+/**
+ * @generated from protobuf message ticketspan.event.GenerateEventInfoResponse
+ */
+export interface GenerateEventInfoResponse {
+    /**
+     * @generated from protobuf field: string title = 1;
+     */
+    title: string;
+    /**
+     * @generated from protobuf field: string description = 2;
+     */
+    description: string;
+    /**
+     * @generated from protobuf field: string category = 3;
+     */
+    category: string;
+    /**
+     * @generated from protobuf field: string date_suggestion = 4;
+     */
+    dateSuggestion: string;
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class EventImage$Type extends MessageType<EventImage> {
     constructor() {
@@ -2275,6 +2305,124 @@ class EventStats$Type extends MessageType<EventStats> {
  * @generated MessageType for protobuf message ticketspan.event.EventStats
  */
 export const EventStats = new EventStats$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GenerateEventInfoRequest$Type extends MessageType<GenerateEventInfoRequest> {
+    constructor() {
+        super("ticketspan.event.GenerateEventInfoRequest", [
+            { no: 1, name: "prompt", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<GenerateEventInfoRequest>): GenerateEventInfoRequest {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.prompt = "";
+        if (value !== undefined)
+            reflectionMergePartial<GenerateEventInfoRequest>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GenerateEventInfoRequest): GenerateEventInfoRequest {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string prompt */ 1:
+                    message.prompt = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GenerateEventInfoRequest, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string prompt = 1; */
+        if (message.prompt !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.prompt);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message ticketspan.event.GenerateEventInfoRequest
+ */
+export const GenerateEventInfoRequest = new GenerateEventInfoRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GenerateEventInfoResponse$Type extends MessageType<GenerateEventInfoResponse> {
+    constructor() {
+        super("ticketspan.event.GenerateEventInfoResponse", [
+            { no: 1, name: "title", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "description", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 3, name: "category", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 4, name: "date_suggestion", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+        ]);
+    }
+    create(value?: PartialMessage<GenerateEventInfoResponse>): GenerateEventInfoResponse {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.title = "";
+        message.description = "";
+        message.category = "";
+        message.dateSuggestion = "";
+        if (value !== undefined)
+            reflectionMergePartial<GenerateEventInfoResponse>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GenerateEventInfoResponse): GenerateEventInfoResponse {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string title */ 1:
+                    message.title = reader.string();
+                    break;
+                case /* string description */ 2:
+                    message.description = reader.string();
+                    break;
+                case /* string category */ 3:
+                    message.category = reader.string();
+                    break;
+                case /* string date_suggestion */ 4:
+                    message.dateSuggestion = reader.string();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GenerateEventInfoResponse, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string title = 1; */
+        if (message.title !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.title);
+        /* string description = 2; */
+        if (message.description !== "")
+            writer.tag(2, WireType.LengthDelimited).string(message.description);
+        /* string category = 3; */
+        if (message.category !== "")
+            writer.tag(3, WireType.LengthDelimited).string(message.category);
+        /* string date_suggestion = 4; */
+        if (message.dateSuggestion !== "")
+            writer.tag(4, WireType.LengthDelimited).string(message.dateSuggestion);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message ticketspan.event.GenerateEventInfoResponse
+ */
+export const GenerateEventInfoResponse = new GenerateEventInfoResponse$Type();
 /**
  * @generated ServiceType for protobuf service ticketspan.event.EventService
  */
@@ -2299,5 +2447,6 @@ export const EventService = new ServiceType("ticketspan.event.EventService", [
     { name: "RemoveEventImage", options: {}, I: RemoveEventImageRequest, O: AckResponse },
     { name: "SetPrimaryEventImage", options: {}, I: RemoveEventImageRequest, O: AckResponse },
     { name: "ReorderEventImages", options: {}, I: ReorderEventImagesRequest, O: AckResponse },
-    { name: "GetMediaSettings", options: {}, I: Empty, O: MediaSettings }
+    { name: "GetMediaSettings", options: {}, I: Empty, O: MediaSettings },
+    { name: "GenerateEventInfo", options: {}, I: GenerateEventInfoRequest, O: GenerateEventInfoResponse }
 ]);
