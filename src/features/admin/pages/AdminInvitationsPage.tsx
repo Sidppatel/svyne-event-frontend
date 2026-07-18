@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Mail, Send, UserPlus } from 'lucide-react';
+import { Mail, Send, UserMinus, UserPlus, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
@@ -7,8 +7,10 @@ import {
   createInvitation,
   revokeInvitation,
 } from '@/features/admin/services/invitationService';
+import { listAllStaff, removeStaffRole } from '@/features/admin/services/staffAdminService';
 import { rpcErrorMessage } from '@/shared/session';
 import { Roles, roleLabel } from '@/shared/roles';
+import { useAuth } from '@/shared/auth/useAuth';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -27,12 +29,17 @@ function statusVariant(status: string): 'success' | 'warn' | 'neutral' | 'danger
 }
 
 export function AdminInvitationsPage() {
-  const loader = useCallback(() => listInvitations(), []);
+  const { user } = useAuth();
+  const loader = useCallback(async () => {
+    const [invs, mems] = await Promise.all([listInvitations(), listAllStaff()]);
+    return { invitations: invs, members: mems };
+  }, []);
   const { data, loading, error, reload } = useAsync(loader);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<number>(Roles.Staff);
 
-  const invitations = useMemo(() => data ?? [], [data]);
+  const invitations = useMemo(() => data?.invitations ?? [], [data]);
+  const members = useMemo(() => data?.members ?? [], [data]);
 
   async function guard(action: () => Promise<unknown>) {
     try {
@@ -95,44 +102,95 @@ export function AdminInvitationsPage() {
             <div key={i} className="h-16 animate-pulse rounded-lg bg-muted" />
           ))}
         </div>
-      ) : invitations.length > 0 ? (
-        <Card className="overflow-hidden">
-          <CardContent className="p-0">
-            <ul className="divide-y divide-hairline">
-              {invitations.map((invitation) => (
-                <li key={invitation.invitationsId} className="flex items-center justify-between gap-3 px-5 py-3.5">
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium text-foreground">{invitation.email}</p>
-                    <p className="text-xs text-ink-soft">{roleLabel(invitation.role)}</p>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    <Badge variant={statusVariant(invitation.status)}>{invitation.status}</Badge>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => guard(() => revokeInvitation(invitation.invitationsId))}
-                      className="h-8 text-xs text-destructive hover:bg-destructive/10"
-                    >
-                      Revoke
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
       ) : (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center gap-5 px-6 py-14 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand/10 text-brand">
-              <Mail className="h-7 w-7" />
-            </div>
-            <div className="space-y-1.5">
-              <h3 className="font-display text-xl font-semibold tracking-tight text-foreground">No invitations yet</h3>
-              <p className="max-w-md text-sm text-ink-soft">Invite your first teammate above — they’ll show up here once the invite goes out.</p>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="space-y-6">
+          <Card className="overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Users className="h-4.5 w-4.5 text-brand" />
+              <CardTitle>Active Members</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {members.length > 0 ? (
+                <ul className="divide-y divide-hairline">
+                  {members.map((member) => {
+                    const isSelf = member.email.toLowerCase() === user?.email?.toLowerCase();
+                    return (
+                      <li key={member.usersId} className="flex items-center justify-between gap-3 px-5 py-3.5">
+                        <div className="min-w-0">
+                          <p className="truncate text-sm font-medium text-foreground">
+                            {member.firstName || member.lastName ? `${member.firstName} ${member.lastName}`.trim() : member.email}
+                            {isSelf && <span className="ml-1.5 rounded bg-brand/10 px-1.5 py-0.5 text-3xs font-semibold uppercase tracking-wider text-brand">You</span>}
+                          </p>
+                          <p className="text-xs text-ink-soft">
+                            {member.email} • {roleLabel(member.role)}
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-3">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={isSelf}
+                            onClick={() =>
+                              guard(async () => {
+                                if (confirm(`Are you sure you want to remove ${member.firstName || member.lastName || member.email} from the team?`)) {
+                                  await removeStaffRole(member.usersId);
+                                  toast.success('Member removed successfully.');
+                                }
+                              })
+                            }
+                            className="h-8 text-xs text-destructive hover:bg-destructive/10 disabled:opacity-35"
+                          >
+                            <UserMinus className="mr-1 h-3.5 w-3.5" /> Remove
+                          </Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
+                  <p className="text-sm text-ink-soft">No active members found</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden">
+            <CardHeader className="flex flex-row items-center gap-2">
+              <Mail className="h-4.5 w-4.5 text-brand" />
+              <CardTitle>Pending Invitations</CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {invitations.length > 0 ? (
+                <ul className="divide-y divide-hairline">
+                  {invitations.map((invitation) => (
+                    <li key={invitation.invitationsId} className="flex items-center justify-between gap-3 px-5 py-3.5">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-foreground">{invitation.email}</p>
+                        <p className="text-xs text-ink-soft">{roleLabel(invitation.role)}</p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <Badge variant={statusVariant(invitation.status)}>{invitation.status}</Badge>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => guard(() => revokeInvitation(invitation.invitationsId))}
+                          className="h-8 text-xs text-destructive hover:bg-destructive/10"
+                        >
+                          Revoke
+                        </Button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <div className="flex flex-col items-center gap-2 px-6 py-10 text-center">
+                  <p className="text-sm text-ink-soft">No pending invitations</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );

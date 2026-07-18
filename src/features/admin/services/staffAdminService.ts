@@ -15,3 +15,12 @@ export async function assignStaffByEmail(email: string, eventsId: string, role: 
   const response = await callRpc(() => staffClient.assignStaffByEmail({ email, eventsId, role }));
   return { userExisted: response.userExisted, message: response.message };
 }
+
+export async function listAllStaff(): Promise<StaffMember[]> {
+  const response = await callRpc(() => staffClient.listAllStaff({}));
+  return response.staff;
+}
+
+export async function removeStaffRole(usersId: string): Promise<void> {
+  await callRpc(() => staffClient.removeStaffRole({ value: usersId }));
+}
