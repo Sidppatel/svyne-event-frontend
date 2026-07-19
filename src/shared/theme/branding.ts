@@ -303,4 +303,14 @@ export function applyBranding(branding: TenantBranding): void {
   for (const [name, value] of Object.entries(brandingCssVars(branding))) {
     root.style.setProperty(name, value);
   }
+  
+  if (branding.logoUrl) {
+    let link = document.querySelector<HTMLLinkElement>("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = branding.logoUrl;
+  }
 }

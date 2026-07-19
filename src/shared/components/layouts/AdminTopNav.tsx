@@ -24,6 +24,7 @@ import { initials } from '@/shared/lib/format';
 import { logout } from '@/features/auth/services/authService';
 import { cn } from '@/shared/lib/cn';
 import type { NavLink as NavLinkItem } from '@/shared/components/layouts/PortalNav';
+import { TicketSpanLogo } from '@/shared/components/TicketSpanLogo';
 
 interface NavGroup {
   label: string;
@@ -136,8 +137,8 @@ export function AdminTopNav() {
       <header className="sticky top-0 z-40 border-b border-hairline bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 md:px-6">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="font-display text-lg font-semibold tracking-tight">
-              TicketSpan <span className="font-light text-voltage">·</span>{' '}
+            <span className="font-display text-lg font-semibold tracking-tight flex items-center gap-1.5">
+              <TicketSpanLogo className="h-9" /> <span className="font-light text-voltage">·</span>{' '}
               <span className="text-sm font-medium tracking-normal text-muted-foreground">admin</span>
             </span>
             <span

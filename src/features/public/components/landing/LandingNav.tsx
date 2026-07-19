@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/shared/lib/cn';
+import { TicketSpanLogo } from '@/shared/components/TicketSpanLogo';
 
 const sections = [
   { href: '#features', label: 'Features' },
@@ -27,10 +28,8 @@ export function LandingNav() {
       )}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-        <Link to="/" className="flex items-baseline gap-2 text-on-stage">
-          <span className="flex items-center gap-1.5 font-display text-xl">
-            <span className="h-1.5 w-1.5 rounded-full bg-voltage" /> TicketSpan
-          </span>
+        <Link to="/" className="flex items-baseline gap-2 text-on-stage group">
+          <TicketSpanLogo className="h-10 transition-opacity group-hover:opacity-80" light />
         </Link>
         <div className="hidden items-center gap-8 md:flex">
           {sections.map((s) => (

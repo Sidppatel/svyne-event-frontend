@@ -89,3 +89,16 @@ export function tenantUrl(slug: string): string {
   const portSuffix = port ? `:${port}` : '';
   return `${protocol}//${slug}.${baseHost}${portSuffix}/`;
 }
+
+export function landingUrl(): string {
+  const { protocol, hostname, port } = window.location;
+  const portSuffix = port ? `:${port}` : '';
+  if (hostname.endsWith('localhost')) {
+    return `${protocol}//localhost${portSuffix}/`;
+  }
+  if (hostname.endsWith('.pages.dev')) {
+    return `${protocol}//ticketspan-frontend.pages.dev${portSuffix}/`;
+  }
+  const baseHost = hostname.split('.').slice(-2).join('.');
+  return `${protocol}//${baseHost}${portSuffix}/`;
+}

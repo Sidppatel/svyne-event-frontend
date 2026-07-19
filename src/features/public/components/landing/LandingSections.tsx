@@ -10,6 +10,7 @@ import {
   Users,
 } from 'lucide-react';
 import { landingCta } from '@/features/public/components/landing/LandingHero';
+import { TicketSpanLogo } from '@/shared/components/TicketSpanLogo';
 const DashboardMock = lazy(() =>
   import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.DashboardMock })),
 );
@@ -723,9 +724,9 @@ export function ClosingCta() {
       <footer className="mx-auto mt-16 max-w-7xl border-t border-hairline pt-10">
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
           <div className="space-y-3">
-            <p className="flex items-center gap-1.5 font-display text-xl text-ink">
-              <span className="h-1.5 w-1.5 rounded-full bg-voltage" /> TicketSpan
-            </p>
+            <Link to="/" className="inline-block transition-opacity hover:opacity-80">
+              <TicketSpanLogo className="h-10" />
+            </Link>
             <p className="max-w-xs text-sm leading-relaxed text-ink-soft">
               The box office for independent venues. Sell tickets and tables under your own name
               &mdash; you keep every penny of your ticket price.

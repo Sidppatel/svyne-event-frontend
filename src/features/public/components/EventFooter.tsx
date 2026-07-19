@@ -1,6 +1,8 @@
 import { cn } from '@/shared/lib/cn';
 import { Compass } from 'lucide-react';
+import { TicketSpanLogo } from '@/shared/components/TicketSpanLogo';
 import { useTenantBranding } from '@/shared/theme/ThemeContext';
+import { landingUrl } from '@/shared/subdomain';
 
 interface EventFooterProps {
   organizerName?: string;
@@ -24,11 +26,9 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         { }
         <div className="md:col-span-4 space-y-4">
-          <div className="flex items-center gap-2">
-            <span className={cn('text-lg font-black tracking-tight font-display', light ? 'text-white' : 'text-foreground')}>
-              TicketSpan
-            </span>
-          </div>
+          <a href={landingUrl()} className="flex items-center gap-2 group">
+            <TicketSpanLogo className="h-11 transition-opacity hover:opacity-80" light={light} />
+          </a>
           <p className="text-xs leading-relaxed max-w-sm">
             Experience ticket bookings and table seating simplified. Built for premium nightlife, concerts, and exclusive social events.
           </p>
@@ -68,7 +68,13 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12 pt-6 border-t border-dashed border-border-strong flex flex-col md:flex-row justify-between items-center gap-4 text-[10px]">
         <p>© {currentYear} TicketSpan Inc. All rights reserved.</p>
         <p className="flex items-center gap-1">
-          <Compass className="size-3 text-accent-gold" /> Powered by <span className={cn('font-bold', light ? 'text-white' : 'text-foreground')}>TicketSpan</span>
+          <Compass className="size-3 text-accent-gold" /> Powered by{' '}
+          <a
+            href={landingUrl()}
+            className={cn('font-bold hover:underline transition-all', light ? 'text-white hover:text-white/80' : 'text-foreground')}
+          >
+            TicketSpan
+          </a>
         </p>
       </div>
     </footer>

@@ -8,6 +8,7 @@ import { useAuth } from '@/shared/auth/useAuth';
 import { useTenantBranding } from '@/shared/theme/ThemeContext';
 import { roleLabel } from '@/shared/roles';
 import { cn } from '@/shared/lib/cn';
+import { TicketSpanLogo } from '@/shared/components/TicketSpanLogo';
 
 export interface NavLink {
   to: string;
@@ -91,10 +92,7 @@ function Brand({ section, className, onStage }: { section?: string; className?: 
   }
   return (
     <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-1.5', className)}>
-      <span className="h-1.5 w-1.5 rounded-full bg-voltage" />
-      <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>
-        TicketSpan
-      </span>
+      <TicketSpanLogo className="h-9" light={onStage} />
       {section ? (
         <>
           <span className="font-light text-voltage">·</span>
