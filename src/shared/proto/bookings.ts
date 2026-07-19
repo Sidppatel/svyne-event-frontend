@@ -335,6 +335,67 @@ export interface CartQuote {
      * @generated from protobuf field: int32 ach_savings_cents = 15;
      */
     achSavingsCents: number;
+    /**
+     * Everything the group-discount banner renders, computed server-side. Always
+     * present; applied_min_qty = 0 means no tier is active for this cart.
+     *
+     * @generated from protobuf field: ticketspan.booking.GroupDiscountHint group_discount = 16;
+     */
+    groupDiscount?: GroupDiscountHint;
+}
+/**
+ * Server-computed group-discount state for a cart. The client renders these
+ * values verbatim and never derives savings itself.
+ *
+ * @generated from protobuf message ticketspan.booking.GroupDiscountHint
+ */
+export interface GroupDiscountHint {
+    /**
+     * @generated from protobuf field: string applied_rule_name = 1;
+     */
+    appliedRuleName: string; // empty = no tier applied
+    /**
+     * @generated from protobuf field: int32 applied_min_qty = 2;
+     */
+    appliedMinQty: number; // 0 = no tier applied
+    /**
+     * @generated from protobuf field: int32 group_discount_cents = 3;
+     */
+    groupDiscountCents: number; // what the group tier saved on this cart
+    /**
+     * @generated from protobuf field: int32 discounted_seats = 4;
+     */
+    discountedSeats: number; // seats that actually received the tier price
+    /**
+     * @generated from protobuf field: bool capped = 5;
+     */
+    capped: boolean; // true = a capacity cap left some seats at full price
+    /**
+     * @generated from protobuf field: int32 eligible_qty = 6;
+     */
+    eligibleQty: number; // ticket seats counted toward the threshold
+    /**
+     * The next tier up, if any. next_tier_min_qty = 0 means there is none.
+     *
+     * @generated from protobuf field: int32 next_tier_min_qty = 7;
+     */
+    nextTierMinQty: number;
+    /**
+     * @generated from protobuf field: int32 next_tier_seats_away = 8;
+     */
+    nextTierSeatsAway: number;
+    /**
+     * @generated from protobuf field: string next_tier_kind = 9;
+     */
+    nextTierKind: string; // FixedUnitPrice | PercentOff | AmountOffOrder
+    /**
+     * @generated from protobuf field: int32 next_tier_bps = 10;
+     */
+    nextTierBps: number;
+    /**
+     * @generated from protobuf field: int32 next_tier_price_cents = 11;
+     */
+    nextTierPriceCents: number;
 }
 /**
  * @generated from protobuf message ticketspan.booking.BookingLineInput
@@ -1649,7 +1710,8 @@ class CartQuote$Type extends MessageType<CartQuote> {
             { no: 12, name: "hold_seconds", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 13, name: "ach_available", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 14, name: "ach_total_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 15, name: "ach_savings_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 15, name: "ach_savings_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 16, name: "group_discount", kind: "message", T: () => GroupDiscountHint }
         ]);
     }
     create(value?: PartialMessage<CartQuote>): CartQuote {
@@ -1723,6 +1785,9 @@ class CartQuote$Type extends MessageType<CartQuote> {
                 case /* int32 ach_savings_cents */ 15:
                     message.achSavingsCents = reader.int32();
                     break;
+                case /* ticketspan.booking.GroupDiscountHint group_discount */ 16:
+                    message.groupDiscount = GroupDiscountHint.internalBinaryRead(reader, reader.uint32(), options, message.groupDiscount);
+                    break;
                 default:
                     let u = options.readUnknownField;
                     if (u === "throw")
@@ -1780,6 +1845,9 @@ class CartQuote$Type extends MessageType<CartQuote> {
         /* int32 ach_savings_cents = 15; */
         if (message.achSavingsCents !== 0)
             writer.tag(15, WireType.Varint).int32(message.achSavingsCents);
+        /* ticketspan.booking.GroupDiscountHint group_discount = 16; */
+        if (message.groupDiscount)
+            GroupDiscountHint.internalBinaryWrite(message.groupDiscount, writer.tag(16, WireType.LengthDelimited).fork(), options).join();
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1790,6 +1858,133 @@ class CartQuote$Type extends MessageType<CartQuote> {
  * @generated MessageType for protobuf message ticketspan.booking.CartQuote
  */
 export const CartQuote = new CartQuote$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class GroupDiscountHint$Type extends MessageType<GroupDiscountHint> {
+    constructor() {
+        super("ticketspan.booking.GroupDiscountHint", [
+            { no: 1, name: "applied_rule_name", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 2, name: "applied_min_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 3, name: "group_discount_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 4, name: "discounted_seats", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "capped", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
+            { no: 6, name: "eligible_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 7, name: "next_tier_min_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 8, name: "next_tier_seats_away", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 9, name: "next_tier_kind", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 10, name: "next_tier_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 11, name: "next_tier_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+        ]);
+    }
+    create(value?: PartialMessage<GroupDiscountHint>): GroupDiscountHint {
+        const message = globalThis.Object.create((this.messagePrototype!));
+        message.appliedRuleName = "";
+        message.appliedMinQty = 0;
+        message.groupDiscountCents = 0;
+        message.discountedSeats = 0;
+        message.capped = false;
+        message.eligibleQty = 0;
+        message.nextTierMinQty = 0;
+        message.nextTierSeatsAway = 0;
+        message.nextTierKind = "";
+        message.nextTierBps = 0;
+        message.nextTierPriceCents = 0;
+        if (value !== undefined)
+            reflectionMergePartial<GroupDiscountHint>(this, message, value);
+        return message;
+    }
+    internalBinaryRead(reader: IBinaryReader, length: number, options: BinaryReadOptions, target?: GroupDiscountHint): GroupDiscountHint {
+        let message = target ?? this.create(), end = reader.pos + length;
+        while (reader.pos < end) {
+            let [fieldNo, wireType] = reader.tag();
+            switch (fieldNo) {
+                case /* string applied_rule_name */ 1:
+                    message.appliedRuleName = reader.string();
+                    break;
+                case /* int32 applied_min_qty */ 2:
+                    message.appliedMinQty = reader.int32();
+                    break;
+                case /* int32 group_discount_cents */ 3:
+                    message.groupDiscountCents = reader.int32();
+                    break;
+                case /* int32 discounted_seats */ 4:
+                    message.discountedSeats = reader.int32();
+                    break;
+                case /* bool capped */ 5:
+                    message.capped = reader.bool();
+                    break;
+                case /* int32 eligible_qty */ 6:
+                    message.eligibleQty = reader.int32();
+                    break;
+                case /* int32 next_tier_min_qty */ 7:
+                    message.nextTierMinQty = reader.int32();
+                    break;
+                case /* int32 next_tier_seats_away */ 8:
+                    message.nextTierSeatsAway = reader.int32();
+                    break;
+                case /* string next_tier_kind */ 9:
+                    message.nextTierKind = reader.string();
+                    break;
+                case /* int32 next_tier_bps */ 10:
+                    message.nextTierBps = reader.int32();
+                    break;
+                case /* int32 next_tier_price_cents */ 11:
+                    message.nextTierPriceCents = reader.int32();
+                    break;
+                default:
+                    let u = options.readUnknownField;
+                    if (u === "throw")
+                        throw new globalThis.Error(`Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`);
+                    let d = reader.skip(wireType);
+                    if (u !== false)
+                        (u === true ? UnknownFieldHandler.onRead : u)(this.typeName, message, fieldNo, wireType, d);
+            }
+        }
+        return message;
+    }
+    internalBinaryWrite(message: GroupDiscountHint, writer: IBinaryWriter, options: BinaryWriteOptions): IBinaryWriter {
+        /* string applied_rule_name = 1; */
+        if (message.appliedRuleName !== "")
+            writer.tag(1, WireType.LengthDelimited).string(message.appliedRuleName);
+        /* int32 applied_min_qty = 2; */
+        if (message.appliedMinQty !== 0)
+            writer.tag(2, WireType.Varint).int32(message.appliedMinQty);
+        /* int32 group_discount_cents = 3; */
+        if (message.groupDiscountCents !== 0)
+            writer.tag(3, WireType.Varint).int32(message.groupDiscountCents);
+        /* int32 discounted_seats = 4; */
+        if (message.discountedSeats !== 0)
+            writer.tag(4, WireType.Varint).int32(message.discountedSeats);
+        /* bool capped = 5; */
+        if (message.capped !== false)
+            writer.tag(5, WireType.Varint).bool(message.capped);
+        /* int32 eligible_qty = 6; */
+        if (message.eligibleQty !== 0)
+            writer.tag(6, WireType.Varint).int32(message.eligibleQty);
+        /* int32 next_tier_min_qty = 7; */
+        if (message.nextTierMinQty !== 0)
+            writer.tag(7, WireType.Varint).int32(message.nextTierMinQty);
+        /* int32 next_tier_seats_away = 8; */
+        if (message.nextTierSeatsAway !== 0)
+            writer.tag(8, WireType.Varint).int32(message.nextTierSeatsAway);
+        /* string next_tier_kind = 9; */
+        if (message.nextTierKind !== "")
+            writer.tag(9, WireType.LengthDelimited).string(message.nextTierKind);
+        /* int32 next_tier_bps = 10; */
+        if (message.nextTierBps !== 0)
+            writer.tag(10, WireType.Varint).int32(message.nextTierBps);
+        /* int32 next_tier_price_cents = 11; */
+        if (message.nextTierPriceCents !== 0)
+            writer.tag(11, WireType.Varint).int32(message.nextTierPriceCents);
+        let u = options.writeUnknownFields;
+        if (u !== false)
+            (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+        return writer;
+    }
+}
+/**
+ * @generated MessageType for protobuf message ticketspan.booking.GroupDiscountHint
+ */
+export const GroupDiscountHint = new GroupDiscountHint$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class BookingLineInput$Type extends MessageType<BookingLineInput> {
     constructor() {

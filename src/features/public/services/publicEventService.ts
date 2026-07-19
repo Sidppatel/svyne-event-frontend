@@ -9,7 +9,7 @@ import type { PriceBreakdown } from '@/shared/proto/pricing';
 
 
 export async function calculatePrice(pricesId: string, seats: number): Promise<PriceBreakdown> {
-  return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at: '0', remaining: -1 }));
+  return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at: '0', remaining: -1, groupQty: 0 }));
 }
 
 export async function listPublicEvents(search: string, category = ''): Promise<Event[]> {

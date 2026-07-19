@@ -11,6 +11,7 @@ import {
 } from '@/features/admin/services/pricingService';
 import {
   groupEventRules,
+  isGroupRule,
   discountedCents,
   isWindowActive,
   windowProgress,
@@ -47,7 +48,7 @@ export function PricingManager({
     const prices = await listPricesForEvent(eventsId);
     const owners = prices.filter((p) => p.pricingType === 'TicketTier' || p.pricingType === 'Table');
     const ruleLists = await Promise.all(owners.map((p) => listPriceRules(p.pricesId)));
-    return { prices, groups: groupEventRules(prices, ruleLists.flat()) };
+    return { prices, groups: groupEventRules(prices, ruleLists.flat().filter((r) => !isGroupRule(r))) };
   }, [eventsId]);
 
   const state = useAsync(load);

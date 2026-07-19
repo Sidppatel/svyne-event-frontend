@@ -161,7 +161,7 @@ export interface PriceRule {
     /**
      * @generated from protobuf field: string rule_type = 4;
      */
-    ruleType: string; // Presale | LastMinute | TimeWindow | Dynamic
+    ruleType: string; // Presale | LastMinute | TimeWindow | Dynamic | Group
     /**
      * @generated from protobuf field: int32 priority = 5;
      */
@@ -202,6 +202,26 @@ export interface PriceRule {
      * @generated from protobuf field: int32 capacity = 14;
      */
     capacity: number; // discount applies only to this many people/seats (0 = no cap)
+    /**
+     * Group tier fields; only meaningful when rule_type = Group. min_qty is the
+     * cart quantity that triggers the tier, max_qty its upper bound (0 = open).
+     * Among qualifying tiers the highest min_qty wins.
+     *
+     * @generated from protobuf field: int32 min_qty = 15;
+     */
+    minQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: int32 max_qty = 16;
+     */
+    maxQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: string discount_kind = 17;
+     */
+    discountKind: string; // FixedUnitPrice | PercentOff | AmountOffOrder; empty = unset
+    /**
+     * @generated from protobuf field: int32 discount_bps = 18;
+     */
+    discountBps: number; // basis points for PercentOff (1500 = 15%)
 }
 /**
  * @generated from protobuf message ticketspan.pricing.CreatePriceRuleRequest
@@ -254,6 +274,22 @@ export interface CreatePriceRuleRequest {
      * @generated from protobuf field: int32 capacity = 11;
      */
     capacity: number; // discount applies only to this many people/seats (0 = no cap)
+    /**
+     * @generated from protobuf field: int32 min_qty = 12;
+     */
+    minQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: int32 max_qty = 13;
+     */
+    maxQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: string discount_kind = 14;
+     */
+    discountKind: string; // FixedUnitPrice | PercentOff | AmountOffOrder
+    /**
+     * @generated from protobuf field: int32 discount_bps = 15;
+     */
+    discountBps: number; // basis points for PercentOff (1500 = 15%)
 }
 /**
  * @generated from protobuf message ticketspan.pricing.UpdatePriceRuleRequest
@@ -303,6 +339,22 @@ export interface UpdatePriceRuleRequest {
      * @generated from protobuf field: int32 capacity = 11;
      */
     capacity: number; // discount applies only to this many people/seats (0 = no cap)
+    /**
+     * @generated from protobuf field: int32 min_qty = 12;
+     */
+    minQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: int32 max_qty = 13;
+     */
+    maxQty: number; // 0 = unset
+    /**
+     * @generated from protobuf field: string discount_kind = 14;
+     */
+    discountKind: string; // FixedUnitPrice | PercentOff | AmountOffOrder
+    /**
+     * @generated from protobuf field: int32 discount_bps = 15;
+     */
+    discountBps: number; // basis points for PercentOff (1500 = 15%)
 }
 /**
  * @generated from protobuf message ticketspan.pricing.ListPriceRulesResponse
@@ -333,6 +385,12 @@ export interface CalculatePriceRequest {
      * @generated from protobuf field: int32 remaining = 4;
      */
     remaining: number; // -1 = unknown
+    /**
+     * Cart quantity used to evaluate Group tiers. 0 = use seats (admin preview).
+     *
+     * @generated from protobuf field: int32 group_qty = 5;
+     */
+    groupQty: number;
 }
 /**
  * Full server-authoritative breakdown for one priced line. Every surface (admin
@@ -400,6 +458,22 @@ export interface PriceBreakdown {
      * @generated from protobuf field: string currency = 14;
      */
     currency: string;
+    /**
+     * Group tier outcome for this line. When a capacity cap applies, only
+     * group_discounted_seats of the line's seats bill at group_unit_cents and the
+     * remainder bill at standard_unit_cents, so selling is a blended figure.
+     *
+     * @generated from protobuf field: int32 group_discounted_seats = 15;
+     */
+    groupDiscountedSeats: number;
+    /**
+     * @generated from protobuf field: int32 group_unit_cents = 16;
+     */
+    groupUnitCents: number;
+    /**
+     * @generated from protobuf field: int32 standard_unit_cents = 17;
+     */
+    standardUnitCents: number;
 }
 /**
  * @generated from protobuf message ticketspan.pricing.SetTenantDefaultFeeFormulaRequest
@@ -807,7 +881,11 @@ class PriceRule$Type extends MessageType<PriceRule> {
             { no: 11, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
             { no: 12, name: "scope", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 13, name: "events_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 14, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 14, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 15, name: "min_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 16, name: "max_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 17, name: "discount_kind", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 18, name: "discount_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<PriceRule>): PriceRule {
@@ -826,6 +904,10 @@ class PriceRule$Type extends MessageType<PriceRule> {
         message.scope = "";
         message.eventsId = "";
         message.capacity = 0;
+        message.minQty = 0;
+        message.maxQty = 0;
+        message.discountKind = "";
+        message.discountBps = 0;
         if (value !== undefined)
             reflectionMergePartial<PriceRule>(this, message, value);
         return message;
@@ -876,6 +958,18 @@ class PriceRule$Type extends MessageType<PriceRule> {
                     break;
                 case /* int32 capacity */ 14:
                     message.capacity = reader.int32();
+                    break;
+                case /* int32 min_qty */ 15:
+                    message.minQty = reader.int32();
+                    break;
+                case /* int32 max_qty */ 16:
+                    message.maxQty = reader.int32();
+                    break;
+                case /* string discount_kind */ 17:
+                    message.discountKind = reader.string();
+                    break;
+                case /* int32 discount_bps */ 18:
+                    message.discountBps = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -931,6 +1025,18 @@ class PriceRule$Type extends MessageType<PriceRule> {
         /* int32 capacity = 14; */
         if (message.capacity !== 0)
             writer.tag(14, WireType.Varint).int32(message.capacity);
+        /* int32 min_qty = 15; */
+        if (message.minQty !== 0)
+            writer.tag(15, WireType.Varint).int32(message.minQty);
+        /* int32 max_qty = 16; */
+        if (message.maxQty !== 0)
+            writer.tag(16, WireType.Varint).int32(message.maxQty);
+        /* string discount_kind = 17; */
+        if (message.discountKind !== "")
+            writer.tag(17, WireType.LengthDelimited).string(message.discountKind);
+        /* int32 discount_bps = 18; */
+        if (message.discountBps !== 0)
+            writer.tag(18, WireType.Varint).int32(message.discountBps);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -955,7 +1061,11 @@ class CreatePriceRuleRequest$Type extends MessageType<CreatePriceRuleRequest> {
             { no: 8, name: "min_remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "max_remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "scope", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
-            { no: 11, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 11, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 12, name: "min_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 13, name: "max_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 14, name: "discount_kind", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 15, name: "discount_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<CreatePriceRuleRequest>): CreatePriceRuleRequest {
@@ -971,6 +1081,10 @@ class CreatePriceRuleRequest$Type extends MessageType<CreatePriceRuleRequest> {
         message.maxRemaining = 0;
         message.scope = "";
         message.capacity = 0;
+        message.minQty = 0;
+        message.maxQty = 0;
+        message.discountKind = "";
+        message.discountBps = 0;
         if (value !== undefined)
             reflectionMergePartial<CreatePriceRuleRequest>(this, message, value);
         return message;
@@ -1012,6 +1126,18 @@ class CreatePriceRuleRequest$Type extends MessageType<CreatePriceRuleRequest> {
                     break;
                 case /* int32 capacity */ 11:
                     message.capacity = reader.int32();
+                    break;
+                case /* int32 min_qty */ 12:
+                    message.minQty = reader.int32();
+                    break;
+                case /* int32 max_qty */ 13:
+                    message.maxQty = reader.int32();
+                    break;
+                case /* string discount_kind */ 14:
+                    message.discountKind = reader.string();
+                    break;
+                case /* int32 discount_bps */ 15:
+                    message.discountBps = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1058,6 +1184,18 @@ class CreatePriceRuleRequest$Type extends MessageType<CreatePriceRuleRequest> {
         /* int32 capacity = 11; */
         if (message.capacity !== 0)
             writer.tag(11, WireType.Varint).int32(message.capacity);
+        /* int32 min_qty = 12; */
+        if (message.minQty !== 0)
+            writer.tag(12, WireType.Varint).int32(message.minQty);
+        /* int32 max_qty = 13; */
+        if (message.maxQty !== 0)
+            writer.tag(13, WireType.Varint).int32(message.maxQty);
+        /* string discount_kind = 14; */
+        if (message.discountKind !== "")
+            writer.tag(14, WireType.LengthDelimited).string(message.discountKind);
+        /* int32 discount_bps = 15; */
+        if (message.discountBps !== 0)
+            writer.tag(15, WireType.Varint).int32(message.discountBps);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1082,7 +1220,11 @@ class UpdatePriceRuleRequest$Type extends MessageType<UpdatePriceRuleRequest> {
             { no: 8, name: "min_remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 9, name: "max_remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 10, name: "is_active", kind: "scalar", T: 8 /*ScalarType.BOOL*/ },
-            { no: 11, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 11, name: "capacity", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 12, name: "min_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 13, name: "max_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 14, name: "discount_kind", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 15, name: "discount_bps", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<UpdatePriceRuleRequest>): UpdatePriceRuleRequest {
@@ -1098,6 +1240,10 @@ class UpdatePriceRuleRequest$Type extends MessageType<UpdatePriceRuleRequest> {
         message.maxRemaining = 0;
         message.isActive = false;
         message.capacity = 0;
+        message.minQty = 0;
+        message.maxQty = 0;
+        message.discountKind = "";
+        message.discountBps = 0;
         if (value !== undefined)
             reflectionMergePartial<UpdatePriceRuleRequest>(this, message, value);
         return message;
@@ -1139,6 +1285,18 @@ class UpdatePriceRuleRequest$Type extends MessageType<UpdatePriceRuleRequest> {
                     break;
                 case /* int32 capacity */ 11:
                     message.capacity = reader.int32();
+                    break;
+                case /* int32 min_qty */ 12:
+                    message.minQty = reader.int32();
+                    break;
+                case /* int32 max_qty */ 13:
+                    message.maxQty = reader.int32();
+                    break;
+                case /* string discount_kind */ 14:
+                    message.discountKind = reader.string();
+                    break;
+                case /* int32 discount_bps */ 15:
+                    message.discountBps = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1185,6 +1343,18 @@ class UpdatePriceRuleRequest$Type extends MessageType<UpdatePriceRuleRequest> {
         /* int32 capacity = 11; */
         if (message.capacity !== 0)
             writer.tag(11, WireType.Varint).int32(message.capacity);
+        /* int32 min_qty = 12; */
+        if (message.minQty !== 0)
+            writer.tag(12, WireType.Varint).int32(message.minQty);
+        /* int32 max_qty = 13; */
+        if (message.maxQty !== 0)
+            writer.tag(13, WireType.Varint).int32(message.maxQty);
+        /* string discount_kind = 14; */
+        if (message.discountKind !== "")
+            writer.tag(14, WireType.LengthDelimited).string(message.discountKind);
+        /* int32 discount_bps = 15; */
+        if (message.discountBps !== 0)
+            writer.tag(15, WireType.Varint).int32(message.discountBps);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1249,7 +1419,8 @@ class CalculatePriceRequest$Type extends MessageType<CalculatePriceRequest> {
             { no: 1, name: "prices_id", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
             { no: 2, name: "seats", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 3, name: "at", kind: "scalar", T: 3 /*ScalarType.INT64*/ },
-            { no: 4, name: "remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
+            { no: 4, name: "remaining", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 5, name: "group_qty", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<CalculatePriceRequest>): CalculatePriceRequest {
@@ -1258,6 +1429,7 @@ class CalculatePriceRequest$Type extends MessageType<CalculatePriceRequest> {
         message.seats = 0;
         message.at = "0";
         message.remaining = 0;
+        message.groupQty = 0;
         if (value !== undefined)
             reflectionMergePartial<CalculatePriceRequest>(this, message, value);
         return message;
@@ -1278,6 +1450,9 @@ class CalculatePriceRequest$Type extends MessageType<CalculatePriceRequest> {
                     break;
                 case /* int32 remaining */ 4:
                     message.remaining = reader.int32();
+                    break;
+                case /* int32 group_qty */ 5:
+                    message.groupQty = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1303,6 +1478,9 @@ class CalculatePriceRequest$Type extends MessageType<CalculatePriceRequest> {
         /* int32 remaining = 4; */
         if (message.remaining !== 0)
             writer.tag(4, WireType.Varint).int32(message.remaining);
+        /* int32 group_qty = 5; */
+        if (message.groupQty !== 0)
+            writer.tag(5, WireType.Varint).int32(message.groupQty);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1330,7 +1508,10 @@ class PriceBreakdown$Type extends MessageType<PriceBreakdown> {
             { no: 11, name: "tax_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 12, name: "final_price_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
             { no: 13, name: "organizer_net_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
-            { no: 14, name: "currency", kind: "scalar", T: 9 /*ScalarType.STRING*/ }
+            { no: 14, name: "currency", kind: "scalar", T: 9 /*ScalarType.STRING*/ },
+            { no: 15, name: "group_discounted_seats", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 16, name: "group_unit_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ },
+            { no: 17, name: "standard_unit_cents", kind: "scalar", T: 5 /*ScalarType.INT32*/ }
         ]);
     }
     create(value?: PartialMessage<PriceBreakdown>): PriceBreakdown {
@@ -1349,6 +1530,9 @@ class PriceBreakdown$Type extends MessageType<PriceBreakdown> {
         message.finalPriceCents = 0;
         message.organizerNetCents = 0;
         message.currency = "";
+        message.groupDiscountedSeats = 0;
+        message.groupUnitCents = 0;
+        message.standardUnitCents = 0;
         if (value !== undefined)
             reflectionMergePartial<PriceBreakdown>(this, message, value);
         return message;
@@ -1399,6 +1583,15 @@ class PriceBreakdown$Type extends MessageType<PriceBreakdown> {
                     break;
                 case /* string currency */ 14:
                     message.currency = reader.string();
+                    break;
+                case /* int32 group_discounted_seats */ 15:
+                    message.groupDiscountedSeats = reader.int32();
+                    break;
+                case /* int32 group_unit_cents */ 16:
+                    message.groupUnitCents = reader.int32();
+                    break;
+                case /* int32 standard_unit_cents */ 17:
+                    message.standardUnitCents = reader.int32();
                     break;
                 default:
                     let u = options.readUnknownField;
@@ -1454,6 +1647,15 @@ class PriceBreakdown$Type extends MessageType<PriceBreakdown> {
         /* string currency = 14; */
         if (message.currency !== "")
             writer.tag(14, WireType.LengthDelimited).string(message.currency);
+        /* int32 group_discounted_seats = 15; */
+        if (message.groupDiscountedSeats !== 0)
+            writer.tag(15, WireType.Varint).int32(message.groupDiscountedSeats);
+        /* int32 group_unit_cents = 16; */
+        if (message.groupUnitCents !== 0)
+            writer.tag(16, WireType.Varint).int32(message.groupUnitCents);
+        /* int32 standard_unit_cents = 17; */
+        if (message.standardUnitCents !== 0)
+            writer.tag(17, WireType.Varint).int32(message.standardUnitCents);
         let u = options.writeUnknownFields;
         if (u !== false)
             (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);

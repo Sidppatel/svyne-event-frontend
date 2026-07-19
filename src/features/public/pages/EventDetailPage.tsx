@@ -23,6 +23,7 @@ import { SectionTitle } from '@/features/public/components/SectionTitle';
 import { Seo } from '@/shared/components/Seo';
 import { imageUrl } from '@/shared/upload';
 import { createMultiBooking, quoteCart, cartServiceFeeCents, lineAllInExclTaxCents } from '@/features/public/services/paymentService';
+import { GroupDiscountBanner } from '@/features/public/components/GroupDiscountBanner';
 import {
   type CartItem,
   DEFAULT_HOLD_SECONDS,
@@ -107,7 +108,6 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
   const cartKey = cart.map((i) => `${i.key}x${i.seats}`).join('|');
   const quoteLoader = useCallback(async () => {
-    if (cart.length === 0) return null;
     return quoteCart(
       event.eventsId,
       cart.map((i) => ({ kind: i.kind, refId: i.refId, seats: i.kind === 'Ticket' ? i.seats : 0 })),
@@ -198,6 +198,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                   subtitle="Choose your admission"
                   icon={Ticket}
                 />
+                <GroupDiscountBanner hint={quote?.groupDiscount} />
                 <div className="space-y-3">
                   {!ticketTypes ? (
                     <div className="py-8 text-center text-sm text-ink-soft">Loading tickets…</div>
@@ -369,8 +370,8 @@ function EventDetailPageContent({ event }: { event: Event }) {
                       <div className="space-y-1.5 text-xs">
                         {discount > 0 && (
                           <div className="flex justify-between font-medium text-success">
-                            <span>You save</span>
-                            <span className="font-mono">{centsToUSD(discount)}</span>
+                            <span>{quote?.groupDiscount?.appliedRuleName || 'You save'}</span>
+                            <span className="font-mono">-{centsToUSD(discount)}</span>
                           </div>
                         )}
                         {!event.feesIncluded && (

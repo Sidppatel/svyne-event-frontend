@@ -21,6 +21,7 @@ import type { TableTemplate } from '@/shared/proto/booking';
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui/dialog';
 import { Switch } from '@/shared/ui/switch';
 import { PricingManager } from '@/features/admin/components/PricingManager';
+import { GroupDiscountsPanel } from '@/features/admin/components/GroupDiscountsPanel';
 import { ScheduleTimeline } from '@/features/admin/components/ScheduleTimeline';
 import { TicketTypesManager } from '@/features/admin/components/TicketTypesManager';
 import { CheckInLogsPanel } from '@/features/admin/components/CheckInLogsPanel';
@@ -522,7 +523,10 @@ export function AdminEventManagePage() {
             timeZone={timeZone}
           />
           {event.data.eventType !== 'Table' ? (
-            <TicketTypesManager eventsId={eventsId} />
+            <>
+              <TicketTypesManager eventsId={eventsId} />
+              <GroupDiscountsPanel eventsId={eventsId} />
+            </>
           ) : null}
         </div>
       )}

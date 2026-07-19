@@ -147,10 +147,20 @@ export function initErrorReporter(): void {
   const originalConsoleError = console.error.bind(console);
   console.error = (...args: unknown[]) => {
     originalConsoleError(...args);
+    const message = args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ');
+    if (
+      message.includes('ReportClientErrors') ||
+      message.includes('LogService') ||
+      message.includes('Failed to fetch') ||
+      message.includes('NetworkError') ||
+      message.includes('ERR_CONNECTION')
+    ) {
+      return;
+    }
     const first = args[0];
     reportError(
       'ConsoleError',
-      args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ').slice(0, 500),
+      message.slice(0, 500),
       first instanceof Error ? (first.stack ?? '') : '',
       'Low',
     );
@@ -159,10 +169,20 @@ export function initErrorReporter(): void {
   const originalConsoleWarn = console.warn.bind(console);
   console.warn = (...args: unknown[]) => {
     originalConsoleWarn(...args);
+    const message = args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ');
+    if (
+      message.includes('ReportClientErrors') ||
+      message.includes('LogService') ||
+      message.includes('Failed to fetch') ||
+      message.includes('NetworkError') ||
+      message.includes('ERR_CONNECTION')
+    ) {
+      return;
+    }
     const first = args[0];
     reportError(
       'ConsoleWarning',
-      args.map((a) => (a instanceof Error ? a.message : String(a))).join(' ').slice(0, 500),
+      message.slice(0, 500),
       first instanceof Error ? (first.stack ?? '') : '',
       'Warning',
     );

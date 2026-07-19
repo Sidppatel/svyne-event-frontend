@@ -58,6 +58,58 @@ export function epochToLocalInput(activeAt: string): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
+export const GROUP_RULE_TYPE = 'Group';
+
+export function isGroupRule(rule: PriceRule): boolean {
+  return rule.ruleType === GROUP_RULE_TYPE;
+}
+
+export function percentToBps(percent: string): number {
+  const value = parseFloat(percent);
+  return Number.isFinite(value) ? Math.round(value * 100) : 0;
+}
+
+export function bpsToPercent(bps: number): string {
+  return String(bps / 100);
+}
+
+export function groupTierSummary(rule: PriceRule, priceName: string): string {
+  const scope = rule.scope === 'Event' ? 'All ticket types' : priceName || 'One ticket type';
+  const range = rule.maxQty > 0 ? `${rule.minQty}–${rule.maxQty}` : `${rule.minQty}+`;
+  let offer: string;
+  if (rule.discountKind === 'PercentOff') {
+    offer = `${bpsToPercent(rule.discountBps)}% off`;
+  } else if (rule.discountKind === 'FixedUnitPrice') {
+    offer = `$${(rule.priceCents / 100).toFixed(2)} per ticket`;
+  } else {
+    offer = `$${(rule.priceCents / 100).toFixed(2)} off the order`;
+  }
+  const cap = rule.capacity > 0 ? `, first ${rule.capacity} seats` : '';
+  return `${scope} · ${range} tickets · ${offer}${cap}`;
+}
+
+export function sortGroupTiers(rules: PriceRule[]): PriceRule[] {
+  return [...rules].sort((a, b) => a.minQty - b.minQty);
+}
+
+export function overlapsExistingTier(
+  rules: PriceRule[],
+  scope: string,
+  ownerId: string,
+  minQty: number,
+  maxQty: number,
+  ignoreId: string,
+): boolean {
+  const upper = maxQty > 0 ? maxQty : Number.MAX_SAFE_INTEGER;
+  return rules.some((r) => {
+    if (r.priceRulesId === ignoreId || r.scope !== scope) return false;
+    const sameOwner = scope === 'Event' ? true : r.pricesId === ownerId;
+    if (!sameOwner) return false;
+    const rUpper = r.maxQty > 0 ? r.maxQty : Number.MAX_SAFE_INTEGER;
+    return minQty <= rUpper && r.minQty <= upper;
+  });
+}
+
 function ruleKey(rule: PriceRule): string {
   return [rule.name, rule.ruleType, rule.activeFrom, rule.activeUntil].join('|');
 }

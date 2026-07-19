@@ -26,6 +26,66 @@ export interface PriceRuleInput {
   capacity: number; 
 }
 
+export interface GroupTierInput {
+  ownerId: string;
+  scope: 'Price' | 'Event';
+  name: string;
+  minQty: number;
+  maxQty: number;
+  discountKind: string;
+  discountBps: number;
+  priceCents: number;
+  capacity: number;
+  activeFrom: string;
+  activeUntil: string;
+}
+
+function groupTierPayload(input: GroupTierInput) {
+  return {
+    name: input.name,
+    ruleType: 'Group',
+    priority: 0,
+    priceCents: input.priceCents,
+    activeFrom: input.activeFrom,
+    activeUntil: input.activeUntil,
+    minRemaining: -1,
+    maxRemaining: -1,
+    capacity: input.capacity,
+    minQty: input.minQty,
+    maxQty: input.maxQty,
+    discountKind: input.discountKind,
+    discountBps: input.discountBps,
+  };
+}
+
+export async function createGroupTier(input: GroupTierInput): Promise<string> {
+  const res = await callRpc(() =>
+    pricingClient.createPriceRule({
+      ...groupTierPayload(input),
+      ownerId: input.ownerId,
+      scope: input.scope,
+    }),
+  );
+  return res.value;
+}
+
+export async function updateGroupTier(
+  input: GroupTierInput & { priceRulesId: string; isActive: boolean },
+): Promise<void> {
+  await callRpc(() =>
+    pricingClient.updatePriceRule({
+      ...groupTierPayload(input),
+      priceRulesId: input.priceRulesId,
+      isActive: input.isActive,
+    }),
+  );
+}
+
+export async function listEventPriceRules(eventsId: string): Promise<PriceRule[]> {
+  const res = await callRpc(() => pricingClient.listEventPriceRules({ value: eventsId }));
+  return res.rules;
+}
+
 export async function createPrice(input: PriceInput): Promise<string> {
   const res = await callRpc(() => pricingClient.createPrice(input));
   return res.value;
@@ -62,13 +122,29 @@ export async function createPriceRule(input: PriceRuleInput): Promise<string> {
   
   const { pricesId, ...rest } = input;
   const res = await callRpc(() =>
-    pricingClient.createPriceRule({ ...rest, ownerId: pricesId, scope: 'Price' }),
+    pricingClient.createPriceRule({
+      ...rest,
+      ownerId: pricesId,
+      scope: 'Price',
+      minQty: 0,
+      maxQty: 0,
+      discountKind: '',
+      discountBps: 0,
+    }),
   );
   return res.value;
 }
 
 export async function updatePriceRule(input: PriceRuleInput & { priceRulesId: string; isActive: boolean }): Promise<void> {
-  await callRpc(() => pricingClient.updatePriceRule(input));
+  await callRpc(() =>
+    pricingClient.updatePriceRule({
+      ...input,
+      minQty: 0,
+      maxQty: 0,
+      discountKind: '',
+      discountBps: 0,
+    }),
+  );
 }
 
 export async function deletePriceRule(priceRulesId: string): Promise<void> {
@@ -85,8 +161,9 @@ export async function calculatePrice(
   seats: number,
   at = '0',
   remaining = -1,
+  groupQty = 0,
 ): Promise<PriceBreakdown> {
-  return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at, remaining }));
+  return callRpc(() => pricingClient.calculatePrice({ pricesId, seats, at, remaining, groupQty }));
 }
 
 export async function setTenantDefaultFeeFormula(
