@@ -12,52 +12,89 @@ function motionOk() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
 }
 
+const QR_PATH =
+  'M2 2h8v8H2V2Zm2 2v4h4V4H4Zm10-2h8v8h-8V2Zm2 2v4h4V4h-4ZM2 14h8v8H2v-8Zm2 2v4h4v-4H4Zm12-2h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-4 4h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-2 2h2v2h-2v-2Zm-4 0h2v2h-2v-2Z';
+
 export function HeroTicket() {
   const venueName = useLandingStore((s) => s.venueName);
   const venueType = useLandingStore((s) => s.venueType);
+  const [showQr, setShowQr] = useState(false);
+  useEffect(() => {
+    if (!motionOk()) return;
+    const id = window.setInterval(() => setShowQr((v) => !v), 3600);
+    return () => window.clearInterval(id);
+  }, []);
   const show = eventByType[venueType];
   const house = venueName.trim() || 'The Aster Room';
   return (
-    <div className="relative w-full max-w-sm" data-ticket-scene>
+    <div className="relative w-full max-w-[270px]" data-ticket-scene>
       <div
         data-ticket-stub
-        className="absolute -right-4 top-8 hidden h-full w-full rotate-3 bg-(--lp-green) md:block"
+        className="absolute -right-5 top-10 hidden h-full w-full rotate-3 bg-(--lp-green) md:block"
         aria-hidden="true"
       />
-      <div data-ticket-card className="lp-frame relative px-8 pb-7 pt-8 md:px-10">
-        <div className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-(--lp-ink-soft)">
-          <span>Admit one</span>
-          <span>№ 000147</span>
+      <button
+        type="button"
+        data-ticket-card
+        onClick={() => setShowQr((v) => !v)}
+        aria-label={showQr ? 'Show ticket details' : 'Show entry QR code'}
+        className="relative block w-full cursor-pointer overflow-hidden rounded-[2.6rem] border-[3px] border-(--lp-ink) bg-(--lp-ivory) text-left shadow-[14px_14px_0_rgba(25,23,20,0.1)]"
+      >
+        <div className="bg-(--lp-green) px-6 pb-5 pt-7 text-(--lp-ivory)">
+          <p className="truncate font-[family-name:var(--lp-display)] text-xl font-semibold">{house}</p>
+          <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-(--lp-green-ivory)">
+            Box office · Your ticket
+          </p>
         </div>
-        <p className="mt-4 font-[family-name:var(--lp-display)] text-3xl font-semibold text-(--lp-ink)">
-          {show.name}
-        </p>
-        <p className="mt-1 text-[13px] text-(--lp-ink-soft)">
-          {house} — {show.detail}
-        </p>
-        <div className="mt-5 flex items-baseline justify-between font-mono text-[11px] tracking-[0.14em] text-(--lp-ink-soft)">
-          <span>SAT · DEC 12 · 8 PM</span>
-          <span className="text-(--lp-green)">$120.00</span>
+        <div className="relative min-h-[280px] px-6 py-5">
+          {showQr ? (
+            <div key="qr" className="flex animate-[lp-rise_0.45s_var(--lp-ease)_both] flex-col items-center pt-2 text-center">
+              <svg viewBox="0 0 24 24" className="h-36 w-36 text-(--lp-ink)" aria-hidden="true">
+                <path fill="currentColor" d={QR_PATH} />
+              </svg>
+              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-(--lp-ink-soft)">
+                Show at the door
+              </p>
+              <p className="mt-1 font-mono text-[10px] tracking-[0.14em] text-(--lp-green)">№ 000147 · SEAT 14</p>
+            </div>
+          ) : (
+            <div key="ticket" className="animate-[lp-rise_0.45s_var(--lp-ease)_both]">
+              <div className="flex items-baseline justify-between font-mono text-[9px] uppercase tracking-[0.2em] text-(--lp-ink-soft)">
+                <span>Admit one</span>
+                <span>№ 000147</span>
+              </div>
+              <p className="mt-3 font-[family-name:var(--lp-display)] text-2xl font-semibold text-(--lp-ink)">
+                {show.name}
+              </p>
+              <p className="mt-0.5 truncate text-xs text-(--lp-ink-soft)">{show.detail}</p>
+              <div className="mt-4 flex items-baseline justify-between font-mono text-[10px] tracking-[0.14em] text-(--lp-ink-soft)">
+                <span>SAT · DEC 12 · 8 PM</span>
+                <span className="text-(--lp-green)">$120.00</span>
+              </div>
+              <div className="lp-perf mt-4 pt-3">
+                <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.16em] text-(--lp-green)">
+                  <span>BOX B</span>
+                  <span>ROW 2</span>
+                  <span>SEAT 14</span>
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-3 border-t border-(--lp-line-soft) pt-3.5">
+                <svg viewBox="0 0 24 24" className="h-8 w-8 shrink-0 text-(--lp-ink)" aria-hidden="true">
+                  <path fill="currentColor" d={QR_PATH} />
+                </svg>
+                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-(--lp-ink-faint)">
+                  Tap for entry QR
+                </span>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="lp-perf mt-5 pt-4">
-          <div className="flex items-center justify-between font-mono text-[11px] tracking-[0.16em] text-(--lp-green)">
-            <span>BOX B</span>
-            <span>ROW 2</span>
-            <span>SEAT 14</span>
-          </div>
-        </div>
-        <div className="mt-4 flex items-center justify-between">
-          <span className="truncate font-mono text-[9px] uppercase tracking-[0.3em] text-(--lp-ink-faint)">
+        <div className="flex items-center justify-center border-t border-(--lp-line-soft) py-2.5">
+          <span className="truncate px-4 font-mono text-[9px] uppercase tracking-[0.26em] text-(--lp-ink-faint)">
             {venueSlug(house)}.ticketspan.com
           </span>
-          <svg viewBox="0 0 24 24" className="h-7 w-7 shrink-0 text-(--lp-ink)" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M2 2h8v8H2V2Zm2 2v4h4V4H4Zm10-2h8v8h-8V2Zm2 2v4h4V4h-4ZM2 14h8v8H2v-8Zm2 2v4h4v-4H4Zm12-2h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-4 4h2v2h-2v-2Zm4 0h2v2h-2v-2Zm-2 2h2v2h-2v-2Zm-4 0h2v2h-2v-2Z"
-            />
-          </svg>
         </div>
-      </div>
+      </button>
     </div>
   );
 }
