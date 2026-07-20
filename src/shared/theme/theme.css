@@ -197,14 +197,46 @@
 }
 
 [data-portal='admin'] {
-  --brand: var(--color-forest-brand);
-  --brand-hover: var(--color-forest-brand-hover);
-  --voltage-accent: var(--color-digital-gold);
-  --voltage-accent-ink: var(--color-deep-gold-ink);
-  --stage: var(--color-forest-stage);
-  --stage-elevated: var(--color-forest-stage-elevated);
-  --on-stage: var(--color-forest-mist);
-  --on-stage-soft: var(--color-forest-haze);
+  --canvas: #F5F1E8;
+  --surface: #FBF9F3;
+  --surface-sunken: #ECE6D8;
+  --ink: #191714;
+  --ink-soft: #55504A;
+  --ink-faint: #6E685F;
+  --hairline: #E2DBCB;
+  --hairline-strong: #C7BFAC;
+  --brand: #1F3D2B;
+  --brand-hover: #2C543C;
+  --brand-ink: #F5F1E8;
+  --voltage-accent: #7D6003;
+  --voltage-accent-ink: #3A2E14;
+  --highlight: #F1E8CE;
+  --stage: #191714;
+  --stage-elevated: #2A2620;
+  --on-stage: #F5F1E8;
+  --on-stage-soft: #C7BFAC;
+  --font-body-stack: 'Albert Sans', 'Albert Sans Fallback', Arial, sans-serif;
+  --font-display-stack: 'Cormorant Garamond', 'Cormorant Garamond Fallback', Georgia, serif;
+  --font-accent-stack: 'Cormorant Garamond', 'Cormorant Garamond Fallback', Georgia, serif;
+  --radius-input: 3px;
+  --radius-card: 6px;
+  --radius-sheet: 10px;
+  --background: var(--canvas);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--brand);
+  --primary-foreground: var(--brand-ink);
+  --muted: var(--surface-sunken);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--surface-sunken);
+  --accent-foreground: var(--ink);
+  --border: var(--hairline);
+  --input: #6E685F;
+  --ring: var(--brand);
+  font-family: var(--font-body-stack);
 }
 
 @theme inline {

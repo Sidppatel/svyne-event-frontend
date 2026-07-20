@@ -37,18 +37,18 @@ export function ContactSupportPage() {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {channels.map((channel) => (
-          <div key={channel.title} className="rounded-xl border border-border-strong bg-surface-canvas p-5 flex flex-col gap-3">
-            <channel.icon className="size-5 text-accent-gold" />
-            <h2 className="text-sm font-bold text-foreground">{channel.title}</h2>
-            <p className="text-sm leading-relaxed text-muted-foreground flex-1">{channel.body}</p>
-            <a href={channel.action.href} className="text-sm font-semibold text-accent-burgundy hover:underline">
+          <div key={channel.title} className="flex flex-col gap-3 border border-hairline-strong bg-surface p-5">
+            <channel.icon className="size-5 text-brand" />
+            <h2 className="font-display text-xl text-foreground">{channel.title}</h2>
+            <p className="flex-1 text-sm leading-relaxed text-muted-foreground">{channel.body}</p>
+            <a href={channel.action.href} className="text-sm font-medium text-brand hover:underline underline-offset-2">
               {channel.action.label} →
             </a>
           </div>
         ))}
       </div>
-      <div className="rounded-xl border border-dashed border-border-strong p-5 text-sm text-muted-foreground space-y-2">
-        <p className="font-bold text-foreground">Before you write in</p>
+      <div className="border border-dashed border-hairline-strong p-5 text-sm text-muted-foreground space-y-2">
+        <p className="font-display text-lg text-foreground">Before you write in</p>
         <ul className="list-disc pl-5 space-y-1.5">
           <li>Include the email address used for the booking.</li>
           <li>Add the event name and date, plus a booking reference if you have one.</li>

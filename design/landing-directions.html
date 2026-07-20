@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TicketSpan — Landing Directions</title>
+<!--
+  Aesthetic direction comparison — 3 committed systems, pick one (or mix axes).
+
+  D1 Midnight Marquee — dark editorial premium
+    Type: Bricolage Grotesque (display) + Schibsted Grotesk (body) + JetBrains Mono (labels)
+    Color: near-black #0E0E11 stage, ivory #F1EDE4 text, brass #C8A566 accent. Hairlines.
+    Density: loose. Radius: 2px. Motion: cinematic (slow reveals, parallax).
+
+  D2 Ivory House — light luxury minimal
+    Type: Cormorant Garamond (display, italic accents) + Albert Sans (body) + JetBrains Mono
+    Color: warm ivory #F5F1E8 ground, ink #191714, racing green #1F3D2B accent. Engraved rules.
+    Density: very loose. Radius: 0. Motion: quiet, precise.
+
+  D3 Encore Poster — high-energy show poster
+    Type: Anton (display, skewed) + Archivo (body) + JetBrains Mono
+    Color: flat blocks — crimson #E62E2E, sunshine #FFD23F, black #121212, chalk #F7F4EC.
+    Density: tight/punchy. Radius: 0. Motion: kinetic (marquee tickers, snap transitions).
+
+  Fonts via Google CDN for comparison speed only; production build uses @fontsource.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Schibsted+Grotesk:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Albert+Sans:wght@400;500;600&family=Anton&family=Archivo:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #0A0A0C; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+
+  /* ---------- switcher ---------- */
+  .switcher {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: row; gap: 8px; z-index: 50;
+  }
+  .switcher a {
+    display: block; padding: 8px 14px; text-decoration: none;
+    font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .12em;
+    color: #999; background: rgba(20,20,24,.85); border: 1px solid rgba(255,255,255,.14);
+    border-radius: 2px; backdrop-filter: blur(6px); transition: color .2s ease, border-color .2s ease;
+  }
+  .switcher a:hover, .switcher a:focus-visible { color: #fff; border-color: rgba(255,255,255,.5); outline: none; }
+
+  .panel { min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+  .tag {
+    align-self: center; margin: 18px 0 2px;
+    font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 2px;
+  }
+
+  /* spec strip shared layout */
+  .spec { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; padding: 40px 64px 88px; }
+  .spec h4 { font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 16px; font-weight: 500; }
+  .chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip { width: 92px; }
+  .chip i { display: block; height: 44px; border-radius: 2px; }
+  .chip span { display: block; font-family: "JetBrains Mono", monospace; font-size: 9.5px; margin-top: 6px; letter-spacing: .04em; }
+  @media (max-width: 900px) { .spec { grid-template-columns: 1fr; padding: 32px 24px 80px; } }
+
+  /* =========================================================
+     D1 — MIDNIGHT MARQUEE
+     ========================================================= */
+  .d1 { background: #0E0E11; color: #F1EDE4; font-family: "Schibsted Grotesk", sans-serif; }
+  .d1 .tag { color: #C8A566; border: 1px solid rgba(200,165,102,.4); background: rgba(14,14,17,.6); }
+  .d1 .nav { display: flex; align-items: center; justify-content: space-between; padding: 28px 64px; border-bottom: 1px solid rgba(241,237,228,.1); }
+  .d1 .lockup { display: flex; align-items: center; gap: 14px; }
+  .d1 .ts-mark {
+    width: 44px; height: 44px; border: 1px solid #C8A566; border-radius: 2px;
+    display: grid; place-items: center;
+    font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 19px; letter-spacing: .02em; color: #C8A566;
+  }
+  .d1 .word { line-height: 1.15; }
+  .d1 .word b { font-family: "Bricolage Grotesque", sans-serif; font-weight: 600; font-size: 15px; letter-spacing: .16em; display: block; }
+  .d1 .word span { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: .34em; text-transform: uppercase; color: #C8A566; }
+  .d1 .nav nav { display: flex; gap: 36px; align-items: center; }
+  .d1 .nav nav a { color: #8B8A93; text-decoration: none; font-size: 13.5px; letter-spacing: .02em; transition: color .2s ease; }
+  .d1 .nav nav a:hover { color: #F1EDE4; }
+  .d1 .cta {
+    font-family: "JetBrains Mono", monospace; font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+    color: #0E0E11; background: #C8A566; padding: 13px 26px; border-radius: 2px; text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+  }
+  .d1 .cta:hover { background: #DDBB80; transform: translateY(-1px); }
+  .d1 .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 96px 64px 72px; position: relative; }
+  .d1 .eyebrow { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .38em; text-transform: uppercase; color: #C8A566; margin-bottom: 30px; animation: d1rise 1s ease .1s both; }
+  .d1 h1 {
+    font-family: "Bricolage Grotesque", sans-serif; font-weight: 500; font-size: clamp(52px, 7.4vw, 108px);
+    line-height: .98; letter-spacing: -.025em; max-width: 12ch; animation: d1rise 1s ease .25s both;
+  }
+  .d1 h1 em { font-style: normal; color: #C8A566; }
+  .d1 .sub { margin-top: 32px; font-size: 17px; line-height: 1.65; color: #8B8A93; max-width: 46ch; animation: d1rise 1s ease .45s both; }
+  .d1 .hero-actions { margin-top: 44px; display: flex; gap: 22px; align-items: center; animation: d1rise 1s ease .6s both; }
+  .d1 .ghost { color: #F1EDE4; text-decoration: none; font-size: 13.5px; border-bottom: 1px solid rgba(241,237,228,.35); padding-bottom: 3px; transition: border-color .2s ease; }
+  .d1 .ghost:hover { border-color: #C8A566; }
+  .d1 .beam {
+    position: absolute; top: -20%; right: -6%; width: 46%; height: 150%;
+    background: radial-gradient(ellipse at center, rgba(200,165,102,.09) 0%, transparent 62%);
+    pointer-events: none;
+  }
+  .d1 .stub {
+    position: absolute; right: 64px; bottom: 64px; width: 300px; border: 1px solid rgba(241,237,228,.16); border-radius: 2px;
+    padding: 22px 24px; background: rgba(21,21,26,.7); backdrop-filter: blur(4px);
+    animation: d1rise 1.2s ease .8s both;
+  }
+  .d1 .stub .row { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #8B8A93; }
+  .d1 .stub .name { font-family: "Bricolage Grotesque", sans-serif; font-size: 21px; font-weight: 500; margin: 12px 0 4px; }
+  .d1 .stub .venue { font-size: 12.5px; color: #8B8A93; }
+  .d1 .stub .tear { border-top: 1px dashed rgba(241,237,228,.25); margin: 16px -24px 12px; position: relative; }
+  .d1 .stub .tear::before, .d1 .stub .tear::after { content: ""; position: absolute; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: #0E0E11; }
+  .d1 .stub .tear::before { left: -7px; } .d1 .stub .tear::after { right: -7px; }
+  .d1 .stub .seat { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 11px; color: #C8A566; letter-spacing: .1em; }
+  .d1 .spec { border-top: 1px solid rgba(241,237,228,.1); }
+  .d1 .spec h4 { color: #8B8A93; }
+  .d1 .chip span { color: #8B8A93; }
+  .d1 .scale div:nth-child(2) { font-family: "Bricolage Grotesque", sans-serif; font-size: 34px; font-weight: 500; letter-spacing: -.02em; }
+  .d1 .scale div:nth-child(3) { font-size: 15px; color: #8B8A93; margin-top: 6px; max-width: 52ch; line-height: 1.6; }
+  .d1 .scale div:nth-child(4) { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #C8A566; margin-top: 12px; }
+  @keyframes d1rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+  /* =========================================================
+     D2 — IVORY HOUSE
+     ========================================================= */
+  .d2 { background: #F5F1E8; color: #191714; font-family: "Albert Sans", sans-serif; }
+  .d2 .tag { color: #1F3D2B; border: 1px solid rgba(31,61,43,.35); background: rgba(245,241,232,.7); }
+  .d2 .nav { display: flex; align-items: center; justify-content: space-between; padding: 30px 72px; }
+  .d2 .lockup { display: flex; align-items: center; gap: 16px; }
+  .d2 .ts-mark {
+    width: 46px; height: 46px; border-radius: 50%; border: 1.5px solid #191714;
+    display: grid; place-items: center; font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 22px; letter-spacing: .03em;
+  }
+  .d2 .word b { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 20px; letter-spacing: .1em; display: block; }
+  .d2 .word span { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: .32em; text-transform: uppercase; color: #1F3D2B; }
+  .d2 .nav nav { display: flex; gap: 40px; align-items: center; }
+  .d2 .nav nav a { color: #191714; opacity: .62; text-decoration: none; font-size: 13.5px; transition: opacity .2s ease; }
+  .d2 .nav nav a:hover { opacity: 1; }
+  .d2 .cta {
+    font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: #F5F1E8; background: #1F3D2B;
+    padding: 14px 30px; text-decoration: none; transition: background .2s ease;
+  }
+  .d2 .cta:hover { background: #2C543C; }
+  .d2 .rule { height: 1px; background: #191714; margin: 0 72px; opacity: .85; }
+  .d2 .rule + .rule { margin-top: 3px; opacity: .3; }
+  .d2 .hero { flex: 1; display: grid; grid-template-columns: 1.35fr 1fr; gap: 64px; padding: 84px 72px; align-items: center; }
+  .d2 .eyebrow { font-family: "JetBrains Mono", monospace; font-size: 10.5px; letter-spacing: .4em; text-transform: uppercase; color: #1F3D2B; margin-bottom: 28px; }
+  .d2 h1 { font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: clamp(52px, 6.8vw, 100px); line-height: 1.02; letter-spacing: -.01em; }
+  .d2 h1 em { font-style: italic; color: #1F3D2B; }
+  .d2 .sub { margin-top: 30px; font-size: 16.5px; line-height: 1.7; color: #191714; opacity: .68; max-width: 44ch; }
+  .d2 .hero-actions { margin-top: 42px; display: flex; gap: 26px; align-items: center; }
+  .d2 .ghost { color: #191714; text-decoration: none; font-size: 13.5px; border-bottom: 1px solid #191714; padding-bottom: 3px; }
+  .d2 .ticket {
+    border: 1.5px solid #191714; padding: 30px 32px; background: #FBF9F3; position: relative; max-width: 380px; justify-self: end;
+  }
+  .d2 .ticket::before { content: ""; position: absolute; inset: 6px; border: 1px solid rgba(25,23,20,.25); pointer-events: none; }
+  .d2 .ticket .row { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; opacity: .6; }
+  .d2 .ticket .name { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 28px; margin: 14px 0 4px; }
+  .d2 .ticket .venue { font-size: 13px; opacity: .65; }
+  .d2 .ticket .tear { border-top: 1px dashed rgba(25,23,20,.4); margin: 18px -32px 14px; }
+  .d2 .ticket .seat { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .12em; color: #1F3D2B; }
+  .d2 .spec { border-top: 1px solid rgba(25,23,20,.3); }
+  .d2 .spec h4 { color: #191714; opacity: .55; }
+  .d2 .chip i { border: 1px solid rgba(25,23,20,.2); }
+  .d2 .chip span { color: #191714; opacity: .6; }
+  .d2 .scale div:nth-child(2) { font-family: "Cormorant Garamond", serif; font-weight: 500; font-size: 38px; }
+  .d2 .scale div:nth-child(3) { font-size: 15px; opacity: .68; margin-top: 6px; max-width: 52ch; line-height: 1.65; }
+  .d2 .scale div:nth-child(4) { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #1F3D2B; margin-top: 12px; }
+
+  /* =========================================================
+     D3 — ENCORE POSTER
+     ========================================================= */
+  .d3 { background: #121212; color: #F7F4EC; font-family: "Archivo", sans-serif; }
+  .d3 .tag { color: #121212; background: #FFD23F; border: none; font-weight: 500; }
+  .d3 .nav { display: flex; align-items: center; justify-content: space-between; padding: 22px 48px; background: #E62E2E; }
+  .d3 .lockup { display: flex; align-items: center; gap: 12px; }
+  .d3 .ts-mark {
+    width: 46px; height: 46px; background: #121212; color: #FFD23F; display: grid; place-items: center;
+    font-family: "Anton", sans-serif; font-size: 20px; transform: skewX(-6deg);
+  }
+  .d3 .word b { font-family: "Anton", sans-serif; font-weight: 400; font-size: 17px; letter-spacing: .1em; display: block; color: #121212; }
+  .d3 .word span { font-family: "JetBrains Mono", monospace; font-size: 9px; letter-spacing: .3em; text-transform: uppercase; color: #121212; font-weight: 500; }
+  .d3 .nav nav { display: flex; gap: 30px; align-items: center; }
+  .d3 .nav nav a { color: #121212; text-decoration: none; font-size: 13.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .d3 .nav nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .d3 .cta {
+    font-family: "Anton", sans-serif; font-size: 15px; letter-spacing: .08em; text-transform: uppercase;
+    color: #121212; background: #FFD23F; padding: 13px 26px; text-decoration: none; transform: skewX(-6deg); display: inline-block;
+    box-shadow: 4px 4px 0 #121212; transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .d3 .cta:hover { transform: skewX(-6deg) translate(-2px,-2px); box-shadow: 7px 7px 0 #121212; }
+  .d3 .hero { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 90px 48px 60px; position: relative; }
+  .d3 h1 {
+    font-family: "Anton", sans-serif; font-weight: 400; font-size: clamp(64px, 10vw, 150px);
+    line-height: .92; text-transform: uppercase; transform: skewX(-4deg); letter-spacing: .005em;
+  }
+  .d3 h1 .l1 { color: #F7F4EC; display: block; }
+  .d3 h1 .l2 { color: #FFD23F; display: block; }
+  .d3 h1 .l3 { color: #E62E2E; display: block; -webkit-text-stroke: 0; }
+  .d3 .sub { margin-top: 30px; font-size: 17px; line-height: 1.6; color: #F7F4EC; opacity: .8; max-width: 46ch; font-weight: 500; }
+  .d3 .hero-actions { margin-top: 40px; display: flex; gap: 26px; align-items: center; }
+  .d3 .ghost { color: #F7F4EC; text-decoration: none; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; border-bottom: 2px solid #E62E2E; padding-bottom: 3px; }
+  .d3 .marquee { background: #FFD23F; color: #121212; overflow: hidden; white-space: nowrap; padding: 12px 0; border-top: 3px solid #121212; border-bottom: 3px solid #121212; }
+  .d3 .marquee span {
+    display: inline-block; font-family: "Anton", sans-serif; font-size: 17px; letter-spacing: .12em; text-transform: uppercase;
+    animation: d3tick 18s linear infinite;
+  }
+  @keyframes d3tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .d3 .stamp {
+    position: absolute; right: 70px; top: 90px; width: 170px; height: 170px; border: 3px solid #FFD23F; border-radius: 50%;
+    display: grid; place-items: center; transform: rotate(12deg); text-align: center;
+    font-family: "Anton", sans-serif; font-size: 19px; text-transform: uppercase; color: #FFD23F; line-height: 1.15;
+  }
+  .d3 .spec { border-top: 3px solid #E62E2E; }
+  .d3 .spec h4 { color: #F7F4EC; opacity: .55; }
+  .d3 .chip span { color: #F7F4EC; opacity: .6; }
+  .d3 .scale div:nth-child(2) { font-family: "Anton", sans-serif; font-size: 38px; text-transform: uppercase; transform: skewX(-4deg); }
+  .d3 .scale div:nth-child(3) { font-size: 15px; opacity: .75; margin-top: 8px; max-width: 52ch; line-height: 1.6; }
+  .d3 .scale div:nth-child(4) { font-family: "JetBrains Mono", monospace; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #FFD23F; margin-top: 12px; }
+
+  @media (max-width: 900px) {
+    .d1 .nav, .d2 .nav { padding: 20px 24px; }
+    .d1 .hero, .d3 .hero { padding: 72px 24px 48px; }
+    .d2 .hero { grid-template-columns: 1fr; padding: 64px 24px; }
+    .d2 .ticket { justify-self: start; }
+    .d1 .stub, .d3 .stamp { display: none; }
+    .d1 .nav nav a:not(.cta), .d2 .nav nav a:not(.cta), .d3 .nav nav a:not(.cta) { display: none; }
+    .d2 .rule { margin: 0 24px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="switcher" aria-label="Jump to direction">
+  <a href="#d1">01 MIDNIGHT</a>
+  <a href="#d2">02 IVORY</a>
+  <a href="#d3">03 ENCORE</a>
+</div>
+
+<!-- ============ D1 MIDNIGHT MARQUEE ============ -->
+<section class="panel d1" id="d1">
+  <div class="tag">Direction 01 — Midnight Marquee</div>
+  <header class="nav">
+    <div class="lockup">
+      <div class="ts-mark">TS</div>
+      <div class="word"><b>TICKETSPAN</b><span>Premium Ticketing</span></div>
+    </div>
+    <nav>
+      <a href="#d1">Platform</a><a href="#d1">Showcase</a><a href="#d1">Pricing</a>
+      <a class="cta" href="#d1">Request access</a>
+    </nav>
+  </header>
+  <div class="hero">
+    <div class="beam"></div>
+    <p class="eyebrow">White-label box office</p>
+    <h1>Your box office.<br>Your name <em>on the door.</em></h1>
+    <p class="sub">TicketSpan runs the ticketing — seating, payments, entry — behind your brand, on your domain. Your audience never sees ours.</p>
+    <div class="hero-actions">
+      <a class="cta" href="#d1">Request access</a>
+      <a class="ghost" href="#d1">See a live box office</a>
+    </div>
+    <div class="stub" aria-hidden="true">
+      <div class="row"><span>Admit one</span><span>№ 000147</span></div>
+      <div class="name">Winter Gala</div>
+      <div class="venue">The Aster Room — Grand Hall</div>
+      <div class="tear"></div>
+      <div class="seat"><span>BOX B</span><span>ROW 2</span><span>SEAT 14</span></div>
+    </div>
+  </div>
+  <div class="spec">
+    <div>
+      <h4>Palette</h4>
+      <div class="chips">
+        <div class="chip"><i style="background:#0E0E11;border:1px solid rgba(241,237,228,.2)"></i><span>#0E0E11 stage</span></div>
+        <div class="chip"><i style="background:#15151A"></i><span>#15151A surface</span></div>
+        <div class="chip"><i style="background:#F1EDE4"></i><span>#F1EDE4 ivory</span></div>
+        <div class="chip"><i style="background:#8B8A93"></i><span>#8B8A93 muted</span></div>
+        <div class="chip"><i style="background:#C8A566"></i><span>#C8A566 brass</span></div>
+      </div>
+    </div>
+    <div class="scale">
+      <h4>Type — Bricolage Grotesque / Schibsted Grotesk / JetBrains Mono</h4>
+      <div>Sharp grotesk, cinematic weight</div>
+      <div>Body is quiet and legible; the display face carries the drama. Brass is reserved for the one word that matters and the one action that matters.</div>
+      <div>Eyebrow label · 0.38em tracking</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ D2 IVORY HOUSE ============ -->
+<section class="panel d2" id="d2">
+  <div class="tag">Direction 02 — Ivory House</div>
+  <header class="nav">
+    <div class="lockup">
+      <div class="ts-mark">TS</div>
+      <div class="word"><b>TICKETSPAN</b><span>Premium Ticketing</span></div>
+    </div>
+    <nav>
+      <a href="#d2">Platform</a><a href="#d2">Showcase</a><a href="#d2">Pricing</a>
+      <a class="cta" href="#d2">Begin</a>
+    </nav>
+  </header>
+  <div class="rule"></div><div class="rule"></div>
+  <div class="hero">
+    <div>
+      <p class="eyebrow">White-label box office</p>
+      <h1>Ticketing, tailored <em>to the house.</em></h1>
+      <p class="sub">Every venue on TicketSpan gets its own box office — its own domain, colors, and door list. We handle seats, payments, and entry. Quietly.</p>
+      <div class="hero-actions">
+        <a class="cta" href="#d2">Begin</a>
+        <a class="ghost" href="#d2">Visit a live box office</a>
+      </div>
+    </div>
+    <div class="ticket" aria-hidden="true">
+      <div class="row"><span>Admit one</span><span>№ 000147</span></div>
+      <div class="name">Winter Gala</div>
+      <div class="venue">The Aster Room — Grand Hall</div>
+      <div class="tear"></div>
+      <div class="seat"><span>BOX B</span><span>ROW 2</span><span>SEAT 14</span></div>
+    </div>
+  </div>
+  <div class="spec">
+    <div>
+      <h4>Palette</h4>
+      <div class="chips">
+        <div class="chip"><i style="background:#F5F1E8"></i><span>#F5F1E8 ivory</span></div>
+        <div class="chip"><i style="background:#FBF9F3"></i><span>#FBF9F3 paper</span></div>
+        <div class="chip"><i style="background:#191714"></i><span>#191714 ink</span></div>
+        <div class="chip"><i style="background:#1F3D2B"></i><span>#1F3D2B green</span></div>
+        <div class="chip"><i style="background:#2C543C"></i><span>#2C543C green-lt</span></div>
+      </div>
+    </div>
+    <div class="scale">
+      <h4>Type — Cormorant Garamond / Albert Sans / JetBrains Mono</h4>
+      <div>Engraved serif, italic <em style="font-style:italic">accents</em></div>
+      <div>Double rules and ticket-stock textures borrow from printed admission tickets. Racing green is the single accent — used for ink, never for decoration.</div>
+      <div>Eyebrow label · 0.4em tracking</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ D3 ENCORE POSTER ============ -->
+<section class="panel d3" id="d3">
+  <div class="tag">Direction 03 — Encore Poster</div>
+  <header class="nav">
+    <div class="lockup">
+      <div class="ts-mark">TS</div>
+      <div class="word"><b>TICKETSPAN</b><span>Premium Ticketing</span></div>
+    </div>
+    <nav>
+      <a href="#d3">Platform</a><a href="#d3">Showcase</a><a href="#d3">Pricing</a>
+      <a class="cta" href="#d3">Start free</a>
+    </nav>
+  </header>
+  <div class="hero">
+    <h1><span class="l1">Sell out</span><span class="l2">the house.</span><span class="l3">Every night.</span></h1>
+    <p class="sub">Your brand on the ticket, your name on the door. TicketSpan powers the box office behind the scenes — seating, payments, scan-in — while the spotlight stays on you.</p>
+    <div class="hero-actions">
+      <a class="cta" href="#d3">Start free</a>
+      <a class="ghost" href="#d3">See it live</a>
+    </div>
+    <div class="stamp" aria-hidden="true">Admit<br>One</div>
+  </div>
+  <div class="marquee" aria-hidden="true">
+    <span>YOUR BRAND · YOUR DOMAIN · YOUR DOOR LIST · PREMIUM TICKETING · YOUR BRAND · YOUR DOMAIN · YOUR DOOR LIST · PREMIUM TICKETING ·&nbsp;</span>
+  </div>
+  <div class="spec">
+    <div>
+      <h4>Palette</h4>
+      <div class="chips">
+        <div class="chip"><i style="background:#121212;border:1px solid rgba(247,244,236,.2)"></i><span>#121212 black</span></div>
+        <div class="chip"><i style="background:#F7F4EC"></i><span>#F7F4EC chalk</span></div>
+        <div class="chip"><i style="background:#E62E2E"></i><span>#E62E2E crimson</span></div>
+        <div class="chip"><i style="background:#FFD23F"></i><span>#FFD23F sunshine</span></div>
+      </div>
+    </div>
+    <div class="scale">
+      <h4>Type — Anton / Archivo / JetBrains Mono</h4>
+      <div>Poster condensed, skewed</div>
+      <div>Flat color blocks, hard 3px rules, offset shadows — printed-poster energy, no gradients anywhere. Marquee tickers and snap transitions carry the motion.</div>
+      <div>Eyebrow label · 0.3em tracking</div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

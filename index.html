@@ -4,15 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TicketSpan Events</title>
+  <title>TicketSpan — Premium Ticketing</title>
   <meta name="description"
-    content="Tickets and tables for premium events, sold under your own brand. Attendees pick their exact table; organizers keep every dollar." />
+    content="Ticketing, tailored to the house. Every venue on TicketSpan gets its own branded box office — tickets, tables, payments, and entry under your name." />
   <meta name="theme-color" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta property="og:site_name" content="TicketSpan Events" />
+  <meta property="og:site_name" content="TicketSpan" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="TicketSpan Events" />
-  <meta property="og:description" content="Tickets and tables for premium events, sold under your own brand." />
+  <meta property="og:title" content="TicketSpan — Premium Ticketing" />
+  <meta property="og:description" content="Ticketing, tailored to the house. Branded box offices for premium venues." />
   <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -35,9 +35,14 @@
 
 <body>
   <div id="hero-flash"
-    style="position:absolute;top:0;left:0;right:0;height:96vh;z-index:1;overflow:hidden;pointer-events:none;background:var(--color-charcoal-ink)">
-    <div
-      style="position:absolute;inset:0;background:linear-gradient(to right,color-mix(in srgb,var(--color-charcoal-ink) 85%,transparent),color-mix(in srgb,var(--color-charcoal-ink) 40%,transparent) 50%,transparent),linear-gradient(to bottom,color-mix(in srgb,var(--color-charcoal-ink) 70%,transparent),color-mix(in srgb,var(--color-charcoal-ink) 60%,transparent) 50%,var(--color-charcoal-ink))">
+    style="position:absolute;top:0;left:0;right:0;height:96vh;z-index:1;overflow:hidden;pointer-events:none;background:#f5f1e8">
+    <div id="hero-flash-copy" style="max-width:80rem;margin:0 auto;padding:7.5rem 1.25rem 0">
+      <p
+        style="margin:0;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#1F3D2B">
+        White-label box office — built in Chickasaw, Alabama</p>
+      <h1
+        style="margin:1.75rem 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;line-height:1.05;font-size:clamp(3rem,6.5vw,4.6rem);color:#191714">
+        Ticketing, tailored <em style="color:#1F3D2B">to the house.</em></h1>
     </div>
   </div>
   <script>
@@ -49,14 +54,7 @@
       var flash = document.getElementById('hero-flash');
       if (portalSub || (storedPortal && storedPortal !== 'public')) {
         flash.style.cssText = 'position:fixed;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;background:var(--color-charcoal-ink);pointer-events:none';
-        flash.innerHTML = '<span style="font-family:\'Space Grotesk\',system-ui,sans-serif;font-size:clamp(44px,13vw,80px);font-weight:600;letter-spacing:-0.03em;color:#fff">ticketspan</span>';
-      } else {
-        var img = document.createElement('img');
-        img.src = '/hero.webp';
-        img.alt = '';
-        img.setAttribute('fetchpriority', 'high');
-        img.style.cssText = 'width:100%;height:100%;object-fit:cover;opacity:.7';
-        flash.insertBefore(img, flash.firstChild);
+        flash.innerHTML = '<span style="font-family:system-ui,sans-serif;font-size:clamp(44px,13vw,80px);font-weight:600;letter-spacing:-0.03em;color:#fff">ticketspan</span>';
       }
       var themeColor = getComputedStyle(document.documentElement).getPropertyValue('--brand').trim();
       if (themeColor) {

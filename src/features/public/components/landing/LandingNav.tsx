@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/shared/lib/cn';
+import { BrandLockup } from '@/shared/brand/BrandMark';
 
 const sections = [
-  { href: '#features', label: 'Features' },
-  { href: '#floor-plan', label: 'Floor plan' },
+  { href: '#platform', label: 'Platform' },
+  { href: '#showcase', label: 'Showcase' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#founder', label: 'Founder' },
 ];
@@ -22,38 +23,26 @@ export function LandingNav() {
   return (
     <header
       className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-        scrolled ? 'border-b border-hairline/60 bg-stage/90 backdrop-blur-md' : 'bg-transparent',
+        'fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow] duration-300',
+        scrolled ? 'bg-(--lp-ivory)/95 shadow-[0_1px_0_var(--lp-line)] backdrop-blur-md' : 'bg-transparent',
       )}
     >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-        <Link to="/" className="flex items-baseline gap-2 text-on-stage">
-          <span className="flex items-center gap-1.5 font-display text-xl">
-            <span className="h-1.5 w-1.5 rounded-full bg-voltage" /> TicketSpan
-          </span>
+      <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-3 md:px-8">
+        <Link to="/" className="flex items-center text-(--lp-ink)" aria-label="TicketSpan home">
+          <BrandLockup size="md" tone="ink" />
         </Link>
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-9 md:flex">
           {sections.map((s) => (
-            <a
-              key={s.href}
-              href={s.href}
-              className="text-sm text-on-stage-soft transition-colors hover:text-on-stage"
-            >
+            <a key={s.href} href={s.href} className="lp-link text-sm">
               {s.label}
             </a>
           ))}
-          <a
-            href="#start"
-            className="rounded-full bg-marigold px-5 py-2 text-sm font-medium text-marigold-foreground transition-colors hover:bg-coral"
-          >
-            Start free
+          <a href="#start" data-magnet className="lp-cta !h-11 !px-6 !text-xs">
+            Open your box office
           </a>
         </div>
-        <a
-          href="#start"
-          className="rounded-full bg-marigold px-4 py-2 text-sm font-medium text-marigold-foreground md:hidden"
-        >
-          Start free
+        <a href="#start" className="lp-cta !h-10 shrink-0 whitespace-nowrap !px-4 !text-xs md:!hidden">
+          Start
         </a>
       </nav>
     </header>

@@ -5,6 +5,7 @@ import { Button } from '@/shared/ui/button';
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
 import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { useAuth } from '@/shared/auth/useAuth';
+import { BrandLockup } from '@/shared/brand/BrandMark';
 import { useTenantBranding } from '@/shared/theme/ThemeContext';
 import { roleLabel } from '@/shared/roles';
 import { cn } from '@/shared/lib/cn';
@@ -90,18 +91,11 @@ function Brand({ section, className, onStage }: { section?: string; className?: 
     );
   }
   return (
-    <span className={cn('font-semibold tracking-tight font-display text-lg flex items-center gap-1.5', className)}>
-      <span className="h-1.5 w-1.5 rounded-full bg-voltage" />
-      <span className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground')}>
-        TicketSpan
-      </span>
-      {section ? (
-        <>
-          <span className="font-light text-voltage">·</span>
-          <span className="text-sm font-medium tracking-normal text-muted-foreground">{section}</span>
-        </>
-      ) : null}
-    </span>
+    <BrandLockup
+      size="sm"
+      section={section}
+      className={cn('transition-opacity hover:opacity-80', onStage ? 'text-on-stage' : 'text-foreground', className)}
+    />
   );
 }
 
@@ -161,7 +155,7 @@ export function PortalNav({ section, links, transparent, hideAuth }: { section?:
                             className={({ isActive }) => cn(
                               'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all',
                               isActive
-                                ? 'bg-primary/10 text-primary border-l-2 border-primary rounded-l-none pl-2.5'
+                                ? 'bg-primary/10 text-primary'
                                 : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                             )}
                           >
@@ -207,7 +201,7 @@ export function PortalNav({ section, links, transparent, hideAuth }: { section?:
                       className={({ isActive }) => cn(
                         'flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                         isActive
-                          ? 'bg-primary/10 text-primary border-l-2 border-primary rounded-l-none pl-2.5'
+                          ? 'bg-primary/10 text-primary'
                           : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                       )}
                     >

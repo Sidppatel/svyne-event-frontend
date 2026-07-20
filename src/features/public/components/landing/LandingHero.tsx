@@ -1,57 +1,82 @@
-import { lazy, Suspense } from 'react';
-
-const HeroTicket = lazy(() =>
-  import('@/features/public/components/landing/LandingMockups').then((m) => ({ default: m.HeroTicket })),
-);
-
-export const landingCta =
-  'inline-flex h-12 items-center justify-center rounded-full bg-marigold px-8 py-3 text-base font-medium text-marigold-foreground shadow-[var(--shadow-e1)] transition-[transform,background-color,box-shadow] duration-[180ms] ease-[var(--ease-out)] hover:bg-coral hover:shadow-[0_0_24px_color-mix(in_srgb,var(--voltage-accent)_55%,transparent)] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-voltage focus-visible:ring-offset-2 focus-visible:ring-offset-stage';
+import { HeroTicket } from '@/features/public/components/landing/LandingMockups';
+import { useLandingStore, type VenueType } from '@/features/public/hooks/landingStore';
 
 const trustPoints = ['6.5% + $1.75 per order · buyer pays', 'Unlimited events', 'No monthly bill'];
+const venueTypes: VenueType[] = ['club', 'theater', 'rooftop', 'supper club'];
 
 export function LandingHero() {
+  const { venueName, venueType, setVenueName, setVenueType } = useLandingStore();
+
   return (
-    <section className="relative overflow-hidden bg-stage text-on-stage">
-      <img
-        src="/hero.webp"
-        alt=""
-        fetchPriority="high"
-        decoding="async"
-        className="pointer-events-none absolute inset-x-0 top-0 h-full max-h-[90vh] w-full object-cover opacity-70"
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-stage/70 via-stage/60 to-stage" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-stage/85 via-stage/40 to-transparent" />
-      <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-4 pb-20 pt-24 md:grid-cols-[1.1fr_0.9fr] md:items-center md:gap-8 md:px-6 md:pb-28 md:pt-32">
-        <div className="max-w-xl space-y-7">
-          <p
-            data-reveal
-            className="font-mono text-xs uppercase tracking-[0.3em] text-voltage"
-          >
-            Built in Chickasaw, Alabama
+    <section className="relative pt-16 md:pt-[4.5rem]">
+      <div className="lp-rule-double relative mx-5 md:mx-8" aria-hidden="true" />
+      <div className="relative mx-auto grid max-w-7xl items-center gap-14 px-5 pb-16 pt-8 md:grid-cols-[1.2fr_0.8fr] md:gap-10 md:px-8 md:pb-24 md:pt-12">
+        <div className="max-w-2xl">
+          <p data-hero-rise className="lp-eyebrow text-(--lp-green)">
+            White-label box office — built in Chickasaw, Alabama
           </p>
-          <h1 data-split className="font-display text-4xl font-medium leading-[1.15] text-on-stage md:text-5xl lg:text-6xl">
-            The box office <em className="italic text-voltage">you&rsquo;d want</em> &mdash; for the person who sweeps the floor at 3 AM.
+          <h1 data-hero-headline className="mt-7 text-5xl text-(--lp-ink) md:text-6xl lg:text-7xl">
+            Ticketing, tailored <em className="text-(--lp-green)">to the house.</em>
           </h1>
-          <p data-reveal className="max-w-md text-base leading-relaxed text-on-stage-soft md:text-lg">
-            Sell tickets and tables under your own name. No monthly bill, no credit card to
-            start. The buyer pays <strong className="text-on-stage">one honest fee</strong> at checkout
-            &mdash; you keep every penny of your ticket price.
+          <p data-hero-rise className="lp-d1 mt-7 max-w-md text-base leading-relaxed text-(--lp-ink-soft) md:text-lg">
+            Your venue gets its own box office on its own domain, wearing your colors. The service
+            fee is added at checkout on the buyer&rsquo;s side, so{' '}
+            <strong className="font-medium text-(--lp-ink)">a $50 ticket pays you $50</strong>.
+            Tables, tickets, and the door list all live under your name.
           </p>
-          <div data-reveal className="flex flex-wrap items-center gap-4 pt-2">
-            <a href="#start" data-magnet className={landingCta}>
-              Start free &mdash; no credit card
+          <div data-hero-rise className="lp-d2 mt-10 flex flex-wrap items-center gap-7">
+            <a href="#start" data-magnet className="lp-cta">
+              Open your box office
+            </a>
+            <a href="#showcase" className="lp-ghost">
+              See it wearing your brand
             </a>
           </div>
-          <ul data-reveal className="flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-[0.15em] text-on-stage-soft">
+          <div data-hero-rise className="lp-d3 mt-10 max-w-md border-t border-(--lp-line-soft) pt-6">
+            <label className="block">
+              <span className="lp-eyebrow text-(--lp-ink-soft)">Try it — what&rsquo;s your venue called?</span>
+              <input
+                type="text"
+                value={venueName}
+                maxLength={40}
+                onChange={(e) => setVenueName(e.target.value)}
+                placeholder="Skyline Terrace"
+                className="lp-input mt-3"
+                aria-label="Type your venue name to preview it on the ticket"
+              />
+            </label>
+            <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="What kind of venue?">
+              {venueTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setVenueType(type)}
+                  aria-pressed={venueType === type}
+                  className={`border px-3.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[0.16em] transition-colors ${
+                    venueType === type
+                      ? 'border-(--lp-green) bg-(--lp-green) text-(--lp-ivory)'
+                      : 'border-(--lp-ink)/40 text-(--lp-ink-soft) hover:border-(--lp-ink)'
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.16em] text-(--lp-ink-faint)" aria-live="polite">
+              {venueName.trim() ? 'That’s your ticket — look right →' : 'Watch the ticket redraw as you type'}
+            </p>
+          </div>
+          <ul
+            data-hero-rise
+            className="lp-d3 mt-9 flex flex-wrap items-center gap-x-7 gap-y-2 font-mono text-[10.5px] uppercase tracking-[0.16em] text-(--lp-ink-soft)"
+          >
             {trustPoints.map((point) => (
               <li key={point}>{point}</li>
             ))}
           </ul>
         </div>
-        <div data-reveal className="flex justify-center md:justify-end">
-          <Suspense fallback={<div className="w-full max-w-sm min-h-[280px]" />}>
-            <HeroTicket />
-          </Suspense>
+        <div data-hero-ticket className="flex justify-center md:justify-end md:pr-6">
+          <HeroTicket />
         </div>
       </div>
     </section>

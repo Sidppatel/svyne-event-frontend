@@ -60,6 +60,14 @@ All color flows through CSS variables in `src/index.css`. **Never hardcode hex i
 | Body / UI | **Inter** (`font-sans`) | paragraphs, labels, buttons, inputs |
 | Mono | **JetBrains Mono** (`font-mono`) | ticket codes, booking IDs, seat labels — reads as a serial number |
 
+Marketing landing only ("Ivory House" system, scoped to `.landing-ivory` in `src/features/public/landing.css`):
+
+| Role | Family | Where |
+| --- | --- | --- |
+| Display | **Cormorant Garamond** (`--lp-display`) | landing `h1`–`h3`, italic accents, ticket motifs — engraved-invitation voice |
+| Body | **Albert Sans** (`--lp-body`) | landing paragraphs, labels, buttons |
+| Mono | **JetBrains Mono** (`--lp-mono`) | landing eyebrows, ticket serials |
+
 Headings already get `font-display`, `letter-spacing: -0.01em` from the base `h1,h2,h3` rule. Scale: page title `text-2xl md:text-3xl font-bold`, section `text-lg font-semibold`, body `text-sm`/`text-base`, meta `text-xs text-muted-foreground`. Prices use `font-display` + `text-marigold` (or marigold-foreground on tint).
 
 ---

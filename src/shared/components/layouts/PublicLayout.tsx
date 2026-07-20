@@ -39,7 +39,7 @@ export function PublicLayout() {
   const isFullBleedPage = pathname.startsWith('/events/') || isPlatformLanding;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={cn('min-h-screen bg-background', onRootDomain && 'landing-ivory')}>
       {!isPlatformLanding && (
         <Suspense fallback={<div className="h-16" />}>
           <PortalNav links={links} transparent={isFullBleedPage} hideAuth={onRootDomain} />

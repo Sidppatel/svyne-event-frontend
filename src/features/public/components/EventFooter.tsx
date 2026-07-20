@@ -1,5 +1,6 @@
 import { cn } from '@/shared/lib/cn';
 import { Compass } from 'lucide-react';
+import { BrandLockup } from '@/shared/brand/BrandMark';
 import { useTenantBranding } from '@/shared/theme/ThemeContext';
 
 interface EventFooterProps {
@@ -24,11 +25,7 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
       <div className="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         { }
         <div className="md:col-span-4 space-y-4">
-          <div className="flex items-center gap-2">
-            <span className={cn('text-lg font-black tracking-tight font-display', light ? 'text-white' : 'text-foreground')}>
-              TicketSpan
-            </span>
-          </div>
+          <BrandLockup size="sm" tone={light ? 'ivory' : 'current'} className={light ? 'text-white' : 'text-foreground'} />
           <p className="text-xs leading-relaxed max-w-sm">
             Experience ticket bookings and table seating simplified. Built for premium nightlife, concerts, and exclusive social events.
           </p>

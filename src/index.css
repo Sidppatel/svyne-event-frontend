@@ -6,6 +6,13 @@
 @import '@fontsource/inter/latin-700.css';
 @import '@fontsource/jetbrains-mono/latin-400.css';
 @import '@fontsource/jetbrains-mono/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-600.css';
+@import '@fontsource/cormorant-garamond/latin-700.css';
+@import '@fontsource/cormorant-garamond/latin-500-italic.css';
+@import '@fontsource/albert-sans/latin-400.css';
+@import '@fontsource/albert-sans/latin-500.css';
+@import '@fontsource/albert-sans/latin-600.css';
 @import 'tailwindcss';
 @import './shared/theme/theme.css'; /* Trigger brand v1.0 styles */
 
@@ -357,6 +364,22 @@ h3 {
   descent-override: 30%;
   line-gap-override: 0%;
   size-adjust: 88.3%;
+}
+@font-face {
+  font-family: 'Cormorant Garamond Fallback';
+  src: local('Georgia');
+  ascent-override: 86%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+  size-adjust: 108%;
+}
+@font-face {
+  font-family: 'Albert Sans Fallback';
+  src: local('Arial');
+  ascent-override: 92%;
+  descent-override: 23%;
+  line-gap-override: 0%;
+  size-adjust: 101%;
 }
 @keyframes hero-reveal {
   from {

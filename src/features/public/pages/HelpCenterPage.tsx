@@ -95,15 +95,15 @@ const faqGroups: FaqGroup[] = [
 function FaqRow({ item }: { item: FaqItem }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="border border-border-strong rounded-lg overflow-hidden">
+    <div className="border border-hairline-strong bg-surface">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left text-sm font-semibold text-foreground hover:bg-accent-gold/5 transition-colors"
+        className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left text-sm font-medium text-foreground hover:bg-surface-sunken/60 transition-colors"
         aria-expanded={open}
       >
         {item.q}
-        <ChevronDown className={cn('size-4 shrink-0 text-accent-gold transition-transform', open && 'rotate-180')} />
+        <ChevronDown className={cn('size-4 shrink-0 text-brand transition-transform', open && 'rotate-180')} />
       </button>
       {open ? <p className="px-4 pb-4 text-sm leading-relaxed text-muted-foreground">{item.a}</p> : null}
     </div>
@@ -133,7 +133,7 @@ export function HelpCenterPage() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search help topics…"
-        className="w-full rounded-lg border border-border-strong bg-transparent px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-accent-gold/40"
+        className="w-full border border-hairline-strong bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
       />
       {groups.length === 0 ? (
         <p className="text-sm text-muted-foreground">
@@ -142,7 +142,7 @@ export function HelpCenterPage() {
       ) : (
         groups.map((group) => (
           <section key={group.title} className="space-y-3">
-            <h2 className="text-xs font-bold uppercase tracking-[0.15em] text-voltage-ink">{group.title}</h2>
+            <h2 className="font-mono text-[10.5px] font-medium uppercase tracking-[0.3em] text-brand">{group.title}</h2>
             <div className="space-y-2">
               {group.items.map((item) => (
                 <FaqRow key={item.q} item={item} />
@@ -151,14 +151,14 @@ export function HelpCenterPage() {
           </section>
         ))
       )}
-      <div className="rounded-xl border border-border-strong bg-surface-canvas p-6 text-center space-y-2">
-        <p className="text-sm font-bold text-foreground">Still stuck?</p>
+      <div className="border-[1.5px] border-ink bg-surface p-6 text-center space-y-2">
+        <p className="font-display text-2xl text-foreground">Still stuck?</p>
         <p className="text-sm text-muted-foreground">
           Our team is happy to help with anything not covered here.
         </p>
         <a
           href="/contact"
-          className="inline-block mt-1 rounded-lg bg-accent-burgundy px-5 py-2.5 text-sm font-bold text-white hover:opacity-90 transition-opacity"
+          className="mt-2 inline-flex h-11 items-center justify-center bg-brand px-6 text-[13px] font-medium uppercase tracking-[0.1em] text-(--brand-ink) transition-colors hover:bg-brand-hover"
         >
           Contact Support
         </a>

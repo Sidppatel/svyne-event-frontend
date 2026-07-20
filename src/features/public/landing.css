@@ -1,0 +1,290 @@
+.landing-ivory {
+  --lp-ivory: #f5f1e8;
+  --lp-paper: #fbf9f3;
+  --lp-ink: #191714;
+  --lp-ink-soft: #55504a;
+  --lp-ink-faint: #6e685f;
+  --lp-green: #1f3d2b;
+  --lp-green-soft: #2c543c;
+  --lp-green-ivory: #cfdcc9;
+  --lp-line: #35312b;
+  --lp-line-soft: rgba(25, 23, 20, 0.16);
+  --lp-line-ivory: rgba(245, 241, 232, 0.28);
+  --lp-display: 'Cormorant Garamond', 'Cormorant Garamond Fallback', Georgia, serif;
+  --lp-body: 'Albert Sans', 'Albert Sans Fallback', Arial, sans-serif;
+  --lp-mono: var(--font-mono-stack);
+  --lp-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --canvas: var(--lp-ivory);
+  --surface: var(--lp-paper);
+  --surface-sunken: #ece6d8;
+  --ink: var(--lp-ink);
+  --ink-soft: var(--lp-ink-soft);
+  --ink-faint: var(--lp-ink-faint);
+  --hairline: #e2dbcb;
+  --hairline-strong: #c7bfac;
+  --brand: var(--lp-green);
+  --brand-hover: var(--lp-green-soft);
+  --brand-ink: var(--lp-ivory);
+  --voltage-accent: #7d6003;
+  --voltage-accent-ink: #3a2e14;
+  --highlight: #f1e8ce;
+  --stage: var(--lp-ink);
+  --stage-elevated: #2a2620;
+  --on-stage: var(--lp-ivory);
+  --on-stage-soft: #c7bfac;
+  --font-body-stack: var(--lp-body);
+  --font-display-stack: var(--lp-display);
+  --font-accent-stack: var(--lp-display);
+  --background: var(--lp-ivory);
+  --foreground: var(--lp-ink);
+  --card: var(--lp-paper);
+  --card-foreground: var(--lp-ink);
+  --popover: var(--lp-paper);
+  --popover-foreground: var(--lp-ink);
+  --primary: var(--lp-green);
+  --primary-foreground: var(--lp-ivory);
+  --muted: #ece6d8;
+  --muted-foreground: var(--lp-ink-soft);
+  --accent: #ece6d8;
+  --accent-foreground: var(--lp-ink);
+  --border: #e2dbcb;
+  --input: #6e685f;
+  --ring: var(--lp-green);
+  background: var(--lp-ivory);
+  color: var(--lp-ink);
+  font-family: var(--lp-body);
+}
+
+body:has(.landing-ivory) {
+  background-color: #f5f1e8;
+}
+
+.landing-ivory h1,
+.landing-ivory h2,
+.landing-ivory h3 {
+  font-family: var(--lp-display);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.landing-ivory em {
+  font-style: italic;
+}
+
+.landing-ivory ::selection {
+  background: var(--lp-green);
+  color: var(--lp-ivory);
+}
+
+.landing-ivory :focus-visible {
+  outline: 2px solid var(--lp-green);
+  outline-offset: 3px;
+}
+
+.lp-eyebrow {
+  font-family: var(--lp-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+}
+
+.lp-rule-double {
+  border-top: 1px solid var(--lp-line);
+  position: relative;
+}
+.lp-rule-double::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid var(--lp-line-soft);
+}
+
+.lp-frame {
+  border: 1.5px solid var(--lp-ink);
+  background: var(--lp-paper);
+  position: relative;
+}
+.lp-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--lp-line-soft);
+  pointer-events: none;
+}
+
+.lp-perf {
+  border-top: 1px dashed rgba(25, 23, 20, 0.4);
+  position: relative;
+}
+.lp-perf::before,
+.lp-perf::after {
+  content: '';
+  position: absolute;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--lp-ivory);
+  border: 1.5px solid var(--lp-ink);
+}
+.lp-perf::before {
+  left: -40px;
+  border-left-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-45deg);
+}
+.lp-perf::after {
+  right: -40px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(45deg);
+}
+
+@keyframes lp-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.lp-marquee {
+  animation: lp-marquee 46s linear infinite;
+}
+
+.lp-cta {
+  display: inline-flex;
+  height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 34px;
+  background: var(--lp-green);
+  color: var(--lp-ivory);
+  font-family: var(--lp-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 0.22s ease,
+    transform 0.22s var(--lp-ease),
+    box-shadow 0.22s ease;
+}
+.lp-cta:hover {
+  background: var(--lp-green-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(31, 61, 43, 0.24);
+}
+.lp-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+.lp-cta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.lp-ghost {
+  color: inherit;
+  text-decoration: none;
+  font-size: 14px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  transition: opacity 0.2s ease;
+}
+.lp-ghost:hover {
+  opacity: 0.65;
+}
+
+.lp-link {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.62;
+  transition: opacity 0.2s ease;
+}
+.lp-link:hover,
+.lp-link[aria-current='true'] {
+  opacity: 1;
+}
+
+.lp-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(25, 23, 20, 0.55);
+  padding: 8px 0;
+  font-family: var(--lp-body);
+  font-size: 16px;
+  color: var(--lp-ink);
+  transition: border-color 0.2s ease;
+}
+.lp-input::placeholder {
+  color: var(--lp-ink-faint);
+}
+.lp-input:focus {
+  outline: none;
+  border-bottom-color: var(--lp-green);
+  border-bottom-width: 2px;
+  padding-bottom: 7px;
+}
+
+.lp-mask {
+  overflow: hidden;
+}
+
+@keyframes lp-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-rise],
+  [data-hero-headline],
+  [data-hero-ticket] {
+    animation: lp-rise 0.9s var(--lp-ease) both;
+  }
+  [data-hero-headline] {
+    animation-duration: 1.1s;
+    animation-delay: 0.12s;
+  }
+  [data-hero-ticket] {
+    animation-delay: 0.5s;
+  }
+  .lp-d1 {
+    animation-delay: 0.28s;
+  }
+  .lp-d2 {
+    animation-delay: 0.4s;
+  }
+  .lp-d3 {
+    animation-delay: 0.52s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-marquee {
+    animation: none;
+  }
+  .lp-cta,
+  .lp-ghost,
+  .lp-link,
+  .lp-input {
+    transition: none;
+  }
+}
