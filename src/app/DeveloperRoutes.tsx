@@ -1,4 +1,9 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { useActingTenantStore } from '@/shared/actingTenant';
+import { AdminEventsPage } from '@/features/admin/pages/AdminEventsPage';
+import { AdminEventWizardPage } from '@/features/admin/pages/AdminEventWizardPage';
+import { AdminEventManagePage } from '@/features/admin/pages/AdminEventManagePage';
 import { ProtectedRoute } from '@/shared/components/ProtectedRoute';
 import { NotFoundPage } from '@/shared/components/StatusPages';
 import { DeveloperLayout } from '@/shared/components/layouts/DeveloperLayout';
@@ -19,6 +24,11 @@ import { DeveloperTaxLookupPage } from '@/features/developer/pages/DeveloperTaxL
 import { DeveloperTaxRemittancePage } from '@/features/developer/pages/DeveloperTaxRemittancePage';
 import { DeveloperLeadsPage } from '@/features/developer/pages/DeveloperLeadsPage';
 
+function RequireActingTenant({ children }: { children: ReactNode }) {
+  const tenantsId = useActingTenantStore((state) => state.tenantsId);
+  return tenantsId ? children : <Navigate to="/tenants" replace />;
+}
+
 export default function DeveloperRoutes() {
   return (
     <Routes>
@@ -34,6 +44,9 @@ export default function DeveloperRoutes() {
         <Route path="tenants" element={<DeveloperTenantsPage />} />
         <Route path="leads" element={<DeveloperLeadsPage />} />
         <Route path="tenants/:tenantsId" element={<DeveloperTenantDashboardPage />} />
+        <Route path="events" element={<RequireActingTenant><AdminEventsPage /></RequireActingTenant>} />
+        <Route path="events/new" element={<RequireActingTenant><AdminEventWizardPage /></RequireActingTenant>} />
+        <Route path="events/:eventsId" element={<RequireActingTenant><AdminEventManagePage /></RequireActingTenant>} />
         <Route path="fees" element={<DeveloperFeesPage />} />
         <Route path="billing" element={<DeveloperBillingPage />} />
         <Route path="pay-per-event" element={<DeveloperPayPerEventPage />} />

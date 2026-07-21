@@ -2,6 +2,7 @@ import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
 import type { RpcInterceptor } from '@protobuf-ts/runtime-rpc';
 import { getAccessToken } from '@/shared/auth/store';
 import { currentTenantSlug } from '@/shared/subdomain';
+import { getActingTenant } from '@/shared/actingTenant';
 import { AuthServiceClient } from '@/shared/proto/auth.client';
 import { TenantServiceClient } from '@/shared/proto/tenant.client';
 import { EventServiceClient } from '@/shared/proto/event.client';
@@ -55,10 +56,24 @@ const tenantInterceptor: RpcInterceptor = {
   },
 };
 
+const actingTenantInterceptor: RpcInterceptor = {
+  interceptUnary(next, method, input, options) {
+    const { tenantsId, notifyTenant } = getActingTenant();
+    if (tenantsId) {
+      options.meta = {
+        ...options.meta,
+        'x-acting-tenant': tenantsId,
+        'x-notify-tenant': notifyTenant ? '1' : '0',
+      };
+    }
+    return next(method, input, options);
+  },
+};
+
 export const transport = new GrpcWebFetchTransport({
   baseUrl: BACKEND_URL,
   format: 'binary',
-  interceptors: [authInterceptor, tenantInterceptor],
+  interceptors: [authInterceptor, tenantInterceptor, actingTenantInterceptor],
 });
 
 export const authClient = new AuthServiceClient(transport);

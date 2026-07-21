@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useActingTenantStore } from '@/shared/actingTenant';
 import { useAsync } from '@/shared/hooks/useAsync';
 import {
   listTenants,
@@ -43,6 +44,8 @@ const ACH_FILTERS: { value: AchFilter; label: string }[] = [
 ];
 
 export function DeveloperTenantsPage() {
+  const navigate = useNavigate();
+  const setActingTenant = useActingTenantStore((state) => state.setActingTenant);
   const { data, loading, error, reload } = useAsync(useCallback(() => listTenants(), []));
   const { data: feeFormulas } = useAsync(useCallback(() => listFeeFormulas(), []));
 
@@ -318,6 +321,16 @@ export function DeveloperTenantsPage() {
                   <Link to={`/tenants/${tenant.tenantsId}`} className="text-sm text-primary">
                     View Events
                   </Link>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setActingTenant(tenant.tenantsId, tenant.name);
+                      navigate('/events');
+                    }}
+                  >
+                    Manage Events
+                  </Button>
                   <Button
                     size="sm"
                     variant="destructive"
