@@ -16,7 +16,7 @@ export function EventFooter({ organizerName, className, light = false }: EventFo
 
   return (
     <footer className={cn(
-      'w-full py-12 border-t mt-16 md:mt-24 transition-colors',
+      'w-full py-8 md:py-16 border-t mt-16 md:mt-24 transition-colors',
       light
         ? 'bg-stage border-white/5 text-white/50'
         : 'bg-surface-canvas border-border-strong text-muted-foreground',

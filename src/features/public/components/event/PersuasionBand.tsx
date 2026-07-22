@@ -102,11 +102,11 @@ export function PersuasionBand({ persuasion, onGetTickets, cartCount }: Persuasi
         )}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 md:px-8">
-          <span className="inline-flex items-center gap-2 text-sm font-medium text-ink">
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-ink min-w-0">
             {urgent ? (
-              <Flame className="size-4 text-voltage-ink ticketspan-urgent" />
+              <Flame className="size-4 text-voltage-ink ticketspan-urgent shrink-0" />
             ) : (
-              <Sparkles className="size-4 text-brand" />
+              <Sparkles className="size-4 text-brand shrink-0" />
             )}
             <span className="truncate">{persuasion.stickyLabel}</span>
           </span>

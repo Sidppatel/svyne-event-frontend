@@ -174,7 +174,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
   const showTables = event.eventType === 'Table' || event.eventType === 'Both';
 
   return (
-    <div className="w-full bg-surface-canvas min-h-screen pb-24">
+    <div className="w-full bg-surface-canvas min-h-screen pb-16 md:pb-8">
       <Seo
         title={event.title}
         description={event.description}
