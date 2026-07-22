@@ -3,17 +3,15 @@ interface Env {
   VITE_BACKEND_URL?: string;
 }
 
-const BOT = /bot|crawler|spider|facebookexternalhit|twitterbot|slackbot|linkedinbot|whatsapp|telegrambot|discordbot|embedly|pinterest|googlebot|bingbot|gptbot|oai-searchbot|chatgpt-user|claudebot|claude-web|anthropic-ai|perplexity|google-extended|duckassistbot|cohere-ai|ccbot|meta-externalagent|applebot|amazonbot|youbot|bytespider/i;
-
 const ROUTES: Record<string, { service: string; method: string }> = {
   events: { service: 'ticketspan.event.EventService', method: 'GetEventBySlug' },
   performers: { service: 'ticketspan.catalog.PerformerService', method: 'GetPerformerBySlug' },
   sponsors: { service: 'ticketspan.catalog.SponsorService', method: 'GetSponsorBySlug' },
 };
 
-// ponytail: hand-rolled gRPC-Web framing for 3 unary slug lookups; the backend is
-// gRPC-only (no REST read path) and bundling a full client at the edge is overkill.
-// Upgrade path: add a JSON transcoding gateway and fetch that instead.
+
+
+
 function varint(value: number): number[] {
   const out: number[] = [];
   while (value > 0x7f) {
@@ -61,7 +59,10 @@ function decodeStrings(bytes: Uint8Array): Record<number, string> {
         fields[field] = new TextDecoder().decode(slice);
       }
     } else if (wire === 0) {
-      readVarint();
+      const val = readVarint();
+      if (!(field in fields)) {
+        fields[field] = val.toString();
+      }
     } else if (wire === 1) {
       i += 8;
     } else if (wire === 5) {
@@ -71,6 +72,40 @@ function decodeStrings(bytes: Uint8Array): Record<number, string> {
     }
   }
   return fields;
+}
+
+function formatEventDate(epochSecondsStr: string): string {
+  const seconds = Number(epochSecondsStr);
+  if (!Number.isFinite(seconds) || seconds === 0) {
+    return '';
+  }
+  return new Date(seconds * 1000).toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+function getMetaDescription(metaJsonStr: string): string {
+  try {
+    const meta = JSON.parse(metaJsonStr || '[]');
+    if (Array.isArray(meta)) {
+      const descItem = meta.find(
+        (item: unknown) =>
+          item &&
+          typeof item === 'object' &&
+          'key' in item &&
+          typeof (item as Record<string, unknown>).key === 'string' &&
+          String((item as Record<string, unknown>).key).toLowerCase() === 'description',
+      ) as Record<string, unknown> | undefined;
+      return typeof descItem?.value === 'string' ? descItem.value : '';
+    }
+  } catch (e) {
+    void e;
+  }
+  return '';
 }
 
 function firstDataFrame(b64: string): Uint8Array | null {
@@ -98,12 +133,12 @@ function escapeHtml(value: string): string {
 
 export const onRequest = async (context: { request: Request; env: Env }): Promise<Response> => {
   const { request, env } = context;
-  const ua = request.headers.get('user-agent') ?? '';
   const url = new URL(request.url);
   const segments = url.pathname.split('/').filter(Boolean);
   const route = segments.length === 2 ? ROUTES[segments[0]] : undefined;
 
-  if (!BOT.test(ua) || !route || !env.VITE_BACKEND_URL) {
+  
+  if (request.method !== 'GET' || !route || !env.VITE_BACKEND_URL) {
     return env.ASSETS.fetch(request);
   }
 
@@ -127,7 +162,7 @@ export const onRequest = async (context: { request: Request; env: Env }): Promis
     const fields = decodeStrings(frame);
     const isEvent = segments[0] === 'events';
     const title = isEvent ? fields[3] : fields[2];
-    const description = isEvent ? fields[5] : '';
+    const description = isEvent ? (fields[5] || '') : getMetaDescription(fields[5]);
     const imageId = isEvent ? fields[19] : fields[4];
     if (!title) {
       return env.ASSETS.fetch(request);
@@ -154,8 +189,46 @@ export const onRequest = async (context: { request: Request; env: Env }): Promis
       `<meta name="twitter:card" content="${image ? 'summary_large_image' : 'summary'}"/>` +
       `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
 
+    
+    let customShell = '';
+    if (isEvent) {
+      const date = formatEventDate(fields[8]);
+      const category = fields[7] || '';
+      const subtitle = date ? (category ? `${date} — ${category}` : date) : category;
+      customShell = `
+  <div id="hero-flash"
+    style="position:absolute;top:0;left:0;right:0;height:96vh;z-index:1;overflow:hidden;pointer-events:none;background:var(--stage,#191714);color:var(--on-stage,#fffffd)">
+    <div style="max-width:80rem;margin:0 auto;padding:7.5rem 1.25rem 0">
+      ${subtitle ? `<p style="margin:0;font-family:var(--font-mono-stack),ui-monospace,monospace;font-size:12px;letter-spacing:0.25em;text-transform:uppercase;color:var(--voltage-accent,#d4a574)">${escapeHtml(subtitle)}</p>` : ''}
+      <h1 style="margin:1.75rem 0 0;font-family:var(--font-display-stack),Georgia,serif;font-weight:500;line-height:1.05;font-size:clamp(3rem,6.5vw,4.6rem);color:var(--on-stage,#fffffd)">
+        ${escapeHtml(title)}</h1>
+      ${description ? `<p style="margin:1.5rem 0 0;max-width:42rem;font-family:var(--font-body-stack),system-ui,sans-serif;font-size:16px;line-height:1.6;color:var(--on-stage-soft,#e5e2de);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(description)}</p>` : ''}
+    </div>
+  </div>`;
+    } else {
+      customShell = `
+  <div id="hero-flash"
+    style="position:absolute;top:0;left:0;right:0;height:96vh;z-index:1;overflow:hidden;pointer-events:none;background:var(--canvas,#faf8f5);color:var(--ink,#1c1917)">
+    <div style="max-width:80rem;margin:0 auto;padding:7.5rem 1.25rem 0;display:flex;flex-direction:row;gap:2rem;align-items:flex-end">
+      ${image ? `<img src="${escapeHtml(image)}" style="width:160px;height:160px;border-radius:12px;object-fit:cover;flex-shrink:0" />` : ''}
+      <div>
+        <h1 style="margin:0;font-family:var(--font-display-stack),Georgia,serif;font-weight:500;line-height:1.05;font-size:clamp(2.5rem,5.5vw,3.8rem);color:var(--ink,#1c1917)">
+          ${escapeHtml(title)}</h1>
+        ${description ? `<p style="margin:1.25rem 0 0;max-width:42rem;font-family:var(--font-body-stack),system-ui,sans-serif;font-size:15px;line-height:1.5;color:var(--ink-soft,#57534e);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${escapeHtml(description)}</p>` : ''}
+      </div>
+    </div>
+  </div>`;
+    }
+
     const shell = await env.ASSETS.fetch(new Request(url.origin, request));
-    const html = (await shell.text()).replace('</head>', `${tags}</head>`);
+    let html = await shell.text();
+    
+    
+    html = html.replace('</head>', `${tags}</head>`);
+    
+    
+    html = html.replace(/<div id="hero-flash"[\s\S]*?<\/div>\s*<\/div>/, customShell.trim());
+
     return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8' } });
   } catch {
     return env.ASSETS.fetch(request);

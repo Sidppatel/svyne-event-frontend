@@ -27,6 +27,12 @@ export function useLazyGsap(
   deps: unknown[] = [],
 ): void {
   useEffect(() => {
+    if (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(hover: none), (max-width: 767px), (prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
     let disposed = false;
     let ctx: { revert(): void } | undefined;
     let cleanup: (() => void) | void;
@@ -41,6 +47,5 @@ export function useLazyGsap(
       cleanup?.();
       ctx?.revert();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, deps);
+  }, [setup, scope, deps]);
 }

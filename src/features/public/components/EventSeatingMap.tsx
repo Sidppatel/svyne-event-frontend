@@ -81,6 +81,7 @@ export function EventSeatingMap({
   const [error, setError] = useState<string | null>(null);
   const [hoveredTable, setHoveredTable] = useState<HoveredTable | null>(null);
 
+  const [containerWidth, setContainerWidth] = useState(0);
 
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
@@ -121,7 +122,7 @@ export function EventSeatingMap({
     const bd = tablePricing?.get(table.eventTablesId);
     const price = bd ? centsToUSD(feesIncluded ? bd.finalPriceCents : bd.sellingPriceCents) : '';
     const status = isSelected ? 'in your order' : isAvailable ? 'available' : 'reserved';
-    return [table.label, `${capacity} seats`, price, status].filter(Boolean).join(', ');
+    return [`${table.label} ${capacity} PAX`, price, status].filter(Boolean).join(', ');
   }
 
   async function toggleTable(table: Table) {
@@ -151,6 +152,7 @@ export function EventSeatingMap({
   const fitView = useCallback(() => {
     const el = containerRef.current;
     if (!el || !canvas.w || !canvas.h) return;
+    setContainerWidth(el.clientWidth);
     const z = Math.min(el.clientWidth / canvas.w, el.clientHeight / canvas.h, 1.5);
     setZoom(z);
     setPan({ x: (el.clientWidth - canvas.w * z) / 2, y: (el.clientHeight - canvas.h * z) / 2 });
@@ -160,7 +162,9 @@ export function EventSeatingMap({
     fitView();
     const el = containerRef.current;
     if (!el) return;
+    setContainerWidth(el.clientWidth);
     const observer = new ResizeObserver(() => {
+      setContainerWidth(el.clientWidth);
       if (!userAdjusted.current) fitView();
     });
     observer.observe(el);
@@ -200,7 +204,7 @@ export function EventSeatingMap({
 
   if (loading) {
     return (
-      <div className="py-12 text-center text-xs text-ink-soft font-bold uppercase tracking-widest animate-pulse">
+      <div className="flex min-h-[590px] items-center justify-center rounded-3xl border border-border-soft bg-stage text-xs font-bold uppercase tracking-widest text-on-stage-soft animate-pulse">
         Loading interactive Seating Floorplan…
       </div>
     );
@@ -217,7 +221,7 @@ export function EventSeatingMap({
     const cx = pan.x + (hoveredTable.posX + w / 2) * zoom;
     const topY = pan.y + hoveredTable.posY * zoom;
     const botY = pan.y + (hoveredTable.posY + h) * zoom;
-    const cw = containerRef.current?.clientWidth ?? 0;
+    const cw = containerWidth;
     const half = 112;
     const left = cw ? Math.min(Math.max(cx, half + 8), cw - half - 8) : cx;
     tipStyle = topY > 180

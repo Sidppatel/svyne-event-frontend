@@ -6,7 +6,9 @@ let refCount = 0;
 let initializing = false;
 
 function prefersReducedMotion(): boolean {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  return window.matchMedia(
+    '(prefers-reduced-motion: reduce), (hover: none), (max-width: 767px)',
+  ).matches;
 }
 
 function teardown() {

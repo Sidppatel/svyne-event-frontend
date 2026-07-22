@@ -55,7 +55,7 @@ const TYPE_STYLES: Record<string, { ring: string; dotBg: string; text: string; b
 
 export function EventTimeline({ eventsId }: { eventsId: string }) {
   const loader = useCallback(() => listScheduleItems(eventsId), [eventsId]);
-  const { data } = useAsync(loader);
+  const { data, loading } = useAsync(loader);
   const items = data ?? [];
 
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -149,6 +149,10 @@ export function EventTimeline({ eventsId }: { eventsId: string }) {
     timelineRef,
     [items],
   );
+
+  if (loading) {
+    return <div className="min-h-[780px] animate-pulse rounded-2xl bg-muted/20" aria-hidden />;
+  }
 
   if (items.length === 0) {
     return null;

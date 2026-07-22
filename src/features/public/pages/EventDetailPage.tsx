@@ -23,6 +23,7 @@ import { TicketCard } from '@/features/public/components/TicketCard';
 import { SectionTitle } from '@/features/public/components/SectionTitle';
 
 import { Seo } from '@/shared/components/Seo';
+import { DeferUntilVisible } from '@/shared/components/DeferUntilVisible';
 import { imageUrl } from '@/shared/upload';
 import { createMultiBooking, quoteCart, cartServiceFeeCents, lineAllInExclTaxCents } from '@/features/public/services/paymentService';
 import { GroupDiscountBanner } from '@/features/public/components/GroupDiscountBanner';
@@ -109,14 +110,12 @@ function EventDetailPageContent({ event }: { event: Event }) {
     setCart((prev) => prev.filter((i) => i.key !== key));
   }, []);
 
-  const cartKey = cart.map((i) => `${i.key}x${i.seats}`).join('|');
   const quoteLoader = useCallback(async () => {
     return quoteCart(
       event.eventsId,
       cart.map((i) => ({ kind: i.kind, refId: i.refId, seats: i.kind === 'Ticket' ? i.seats : 0 })),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartKey, event.eventsId]);
+  }, [cart, event.eventsId]);
   const { data: quote } = useAsync(quoteLoader);
 
   const holdSeconds = quote?.holdSeconds || DEFAULT_HOLD_SECONDS;
@@ -193,7 +192,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
       {delta ? <DeltaStrip delta={delta} /> : null}
 
-      <div id="booking-panel" className="max-w-7xl mx-auto px-4 md:px-8 mt-12 md:mt-16">
+      <div id="booking-panel" className="max-w-7xl mx-auto px-4 md:px-8 mt-12 md:mt-16 [content-visibility:auto] [contain-intrinsic-size:auto_4000px]">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:items-start">
           <div className="min-w-0 space-y-12">
             {showTickets && (
@@ -206,7 +205,7 @@ function EventDetailPageContent({ event }: { event: Event }) {
                 <GroupDiscountBanner hint={quote?.groupDiscount} />
                 <div className="space-y-3">
                   {!ticketTypes ? (
-                    <div className="py-8 text-center text-sm text-ink-soft">Loading tickets…</div>
+                    <div className="flex min-h-[340px] items-center justify-center rounded-2xl border border-border-soft bg-surface-card text-sm text-ink-soft animate-pulse">Loading tickets…</div>
                   ) : admissionTiers.length === 0 ? (
                     <p className="py-6 text-center text-sm text-ink-soft">
                       No tickets on sale right now.
@@ -267,13 +266,15 @@ function EventDetailPageContent({ event }: { event: Event }) {
                   subtitle="Select a table layout to reserve the block"
                   icon={Users}
                 />
-                <EventSeatingMap
-                  eventsId={event.eventsId}
-                  feesIncluded={event.feesIncluded}
-                  cart={cart}
-                  upsert={upsert}
-                  removeKey={removeKey}
-                />
+                <DeferUntilVisible minHeight={590}>
+                  <EventSeatingMap
+                    eventsId={event.eventsId}
+                    feesIncluded={event.feesIncluded}
+                    cart={cart}
+                    upsert={upsert}
+                    removeKey={removeKey}
+                  />
+                </DeferUntilVisible>
               </div>
             )}
 
@@ -295,12 +296,16 @@ function EventDetailPageContent({ event }: { event: Event }) {
 
             {/* Event Timeline */}
             <div className="pt-6">
-              <EventTimeline eventsId={event.eventsId} />
+              <DeferUntilVisible minHeight={780}>
+                <EventTimeline eventsId={event.eventsId} />
+              </DeferUntilVisible>
             </div>
 
             {/* Venue Card Address & Map details */}
             <div className="pt-6">
-              <VenueCard venuesId={event.venuesId} />
+              <DeferUntilVisible minHeight={420}>
+                <VenueCard venuesId={event.venuesId} />
+              </DeferUntilVisible>
             </div>
 
             {/* FAQs / Extra Guidelines Info */}

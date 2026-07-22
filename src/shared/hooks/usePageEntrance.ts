@@ -3,6 +3,9 @@ import { useEffect, useRef } from 'react';
 export function usePageEntrance<T extends HTMLElement = HTMLElement>() {
   const scope = useRef<T>(null);
   useEffect(() => {
+    if (window.matchMedia('(hover: none), (max-width: 767px), (prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     let disposed = false;
     let ctx: { revert(): void } | undefined;
     void import('gsap').then(({ gsap }) => {

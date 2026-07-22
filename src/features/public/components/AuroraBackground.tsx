@@ -61,81 +61,117 @@ function compile(gl: WebGLRenderingContext, type: number, src: string): WebGLSha
   return sh;
 }
 
+const GRADIENT_FALLBACK =
+  'radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--accent-gold) 22%, transparent), transparent 55%), ' +
+  'linear-gradient(180deg, color-mix(in srgb, var(--brand) 55%, var(--color-charcoal-ink, #14110c)) 0%, var(--color-charcoal-ink, #14110c) 78%)';
+
 export function AuroraBackground({ className }: { className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const gl = canvas.getContext('webgl', { antialias: true, powerPreference: 'low-power' });
-    if (!gl) return;
-
-    const vs = compile(gl, gl.VERTEX_SHADER, VERT);
-    const fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
-    if (!vs || !fs) return;
-    const prog = gl.createProgram();
-    if (!prog) return;
-    gl.attachShader(prog, vs);
-    gl.attachShader(prog, fs);
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
-    gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'p');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const uTime = gl.getUniformLocation(prog, 'u_time');
-    const uRes = gl.getUniformLocation(prog, 'u_res');
-    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-    const { green, gold } = brandColors();
-    gl.uniform3f(gl.getUniformLocation(prog, 'u_green'), green[0], green[1], green[2]);
-    gl.uniform3f(gl.getUniformLocation(prog, 'u_gold'), gold[0], gold[1], gold[2]);
-    const mouse = { x: 0.5, y: 0.6 };
-
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const resize = () => {
-      const w = canvas.clientWidth;
-      const h = canvas.clientHeight;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-    };
-    resize();
-    window.addEventListener('resize', resize);
-
-    const onMove = (e: PointerEvent) => {
-      const r = canvas.getBoundingClientRect();
-      mouse.x = (e.clientX - r.left) / r.width;
-      mouse.y = 1 - (e.clientY - r.top) / r.height;
-    };
-    window.addEventListener('pointermove', onMove);
 
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const lite = reduce || window.matchMedia('(hover: none), (max-width: 767px)').matches;
+
+    if (lite) return;
+
+    let gl: WebGLRenderingContext | null = null;
+    let prog: WebGLProgram | null = null;
+    let vs: WebGLShader | null = null;
+    let fs: WebGLShader | null = null;
+    let buf: WebGLBuffer | null = null;
     let raf = 0;
-    const start = performance.now();
-    const render = (now: number) => {
-      gl.uniform1f(uTime, reduce ? 8 : (now - start) / 1000);
-      gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-      if (!reduce) raf = requestAnimationFrame(render);
+    const cleanups: Array<() => void> = [];
+
+    const init = () => {
+      gl = canvas.getContext('webgl', { antialias: !lite, powerPreference: 'low-power' });
+      if (!gl) return;
+
+      vs = compile(gl, gl.VERTEX_SHADER, VERT);
+      fs = compile(gl, gl.FRAGMENT_SHADER, FRAG);
+      if (!vs || !fs) return;
+      prog = gl.createProgram();
+      if (!prog) return;
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+      gl.useProgram(prog);
+
+      buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+      const uRes = gl.getUniformLocation(prog, 'u_res');
+      const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+      const { green, gold } = brandColors();
+      gl.uniform3f(gl.getUniformLocation(prog, 'u_green'), green[0], green[1], green[2]);
+      gl.uniform3f(gl.getUniformLocation(prog, 'u_gold'), gold[0], gold[1], gold[2]);
+      const mouse = { x: 0.5, y: 0.6 };
+
+      const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1 : 2);
+      const resize = () => {
+        if (!gl) return;
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+      };
+      resize();
+      window.addEventListener('resize', resize);
+      cleanups.push(() => window.removeEventListener('resize', resize));
+
+      if (!lite) {
+        const onMove = (e: PointerEvent) => {
+          const r = canvas.getBoundingClientRect();
+          mouse.x = (e.clientX - r.left) / r.width;
+          mouse.y = 1 - (e.clientY - r.top) / r.height;
+        };
+        window.addEventListener('pointermove', onMove);
+        cleanups.push(() => window.removeEventListener('pointermove', onMove));
+      }
+
+      const start = performance.now();
+      const render = (now: number) => {
+        if (!gl) return;
+        gl.uniform1f(uTime, lite ? 8 : (now - start) / 1000);
+        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+        if (!lite) raf = requestAnimationFrame(render);
+      };
+      if (lite) render(0);
+      else raf = requestAnimationFrame(render);
     };
-    raf = requestAnimationFrame(render);
+
+    let cancelIdle: () => void;
+    if (typeof window.requestIdleCallback === 'function') {
+      const id = window.requestIdleCallback(init, { timeout: 1200 });
+      cancelIdle = () => window.cancelIdleCallback(id);
+    } else {
+      const id = window.setTimeout(init, 200);
+      cancelIdle = () => window.clearTimeout(id);
+    }
 
     return () => {
+      cancelIdle();
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('pointermove', onMove);
-      gl.deleteProgram(prog);
-      gl.deleteShader(vs);
-      gl.deleteShader(fs);
-      gl.deleteBuffer(buf);
+      cleanups.forEach((off) => off());
+      if (gl) {
+        if (prog) gl.deleteProgram(prog);
+        if (vs) gl.deleteShader(vs);
+        if (fs) gl.deleteShader(fs);
+        if (buf) gl.deleteBuffer(buf);
+      }
     };
   }, []);
 
-  return <canvas ref={canvasRef} aria-hidden className={className} />;
+  return <canvas ref={canvasRef} aria-hidden className={className} style={{ background: GRADIENT_FALLBACK }} />;
 }

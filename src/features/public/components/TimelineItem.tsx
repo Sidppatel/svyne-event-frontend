@@ -54,7 +54,7 @@ export function TimelineItem({
       >
         <div className={cn('flex flex-col gap-3', isLeft ? 'md:items-end' : 'md:items-start')}>
           <div className="flex items-center gap-2 flex-wrap text-xs font-bold">
-            <span className="tracking-wider uppercase text-accent-burgundy/80">
+            <span className="tracking-wider uppercase text-accent-burgundy">
               {startTimeFormatted} – {endTimeFormatted}
             </span>
             <span className="text-muted-foreground/60">•</span>

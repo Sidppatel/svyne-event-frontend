@@ -16,7 +16,7 @@ export function VenueCard({ venuesId, className }: VenueCardProps) {
 
   if (loading) {
     return (
-      <div className={cn('p-6 rounded-2xl border border-border-soft bg-surface-card animate-pulse space-y-4 h-64', className)}>
+      <div className={cn('p-6 rounded-2xl border border-border-soft bg-surface-card animate-pulse space-y-4 min-h-[420px] lg:min-h-[280px]', className)}>
         <div className="h-6 w-1/3 bg-muted rounded" />
         <div className="h-4 w-2/3 bg-muted rounded" />
         <div className="h-4 w-1/2 bg-muted rounded" />
@@ -34,7 +34,7 @@ export function VenueCard({ venuesId, className }: VenueCardProps) {
   }
 
   const addressString = `${venue.line1 || ''} ${venue.line2 || ''}, ${venue.city || ''}, ${venue.state || ''} ${venue.zip || ''}`.trim();
-  const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${venue.name} ${addressString}`)}`;
+  const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressString)}`;
 
   return (
     <div className={cn('grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 md:p-8 rounded-3xl border border-border-strong bg-surface-card shadow-md', className)}>

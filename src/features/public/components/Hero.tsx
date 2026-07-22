@@ -53,6 +53,7 @@ export function Hero({ event, onGetTickets, minPriceCents }: HeroProps) {
   );
 
   useEffect(() => {
+    if (window.matchMedia('(max-width: 767px), (prefers-reduced-motion: reduce)').matches) return;
     let disposed = false;
     let ctx: { revert(): void } | undefined;
     void Promise.all([import('gsap'), import('gsap/ScrollTrigger')]).then(
