@@ -111,6 +111,9 @@ function EventDetailPageContent({ event }: { event: Event }) {
   }, []);
 
   const quoteLoader = useCallback(async () => {
+    if (cart.length === 0) {
+      return null;
+    }
     return quoteCart(
       event.eventsId,
       cart.map((i) => ({ kind: i.kind, refId: i.refId, seats: i.kind === 'Ticket' ? i.seats : 0 })),

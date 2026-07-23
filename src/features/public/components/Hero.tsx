@@ -50,12 +50,14 @@ export function Hero({ event, onGetTickets, minPriceCents }: HeroProps) {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const xTo = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3' });
       const yTo = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3' });
+      let r: DOMRect | null = null;
       const onMove = (e: PointerEvent) => {
-        const r = btn.getBoundingClientRect();
+        if (!r) r = btn.getBoundingClientRect();
         xTo((e.clientX - r.left - r.width / 2) * 0.3);
         yTo((e.clientY - r.top - r.height / 2) * 0.5);
       };
       const onLeave = () => {
+        r = null;
         xTo(0);
         yTo(0);
       };

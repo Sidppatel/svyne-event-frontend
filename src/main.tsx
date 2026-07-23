@@ -10,6 +10,22 @@ import { fetchPublicBranding, prefetchDefaultPublicEventList, prefetchPublicEven
 import '@/index.css';
 
 initErrorReporter();
+
+// Dynamically preconnect to the backend API origin
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+if (backendUrl) {
+  try {
+    const origin = new URL(backendUrl).origin;
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = origin;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  } catch {
+    // Ignore invalid URLs
+  }
+}
+
 const bootContext = resolvePortalContext();
 if (bootContext.portal === 'public' && bootContext.tenantSlug) {
   void fetchPublicBranding(bootContext.tenantSlug).catch(() => undefined);

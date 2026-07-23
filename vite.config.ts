@@ -20,8 +20,7 @@ export default defineConfig({
       output: {
         manualChunks(id: string) {
           if (id.includes('/shared/proto/')) {
-            const name = id.split('/shared/proto/')[1]?.split('.')[0];
-            return name ? `proto-${name}` : 'proto';
+            return 'proto';
           }
           return undefined;
         },

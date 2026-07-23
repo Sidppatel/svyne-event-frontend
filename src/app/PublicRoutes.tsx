@@ -43,10 +43,18 @@ const FeedbackPage = lazy(() =>
 const OrganizerPage = lazy(() =>
   import('@/features/public/pages/OrganizerPage').then((m) => ({ default: m.OrganizerPage })),
 );
-import { TermsPage } from '@/features/public/pages/TermsPage';
-import { PrivacyPage } from '@/features/public/pages/PrivacyPage';
-import { HelpCenterPage } from '@/features/public/pages/HelpCenterPage';
-import { ContactSupportPage } from '@/features/public/pages/ContactSupportPage';
+const TermsPage = lazy(() =>
+  import('@/features/public/pages/TermsPage').then((m) => ({ default: m.TermsPage })),
+);
+const PrivacyPage = lazy(() =>
+  import('@/features/public/pages/PrivacyPage').then((m) => ({ default: m.PrivacyPage })),
+);
+const HelpCenterPage = lazy(() =>
+  import('@/features/public/pages/HelpCenterPage').then((m) => ({ default: m.HelpCenterPage })),
+);
+const ContactSupportPage = lazy(() =>
+  import('@/features/public/pages/ContactSupportPage').then((m) => ({ default: m.ContactSupportPage })),
+);
 const GetStartedPage = lazy(() =>
   import('@/features/public/pages/GetStartedPage').then((m) => ({ default: m.GetStartedPage })),
 );

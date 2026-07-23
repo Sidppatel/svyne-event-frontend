@@ -23,8 +23,9 @@ export function ArtistCard({ name, slug, primaryImagePath, subtitle, hrefBase, c
       const card = cardRef.current;
       if (!card) return;
 
+      let rect: DOMRect | null = null;
       const onMouseMove = (e: MouseEvent) => {
-        const rect = card.getBoundingClientRect();
+        if (!rect) rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         const xc = rect.width / 2;
@@ -60,6 +61,7 @@ export function ArtistCard({ name, slug, primaryImagePath, subtitle, hrefBase, c
       };
 
       const onMouseLeave = () => {
+        rect = null;
         gsap.to(card, {
           rotateX: 0,
           rotateY: 0,
